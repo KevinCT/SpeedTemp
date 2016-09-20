@@ -30,9 +30,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(getApplication());
-
         setContentView(R.layout.activity_login);
 
         mLoginButton = (LoginButton) findViewById(R.id.activity_login_login_button);
