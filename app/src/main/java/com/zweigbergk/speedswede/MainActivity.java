@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
         setUpContent();
 
-        startLoginActivity();
+//        startLoginActivity();
+        startChatActivity();
     }
 
     private void setUpContent() {
