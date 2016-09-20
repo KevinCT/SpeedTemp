@@ -1,5 +1,6 @@
 package com.zweigbergk.speedswede;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -22,6 +23,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
         mViewListener= new MainPresenter(this);
 
         setUpContent();
+
+        startLoginActivity();
     }
 
     private void setUpContent() {
@@ -33,4 +36,14 @@ public class MainActivity extends AppCompatActivity implements MainView {
 //    public void updateButtonText(String text) {
 //        ((Button) findViewById(R.id.button)).setText(text);
 //    }
+
+    private void startLoginActivity() {
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private void startChatActivity() {
+        Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+        startActivity(intent);
+    }
 }
