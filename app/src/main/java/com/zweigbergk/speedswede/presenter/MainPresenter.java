@@ -14,8 +14,8 @@ public class MainPresenter implements MainActivity.ViewListener {
         mInteractor = new MainInteractor();
     }
 
-    @Override
-    public void onLoginClick() {
-        mView.updateButtonText("Ny text");
-    }
+//    @Override
+//    public void onLoginClick() {
+//        mView.updateButtonText("Ny text");
+//    }
 }
