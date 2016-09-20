@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">SpeedSwede</string>
     <string name="helloM8s">Hallå kompisar</string>
+    <string name="title_activity_login">LoginActivity</string>
 </resources>
