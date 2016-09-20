@@ -38,7 +38,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     }
 
     private void setUpContent() {
-        mAdapter = new ChatAdapter(getSupportFragmentManager(), Arrays.asList(mChatFragment, mChatListFragment));
+        mAdapter = new ChatAdapter(getSupportFragmentManager(), Arrays.asList(mChatListFragment, mChatFragment));
         mPager = (ViewPager) findViewById(R.id.chat_viewpager);
         mPager.setAdapter(mAdapter);
     }
