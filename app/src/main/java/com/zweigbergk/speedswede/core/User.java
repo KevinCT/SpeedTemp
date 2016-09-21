@@ -1,4 +1,12 @@
 package com.zweigbergk.speedswede.core;
 
-public class User {
+import android.net.Uri;
+
+public interface User {
+
+    String getUid();
+    boolean isAnonymous();
+    String getDisplayName();
+    Uri getPhotoUrl();
+    String getEmail();
 }
