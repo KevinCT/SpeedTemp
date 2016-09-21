@@ -5,18 +5,14 @@ public class Message {
     private String text;
     private long timeStamp;
 
-    public Message(){
-
-    }
-
-    public Message(String name, String text, long timeStamp){
+    public Message(String name, String text, long timeStamp) {
         this.name = name;
         this.text = text;
         this.timeStamp = timeStamp;
     }
 
     public void setName(String name){
-        this.name=name;
+        this.name = name;
     }
 
     public void setMessage(String message){
