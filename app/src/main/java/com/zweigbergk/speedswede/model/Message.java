@@ -1,18 +1,15 @@
 package com.zweigbergk.speedswede.model;
 
-/**
- * Created by kevin on 20/09/2016.
- */
 public class Message {
     private String name;
     private String text;
-    private String timeStamp;
+    private long timeStamp;
 
     public Message(){
 
     }
 
-    public Message(String name, String text, String timeStamp){
+    public Message(String name, String text, long timeStamp){
         this.name = name;
         this.text = text;
         this.timeStamp = timeStamp;
@@ -23,10 +20,11 @@ public class Message {
     }
 
     public void setMessage(String message){
-        this.text=message;
+        this.text = message;
     }
-    public void setTimeStamp(String timeStamp){
-        this.timeStamp=timeStamp;
+
+    public void setTimeStamp(long timeStamp){
+        this.timeStamp = timeStamp;
     }
 
     public String getName() {
@@ -37,7 +35,7 @@ public class Message {
         return text;
     }
 
-    public String getTimeStamp() {
+    public long getTimeStamp() {
         return timeStamp;
     }
 
