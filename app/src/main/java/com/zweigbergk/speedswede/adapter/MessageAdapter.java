@@ -14,11 +14,6 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- * Created by Kevin on 2016-09-20.
- */
-
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
     private List<Message> messageList;
 
@@ -39,7 +34,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Message message = messageList.get(position);
         holder.nameView.setText(message.getName());
         holder.textView.setText(message.getText());
-        holder.timeStampView.setText(message.getTimeStamp());
+        holder.timeStampView.setText("" + message.getTimeStamp());
 
     }
 
