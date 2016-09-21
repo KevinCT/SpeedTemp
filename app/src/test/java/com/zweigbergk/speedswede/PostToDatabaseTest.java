@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 public class PostToDatabaseTest {
 
+    @Test
     public void simpleTest() {
         assertTrue(1 == 1);
     }
