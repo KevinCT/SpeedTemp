@@ -2,7 +2,6 @@ package com.zweigbergk.speedswede.interactor;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.icu.util.Calendar;
 import android.util.Log;
 
 import com.facebook.AccessToken;
@@ -16,10 +15,6 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.zweigbergk.speedswede.ActivityAttachable;
-
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 public class LoginInteractor implements ActivityAttachable {
 
@@ -52,9 +47,6 @@ public class LoginInteractor implements ActivityAttachable {
         button.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                Date date = new Date();
-                Log.d(TAG, dateFormat.format(date));
                 handleFacebookAccessToken(activity, loginResult.getAccessToken());
             }
 

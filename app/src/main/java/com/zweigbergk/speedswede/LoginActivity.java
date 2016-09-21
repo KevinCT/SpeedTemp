@@ -3,17 +3,13 @@ package com.zweigbergk.speedswede;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.widget.LoginButton;
 import com.zweigbergk.speedswede.presenter.LoginPresenter;
 import com.zweigbergk.speedswede.view.LoginView;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
@@ -23,30 +19,47 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     private ActivityAttachable mPresenter;
 
     LoginButton mLoginButton;
-
-    @Override
-    public LoginButton getLoginButton() {
-        return mLoginButton;
-    }
-
-    @Override
-    public void startChatActivity() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
-        Log.d(TAG, dateFormat.format(date));
-
-        startActivity(new Intent(this, ChatActivity.class));
-        finish();
-    }
+    ProgressBar mProgressCircle;
+    RelativeLayout mContentLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        mContentLayout = (RelativeLayout) findViewById(R.id.activity_login_content);
+
         mLoginButton = (LoginButton) findViewById(R.id.activity_login_login_button);
         mLoginButton.setReadPermissions("email", "public_profile");
         mPresenter = new LoginPresenter(this);
+
+        mProgressCircle = (ProgressBar) findViewById(R.id.login_progress_circle);
+    }
+
+    @Override
+    public void startChatActivity() {
+        startActivity(new Intent(this, ChatActivity.class));
+        finish();
+    }
+
+    @Override
+    public void onLoginClick(View.OnClickListener listener) {
+        mLoginButton.setOnClickListener(listener);
+    }
+
+    @Override
+    public void showProgressCircle() {
+        mProgressCircle.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideContent() {
+        mContentLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public LoginButton getLoginButton() {
+        return mLoginButton;
     }
 
     @Override

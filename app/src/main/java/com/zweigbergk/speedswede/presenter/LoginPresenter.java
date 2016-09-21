@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.Profile;
-import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.zweigbergk.speedswede.ActivityAttachable;
 import com.zweigbergk.speedswede.LoginActivity;
@@ -25,13 +24,28 @@ public class LoginPresenter implements ActivityAttachable, LoginInteractor.Login
         mInteractor.setLoginListener(this);
         mInteractor.registerLoginCallback(activity, mView.getLoginButton());
 
-        Profile user = Profile.getCurrentProfile();
-
-        if (user != null) {
-            Log.d("DEBUG", "We have a logged in Facebook Profile");
+        if (hasLoggedInUser()) {
+            showLoadingScreen();
             AccessToken token = AccessToken.getCurrentAccessToken();
             mInteractor.handleFacebookAccessToken(activity, token);
-        }
+            }
+
+        mView.onLoginClick(view -> {
+            if (!hasLoggedInUser()) {
+                showLoadingScreen();
+            } else {
+                Log.d("DEBUG", "We have AccessToken. Do nothing.");
+            }
+        });
+    }
+
+    private boolean hasLoggedInUser() {
+        return AccessToken.getCurrentAccessToken() != null;
+    }
+
+    private void showLoadingScreen() {
+        mView.showProgressCircle();
+        mView.hideContent();
     }
 
     @Override
