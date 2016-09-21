@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede.model;
+package com.zweigbergk.speedswede.core;
 
 import java.util.Date;
 public class Message {
