@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "891239035942",
+    "firebase_url": "https://zweigbergk-2c2d8.firebaseio.com",
+    "project_id": "zweigbergk-2c2d8",
+    "storage_bucket": "zweigbergk-2c2d8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:891239035942:android:7a4e8d1b51f8e079",
+        "android_client_info": {
+          "package_name": "com.zweigbergk.speedswede"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "891239035942-09r7vioh8g062rafcbc7us79iik29q2m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGlUMmTgItdpRfnVbMTe-LZD4lq14VXmE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

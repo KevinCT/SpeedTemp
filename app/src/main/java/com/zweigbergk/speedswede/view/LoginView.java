@@ -1,5 +1,8 @@
 package com.zweigbergk.speedswede.view;
 
-public interface LoginView {
+import com.facebook.login.widget.LoginButton;
 
+public interface LoginView {
+    LoginButton getLoginButton();
+    void startChatActivity();
 }
