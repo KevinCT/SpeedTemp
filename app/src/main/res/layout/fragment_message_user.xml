@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/layout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout3"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="80dp">
+
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="6"
+            android:background="@drawable/rounded_corner_stranger"
+            android:padding="16dp"
+            android:text="Vi rockar en testningschatt, till världens bästa festningsapp."
+            android:textColor="#000" />
+    </LinearLayout>
+
+</LinearLayout>
