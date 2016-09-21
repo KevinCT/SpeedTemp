@@ -2,6 +2,7 @@ package com.zweigbergk.speedswede.interactor;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.icu.util.Calendar;
 import android.util.Log;
 
 import com.facebook.AccessToken;
@@ -15,6 +16,10 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.zweigbergk.speedswede.ActivityAttachable;
+
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class LoginInteractor implements ActivityAttachable {
 
@@ -32,7 +37,6 @@ public class LoginInteractor implements ActivityAttachable {
 
     public LoginInteractor() {
         mCallbackManager = CallbackManager.Factory.create();
-
         mAuthStateListener = firebaseAuth -> {
             FirebaseUser user = firebaseAuth.getCurrentUser();
             if (user != null) {
@@ -48,8 +52,10 @@ public class LoginInteractor implements ActivityAttachable {
         button.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                Date date = new Date();
+                Log.d(TAG, dateFormat.format(date));
                 handleFacebookAccessToken(activity, loginResult.getAccessToken());
-                Log.d(TAG, "facebook:onSuccess:" + loginResult);
             }
 
             @Override
@@ -59,12 +65,21 @@ public class LoginInteractor implements ActivityAttachable {
 
             @Override
             public void onError(FacebookException exception) {
-                Log.d(TAG, "facebook:onError", exception);
+                if (isConnectionError(exception)) {
+                    //mLoginListener
+                    Log.d("DEBUG", "Handle connection error~");
+                }
             }
         });
     }
 
-    private void handleFacebookAccessToken(Activity activity, AccessToken token) {
+    private boolean isConnectionError(FacebookException exception) {
+        // We are just interested in the first 18 characters.
+        String msg = exception.getMessage().substring(0, 18);
+        return msg.equals("CONNECTION_FAILURE");
+    }
+
+    public void handleFacebookAccessToken(Activity activity, AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());

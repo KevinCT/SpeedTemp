@@ -52,6 +52,8 @@ public class ChatListFragment extends Fragment {
 //        databaseReference.child("Fisk").setValue("Felix");
 //        databaseReference.child("Fisk").setValue("Felix");
 
+        Log.d("Current user: ", FirebaseAuth.getInstance().getCurrentUser().getUid());
+
 //        Log.d("key: ", databaseRef);
 
 //        for (int i = 0; i < messages.length; i++) {

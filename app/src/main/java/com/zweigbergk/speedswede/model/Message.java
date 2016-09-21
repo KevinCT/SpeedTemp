@@ -1,7 +1,6 @@
 package com.zweigbergk.speedswede.model;
 
 import java.util.Date;
-
 public class Message {
     private String name;
     private String text;
