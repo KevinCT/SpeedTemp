@@ -1,5 +1,7 @@
 package com.zweigbergk.speedswede.model;
 
+import java.util.Date;
+
 public class Message {
     private String name;
     private String text;
@@ -9,6 +11,10 @@ public class Message {
         this.name = name;
         this.text = text;
         this.timeStamp = timeStamp;
+    }
+
+    public Message(String name, String text) {
+        this(name, text, (new Date()).getTime());
     }
 
     public void setName(String name){
@@ -31,8 +37,8 @@ public class Message {
         return text;
     }
 
-    public long getTimeStamp() {
-        return timeStamp;
+    public String getTimeStamp() {
+        return String.valueOf(timeStamp);
     }
 
 
