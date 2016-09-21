@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.zweigbergk.speedswede.adapter.ChatAdapter;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
@@ -28,6 +29,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     private final Fragment mChatFragment = new ChatFragment();
     private final Fragment mChatListFragment = new ChatListFragment();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,14 +37,16 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         Log.d("DEBUGGING", "ChatActivity!");
 
-        mViewListener = new ChatPresenter(this);
-
         setUpContent();
+
+        mViewListener = new ChatPresenter(this);
     }
 
     private void setUpContent() {
         mAdapter = new ChatAdapter(getSupportFragmentManager(), Arrays.asList(mChatListFragment, mChatFragment));
         mPager = (ViewPager) findViewById(R.id.chat_viewpager);
         mPager.setAdapter(mAdapter);
+//        Log.d("a", mChatText.toString());
     }
+
 }
