@@ -10,4 +10,7 @@
         android:left="0dip"
         android:right="0dip"
         android:top="0dip" />
+    <margin
+        android:left="30dp"
+        />
 </shape>
