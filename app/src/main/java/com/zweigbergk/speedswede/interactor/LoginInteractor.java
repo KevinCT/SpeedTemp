@@ -79,7 +79,7 @@ public class LoginInteractor implements ActivityAttachable {
         return msg.equals("CONNECTION_FAILURE");
     }
 
-    private void handleFacebookAccessToken(Activity activity, AccessToken token) {
+    public void handleFacebookAccessToken(Activity activity, AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());

@@ -2,7 +2,12 @@ package com.zweigbergk.speedswede.presenter;
 
 
 import android.content.Intent;
+import android.util.Log;
 
+import com.facebook.AccessToken;
+import com.facebook.Profile;
+import com.facebook.login.LoginManager;
+import com.google.firebase.auth.FirebaseAuth;
 import com.zweigbergk.speedswede.ActivityAttachable;
 import com.zweigbergk.speedswede.LoginActivity;
 import com.zweigbergk.speedswede.interactor.LoginInteractor;
@@ -19,6 +24,14 @@ public class LoginPresenter implements ActivityAttachable, LoginInteractor.Login
         mInteractor = new LoginInteractor();
         mInteractor.setLoginListener(this);
         mInteractor.registerLoginCallback(activity, mView.getLoginButton());
+
+        Profile user = Profile.getCurrentProfile();
+
+        if (user != null) {
+            Log.d("DEBUG", "We have a logged in Facebook Profile");
+            AccessToken token = AccessToken.getCurrentAccessToken();
+            mInteractor.handleFacebookAccessToken(activity, token);
+        }
     }
 
     @Override
