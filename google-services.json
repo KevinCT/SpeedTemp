@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "495336912530",
-    "firebase_url": "https://zweigbergk-3e62c.firebaseio.com",
-    "project_id": "zweigbergk-3e62c",
-    "storage_bucket": "zweigbergk-3e62c.appspot.com"
+    "project_number": "891239035942",
+    "firebase_url": "https://zweigbergk-2c2d8.firebaseio.com",
+    "project_id": "zweigbergk-2c2d8",
+    "storage_bucket": "zweigbergk-2c2d8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:495336912530:android:7a4e8d1b51f8e079",
+        "mobilesdk_app_id": "1:891239035942:android:7a4e8d1b51f8e079",
         "android_client_info": {
           "package_name": "com.zweigbergk.speedswede"
         }
       },
       "oauth_client": [
         {
-          "client_id": "495336912530-tju1m3vm2n2npn5tpjjlshkdkbf1l70f.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.zweigbergk.speedswede",
-            "certificate_hash": "1C2C2816B25E2A7FC1E2744E11ABD133815B1E12"
-          }
-        },
-        {
-          "client_id": "495336912530-pi6o229ilknkq86fo4f4bfq58j7f40bi.apps.googleusercontent.com",
+          "client_id": "891239035942-09r7vioh8g062rafcbc7us79iik29q2m.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAcnXmh0TW7eaCaoUZRaxIuA4ZstOFlsHg"
+          "current_key": "AIzaSyDGlUMmTgItdpRfnVbMTe-LZD4lq14VXmE"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "495336912530-pi6o229ilknkq86fo4f4bfq58j7f40bi.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

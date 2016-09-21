@@ -1,5 +1,7 @@
 package com.zweigbergk.speedswede.presenter;
 
+import android.util.Log;
+
 import com.zweigbergk.speedswede.ChatActivity;
 import com.zweigbergk.speedswede.interactor.ChatInteractor;
 import com.zweigbergk.speedswede.view.ChatView;
