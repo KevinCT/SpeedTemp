@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.zweigbergk.speedswede.MainActivity"
-    android:background="#1fa4b8">
+    android:background="@color/colorPrimary">
 
     <ImageView
         android:layout_width="wrap_content"
