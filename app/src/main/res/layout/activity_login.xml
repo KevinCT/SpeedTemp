@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
     android:layout_width="match_parent"
@@ -8,14 +8,34 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.zweigbergk.speedswede.LoginActivity">
+    tools:context="com.zweigbergk.speedswede.LoginActivity"
+    android:id="@+id/activity_login_root">
 
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/activity_login_login_button"
+    <!-- All content must be inside this RelativeLayout, otherwise code may break.
+    (See LoginActivity & LoginPresenter) -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/activity_login_content">
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/activity_login_login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp" />
+
+    </RelativeLayout>
+
+
+    <ProgressBar
+        android:id="@+id/login_progress_circle"
+        android:indeterminateDrawable="@drawable/circular_progress_bar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp" />
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:layout_height="wrap_content" >
+    </ProgressBar>
 
-</LinearLayout>
+</RelativeLayout>
