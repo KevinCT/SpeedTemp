@@ -59,9 +59,18 @@ public class LoginInteractor implements ActivityAttachable {
 
             @Override
             public void onError(FacebookException exception) {
-                Log.d(TAG, "facebook:onError", exception);
+                if (isConnectionError(exception)) {
+                    //mLoginListener
+                    Log.d("DEBUG", "CONNECTION_FAILURE!");
+                }
             }
         });
+    }
+
+    private boolean isConnectionError(FacebookException exception) {
+        // We are just interested in the first 18 characters.
+        String msg = exception.getMessage().substring(0, 18);
+        return msg.equals("CONNECTION_FAILURE");
     }
 
     private void handleFacebookAccessToken(Activity activity, AccessToken token) {
