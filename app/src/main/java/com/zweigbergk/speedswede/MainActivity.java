@@ -82,22 +82,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     private void setUpContent() {
-
     }
-
-
-//    @Override
-//    public void updateButtonText(String text) {
-//        ((Button) findViewById(R.id.button)).setText(text);
-//    }
 
     private void startLoginActivity() {
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
-    }
-
-    private void startChatActivity() {
-        Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-        startActivity(intent);
+        finish();
     }
 }
