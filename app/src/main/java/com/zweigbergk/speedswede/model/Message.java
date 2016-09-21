@@ -1,8 +1,5 @@
 package com.zweigbergk.speedswede.model;
 
-/**
- * Created by kevin on 20/09/2016.
- */
 public class Message {
     private String name;
     private String text;
