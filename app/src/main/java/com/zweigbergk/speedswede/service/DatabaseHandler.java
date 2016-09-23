@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.core.Message;
+import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.Executable;
 
 import java.util.ArrayList;
@@ -18,9 +19,8 @@ public enum DatabaseHandler {
 
     private DatabaseReference mDatabaseReference;
 
-    public List<Message> fetchInitialData(Executable executable) {
+    public void fetchInitialData(Client<List<Message>> client) {
         List<Message> messageList = new ArrayList<>();
-
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
 
@@ -32,16 +32,14 @@ public enum DatabaseHandler {
                     Message message = new Message(snapshot.child("name").getValue().toString(), snapshot.child("text").getValue().toString());
                     messageList.add(message);
                 }
-                executable.run();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
-        return messageList;
+        Log.d("DEBUG", "Supplying with: " + messageList.size());
+        client.supply(messageList);
     }
 
     public void registerConversationListener() {

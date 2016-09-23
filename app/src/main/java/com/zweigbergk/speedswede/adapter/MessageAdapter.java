@@ -1,19 +1,11 @@
 package com.zweigbergk.speedswede.adapter;
 
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
@@ -29,13 +21,16 @@ public class MessageAdapter extends BaseAdapter {
     private TextView mTimeStamp;
 
     public MessageAdapter(){
-
-        mMessageList = DatabaseHandler.INSTANCE.fetchInitialData(() -> notifyDataSetChanged());
-
-
-
+        mMessageList = new ArrayList<>();
+        //Grab a List<Message> of messages,
+        //and call initialize() with the grabbed list as argument.
+        DatabaseHandler.INSTANCE.fetchInitialData(this::useData);
     }
 
+    private void useData(List<Message> messageList) {
+        mMessageList.addAll(messageList);
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getCount() {
