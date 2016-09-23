@@ -7,9 +7,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.util.Client;
-import com.zweigbergk.speedswede.util.Executable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +32,16 @@ public enum DatabaseHandler {
                     Message message = new Message(snapshot.child("name").getValue().toString(), snapshot.child("text").getValue().toString());
                     messageList.add(message);
                 }
+
+                Log.d("DEBUG", "Supplying! LUL");
+                client.supply(messageList);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                Log.d(Constants.ERROR, databaseError.getMessage());
             }
         });
-        Log.d("DEBUG", "Supplying with: " + messageList.size());
-        client.supply(messageList);
     }
 
     public void registerConversationListener() {

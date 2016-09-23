@@ -23,7 +23,7 @@ public class MessageAdapter extends BaseAdapter {
     public MessageAdapter(){
         mMessageList = new ArrayList<>();
         //Grab a List<Message> of messages,
-        //and call initialize() with the grabbed list as argument.
+        //and call useData() with the grabbed list as argument.
         DatabaseHandler.INSTANCE.fetchInitialData(this::useData);
     }
 
