@@ -31,9 +31,10 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
         mLoginButton = (LoginButton) findViewById(R.id.activity_login_login_button);
         mLoginButton.setReadPermissions("email", "public_profile");
-        mPresenter = new LoginPresenter(this);
 
         mProgressCircle = (ProgressBar) findViewById(R.id.login_progress_circle);
+
+        mPresenter = new LoginPresenter(this);
     }
 
     @Override
