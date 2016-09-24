@@ -4,7 +4,7 @@ import java.util.Date;
 public class Message {
     private String name;
     private String text;
-    private long timeStamp;
+    private final long timeStamp;
 
     public Message(String name, String text, long timeStamp) {
         this.name = name;
@@ -24,10 +24,6 @@ public class Message {
         this.text = message;
     }
 
-    public void setTimeStamp(long timeStamp){
-        this.timeStamp = timeStamp;
-    }
-
     public String getName() {
         return name;
     }
@@ -36,9 +32,25 @@ public class Message {
         return text;
     }
 
-    public String getTimeStamp() {
-        return String.valueOf(timeStamp);
+    public long getTimeStamp() {
+        return timeStamp;
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) {
+            return false;
+        }
+
+        if (other.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Message otherMessage = (Message) other;
+
+        // todo: Change this to use getId instead /Andreas
+        return otherMessage.getName().equals(this.getName())
+                && otherMessage.getTimeStamp() == this.getTimeStamp();
+    }
 
 }
