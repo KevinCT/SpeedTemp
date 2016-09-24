@@ -55,6 +55,11 @@ public class ChatFragment extends Fragment {
         chatView.setLayoutManager(new LinearLayoutManager(getContext()));
         chatView.setAdapter(new NewMessageAdapter(null));
 
+        view.findViewById(R.id.fragment_chat_post_message).setOnClickListener(button -> {
+            Message dummyMessage = new Message("Peter", "Ny text igen", (new Date()).getTime());
+            DatabaseHandler.INSTANCE.postMessage(dummyMessage);
+        });
+
         return view;
     }
 }

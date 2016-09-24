@@ -13,6 +13,7 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.util.Client;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public enum DatabaseHandler {
@@ -77,7 +78,10 @@ public enum DatabaseHandler {
 
             }
         });
+    }
 
+    public void postMessage(Message message) {
+        mDatabaseReference.child("messages").push().setValue(message);
     }
 
 }
