@@ -56,9 +56,12 @@ public enum DatabaseHandler {
         DatabaseReference conversationReference = fetchChatConversationByUid(chatUid);
 
         conversationReference.addChildEventListener(new ChildEventListener() {
+            // NOTE: onChildAdded() runs once for every existing child at the time of attaching.
+            // Thus there is no need for an initial SingleValueEventListener.
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Message message = dataSnapshot.getValue(Message.class);
+                Log.d(Constants.DEBUG, "We have a new message: " + message.getText());
                 client.supply(DataChange.added(message));
             }
 

@@ -12,66 +12,72 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.service.DatabaseHandler.DataChange;
 import com.zweigbergk.speedswede.service.DatabaseHandler.Event;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class NewMessageAdapter extends RecyclerView.Adapter<NewMessageAdapter.ViewHolder> {
+public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
     private List<Message> mMessages;
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public MessageAdapter(List<Message> messages) {
+        mMessages = messages;
+    }
 
-        TextView mTextView;
-        ViewHolder(View view) {
-            super(view);
-
-            mTextView = (TextView) view.findViewById(R.id.message_textview_user);
-        }
+    public MessageAdapter() {
+        this(new ArrayList<>());
     }
 
     public void onListChanged(DataChange<Message> change) {
         Message message = change.getItem();
         Event event = change.getEvent();
-        int position = mMessages.indexOf(message);
 
         switch (event) {
             case ADDED:
-                mMessages.add(message);
-                notifyItemInserted(getItemCount() - 1);
+                addMessage(message);
                 break;
             case MODIFIED:
                 updateMessage(message);
-                notifyItemChanged(position);
                 break;
             case REMOVED:
-                mMessages.remove(message);
-                notifyItemRemoved(position);
+                removeMessage(message);
+                break;
             case CANCELLED:
                 // TODO
-                //Handle failure to respond to a change in the database, maybe by issuing
-                //another onListChanged() after a certain time using onListChanged(change);
+                //Handle failure to respond to a change in the database by creating a listener
+                // for connection and call onListChanged() once connection is reestablished
                 break;
         }
     }
 
     private void updateMessage(@NonNull Message message) {
+        int position = mMessages.indexOf(message);
+
         for (Message messageInList : mMessages) {
             if (isSameMessage(messageInList, message)) {
                 messageInList.copyTextFrom(message);
-                notifyDataSetChanged();
+                notifyItemChanged(position);
                 return;
             }
         }
     }
 
-    private boolean isSameMessage(@NonNull Message message1, @NonNull Message message2) {
+    private void addMessage(Message message) {
+        mMessages.add(message);
+        notifyItemInserted(getItemCount() - 1);
+    }
+
+    private void removeMessage(Message message) {
+        int position = mMessages.indexOf(message);
+
+        mMessages.remove(message);
+        notifyItemRemoved(position);
+    }
+
+    private boolean isSameMessage(@NonNull Message message1, Message message2) {
         return message1.equals(message2);
     }
 
-    public NewMessageAdapter(List<Message> messages) {
-        mMessages = messages;
-    }
-
     @Override
-    public NewMessageAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MessageAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_message_user, parent, false);
 
@@ -87,5 +93,15 @@ public class NewMessageAdapter extends RecyclerView.Adapter<NewMessageAdapter.Vi
     @Override
     public int getItemCount() {
         return mMessages.size();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+
+        TextView mTextView;
+        ViewHolder(View view) {
+            super(view);
+
+            mTextView = (TextView) view.findViewById(R.id.message_textview_user);
+        }
     }
 }
