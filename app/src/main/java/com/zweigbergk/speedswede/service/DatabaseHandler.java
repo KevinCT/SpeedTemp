@@ -20,7 +20,7 @@ public enum DatabaseHandler {
 
     private DatabaseReference mDatabaseReference;
 
-    public void fetchInitialData(Client<List<Message>> client) {
+    public void fetchConversation(Client<List<Message>> client) {
         List<Message> messageList = new ArrayList<>();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 

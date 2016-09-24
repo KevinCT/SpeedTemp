@@ -23,19 +23,19 @@ public class MessageAdapter extends BaseAdapter {
     public MessageAdapter() {
         mMessageList = new ArrayList<>();
         //Grab a List<Message> of messages,
-        //and call initializeWithList() with the grabbed list as argument.
-        DatabaseHandler.INSTANCE.fetchInitialData(this::initializeWithList);
-        DatabaseHandler.INSTANCE.registerConversationListener(this::updateMessageList);
+        //and call initializeWithConversation() with the grabbed list as argument.
+        DatabaseHandler.INSTANCE.fetchConversation(this::initializeWithConversation);
+        DatabaseHandler.INSTANCE.registerConversationListener(this::updateConversation);
 
 
     }
 
-    private void initializeWithList(List<Message> messageList) {
+    private void initializeWithConversation(List<Message> messageList) {
         mMessageList.addAll(messageList);
         notifyDataSetChanged();
     }
 
-    private void updateMessageList(Message message) {
+    private void updateConversation(Message message) {
         for (Message listMessage : mMessageList) {
             if (listMessage.equals(message)) {
                 mMessageList.add(message);
