@@ -26,6 +26,7 @@ import com.zweigbergk.speedswede.adapter.MessageAdapter;
 import com.zweigbergk.speedswede.adapter.NewMessageAdapter;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
+import com.zweigbergk.speedswede.util.Client;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,7 +54,11 @@ public class ChatFragment extends Fragment {
 
         chatView = (RecyclerView) view.findViewById(R.id.fragment_chat_recycler_view);
         chatView.setLayoutManager(new LinearLayoutManager(getContext()));
-        chatView.setAdapter(new NewMessageAdapter(null));
+
+        Client<List<Message>> client = (list) -> chatView.setAdapter(new NewMessageAdapter(list));
+        DatabaseHandler.INSTANCE.fetchConversation(client);
+
+//        chatView.setAdapter(new NewMessageAdapter(new ArrayList<Message>()));
 
         view.findViewById(R.id.fragment_chat_post_message).setOnClickListener(button -> {
             Message dummyMessage = new Message("Peter", "Ny text igen", (new Date()).getTime());
