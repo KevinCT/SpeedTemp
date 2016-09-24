@@ -20,15 +20,30 @@ public class MessageAdapter extends BaseAdapter {
     private TextView mText;
     private TextView mTimeStamp;
 
-    public MessageAdapter(){
+    public MessageAdapter() {
         mMessageList = new ArrayList<>();
         //Grab a List<Message> of messages,
-        //and call useData() with the grabbed list as argument.
-        DatabaseHandler.INSTANCE.fetchInitialData(this::useData);
+        //and call initializeWithList() with the grabbed list as argument.
+        DatabaseHandler.INSTANCE.fetchInitialData(this::initializeWithList);
+        DatabaseHandler.INSTANCE.registerConversationListener(this::updateMessageList);
+
+
     }
 
-    private void useData(List<Message> messageList) {
+    private void initializeWithList(List<Message> messageList) {
         mMessageList.addAll(messageList);
+        notifyDataSetChanged();
+    }
+
+    private void updateMessageList(Message message) {
+        for (Message listMessage : mMessageList) {
+            if (listMessage.equals(message)) {
+                mMessageList.add(message);
+                notifyDataSetChanged();
+                return;
+            }
+        }
+        mMessageList.add(message);
         notifyDataSetChanged();
     }
 
