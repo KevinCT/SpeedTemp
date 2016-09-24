@@ -4,23 +4,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.adapter.MessageAdapter;
 import com.zweigbergk.speedswede.adapter.NewMessageAdapter;
@@ -28,13 +15,14 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
 import com.zweigbergk.speedswede.util.Client;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class ChatFragment extends Fragment {
     private MessageAdapter mMessageAdapter;
-    private RecyclerView chatView;
+    private RecyclerView chatRecyclerView;
+
+    private static final int SCROLL_DOWN_DELAY = 10;
 
     public ChatFragment() {
         // Required empty public constructor
@@ -52,11 +40,13 @@ public class ChatFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
         View message = inflater.inflate(R.layout.fragment_message_user, null);
 
-        chatView = (RecyclerView) view.findViewById(R.id.fragment_chat_recycler_view);
-        chatView.setLayoutManager(new LinearLayoutManager(getContext()));
+        chatRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_chat_recycler_view);
+        chatRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Client<List<Message>> client = (list) -> chatView.setAdapter(new NewMessageAdapter(list));
+        Client<List<Message>> client = (list) -> chatRecyclerView.setAdapter(new NewMessageAdapter(list));
         DatabaseHandler.INSTANCE.fetchConversation(client);
+
+        chatRecyclerView.addOnLayoutChangeListener(this::reactToKeyboardPopup);
 
         view.findViewById(R.id.fragment_chat_post_message).setOnClickListener(button -> {
             Message dummyMessage = new Message("Peter", "Ny text igen", (new Date()).getTime());
@@ -64,5 +54,16 @@ public class ChatFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void reactToKeyboardPopup(View view, int left, int top, int right, int bottom,
+                                      int oldLeft, int oldTop, int oldRight, int oldBottom) {
+        if (bottom < oldBottom) {
+            view.postDelayed(this::scrollToBottomOfList, SCROLL_DOWN_DELAY);
+        }
+    }
+
+    private void scrollToBottomOfList() {
+        chatRecyclerView.scrollToPosition(chatRecyclerView.getAdapter().getItemCount() - 1);
     }
 }

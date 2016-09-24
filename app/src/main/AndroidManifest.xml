@@ -30,7 +30,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity" />
-        <activity android:name=".ChatActivity"/>
+        <activity android:name=".ChatActivity"
+                  android:windowSoftInputMode="adjustResize"/>
         <activity xmlns:tools="http://schemas.android.com/tools"
                   android:name="com.facebook.FacebookActivity"
                   android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
