@@ -39,7 +39,7 @@ public class MessageAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return mMessageList.indexOf(i);
+        return mMessageList.get(i);
     }
 
     @Override
