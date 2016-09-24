@@ -58,8 +58,6 @@ public class ChatFragment extends Fragment {
         Client<List<Message>> client = (list) -> chatView.setAdapter(new NewMessageAdapter(list));
         DatabaseHandler.INSTANCE.fetchConversation(client);
 
-//        chatView.setAdapter(new NewMessageAdapter(new ArrayList<Message>()));
-
         view.findViewById(R.id.fragment_chat_post_message).setOnClickListener(button -> {
             Message dummyMessage = new Message("Peter", "Ny text igen", (new Date()).getTime());
             DatabaseHandler.INSTANCE.postMessage(dummyMessage);
