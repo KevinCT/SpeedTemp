@@ -1,5 +1,6 @@
 package com.zweigbergk.speedswede.service;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
@@ -10,6 +11,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Message;
+import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.Client;
 
 import java.util.ArrayList;
@@ -21,12 +23,40 @@ public enum DatabaseHandler {
     public static final String CONVERSATION = "conversation";
     public static final String CHATS = "chats";
 
-    public enum Event {ADDED, MODIFIED, REMOVED, CANCELLED }
-
     private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
     private DatabaseReference fetchChatConversationByUid(String chatUid) {
         return mDatabaseReference.child(CHATS).child(chatUid).child(CONVERSATION);
+    }
+
+    // TODO Create actual implementation
+    public User getLoggedInUser() {
+        return new User() {
+            @Override
+            public String getUid() {
+                return null;
+            }
+
+            @Override
+            public boolean isAnonymous() {
+                return false;
+            }
+
+            @Override
+            public String getDisplayName() {
+                return Constants.TEST_USER_NAME;
+            }
+
+            @Override
+            public Uri getPhotoUrl() {
+                return null;
+            }
+
+            @Override
+            public String getEmail() {
+                return null;
+            }
+        };
     }
 
     public void fetchConversation(String chatUid, Client<List<Message>> client) {
@@ -96,10 +126,10 @@ public enum DatabaseHandler {
 
     public static class DataChange<ObjectType> {
 
-        private final Event mEvent;
+        private final ConversationEvent mEvent;
         private final ObjectType mData;
 
-        DataChange(ObjectType data, Event event) {
+        DataChange(ObjectType data, ConversationEvent event) {
             mData = data;
             mEvent = event;
         }
@@ -108,24 +138,24 @@ public enum DatabaseHandler {
             return mData;
         }
 
-        public Event getEvent() {
+        public ConversationEvent getEvent() {
             return mEvent;
         }
 
         static <ObjectType> DataChange<ObjectType> added(ObjectType data) {
-            return new DataChange<>(data, Event.ADDED);
+            return new DataChange<>(data, ConversationEvent.MESSAGE_ADDED);
         }
 
         static <ObjectType> DataChange<ObjectType> modified(ObjectType data) {
-            return new DataChange<>(data, Event.MODIFIED);
+            return new DataChange<>(data, ConversationEvent.MESSAGE_MODIFIED);
         }
 
         static <ObjectType> DataChange<ObjectType> removed(ObjectType data) {
-            return new DataChange<>(data, Event.REMOVED);
+            return new DataChange<>(data, ConversationEvent.MESSAGE_REMOVED);
         }
 
         static <ObjectType> DataChange<ObjectType> cancelled(ObjectType data) {
-            return new DataChange<>(data, Event.CANCELLED);
+            return new DataChange<>(data, ConversationEvent.INTERRUPED);
         }
 
 
