@@ -1,5 +1,6 @@
 package com.zweigbergk.speedswede.adapter;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.widget.TextView;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Message;
+import com.zweigbergk.speedswede.service.DatabaseHandler.DataChange;
+import com.zweigbergk.speedswede.service.DatabaseHandler.Event;
 
 import java.util.List;
 
@@ -24,32 +27,63 @@ public class NewMessageAdapter extends RecyclerView.Adapter<NewMessageAdapter.Vi
         }
     }
 
+    public void onListChanged(DataChange<Message> change) {
+        Message message = change.getItem();
+        Event event = change.getEvent();
+        int position = mMessages.indexOf(message);
+
+        switch (event) {
+            case ADDED:
+                mMessages.add(message);
+                notifyItemInserted(getItemCount() - 1);
+                break;
+            case MODIFIED:
+                updateMessage(message);
+                notifyItemChanged(position);
+                break;
+            case REMOVED:
+                mMessages.remove(message);
+                notifyItemRemoved(position);
+            case CANCELLED:
+                // TODO
+                //Handle failure to respond to a change in the database, maybe by issuing
+                //another onListChanged() after a certain time using onListChanged(change);
+                break;
+        }
+    }
+
+    private void updateMessage(@NonNull Message message) {
+        for (Message messageInList : mMessages) {
+            if (isSameMessage(messageInList, message)) {
+                messageInList.copyTextFrom(message);
+                notifyDataSetChanged();
+                return;
+            }
+        }
+    }
+
+    private boolean isSameMessage(@NonNull Message message1, @NonNull Message message2) {
+        return message1.equals(message2);
+    }
+
     public NewMessageAdapter(List<Message> messages) {
         mMessages = messages;
     }
 
     @Override
-    public NewMessageAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                           int viewType) {
-        // create a new view
+    public NewMessageAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_message_user, parent, false);
-        // set the view's size, margins, paddings and layout parameters
 
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
         holder.mTextView.setText(mMessages.get(position).getText());
 
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return mMessages.size();

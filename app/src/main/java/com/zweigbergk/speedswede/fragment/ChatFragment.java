@@ -19,7 +19,7 @@ import java.util.List;
 public class ChatFragment extends Fragment {
     private RecyclerView chatRecyclerView;
 
-    private static final int SCROLL_DOWN_DELAY = 10;
+    public static final String DUMMY_CHAT_UID = "Chat123";
 
     public ChatFragment() {
         // Required empty public constructor
@@ -43,20 +43,23 @@ public class ChatFragment extends Fragment {
 
     private void onButtonClick(View view) {
         Message dummyMessage = new Message("Peter", "Ny text igen", (new Date()).getTime());
-        DatabaseHandler.INSTANCE.postMessage(dummyMessage);
+        DatabaseHandler.INSTANCE.postMessageToChat(DUMMY_CHAT_UID, dummyMessage);
     }
 
     private void initializeRecyclerView(View view) {
         chatRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_chat_recycler_view);
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        DatabaseHandler.INSTANCE.fetchConversation(this::setAdapterMessageList);
+        DatabaseHandler.INSTANCE.fetchConversation(DUMMY_CHAT_UID, this::setAdapterMessageList);
         chatRecyclerView.addOnLayoutChangeListener(this::reactToKeyboardPopup);
 
     }
 
     private void setAdapterMessageList(List<Message> list) {
         chatRecyclerView.setAdapter(new NewMessageAdapter(list));
+
+        NewMessageAdapter adapter = (NewMessageAdapter) chatRecyclerView.getAdapter();
+        DatabaseHandler.INSTANCE.registerConversationListener(DUMMY_CHAT_UID, adapter::onListChanged);
     }
 
     private void reactToKeyboardPopup(View view, int left, int top, int right, int bottom,

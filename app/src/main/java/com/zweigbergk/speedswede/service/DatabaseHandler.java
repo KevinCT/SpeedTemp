@@ -13,30 +13,36 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.util.Client;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public enum DatabaseHandler {
     INSTANCE;
 
-    private DatabaseReference mDatabaseReference;
+    public static final String CONVERSATION = "conversation";
+    public static final String CHATS = "chats";
 
-    public void fetchConversation(Client<List<Message>> client) {
-        List<Message> messageList = new ArrayList<>();
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+    public enum Event {ADDED, MODIFIED, REMOVED, CANCELLED }
 
+    private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
-        mDatabaseReference.child("messages").addListenerForSingleValueEvent(new ValueEventListener() {
+    private DatabaseReference fetchChatConversationByUid(String chatUid) {
+        return mDatabaseReference.child(CHATS).child(chatUid).child(CONVERSATION);
+    }
+
+    public void fetchConversation(String chatUid, Client<List<Message>> client) {
+        List<Message> conversation = new ArrayList<>();
+        DatabaseReference conversationReference = fetchChatConversationByUid(chatUid);
+
+        conversationReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Log.d("dataSnapshot: ", snapshot.child("name").getValue().toString());
-                    Message message = new Message(snapshot.child("name").getValue().toString(), snapshot.child("text").getValue().toString());
-                    messageList.add(message);
+                    Message message = snapshot.getValue(Message.class);
+                    conversation.add(message);
                 }
 
-                Log.d("DEBUG", "Supplying! LUL");
-                client.supply(messageList);
+                client.supply(conversation);
             }
 
             @Override
@@ -46,26 +52,26 @@ public enum DatabaseHandler {
         });
     }
 
-    public void registerConversationListener(Client<Message> client) {
+    public void registerConversationListener(String chatUid, Client<DataChange<Message>> client) {
+        DatabaseReference conversationReference = fetchChatConversationByUid(chatUid);
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-
-        databaseReference.child("messages").addChildEventListener(new ChildEventListener() {
+        conversationReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Message message = new Message(dataSnapshot.child("name").getValue().toString(), dataSnapshot.child("text").getValue().toString());
-                client.supply(message);
+                Message message = dataSnapshot.getValue(Message.class);
+                client.supply(DataChange.added(message));
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Message message = new Message(dataSnapshot.child("name").getValue().toString(), dataSnapshot.child("text").getValue().toString());
-                client.supply(message);
+                Message message = dataSnapshot.getValue(Message.class);
+                client.supply(DataChange.modified(message));
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                Message message = dataSnapshot.getValue(Message.class);
+                client.supply(DataChange.removed(message));
             }
 
             @Override
@@ -75,13 +81,51 @@ public enum DatabaseHandler {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.d(Constants.ERROR, databaseError.getMessage());
+                client.supply(DataChange.cancelled(null));
             }
         });
     }
 
-    public void postMessage(Message message) {
-        mDatabaseReference.child("messages").push().setValue(message);
+    public void postMessageToChat(String chatUid, Message message) {
+        mDatabaseReference.child(CHATS).child(chatUid).child(CONVERSATION).push().setValue(message);
+    }
+
+    public static class DataChange<ObjectType> {
+
+        private final Event mEvent;
+        private final ObjectType mData;
+
+        DataChange(ObjectType data, Event event) {
+            mData = data;
+            mEvent = event;
+        }
+
+        public ObjectType getItem() {
+            return mData;
+        }
+
+        public Event getEvent() {
+            return mEvent;
+        }
+
+        static <ObjectType> DataChange<ObjectType> added(ObjectType data) {
+            return new DataChange<>(data, Event.ADDED);
+        }
+
+        static <ObjectType> DataChange<ObjectType> modified(ObjectType data) {
+            return new DataChange<>(data, Event.MODIFIED);
+        }
+
+        static <ObjectType> DataChange<ObjectType> removed(ObjectType data) {
+            return new DataChange<>(data, Event.REMOVED);
+        }
+
+        static <ObjectType> DataChange<ObjectType> cancelled(ObjectType data) {
+            return new DataChange<>(data, Event.CANCELLED);
+        }
+
+
     }
 
 }

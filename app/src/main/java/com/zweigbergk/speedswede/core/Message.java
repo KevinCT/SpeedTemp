@@ -6,6 +6,11 @@ public class Message {
     private String text;
     private final long timeStamp;
 
+    //For JSON de-serialization
+    private Message() {
+        timeStamp = 0;
+    }
+
     public Message(String name, String text, long timeStamp) {
         this.name = name;
         this.text = text;
@@ -30,6 +35,10 @@ public class Message {
 
     public String getText() {
         return text;
+    }
+
+    public void copyTextFrom(Message message) {
+        this.text = message.getText();
     }
 
     public long getTimeStamp() {
