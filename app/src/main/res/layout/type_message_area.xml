@@ -12,7 +12,7 @@
             android:layout_weight="1"
             android:textColorHint="#CFD8DC"
             android:textColor="#CFD8DC"
-            android:hint="Skriv ett meddelande..."
+            android:hint="@string/input_field_hint"
             android:inputType="textNoSuggestions"/>
 
         <ImageView

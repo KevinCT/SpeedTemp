@@ -3,9 +3,9 @@
     <string name="helloM8s">Hallå kompisar</string>
     <string name="title_activity_login">LoginActivity</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="facebook_app_id">616859141821100</string>
     <string name="fb_login_protocol_scheme">fb616859141821100</string>
+
+    <string name="input_field_hint">Skriv ett meddelande...</string>
+    <string name="message_dummy_text">Vi rockar en testningschatt, till världens bästa festningsapp.</string>
 </resources>

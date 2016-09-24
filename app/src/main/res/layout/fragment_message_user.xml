@@ -20,7 +20,7 @@
             android:background="@drawable/rounded_corner_stranger"
             android:layout_weight="1"
             android:padding="16dp"
-            android:text="Vi rockar en testningschatt, till världens bästa festningsapp."
+            android:text="@string/message_dummy_text"
             android:textColor="#000" />
     </LinearLayout>
 
