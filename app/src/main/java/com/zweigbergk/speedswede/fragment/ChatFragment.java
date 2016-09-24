@@ -2,6 +2,8 @@ package com.zweigbergk.speedswede.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.adapter.MessageAdapter;
+import com.zweigbergk.speedswede.adapter.NewMessageAdapter;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
 
@@ -30,7 +33,7 @@ import java.util.List;
 
 public class ChatFragment extends Fragment {
     private MessageAdapter mMessageAdapter;
-    private ListView chatView;
+    private RecyclerView chatView;
 
     public ChatFragment() {
         // Required empty public constructor
@@ -48,9 +51,9 @@ public class ChatFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
         View message = inflater.inflate(R.layout.fragment_message_user, null);
 
-        chatView = (ListView) view.findViewById(R.id.fragment_message_view);
-        mMessageAdapter = new MessageAdapter();
-        chatView.setAdapter(mMessageAdapter);
+        chatView = (RecyclerView) view.findViewById(R.id.fragment_chat_recycler_view);
+        chatView.setLayoutManager(new LinearLayoutManager(getContext()));
+        chatView.setAdapter(new NewMessageAdapter(null));
 
         return view;
     }
