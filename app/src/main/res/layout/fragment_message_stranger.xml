@@ -7,7 +7,7 @@
         android:id="@+id/layout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/spacing_normal"
         android:orientation="horizontal"
         android:layout_marginRight="80dp">
 

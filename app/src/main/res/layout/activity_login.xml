@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/spacing_normal"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingLeft="@dimen/spacing_normal"
+    android:paddingRight="@dimen/spacing_normal"
     android:paddingTop="@dimen/spacing_normal"
     tools:context="com.zweigbergk.speedswede.LoginActivity"
     android:id="@+id/activity_login_root">
