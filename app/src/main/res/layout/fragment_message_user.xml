@@ -5,7 +5,7 @@
     android:id="@+id/fragment_message_user"
               android:layout_marginLeft="@dimen/activity_horizontal_margin"
               android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="@dimen/activity_vertical_margin">
+    android:layout_marginTop="@dimen/spacing_normal">
 
     <LinearLayout
         android:id="@+id/layout4"
