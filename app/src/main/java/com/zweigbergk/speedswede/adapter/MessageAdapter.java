@@ -111,10 +111,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public MessageAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_message_user, parent, false);
+        View view = null;
+        if(viewType==1) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_message_user, parent, false);
+            return new ViewHolder(view);
 
-        return new ViewHolder(view);
+        }
+        else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_message_stranger, parent, false);
+            return new ViewHolder(view);
+        }
     }
 
     @Override
@@ -128,6 +134,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         return mMessages.size();
     }
 
+    @Override
+    public int getItemViewType(int position){
+        //TODO implement actual userid.
+        if(mMessages.get(position).getName().equals("Peter")){
+            return 1;
+
+        }
+        else {
+            return 2;
+
+        }
+
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView mTextView;
@@ -137,4 +157,5 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             mTextView = (TextView) view.findViewById(R.id.message_textview_user);
         }
     }
+
 }
