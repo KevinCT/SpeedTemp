@@ -5,9 +5,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.R;
@@ -20,6 +22,8 @@ import java.util.Date;
 
 public class ChatFragment extends Fragment {
     private RecyclerView chatRecyclerView;
+
+    private EditText messageText;
 
     public static final String DUMMY_CHAT_UID = "Chat123";
 
@@ -44,7 +48,13 @@ public class ChatFragment extends Fragment {
     }
 
     private void onButtonClick(View view) {
-        Message dummyMessage = new Message(Constants.TEST_USER_NAME, "Ny text igen", (new Date()).getTime());
+//        Log.d("asdf", view.findViewById(R.id.fragment_chat_recycler_view));
+
+//        ((RecyclerView) view.findViewById(R.id.fragment_chat_recycler_view)).findViewById(R.id.chat)
+
+
+        String messageText = ((EditText) view.findViewById(R.id.fragment_chat_message_text)).getText().toString();
+        Message dummyMessage = new Message(Constants.TEST_USER_NAME, messageText, (new Date()).getTime());
         DatabaseHandler.INSTANCE.postMessageToChat(DUMMY_CHAT_UID, dummyMessage);
     }
 
