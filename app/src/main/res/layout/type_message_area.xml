@@ -12,7 +12,7 @@
             android:layout_weight="1"
             android:textColorHint="#CFD8DC"
             android:textColor="#CFD8DC"
-            android:hint="@string/input_field_hint"
+            android:hint="@string/hint_message_input_field"
             android:inputType="textNoSuggestions"
             android:id="@+id/fragment_chat_message_text"/>
 
