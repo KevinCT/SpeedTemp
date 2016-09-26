@@ -23,8 +23,6 @@ import java.util.Date;
 public class ChatFragment extends Fragment {
     private RecyclerView chatRecyclerView;
 
-//    private EditText messageText;
-
     public static final String DUMMY_CHAT_UID = "Chat123";
 
     public ChatFragment() {
@@ -49,9 +47,12 @@ public class ChatFragment extends Fragment {
     }
 
     private void onButtonClick(View view) {
-        String messageText = ((EditText) this.getView().findViewById(R.id.fragment_chat_message_text)).getText().toString();
+        EditText chatMessageText = ((EditText) this.getView().findViewById(R.id.fragment_chat_message_text));
+        String messageText = chatMessageText.getText().toString();
+
         Message dummyMessage = new Message(Constants.TEST_USER_NAME, messageText, (new Date()).getTime());
         DatabaseHandler.INSTANCE.postMessageToChat(DUMMY_CHAT_UID, dummyMessage);
+        chatMessageText.setText("");
     }
 
     private void initializeRecyclerView(View view) {
