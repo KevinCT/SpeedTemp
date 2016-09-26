@@ -13,7 +13,8 @@
             android:textColorHint="#CFD8DC"
             android:textColor="#CFD8DC"
             android:hint="@string/input_field_hint"
-            android:inputType="textNoSuggestions"/>
+            android:inputType="textNoSuggestions"
+            android:id="@+id/fragment_chat_message_text"/>
 
         <ImageView
             android:layout_width="match_parent"
