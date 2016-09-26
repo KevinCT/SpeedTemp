@@ -23,10 +23,10 @@
     </style>
 
     <style name="FacebookLoginButtonCustom">
-        <item name="android:textColor">#FFFFFF</item>
+        <!--<item name="android:textColor">#FFFFFF</item>-->
         <item name="android:textSize">21sp</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">#000000</item>
+        <!--<item name="android:background">#000000</item>-->
     </style>
 
 </resources>
