@@ -20,6 +20,8 @@ import java.util.List;
 public enum DatabaseHandler {
     INSTANCE;
 
+    DatabaseHandler() { }
+
     public static final String CONVERSATION = "conversation";
     public static final String CHATS = "chats";
 
