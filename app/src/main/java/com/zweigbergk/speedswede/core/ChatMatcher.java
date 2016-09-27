@@ -28,17 +28,17 @@ public enum ChatMatcher {
     public void pushUser(User user) {
         Log.d("Length before pushing ", "" + mUserPool.size());
         //mUserPool.add(user);
-        DatabaseHandler.INSTANCE.addUserToPool(user);
+        DatabaseHandler.INSTANCE.addUserToPool(user.getUid());
         Log.d("Length after pushing ", "" + mUserPool.size());
     }
 
     /** Remove user from the matching process */
-    public void removeUser(User user) {
-        DatabaseHandler.INSTANCE.removeUserFromPool(user);
+    public void removeUser(String uid) {
+        DatabaseHandler.INSTANCE.removeUserFromPool(uid);
     }
 
     public boolean hasUserInPool(User user) {
-        return mUserPool.contains(user);
+        return mUserPool.contains(user.getUid());
     }
 
     public User getFirstInPool() {
