@@ -17,11 +17,11 @@ public class Chat {
     }
 
     public User getFirstUser() {
-        return null;
+        return mFirstUser;
     }
 
     public User getSecondUser() {
-        return null;
+        return mSecondUser;
     }
 
     public List<Message> getConversation() {
