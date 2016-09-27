@@ -79,6 +79,7 @@ public class ChatListFragment extends Fragment {
 
     public void addUser(View view) {
         ChatMatcher.INSTANCE.pushUser(new UserProfile("Namn", DatabaseHandler.INSTANCE.getLoggedInUser().getUid()));
+        Log.d("Hejhej", "" + ChatMatcher.INSTANCE.match());
 
         for (User user : ChatMatcher.INSTANCE.getPool()) {
             Toast.makeText(getContext(), "User in pool: " + user.toString(), Toast.LENGTH_LONG).show();
