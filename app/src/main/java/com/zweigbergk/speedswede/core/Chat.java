@@ -47,4 +47,20 @@ public class Chat {
     public void postMessage(User user, Message message) throws IllegalArgumentException {
 
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) {
+            return false;
+        }
+        if (!other.getClass().equals(this.getClass())) {
+            return false;
+        }
+        Chat otherChat = (Chat) other;
+
+        return this.getTimeStamp() == otherChat.getTimeStamp() &&
+                this.getFirstUser().equals(otherChat.getFirstUser()) &&
+                this.getSecondUser().equals(otherChat.getSecondUser()) &&
+                this.getConversation().equals(otherChat.getConversation());
+    }
 }
