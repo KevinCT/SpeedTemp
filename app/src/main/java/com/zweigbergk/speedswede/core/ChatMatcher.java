@@ -24,6 +24,7 @@ public enum ChatMatcher {
 
     /** Include user in the matching process */
     public void pushUser(User user) {
+        pullPool();
         mUserPool.add(user);
         DatabaseHandler.INSTANCE.setMatchingPool();
     }
