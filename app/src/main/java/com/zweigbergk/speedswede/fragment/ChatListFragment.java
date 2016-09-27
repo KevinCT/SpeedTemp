@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,7 +16,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.zweigbergk.speedswede.R;
+import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.Message;
+import com.zweigbergk.speedswede.util.TestFactory;
+
+import junit.framework.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,6 +50,11 @@ public class ChatListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
+        view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
         return view;
+    }
+
+    public void addUser(View view) {
+        ChatMatcher.INSTANCE.pushUser(TestFactory.mockUser("tester", "tester"));
     }
 }

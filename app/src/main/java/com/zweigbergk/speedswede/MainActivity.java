@@ -16,7 +16,10 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.presenter.MainPresenter;
+import com.zweigbergk.speedswede.service.DatabaseHandler;
+import com.zweigbergk.speedswede.util.TestFactory;
 import com.zweigbergk.speedswede.view.MainView;
 
 import java.security.MessageDigest;

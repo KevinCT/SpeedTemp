@@ -11,12 +11,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.Constants;
+import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.Client;
 
+import com.zweigbergk.speedswede.core.local.*;
+import com.zweigbergk.speedswede.util.TestFactory;
+
+import junit.framework.Test;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public enum DatabaseHandler {
     INSTANCE;
@@ -25,11 +34,43 @@ public enum DatabaseHandler {
 
     public static final String CONVERSATION = "conversation";
     public static final String CHATS = "chats";
+    public static final String POOL = "pool";
 
     private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
     private DatabaseReference fetchChatConversationByUid(String chatUid) {
         return mDatabaseReference.child(CHATS).child(chatUid).child(CONVERSATION);
+    }
+
+    public List<User> getMatchingPool() {
+        List<String> userStrings = new LinkedList<>();
+
+        mDatabaseReference.child(POOL).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for( DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    userStrings.add((String)snapshot.child("uid").getValue());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //TODO: Convert string from userID to real users somehow.
+        List<User> userList = new LinkedList<>();
+        for(String user : userStrings) {
+            userList.add(TestFactory.mockUser(user, user));
+        }
+
+        return userList;
+    }
+
+    public void setMatchingPool() {
+        List<User> userList = ChatMatcher.INSTANCE.getPool();
+        mDatabaseReference.child(POOL).setValue(userList);
     }
 
     public User getLoggedInUser() {

@@ -19,11 +19,11 @@
         android:id="@+id/addDummyMessage"
         android:layout_centerInParent="true"/>
 
-    <include
-        layout="@layout/fragment_button_search"
+    <Button
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:id="@+id/chat_fragment_new_message_area"
+        android:text="@string/leta_kompis"
+        android:id="@+id/match_button"
         android:layout_below="@+id/addDummyMessage"
         android:layout_centerHorizontal="true" />
 

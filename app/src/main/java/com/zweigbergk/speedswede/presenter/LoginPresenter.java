@@ -9,7 +9,10 @@ import com.facebook.Profile;
 import com.google.firebase.auth.FirebaseAuth;
 import com.zweigbergk.speedswede.ActivityAttachable;
 import com.zweigbergk.speedswede.LoginActivity;
+import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.interactor.LoginInteractor;
+import com.zweigbergk.speedswede.service.DatabaseHandler;
+import com.zweigbergk.speedswede.util.TestFactory;
 import com.zweigbergk.speedswede.view.LoginView;
 
 public class LoginPresenter implements ActivityAttachable, LoginInteractor.LoginListener {
@@ -23,6 +26,7 @@ public class LoginPresenter implements ActivityAttachable, LoginInteractor.Login
         mInteractor = new LoginInteractor();
         mInteractor.setLoginListener(this);
         mInteractor.registerLoginCallback(activity, mView.getLoginButton());
+
 
         if (hasLoggedInUser()) {
             showLoadingScreen();
