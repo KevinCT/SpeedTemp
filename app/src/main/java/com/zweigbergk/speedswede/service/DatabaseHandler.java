@@ -77,11 +77,14 @@ public enum DatabaseHandler {
         });
     }
 
-    public void setMatchingPool() {
-        List<User> userList = ChatMatcher.INSTANCE.getPool();
-        mDatabaseReference.child(POOL).setValue(userList);
+    public void addUserToPool(User user) {
+        mDatabaseReference.child(POOL).child(user.getUid()).setValue(user);
     }
 
+
+    public void removeUserFromPool(User user) {
+        mDatabaseReference.child(POOL).child(user.getUid()).setValue(null);
+    }
     public User getLoggedInUser() {
         return new User() {
             @Override

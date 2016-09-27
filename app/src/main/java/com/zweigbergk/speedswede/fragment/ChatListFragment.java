@@ -57,7 +57,7 @@ public class ChatListFragment extends Fragment {
     }
 
     public void addUser(View view) {
-        ChatMatcher.INSTANCE.pushUser(TestFactory.mockUser("tester", "tester"));
+        ChatMatcher.INSTANCE.pushUser(TestFactory.mockUser("tester2", "tester2"));
 
         for (User user : ChatMatcher.INSTANCE.getPool()) {
             Log.d("User in pool: ", user.toString());
