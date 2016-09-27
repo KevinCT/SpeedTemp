@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -18,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.Message;
+import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.TestFactory;
 
 import junit.framework.Test;
@@ -56,5 +58,12 @@ public class ChatListFragment extends Fragment {
 
     public void addUser(View view) {
         ChatMatcher.INSTANCE.pushUser(TestFactory.mockUser("tester", "tester"));
+
+        for (User user : ChatMatcher.INSTANCE.getPool()) {
+            Log.d("User in pool: ", user.toString());
+            Toast.makeText(getContext(), "User in pool: " + user.toString(), Toast.LENGTH_LONG).show();
+
+        }
+
     }
 }

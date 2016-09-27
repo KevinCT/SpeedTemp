@@ -17,11 +17,5 @@ public class ChatPresenter implements ChatActivity.ViewListener {
     public ChatPresenter(ChatView view) {
         mView = view;
         mInteractor = new ChatInteractor();
-
-        ChatMatcher.INSTANCE.pushUser(TestFactory.mockUser("Kompis1", "Kompis1"));
-        ChatMatcher.INSTANCE.pushUser(TestFactory.mockUser("Kompis2", "Kompis2"));
-        ChatMatcher.INSTANCE.pushUser(TestFactory.mockUser("Kompis3", "Kompis3"));
-        System.out.println("Im here brah");
-        DatabaseHandler.INSTANCE.setMatchingPool();
     }
 }

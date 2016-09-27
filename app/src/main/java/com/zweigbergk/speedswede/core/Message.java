@@ -58,7 +58,6 @@ public class Message {
 
         Message otherMessage = (Message) other;
 
-        // todo: Change this to use getId instead /Andreas
         return otherMessage.getUid().equals(this.getUid())
                 && otherMessage.getTimeStamp() == this.getTimeStamp();
     }

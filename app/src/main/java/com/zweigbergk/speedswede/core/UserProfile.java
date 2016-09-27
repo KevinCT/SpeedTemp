@@ -46,4 +46,9 @@ public class UserProfile implements User {
     public int hashCode() {
         return mUid.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return this.getUid();
+    }
 }

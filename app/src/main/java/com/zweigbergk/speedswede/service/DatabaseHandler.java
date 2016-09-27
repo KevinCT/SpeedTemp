@@ -14,6 +14,7 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.util.Client;
 
 import com.zweigbergk.speedswede.core.local.*;
@@ -35,6 +36,8 @@ public enum DatabaseHandler {
     public static final String CONVERSATION = "conversation";
     public static final String CHATS = "chats";
     public static final String POOL = "pool";
+    public static final String USER_NAME = "displayName";
+    public static final String UID = "uid";
 
     private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -42,15 +45,29 @@ public enum DatabaseHandler {
         return mDatabaseReference.child(CHATS).child(chatUid).child(CONVERSATION);
     }
 
-    public List<User> getMatchingPool() {
+    public void getMatchingPool(Client<User> client) {
         List<String> userStrings = new LinkedList<>();
 
-        mDatabaseReference.child(POOL).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabaseReference.child(POOL).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for( DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    userStrings.add((String)snapshot.child("uid").getValue());
-                }
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                User user = new UserProfile((String) dataSnapshot.child(USER_NAME).getValue(), (String) dataSnapshot.child(UID).getValue());
+                client.supply(user);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
@@ -58,14 +75,6 @@ public enum DatabaseHandler {
 
             }
         });
-
-        //TODO: Convert string from userID to real users somehow.
-        List<User> userList = new LinkedList<>();
-        for(String user : userStrings) {
-            userList.add(TestFactory.mockUser(user, user));
-        }
-
-        return userList;
     }
 
     public void setMatchingPool() {

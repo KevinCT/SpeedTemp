@@ -1,5 +1,7 @@
 package com.zweigbergk.speedswede.core;
 
+import android.util.Log;
+
 import com.zweigbergk.speedswede.service.DatabaseHandler;
 
 import java.util.LinkedList;
@@ -10,22 +12,29 @@ public enum ChatMatcher {
 
     private List<User> mUserPool;
 
+
+
     ChatMatcher() {
-        mUserPool = DatabaseHandler.INSTANCE.getMatchingPool();
-        if(mUserPool == null) {
-            mUserPool = new LinkedList<>();
-            DatabaseHandler.INSTANCE.setMatchingPool();
-        }
 
+        mUserPool = new LinkedList<>();
 
-        //DatabaseHandler.INSTANCE.registerConversationListener(DUMMY_CHAT_UID, adapter::onListChanged);
+        DatabaseHandler.INSTANCE.getMatchingPool(this::handleUser);
+
     }
 
 
+    private void handleUser(User user) {
+        Log.d("User: ", user.getUid());
+    }
+
     /** Include user in the matching process */
     public void pushUser(User user) {
+        Log.d("pool before", ""+mUserPool.size());
+        pullPool();
+        Log.d("pool after", ""+mUserPool.size());
+
         mUserPool.add(user);
-        DatabaseHandler.INSTANCE.setMatchingPool();
+//        DatabaseHandler.INSTANCE.setMatchingPool();
     }
 
     /** Remove user from the matching process */
@@ -75,6 +84,6 @@ public enum ChatMatcher {
     }
 
     private void pullPool() {
-            mUserPool = DatabaseHandler.INSTANCE.getMatchingPool();
+//        mUserPool = DatabaseHandler.INSTANCE.getMatchingPool();
     }
 }
