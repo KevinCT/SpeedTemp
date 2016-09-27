@@ -18,7 +18,7 @@ public class UserData {
 
     public Chat getChatByUid(String uid) {
         for (Chat chat : chats) {
-            if (chat.getUid().equals(uid))
+            if (chat.getId().equals(uid))
                 return chat;
         }
 
