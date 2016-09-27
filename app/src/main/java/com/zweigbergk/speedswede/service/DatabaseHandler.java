@@ -59,29 +59,6 @@ public enum DatabaseHandler {
         };
     }
 
-    public void fetchConversation(String chatUid, Client<List<Message>> client) {
-        List<Message> conversation = new ArrayList<>();
-        DatabaseReference conversationReference = fetchChatConversationByUid(chatUid);
-
-        conversationReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Log.d("dataSnapshot: ", snapshot.child("name").getValue().toString());
-                    Message message = snapshot.getValue(Message.class);
-                    conversation.add(message);
-                }
-
-                client.supply(conversation);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d(Constants.ERROR, databaseError.getMessage());
-            }
-        });
-    }
-
     public void registerConversationListener(String chatUid, Client<DataChange<Message>> client) {
         DatabaseReference conversationReference = fetchChatConversationByUid(chatUid);
 
