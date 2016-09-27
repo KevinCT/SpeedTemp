@@ -25,8 +25,8 @@ public class Message {
         this.name = name;
     }
 
-    public void setMessage(String message){
-        this.text = message;
+    public void setText(String text){
+        this.text = text;
     }
 
     public String getName() {
