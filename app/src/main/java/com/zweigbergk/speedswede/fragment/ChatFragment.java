@@ -40,7 +40,7 @@ public class ChatFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
         mCurrentChatId = "privateChatUser_"+DatabaseHandler.INSTANCE.getLoggedInUser().getUid();
-//        Log.d(Constants.DEBUG, "Current chat id: "+mCurrentChatId);
+//        mCurrentChatId = "privateChatUser_742nxCA9qvUF4ZIRGqA9sWfgooH2"; // Andreas facebook-id
 
         initializeRecyclerView(view);
 
