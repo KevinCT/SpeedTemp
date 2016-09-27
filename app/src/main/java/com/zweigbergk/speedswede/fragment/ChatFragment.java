@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.adapter.MessageAdapter;
@@ -49,8 +50,8 @@ public class ChatFragment extends Fragment {
         EditText chatMessageText = ((EditText) this.getView().findViewById(R.id.fragment_chat_message_text));
         String messageText = chatMessageText.getText().toString();
 
-        Message dummyMessage = new Message(Constants.TEST_USER_NAME, messageText, (new Date()).getTime());
-        DatabaseHandler.INSTANCE.postMessageToChat(DUMMY_CHAT_UID, dummyMessage);
+        Message message = new Message(FirebaseAuth.getInstance().getCurrentUser().getUid(),messageText,(new Date()).getTime());
+        DatabaseHandler.INSTANCE.postMessageToChat(DUMMY_CHAT_UID, message);
         chatMessageText.setText("");
     }
 

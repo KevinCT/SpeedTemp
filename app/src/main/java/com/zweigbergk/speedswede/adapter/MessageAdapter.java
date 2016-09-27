@@ -1,5 +1,6 @@
 package com.zweigbergk.speedswede.adapter;
 
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +10,9 @@ import android.widget.TextView;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Message;
+import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.service.ConversationEvent;
+import com.zweigbergk.speedswede.service.DatabaseHandler;
 import com.zweigbergk.speedswede.service.DatabaseHandler.DataChange;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.Executable;
@@ -21,11 +24,12 @@ import java.util.Map;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
     private List<Message> mMessages;
-
+    private User mUser;
     private Map<ConversationEvent, List<Client<Message>>> eventCallbacks;
 
 
     public MessageAdapter(List<Message> messages) {
+        mUser= DatabaseHandler.INSTANCE.getLoggedInUser();
         eventCallbacks = new HashMap<>();
         mMessages = messages;
 
@@ -111,7 +115,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public MessageAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = null;
+        View view;
         if(viewType==1) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_message_user, parent, false);
             return new ViewHolder(view);
@@ -136,8 +140,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public int getItemViewType(int position){
-        //TODO implement actual userid.
-        if(mMessages.get(position).getUid().equals("Peter")){
+        if(mMessages.get(position).getUid().equals(mUser.getUid())){
             return 1;
 
         }
