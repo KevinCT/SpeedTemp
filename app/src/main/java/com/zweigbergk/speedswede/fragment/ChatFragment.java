@@ -4,15 +4,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.adapter.MessageAdapter;
 import com.zweigbergk.speedswede.core.Message;
@@ -25,6 +23,8 @@ public class ChatFragment extends Fragment {
     private RecyclerView chatRecyclerView;
 
     public static final String DUMMY_CHAT_UID = "Chat123";
+
+    public String mCurrentChatId;
 
     public ChatFragment() {
         // Required empty public constructor
@@ -39,6 +39,9 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
+        mCurrentChatId = "privateChatUser_"+DatabaseHandler.INSTANCE.getLoggedInUser().getUid();
+//        Log.d(Constants.DEBUG, "Current chat id: "+mCurrentChatId);
+
         initializeRecyclerView(view);
 
         view.findViewById(R.id.fragment_chat_post_message).setOnClickListener(this::onButtonClick);
@@ -51,7 +54,8 @@ public class ChatFragment extends Fragment {
         String messageText = chatMessageText.getText().toString();
 
         Message message = new Message(DatabaseHandler.INSTANCE.getLoggedInUser().getUid(),messageText,(new Date()).getTime());
-        DatabaseHandler.INSTANCE.postMessageToChat(DUMMY_CHAT_UID, message);
+        DatabaseHandler.INSTANCE.postMessageToChat(mCurrentChatId, message);
+//        DatabaseHandler.INSTANCE.postMessageToChat(DUMMY_CHAT_UID, message);
         chatMessageText.setText("");
 
     }
@@ -62,7 +66,7 @@ public class ChatFragment extends Fragment {
 
         MessageAdapter adapter = new MessageAdapter();
         chatRecyclerView.setAdapter(adapter);
-        DatabaseHandler.INSTANCE.registerConversationListener(DUMMY_CHAT_UID, adapter::onListChanged);
+        DatabaseHandler.INSTANCE.registerConversationListener(mCurrentChatId, adapter::onListChanged);
 
         adapter.addEventCallback(ConversationEvent.MESSAGE_ADDED, this::smoothScrollToBottomOfList);
     }
