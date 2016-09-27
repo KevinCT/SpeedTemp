@@ -78,7 +78,7 @@ public enum DatabaseHandler {
     }
 
     public void addUserToPool(User user) {
-        mDatabaseReference.child(POOL).child(user.getUid()).setValue(user);
+        mDatabaseReference.child(POOL).child(user.getUid()).setValue(user.getUid());
     }
 
 
