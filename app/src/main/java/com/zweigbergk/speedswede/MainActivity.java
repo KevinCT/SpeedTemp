@@ -15,6 +15,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.zweigbergk.speedswede.presenter.MainPresenter;
 import com.zweigbergk.speedswede.view.MainView;
 
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         printKeyHash(this);
 
