@@ -3,6 +3,7 @@ package com.zweigbergk.speedswede.service;
 import android.net.Uri;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,32 +32,31 @@ public enum DatabaseHandler {
         return mDatabaseReference.child(CHATS).child(chatUid).child(CONVERSATION);
     }
 
-    // TODO Create actual implementation
     public User getLoggedInUser() {
         return new User() {
             @Override
             public String getUid() {
-                return null;
+                return FirebaseAuth.getInstance().getCurrentUser().getUid();
             }
 
             @Override
             public boolean isAnonymous() {
-                return false;
+                return FirebaseAuth.getInstance().getCurrentUser().isAnonymous();
             }
 
             @Override
             public String getDisplayName() {
-                return Constants.TEST_USER_NAME;
+                return FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
             }
 
             @Override
             public Uri getPhotoUrl() {
-                return null;
+                return FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
             }
 
             @Override
             public String getEmail() {
-                return null;
+                return FirebaseAuth.getInstance().getCurrentUser().getEmail();
             }
         };
     }
