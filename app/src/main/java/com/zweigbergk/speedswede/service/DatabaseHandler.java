@@ -4,29 +4,22 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
 import com.zweigbergk.speedswede.Constants;
-import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.util.Client;
 
-import com.zweigbergk.speedswede.core.local.*;
-import com.zweigbergk.speedswede.util.TestFactory;
-
-import junit.framework.Test;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public enum DatabaseHandler {
     INSTANCE;
@@ -85,6 +78,22 @@ public enum DatabaseHandler {
     public void removeUserFromPool(User user) {
         mDatabaseReference.child(POOL).child(user.getUid()).setValue(null);
     }
+
+    public String getActiveUserId() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+            for (UserInfo profile : user.getProviderData()) {
+                String uid = profile.getUid();
+                if (uid != null)
+                    return uid;
+            }
+        }
+
+        return null;
+    }
+
+    // TODO Create actual implementation
     public User getLoggedInUser() {
         return new User() {
             @Override
@@ -190,8 +199,6 @@ public enum DatabaseHandler {
         static <ObjectType> DataChange<ObjectType> cancelled(ObjectType data) {
             return new DataChange<>(data, ConversationEvent.INTERRUPED);
         }
-
-
     }
 
 }

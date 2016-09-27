@@ -1,18 +1,15 @@
 package com.zweigbergk.speedswede.presenter;
 
-
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.facebook.AccessToken;
-import com.facebook.Profile;
-import com.google.firebase.auth.FirebaseAuth;
+
 import com.zweigbergk.speedswede.ActivityAttachable;
 import com.zweigbergk.speedswede.LoginActivity;
-import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.interactor.LoginInteractor;
-import com.zweigbergk.speedswede.service.DatabaseHandler;
-import com.zweigbergk.speedswede.util.TestFactory;
 import com.zweigbergk.speedswede.view.LoginView;
 
 public class LoginPresenter implements ActivityAttachable, LoginInteractor.LoginListener {
@@ -20,13 +17,25 @@ public class LoginPresenter implements ActivityAttachable, LoginInteractor.Login
     private LoginView mView;
     private LoginInteractor mInteractor;
 
-    public LoginPresenter(LoginActivity activity) {
+    public LoginPresenter(LoginActivity activity, ConnectionCheck networkCheck) {
         mView = activity;
 
         mInteractor = new LoginInteractor();
         mInteractor.setLoginListener(this);
         mInteractor.registerLoginCallback(activity, mView.getLoginButton());
 
+        SharedPreferences localState = PreferenceManager.getDefaultSharedPreferences(activity);
+        String state = localState.getString(ChatPresenter.USER_ID, null);
+        Log.d("DEBUG", state == null ? "null" : state);
+
+
+        if (!networkCheck.hasConnection()) {
+            //We have user ID from old session...
+            if (state != null) {
+                Log.d("DEBUG", "Starting ChatActivity with old user session ID");
+                mView.startChatActivity();
+            }
+        }
 
         if (hasLoggedInUser()) {
             showLoadingScreen();

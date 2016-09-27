@@ -1,6 +1,9 @@
 package com.zweigbergk.speedswede;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -34,7 +37,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
         mProgressCircle = (ProgressBar) findViewById(R.id.login_progress_circle);
 
-        mPresenter = new LoginPresenter(this);
+        mPresenter = new LoginPresenter(this, this::isNetworkAvailable);
     }
 
     @Override
@@ -61,6 +64,13 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @Override
     public LoginButton getLoginButton() {
         return mLoginButton;
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Override
