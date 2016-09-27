@@ -41,4 +41,9 @@ public class UserProfile implements User {
     public String getEmail() {
         return null;
     }
+
+    @Override
+    public int hashCode() {
+        return mUid.hashCode();
+    }
 }

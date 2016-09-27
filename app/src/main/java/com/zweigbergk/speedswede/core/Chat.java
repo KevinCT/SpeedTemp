@@ -16,9 +16,12 @@ public class Chat {
         mSecondUser = secondUser;
 
         mConversation = new ArrayList<>();
-        mId = Long.toString(firstUser.getUid().hashCode() * 17 + secondUser.getUid().hashCode() * 31);
-
         mTimeStamp = (new Date()).getTime();
+
+        mId = Long.toString(firstUser.hashCode() * 5 +
+                secondUser.hashCode() * 7 +
+                mTimeStamp);
+
     }
     public boolean includesUser(User user) {
         return mFirstUser.equals(user) || mSecondUser.equals(user);
