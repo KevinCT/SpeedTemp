@@ -18,7 +18,7 @@ public enum ChatMatcher {
         }
 
 
-        DatabaseHandler.INSTANCE.registerConversationListener(DUMMY_CHAT_UID, adapter::onListChanged);
+        //DatabaseHandler.INSTANCE.registerConversationListener(DUMMY_CHAT_UID, adapter::onListChanged);
     }
 
 
