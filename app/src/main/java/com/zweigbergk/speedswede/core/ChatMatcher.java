@@ -26,10 +26,7 @@ public enum ChatMatcher {
     }
 
     public boolean hasUserInPool(User user) {
-        if(mUserPool.contains(user)) {
-            return true;
-        }
-        return false;
+        return mUserPool.contains(user);
     }
 
     public User getFirstInPool() {

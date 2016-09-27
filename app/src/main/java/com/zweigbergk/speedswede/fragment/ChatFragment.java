@@ -42,7 +42,6 @@ public class ChatFragment extends Fragment {
 
         view.findViewById(R.id.fragment_chat_post_message).setOnClickListener(this::onButtonClick);
 
-
         return view;
     }
 
@@ -68,7 +67,7 @@ public class ChatFragment extends Fragment {
 
     private void smoothScrollToBottomOfList(Message message) {
         //Only scroll to the bottom if the new message was posted by us.
-        if (message.getName().equals(DatabaseHandler.INSTANCE.getLoggedInUser().getDisplayName())) {
+        if (message.getUid().equals(DatabaseHandler.INSTANCE.getLoggedInUser().getDisplayName())) {
             chatRecyclerView.post(() -> chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount() - 1));
         }
     }

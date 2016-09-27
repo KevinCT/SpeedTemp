@@ -3,15 +3,12 @@ package com.zweigbergk.speedswede.core.local;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
 
-public enum LocalStorage {
-    INSTANCE;
+public class LocalStorage {
 
-
-    void saveChat(Chat chat) {
-
+    public static void saveChat(Chat chat) {
     }
 
-    UserData getUserData(User user) {
+    public static UserData getUserData(User user) {
         return null;
     }
 }

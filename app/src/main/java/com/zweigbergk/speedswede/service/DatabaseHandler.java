@@ -63,6 +63,7 @@ public enum DatabaseHandler {
 
     public void registerConversationListener(String chatUid, Client<DataChange<Message>> client) {
         DatabaseReference conversationReference = fetchChatConversationByUid(chatUid);
+        conversationReference.keepSynced(true);
 
         conversationReference.addChildEventListener(new ChildEventListener() {
             // NOTE: onChildAdded() runs once for every existing child at the time of attaching.
