@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede;
+package com.zweigbergk.speedswede.coreTest;
 
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
