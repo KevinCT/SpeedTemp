@@ -40,7 +40,11 @@ public class Chat {
     }
 
     public List<Message> getConversation() {
-        return null;
+        List<Message> conversationClone = new ArrayList<>();
+        for (Message m : mConversation) {
+            conversationClone.add(m.clone());
+        }
+        return conversationClone;
     }
     
     public String getId() {
@@ -48,7 +52,10 @@ public class Chat {
     }
 
     public void postMessage(User user, Message message) throws IllegalArgumentException {
-
+        if (!includesUser(user)) {
+            throw new IllegalArgumentException("User provided ["+user.getUid()+"] is not a member of this chat.");
+        }
+        mConversation.add(message);
     }
 
     @Override

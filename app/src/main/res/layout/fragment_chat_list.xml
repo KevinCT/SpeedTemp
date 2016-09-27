@@ -5,10 +5,26 @@
     tools:context="com.zweigbergk.speedswede.fragment.ChatFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="CHAT LIST FRAGMENT"
         android:id="@+id/protein" />
+
+    <Button
+        android:text="Add dummy message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addDummyMessage"
+        android:layout_centerInParent="true"/>
+
+    <include
+        layout="@layout/fragment_button_search"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/chat_fragment_new_message_area"
+        android:layout_below="@+id/addDummyMessage"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

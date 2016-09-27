@@ -24,7 +24,7 @@ public class LocalStorageTest {
         sir = TestFactory.mockUser(TestFactory.USER_1_NAME, TestFactory.USER_1_ID);
         lord = TestFactory.mockUser(TestFactory.USER_2_NAME, TestFactory.USER_2_ID);
 
-        ChatMatcher.INSTANCE.reset();
+        ChatMatcher.INSTANCE.clear();
     }
 
     @Test

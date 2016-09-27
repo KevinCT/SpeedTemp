@@ -25,12 +25,12 @@ public class ChatMatcherTest {
 
         chat = new Chat(sir, lord);
 
-        ChatMatcher.INSTANCE.reset();
+        ChatMatcher.INSTANCE.clear();
     }
 
     @Test
     public void addUser() {
-        matcher.addUser(sir);
+        matcher.pushUser(sir);
 
         assertTrue(matcher.hasUserInPool(sir));
     }
@@ -39,36 +39,17 @@ public class ChatMatcherTest {
     public void hasUserInPool() {
         assertFalse(matcher.hasUserInPool(sir));
 
-        matcher.addUser(sir);
+        matcher.pushUser(sir);
 
         assertTrue(matcher.hasUserInPool(sir));
     }
 
     @Test
     public void removeUser() {
-        matcher.addUser(sir);
+        matcher.pushUser(sir);
 
         matcher.removeUser(sir);
 
         assertFalse(matcher.hasUserInPool(sir));
-    }
-
-    @Test
-    public void getUserPoolSize() {
-        assertTrue(matcher.getUserPoolSize() == 0);
-
-        matcher.addUser(sir);
-
-        assertTrue(matcher.getUserPoolSize() == 1);
-
-        matcher.removeUser(sir);
-
-        assertTrue(matcher.getUserPoolSize() == 0);
-    }
-
-    @Test
-    public void reset() {
-        matcher.reset();
-        assertTrue(matcher.getUserPoolSize() == 0);
     }
 }

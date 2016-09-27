@@ -2,6 +2,7 @@ package com.zweigbergk.speedswede.core;
 
 import java.util.Date;
 public class Message {
+
     private String uid;
     private String text;
     private final long timeStamp;
@@ -60,6 +61,10 @@ public class Message {
         // todo: Change this to use getId instead /Andreas
         return otherMessage.getUid().equals(this.getUid())
                 && otherMessage.getTimeStamp() == this.getTimeStamp();
+    }
+
+    public Message clone() {
+        return new Message(uid, text, timeStamp);
     }
 
 }
