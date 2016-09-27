@@ -1,11 +1,7 @@
 package com.zweigbergk.speedswede;
 
-import android.app.Activity;
-import android.util.Log;
-
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
-import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.Test;
 

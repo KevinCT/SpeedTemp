@@ -20,7 +20,6 @@ public enum ChatMatcher {
 
 
     private void handleUser(User user) {
-        Log.d("User: ", user.getUid());
         mUserPool.add(user);
     }
 
