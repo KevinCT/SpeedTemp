@@ -17,6 +17,7 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.util.Executable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -121,6 +122,28 @@ public enum DatabaseHandler {
                 return FirebaseAuth.getInstance().getCurrentUser().getEmail();
             }
         };
+    }
+
+    public void onGetConnectionStatus(Client<Boolean> client) {
+        DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+        connectedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (connected) {
+                    System.out.println("connected");
+                } else {
+                    System.out.println("not connected");
+                }
+
+                client.supply(connected);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                System.err.println("Listener was cancelled");
+            }
+        });
     }
 
     public void registerConversationListener(String chatUid, Client<DataChange<Message>> client) {

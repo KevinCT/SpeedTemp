@@ -1,55 +1,62 @@
 package com.zweigbergk.speedswede.presenter;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
 
 import com.facebook.AccessToken;
 
 import com.zweigbergk.speedswede.ActivityAttachable;
 import com.zweigbergk.speedswede.LoginActivity;
 import com.zweigbergk.speedswede.interactor.LoginInteractor;
-import com.zweigbergk.speedswede.view.LoginView;
+import com.zweigbergk.speedswede.service.DatabaseHandler;
+import com.zweigbergk.speedswede.service.LocalStorage;
 
 public class LoginPresenter implements ActivityAttachable, LoginInteractor.LoginListener {
 
-    private LoginView mView;
+    private LoginActivity mActivity;
     private LoginInteractor mInteractor;
 
-    public LoginPresenter(LoginActivity activity, ConnectionCheck networkCheck) {
-        mView = activity;
+    public LoginPresenter(LoginActivity activity) {
+        mActivity = activity;
 
         mInteractor = new LoginInteractor();
         mInteractor.setLoginListener(this);
-        mInteractor.registerLoginCallback(activity, mView.getLoginButton());
+        mInteractor.registerLoginCallback(mActivity, activity.getLoginButton());
 
-        SharedPreferences localState = PreferenceManager.getDefaultSharedPreferences(activity);
-        String state = localState.getString(ChatPresenter.USER_ID, null);
-        Log.d("DEBUG", state == null ? "null" : state);
+        DatabaseHandler.INSTANCE.onGetConnectionStatus(this::handleAutomaticLogin);
 
+        mActivity.onLoginClick(this::changeToLoadingScreen);
+    }
 
-        if (!networkCheck.hasConnection()) {
-            //We have user ID from old session...
-            if (state != null) {
-                Log.d("DEBUG", "Starting ChatActivity with old user session ID");
-                mView.startChatActivity();
-            }
-        }
-
-        if (hasLoggedInUser()) {
+    private void changeToLoadingScreen(View button) {
+        if (!hasLoggedInUser()) {
+            //LoginButton handles login stuff, we just show loading screen below the
+            // facebook stuff
             showLoadingScreen();
-            AccessToken token = AccessToken.getCurrentAccessToken();
-            mInteractor.handleFacebookAccessToken(activity, token);
-            }
+        } else {
+            Log.d("DEBUG", "We have AccessToken. Do nothing.");
+        }
+    }
 
-        mView.onLoginClick(view -> {
-            if (!hasLoggedInUser()) {
-                showLoadingScreen();
-            } else {
-                Log.d("DEBUG", "We have AccessToken. Do nothing.");
+    private void handleAutomaticLogin(boolean connected) {
+        if (connected) {
+            if (hasLoggedInUser()) {
+                AccessToken token = AccessToken.getCurrentAccessToken();
+                loginWithToken(token);
             }
-        });
+        } else {
+            loginInOfflineMode();
+        }
+    }
+
+    private void loginWithToken(AccessToken token) {
+        showLoadingScreen();
+        mInteractor.handleFacebookAccessToken(mActivity, token);
+    }
+
+    private void loginInOfflineMode() {
+        LocalStorage.INSTANCE.loadSavedUserId(mActivity);
     }
 
     private boolean hasLoggedInUser() {
@@ -57,13 +64,13 @@ public class LoginPresenter implements ActivityAttachable, LoginInteractor.Login
     }
 
     private void showLoadingScreen() {
-        mView.showProgressCircle();
-        mView.hideContent();
+        mActivity.showProgressCircle();
+        mActivity.hideContent();
     }
 
     @Override
     public void onLogin() {
-        mView.startChatActivity();
+        mActivity.startChatActivity();
     }
 
     @Override

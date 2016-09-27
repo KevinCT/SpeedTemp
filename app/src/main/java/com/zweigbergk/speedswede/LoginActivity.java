@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 
 import com.facebook.login.widget.LoginButton;
 import com.zweigbergk.speedswede.presenter.LoginPresenter;
+import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.view.LoginView;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
@@ -37,7 +38,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
         mProgressCircle = (ProgressBar) findViewById(R.id.login_progress_circle);
 
-        mPresenter = new LoginPresenter(this, this::isNetworkAvailable);
+        mPresenter = new LoginPresenter(this);
     }
 
     @Override
@@ -64,13 +65,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @Override
     public LoginButton getLoginButton() {
         return mLoginButton;
-    }
-
-    public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Override
