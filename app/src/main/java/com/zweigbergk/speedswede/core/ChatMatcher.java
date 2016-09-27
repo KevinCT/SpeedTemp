@@ -15,25 +15,26 @@ public enum ChatMatcher {
     ChatMatcher() {
         mUserPool = new LinkedList<>();
         DatabaseHandler.INSTANCE.getMatchingPool(this::handleUser);
+
     }
 
 
     private void handleUser(User user) {
         Log.d("User: ", user.getUid());
+        mUserPool.add(user);
     }
 
     /** Include user in the matching process */
     public void pushUser(User user) {
-        mUserPool.add(user);
-        DatabaseHandler.INSTANCE.setMatchingPool();
+        Log.d("Length before pushing ", "" + mUserPool.size());
+        //mUserPool.add(user);
+        DatabaseHandler.INSTANCE.addUserToPool(user);
+        Log.d("Length after pushing ", "" + mUserPool.size());
     }
 
     /** Remove user from the matching process */
     public void removeUser(User user) {
-        if(mUserPool.contains(user)) {
-            mUserPool.remove(user);
-        }
-        DatabaseHandler.INSTANCE.setMatchingPool();
+        DatabaseHandler.INSTANCE.removeUserFromPool(user);
     }
 
     public boolean hasUserInPool(User user) {
@@ -62,7 +63,6 @@ public enum ChatMatcher {
 
     public void clear() {
         mUserPool.clear();
-        DatabaseHandler.INSTANCE.setMatchingPool();
     }
 
     public List<User> getPool() {
