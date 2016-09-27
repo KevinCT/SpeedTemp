@@ -77,13 +77,13 @@ public enum DatabaseHandler {
         });
     }
 
-    public void addUserToPool(User user) {
-        mDatabaseReference.child(POOL).child(user.getUid()).setValue(user.getUid());
+    public void addUserToPool(String uid) {
+        mDatabaseReference.child(POOL).child(uid).setValue(uid);
     }
 
 
-    public void removeUserFromPool(User user) {
-        mDatabaseReference.child(POOL).child(user.getUid()).setValue(null);
+    public void removeUserFromPool(String uid) {
+        mDatabaseReference.child(POOL).child(uid).removeValue();
     }
     public User getLoggedInUser() {
         return new User() {
