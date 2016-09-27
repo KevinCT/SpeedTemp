@@ -3,6 +3,7 @@ package com.zweigbergk.speedswede.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.StringBuilderPrinter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.service.DatabaseHandler;
 import com.zweigbergk.speedswede.util.TestFactory;
 
 import junit.framework.Test;
@@ -53,7 +55,20 @@ public class ChatListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
+
+        this.updateDebugArea((TextView) view.findViewById(R.id.fragment_chat_list_debug_area));
+
         return view;
+    }
+
+    private void updateDebugArea(TextView debugArea) {
+        StringBuilder usersInPool = new StringBuilder();
+
+
+        DatabaseHandler.INSTANCE.getMatchingPool(user -> usersInPool.append(user.getUid() + "\n"));
+
+        debugArea.setText("Users in pool:\n" + usersInPool.toString());
+
     }
 
     public void addUser(View view) {

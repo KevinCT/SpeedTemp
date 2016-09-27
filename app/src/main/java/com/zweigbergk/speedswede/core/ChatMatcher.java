@@ -12,14 +12,9 @@ public enum ChatMatcher {
 
     private List<User> mUserPool;
 
-
-
     ChatMatcher() {
-
         mUserPool = new LinkedList<>();
-
         DatabaseHandler.INSTANCE.getMatchingPool(this::handleUser);
-
     }
 
 

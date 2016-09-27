@@ -9,8 +9,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="CHAT LIST FRAGMENT"
-        android:id="@+id/protein" />
+        android:text="DEBUG AREA"
+        android:id="@+id/fragment_chat_list_debug_area" />
 
     <Button
         android:text="Add dummy message"
