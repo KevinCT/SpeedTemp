@@ -14,14 +14,25 @@ public enum ChatMatcher {
 
 
     /** Include user in the matching process */
-    public void includeUser(User user) {
+    public void addUser(User user) {
+        mUserPool.add(user);
     }
 
     /** Remove user from the matching process */
     public void removeUser(User user) {
+        mUserPool.remove(user);
     }
 
     public boolean hasUserInPool(User user) {
-        return false;
+        return mUserPool.contains(user);
+    }
+
+    /** Reset to initial state */
+    public void reset() {
+        mUserPool = new LinkedList<>();
+    }
+
+    public int getUserPoolSize() {
+        return mUserPool.size();
     }
 }

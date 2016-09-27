@@ -16,4 +16,12 @@ public class UserData {
         return chats;
     }
 
+    public Chat getChatByUid(String uid) {
+        for (Chat chat : chats) {
+            if (chat.getUid().equals(uid))
+                return chat;
+        }
+
+        return null;
+    }
 }

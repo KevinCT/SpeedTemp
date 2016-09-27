@@ -16,20 +16,20 @@ public class MessageTest {
     @Before
     public void initialize() {
         this.timeStamp = (new Date()).getTime();
-        this.message = new Message("initialName", "initialMessage", timeStamp);
+        this.message = new Message("initialUid", "initialMessage", timeStamp);
     }
 
     @Test
     public void initialMessageContent() {
-        assertTrue(this.message.getName().equals("initialName") &&
+        assertTrue(this.message.getUid().equals("initialUid") &&
             this.message.getText().equals("initialMessage"));
     }
 
     @Test
-    public void setGetName() {
-        String testName = "testName";
-        this.message.setName(testName);
-        assertTrue(this.message.getName().equals(testName));
+    public void setGetUid() {
+        String testUid = "testUid";
+        this.message.setUid(testUid);
+        assertTrue(this.message.getUid().equals(testUid));
     }
 
     @Test

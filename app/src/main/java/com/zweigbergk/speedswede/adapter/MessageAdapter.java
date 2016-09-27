@@ -137,7 +137,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public int getItemViewType(int position){
         //TODO implement actual userid.
-        if(mMessages.get(position).getName().equals("Peter")){
+        if(mMessages.get(position).getUid().equals("Peter")){
             return 1;
 
         }
