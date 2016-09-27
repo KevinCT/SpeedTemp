@@ -45,14 +45,6 @@ public class ChatListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
-        mChatText = (TextView) view.findViewById(R.id.protein);
-
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        view.findViewById(R.id.addDummyMessage).setOnClickListener(button -> {
-            Message dummyMessage = new Message("Jonathan", "Ny text", (new Date()).getTime());
-            databaseReference.child("messages").push().setValue(dummyMessage);
-        });
-
         return view;
     }
 }

@@ -42,7 +42,6 @@ public class ChatFragment extends Fragment {
 
         view.findViewById(R.id.fragment_chat_post_message).setOnClickListener(this::onButtonClick);
 
-
         return view;
     }
 

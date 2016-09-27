@@ -11,11 +11,4 @@
         android:text="CHAT LIST FRAGMENT"
         android:id="@+id/protein" />
 
-    <Button
-        android:text="Add dummy message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/addDummyMessage"
-        android:layout_centerInParent="true"/>
-
 </RelativeLayout>
