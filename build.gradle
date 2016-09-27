@@ -10,6 +10,7 @@ buildscript {
 
         // Google Service Plugin for Firebase
         classpath 'com.google.gms:google-services:3.0.0'
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
     }
 }
 

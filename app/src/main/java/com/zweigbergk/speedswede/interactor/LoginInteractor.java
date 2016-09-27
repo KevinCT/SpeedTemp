@@ -73,6 +73,7 @@ public class LoginInteractor implements ActivityAttachable {
 
     public void handleFacebookAccessToken(Activity activity, AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
+        Log.d(TAG, "user: " + token.getUserId());
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         FirebaseAuth.getInstance().signInWithCredential(credential)

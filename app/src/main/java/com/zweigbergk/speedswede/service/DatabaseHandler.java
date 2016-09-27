@@ -141,8 +141,8 @@ public enum DatabaseHandler {
         });
     }
 
-    public void postMessageToChat(String chatUid, Message message) {
-        mDatabaseReference.child(CHATS).child(chatUid).child(CONVERSATION).push().setValue(message);
+    public void postMessageToChat(String chatId, Message message) {
+        mDatabaseReference.child(CHATS).child(chatId).child(CONVERSATION).push().setValue(message);
     }
 
     public static class DataChange<ObjectType> {

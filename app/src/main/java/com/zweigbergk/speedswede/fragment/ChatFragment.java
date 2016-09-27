@@ -10,9 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.adapter.MessageAdapter;
 import com.zweigbergk.speedswede.core.Message;
@@ -50,9 +50,10 @@ public class ChatFragment extends Fragment {
         EditText chatMessageText = ((EditText) this.getView().findViewById(R.id.fragment_chat_message_text));
         String messageText = chatMessageText.getText().toString();
 
-        Message message = new Message(FirebaseAuth.getInstance().getCurrentUser().getUid(),messageText,(new Date()).getTime());
+        Message message = new Message(DatabaseHandler.INSTANCE.getLoggedInUser().getUid(),messageText,(new Date()).getTime());
         DatabaseHandler.INSTANCE.postMessageToChat(DUMMY_CHAT_UID, message);
         chatMessageText.setText("");
+
     }
 
     private void initializeRecyclerView(View view) {
@@ -68,7 +69,7 @@ public class ChatFragment extends Fragment {
 
     private void smoothScrollToBottomOfList(Message message) {
         //Only scroll to the bottom if the new message was posted by us.
-        if (message.getUid().equals(DatabaseHandler.INSTANCE.getLoggedInUser().getDisplayName())) {
+        if (message.getUid() != null && message.getUid().equals(DatabaseHandler.INSTANCE.getLoggedInUser().getDisplayName())) {
             chatRecyclerView.post(() -> chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount() - 1));
         }
     }
