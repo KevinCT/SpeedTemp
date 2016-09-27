@@ -30,12 +30,11 @@ public enum ChatMatcher {
     /** Include user in the matching process */
     public void pushUser(User user) {
         mUserPool.add(user);
-//        DatabaseHandler.INSTANCE.setMatchingPool();
+        DatabaseHandler.INSTANCE.setMatchingPool();
     }
 
     /** Remove user from the matching process */
     public void removeUser(User user) {
-        pullPool();
         if(mUserPool.contains(user)) {
             mUserPool.remove(user);
         }
@@ -43,12 +42,10 @@ public enum ChatMatcher {
     }
 
     public boolean hasUserInPool(User user) {
-        pullPool();
         return mUserPool.contains(user);
     }
 
     public User getFirstInPool() {
-        pullPool();
         if(mUserPool.size() > 0) {
             return mUserPool.get(0);
         }
@@ -56,7 +53,6 @@ public enum ChatMatcher {
     }
 
     public Chat match() {
-        pullPool();
         if(mUserPool.size() > 1) {
             // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
             List<User> copiedList = new LinkedList<>();
@@ -70,16 +66,11 @@ public enum ChatMatcher {
     }
 
     public void clear() {
-        pullPool();
         mUserPool.clear();
         DatabaseHandler.INSTANCE.setMatchingPool();
     }
 
     public List<User> getPool() {
         return mUserPool;
-    }
-
-    private void pullPool() {
-//        mUserPool = DatabaseHandler.INSTANCE.getMatchingPool();
     }
 }
