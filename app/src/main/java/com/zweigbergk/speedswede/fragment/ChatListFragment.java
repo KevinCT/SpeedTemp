@@ -2,6 +2,7 @@ package com.zweigbergk.speedswede.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.util.StringBuilderPrinter;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.zweigbergk.speedswede.R;
+import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
@@ -80,6 +82,18 @@ public class ChatListFragment extends Fragment {
     public void addUser(View view) {
         ChatMatcher.INSTANCE.pushUser(new UserProfile("Namn", DatabaseHandler.INSTANCE.getLoggedInUser().getUid()));
         Log.d("Hejhej", "" + ChatMatcher.INSTANCE.match());
+        Chat chat = ChatMatcher.INSTANCE.match();
+
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction()
+                .show(new ChatFragment())
+                .commit();
+
+        if (chat != null) {
+
+
+
+        }
 
         for (User user : ChatMatcher.INSTANCE.getPool()) {
             Toast.makeText(getContext(), "User in pool: " + user.toString(), Toast.LENGTH_LONG).show();

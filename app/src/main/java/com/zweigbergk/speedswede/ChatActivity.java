@@ -26,6 +26,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     private ViewPager mPager;
 
     private final Fragment mChatFragment = new ChatFragment();
+    private final Fragment mChatFragment2 = new ChatFragment();
     private final Fragment mChatListFragment = new ChatListFragment();
 
 
@@ -42,7 +43,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     }
 
     private void setUpContent() {
-        mAdapter = new ChatAdapter(getSupportFragmentManager(), Arrays.asList(mChatListFragment, mChatFragment));
+        mAdapter = new ChatAdapter(getSupportFragmentManager(), Arrays.asList(mChatListFragment, mChatFragment, mChatFragment2));
         mPager = (ViewPager) findViewById(R.id.chat_viewpager);
         mPager.setAdapter(mAdapter);
 //        Log.d("a", mChatText.toString());
