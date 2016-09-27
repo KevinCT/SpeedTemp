@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
 //        void onLoginClick();
     }
 
+    private static final boolean ON_CREATE_LOGOUT = false;
+
     private ViewListener mViewListener;
 
     @Override
@@ -49,8 +51,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
         setUpContent();
 
         // TODO Remove once we have logout functionality.
-        LoginManager.getInstance().logOut();
-        FirebaseAuth.getInstance().signOut();
+        if (ON_CREATE_LOGOUT) {
+            LoginManager.getInstance().logOut();
+            FirebaseAuth.getInstance().signOut();
+        }
 
         startLoginActivity();
     }
