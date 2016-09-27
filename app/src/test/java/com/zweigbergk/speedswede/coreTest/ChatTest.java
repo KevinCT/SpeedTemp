@@ -18,9 +18,10 @@ public class ChatTest {
 
     @Before
     public void initialize() {
-        chat = new Chat(sir, lord);
         sir = TestFactory.mockUser(TestFactory.USER_1_NAME, TestFactory.USER_1_ID);
         lord = TestFactory.mockUser(TestFactory.USER_2_NAME, TestFactory.USER_2_ID);
+
+        chat = new Chat(sir, lord);
     }
 
     @Test
