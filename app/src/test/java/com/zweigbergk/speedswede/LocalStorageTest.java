@@ -34,7 +34,7 @@ public class LocalStorageTest {
         UserData userData = LocalStorage.getUserData(sir);
         assertTrue(userData != null);
 
-        Chat chatFromStorage = LocalStorage.getUserData(sir).getChatByUid(chat.getUid());
+        Chat chatFromStorage = LocalStorage.getUserData(sir).getChatByUid(chat.getId());
         assertTrue(chatFromStorage.equals(chat));
     }
 }
