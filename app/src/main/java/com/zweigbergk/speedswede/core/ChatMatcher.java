@@ -25,12 +25,15 @@ public enum ChatMatcher {
 
     /** Include user in the matching process */
     public void pushUser(User user) {
-        DatabaseHandler.INSTANCE.addUserToPool(user.getUid());
+        Log.d("Length before pushing ", "" + mUserPool.size());
+        //mUserPool.add(user);
+        DatabaseHandler.INSTANCE.addUserToPool(user);
+        Log.d("Length after pushing ", "" + mUserPool.size());
     }
 
     /** Remove user from the matching process */
-    public void removeUser(String uid) {
-        DatabaseHandler.INSTANCE.removeUserFromPool(uid);
+    public void removeUser(User user) {
+        DatabaseHandler.INSTANCE.removeUserFromPool(user);
     }
 
     public boolean hasUserInPool(User user) {
