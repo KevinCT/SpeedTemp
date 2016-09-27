@@ -21,6 +21,7 @@ import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
 import com.zweigbergk.speedswede.util.TestFactory;
 
@@ -64,15 +65,20 @@ public class ChatListFragment extends Fragment {
     private void updateDebugArea(TextView debugArea) {
         StringBuilder usersInPool = new StringBuilder();
 
+//        DatabaseHandler.INSTANCE.getMatchingPool(user -> usersInPool.append(user.getUid() + "\n"));
+        for (User user : ChatMatcher.INSTANCE.getPool()) {
+            usersInPool.append(user.getUid() + "\n");
+            debugArea.setText("Users in pool2:\n" + user.getUid().toString());
+//            Log.d("User in pool: ", );
+        }
 
-        DatabaseHandler.INSTANCE.getMatchingPool(user -> usersInPool.append(user.getUid() + "\n"));
-
-        debugArea.setText("Users in pool:\n" + usersInPool.toString());
-
+        debugArea.setText("Users in pool2:\n" + usersInPool.toString());
     }
 
+
+
     public void addUser(View view) {
-        ChatMatcher.INSTANCE.pushUser(TestFactory.mockUser("tester2", "tester2"));
+        ChatMatcher.INSTANCE.pushUser(new UserProfile("Namn", DatabaseHandler.INSTANCE.getLoggedInUser().getUid()));
 
         for (User user : ChatMatcher.INSTANCE.getPool()) {
             Log.d("User in pool: ", user.toString());
