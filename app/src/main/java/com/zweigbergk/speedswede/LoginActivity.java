@@ -83,4 +83,9 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mPresenter.onActivityResult(requestCode, resultCode, data);
     }
+
+    @Override
+    public void useContextTo(Client<Context> client) {
+        client.supply(this.getBaseContext());
+    }
 }

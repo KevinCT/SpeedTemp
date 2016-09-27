@@ -1,11 +1,12 @@
 package com.zweigbergk.speedswede.presenter;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 
 import com.facebook.AccessToken;
-
 import com.zweigbergk.speedswede.ActivityAttachable;
 import com.zweigbergk.speedswede.LoginActivity;
 import com.zweigbergk.speedswede.interactor.LoginInteractor;
@@ -24,24 +25,17 @@ public class LoginPresenter implements ActivityAttachable, LoginInteractor.Login
         mInteractor.setLoginListener(this);
         mInteractor.registerLoginCallback(mActivity, activity.getLoginButton());
 
-        DatabaseHandler.INSTANCE.onGetConnectionStatus(this::handleAutomaticLogin);
+        mActivity.useContextTo(this::handleAutomaticLogin);
 
-        mActivity.onLoginClick(this::changeToLoadingScreen);
+        mActivity.onLoginClick(button -> showLoadingScreen());
     }
 
-    private void changeToLoadingScreen(View button) {
-        if (!hasLoggedInUser()) {
-            //LoginButton handles login stuff, we just show loading screen below the
-            // facebook stuff
-            showLoadingScreen();
-        } else {
-            Log.d("DEBUG", "We have AccessToken. Do nothing.");
-        }
-    }
-
-    private void handleAutomaticLogin(boolean connected) {
+    private void handleAutomaticLogin(Context context) {
+        boolean connected = DatabaseHandler.INSTANCE.isNetworkAvailable(context);
         if (connected) {
+            Log.d("DEBUG2", "Connected.");
             if (hasLoggedInUser()) {
+                Log.d("DEBUG2", "hasLoggedInUser.");
                 AccessToken token = AccessToken.getCurrentAccessToken();
                 loginWithToken(token);
             }
