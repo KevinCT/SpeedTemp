@@ -2,7 +2,7 @@ package com.zweigbergk.speedswede.core;
 
 import java.util.Date;
 public class Message {
-    private String name;
+    private String uid;
     private String text;
     private final long timeStamp;
 
@@ -11,26 +11,26 @@ public class Message {
         timeStamp = 0;
     }
 
-    public Message(String name, String text, long timeStamp) {
-        this.name = name;
+    public Message(String uid, String text, long timeStamp) {
+        this.uid = uid;
         this.text = text;
         this.timeStamp = timeStamp;
     }
 
-    public Message(String name, String text) {
-        this(name, text, (new Date()).getTime());
+    public Message(String uid, String text) {
+        this(uid, text, (new Date()).getTime());
     }
 
-    public void setName(String name){
-        this.name = name;
+    public void setUid(String uid){
+        this.uid = uid;
     }
 
     public void setText(String text){
         this.text = text;
     }
 
-    public String getName() {
-        return name;
+    public String getUid() {
+        return uid;
     }
 
     public String getText() {
@@ -58,7 +58,7 @@ public class Message {
         Message otherMessage = (Message) other;
 
         // todo: Change this to use getId instead /Andreas
-        return otherMessage.getName().equals(this.getName())
+        return otherMessage.getUid().equals(this.getUid())
                 && otherMessage.getTimeStamp() == this.getTimeStamp();
     }
 

@@ -1,19 +1,19 @@
 package com.zweigbergk.speedswede.core;
 
-import android.support.annotation.NonNull;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class Chat {
 
     private final User mFirstUser, mSecondUser;
-
+    private List<Message> mConversation;
     private String mUid;
 
-    public Chat(@NonNull User firstUser, @NonNull User secondUser) {
+    public Chat(User firstUser, User secondUser) {
         mFirstUser = firstUser;
         mSecondUser = secondUser;
 
+        mConversation = new ArrayList<>();
         mUid = Long.toString(firstUser.getUid().hashCode() * 17 + secondUser.getUid().hashCode() * 31);
     }
     public boolean includesUser(User user) {
@@ -31,8 +31,12 @@ public class Chat {
     public List<Message> getConversation() {
         return null;
     }
-
+    
     public String getUid() {
         return mUid;
+    }
+
+    public void postMessage(User user, Message message) throws IllegalArgumentException {
+
     }
 }
