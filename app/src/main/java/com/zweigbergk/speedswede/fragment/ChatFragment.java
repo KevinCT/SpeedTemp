@@ -50,7 +50,7 @@ public class ChatFragment extends Fragment {
         EditText chatMessageText = ((EditText) this.getView().findViewById(R.id.fragment_chat_message_text));
         String messageText = chatMessageText.getText().toString();
 
-        Message message = new Message(FirebaseAuth.getInstance().getCurrentUser().getUid(),messageText,(new Date()).getTime());
+        Message message = new Message(DatabaseHandler.INSTANCE.getLoggedInUser().getUid(),messageText,(new Date()).getTime());
         DatabaseHandler.INSTANCE.postMessageToChat(DUMMY_CHAT_UID, message);
         chatMessageText.setText("");
 
