@@ -51,10 +51,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
         setUpContent();
 
         // TODO Remove once we have logout functionality.
-        if (ON_CREATE_LOGOUT) {
+//        if (ON_CREATE_LOGOUT) {
             LoginManager.getInstance().logOut();
             FirebaseAuth.getInstance().signOut();
-        }
+//        }
 
         startLoginActivity();
     }

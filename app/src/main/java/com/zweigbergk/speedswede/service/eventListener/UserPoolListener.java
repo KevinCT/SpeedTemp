@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseError;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.service.DataChange;
 import com.zweigbergk.speedswede.util.Client;
 
@@ -23,20 +24,23 @@ public class UserPoolListener implements ChildEventListener {
     // Thus there is no need for an initial SingleValueEventListener.
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        User user = dataSnapshot.getValue(User.class);
-        Log.d(Constants.DEBUG, "We have a user in pool: " + user.getUid());
+        User user = new UserProfile(dataSnapshot.child("displayName").getValue().toString(),
+                dataSnapshot.child("uid").getValue().toString());
+
         mClient.supply(DataChange.added(user));
     }
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        User user = dataSnapshot.getValue(User.class);
+        User user = new UserProfile(dataSnapshot.child("displayName").getValue().toString(),
+                dataSnapshot.child("uid").getValue().toString());
         mClient.supply(DataChange.modified(user));
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
-        User user = dataSnapshot.getValue(User.class);
+        User user = new UserProfile(dataSnapshot.child("displayName").getValue().toString(),
+                dataSnapshot.child("uid").getValue().toString());
         mClient.supply(DataChange.removed(user));
     }
 

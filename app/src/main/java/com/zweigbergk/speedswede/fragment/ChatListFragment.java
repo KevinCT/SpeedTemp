@@ -65,40 +65,23 @@ public class ChatListFragment extends Fragment {
     }
 
     private void updateDebugArea(TextView debugArea) {
-        StringBuilder usersInPool = new StringBuilder();
+//        StringBuilder usersInPool = new StringBuilder();
 
 //        DatabaseHandler.INSTANCE.getMatchingPool(user -> usersInPool.append(user.getUid() + "\n"));
-        for (User user : ChatMatcher.INSTANCE.getPool()) {
-            usersInPool.append(user.getUid() + "\n");
-            debugArea.setText("Users in pool2:\n" + user.getUid().toString());
-//            Log.d("User in pool: ", );
-        }
-
-        debugArea.setText("Users in pool2:\n" + usersInPool.toString());
+//        for (User user : ChatMatcher.INSTANCE.getPool()) {
+//            usersInPool.append(user.getUid() + "\n");
+//            debugArea.setText("Users in pool2:\n" + user.getUid().toString());
+////            Log.d("User in pool: ", );
+//        }
+//
+//        debugArea.setText("Users in pool2:\n" + usersInPool.toString());
     }
 
 
 
     public void addUser(View view) {
-        ChatMatcher.INSTANCE.pushUser(new UserProfile("Namn", DatabaseHandler.INSTANCE.getLoggedInUser().getUid()));
-        Log.d("Hejhej", "" + ChatMatcher.INSTANCE.match());
-        Chat chat = ChatMatcher.INSTANCE.match();
-
-        FragmentManager fm = getFragmentManager();
-        fm.beginTransaction()
-                .show(new ChatFragment())
-                .commit();
-
-        if (chat != null) {
 
 
-
-        }
-
-        for (User user : ChatMatcher.INSTANCE.getPool()) {
-            Toast.makeText(getContext(), "User in pool: " + user.toString(), Toast.LENGTH_LONG).show();
-
-        }
 
     }
 }

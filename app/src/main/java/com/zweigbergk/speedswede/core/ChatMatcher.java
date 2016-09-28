@@ -14,7 +14,9 @@ public enum ChatMatcher {
 
     ChatMatcher() {
         mUserPool = new LinkedList<>();
-        DatabaseHandler.INSTANCE.getMatchingPool(this::handleUser);
+//        DatabaseHandler.INSTANCE.getMatchingPool(this::handleUser);
+
+        DatabaseHandler.INSTANCE.registerPoolListener(dataChange -> Log.d("Loggar user ", dataChange.getItem().getUid()));
 
     }
 
