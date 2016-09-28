@@ -15,7 +15,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.firebase.database.ValueEventListener;
-import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
@@ -23,6 +22,7 @@ import com.zweigbergk.speedswede.service.eventListener.MessageListener;
 import com.zweigbergk.speedswede.service.eventListener.UserPoolListener;
 import com.zweigbergk.speedswede.util.Client;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,8 +36,11 @@ public enum DatabaseHandler {
     public static final String POOL = "pool";
     public static final String USER_NAME = "displayName";
     public static final String UID = "uid";
-
+    public static final String BANS = "bans";
+    public static final String STRIKES = "strikes";
     private User mLoggedInUser;
+   // private HashMap<String,List<User>> banMap;
+    private List<User> mBanList = new ArrayList<>();
 
     private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -140,5 +143,40 @@ public enum DatabaseHandler {
     public void postMessageToChat(String chatId, Message message) {
         mDatabaseReference.child(CHATS).child(chatId).child(CONVERSATION).push().setValue(message);
     }
+
+    public void banUser(String uID, User stranger ){
+        List<User> banList = getBanList(uID);
+        banList.add(stranger);
+        mDatabaseReference.child(BANS).child(uID).setValue(banList);
+        mDatabaseReference.child("Global"+BANS).push().setValue(stranger.getUid());
+    }
+
+
+    public List<User> getBanList(String uID){
+        mDatabaseReference.child(BANS).child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mBanList=(List<User>) dataSnapshot.getValue();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                mBanList= new ArrayList<>();
+
+            }
+
+        });
+        return mBanList;
+
+    }
+
+    public void removeBan(String uID, User stranger){
+        List<User> banList = getBanList(uID);
+        banList.remove(stranger);
+        mDatabaseReference.child(BANS).child(uID).setValue(banList);
+
+    }
+
+
 
 }
