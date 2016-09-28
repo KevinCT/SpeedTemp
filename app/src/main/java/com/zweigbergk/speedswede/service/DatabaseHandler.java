@@ -44,6 +44,18 @@ public enum DatabaseHandler {
         return mDatabaseReference.child(CHATS).child(chatUid).child(CONVERSATION);
     }
 
+    // TODO: Implement fetchMatchingPool and registerPoolListener instead of getMatchingPool /Andreas
+    private DatabaseReference fetchMatchingPool() {
+        return mDatabaseReference.child(POOL);
+    }
+
+    public void registerPoolListener(Client<DataChange<User>> client) {
+        DatabaseReference poolReference = fetchMatchingPool();
+        poolReference.keepSynced(true);
+
+//        poolReference.addChildEventListener(new MessageListener(client));
+    }
+
     public void getMatchingPool(Client<User> client) {
         List<String> userStrings = new LinkedList<>();
 
