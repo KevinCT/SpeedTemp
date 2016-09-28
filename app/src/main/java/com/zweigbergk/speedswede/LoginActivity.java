@@ -1,6 +1,9 @@
 package com.zweigbergk.speedswede;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -9,6 +12,7 @@ import android.widget.RelativeLayout;
 
 import com.facebook.login.widget.LoginButton;
 import com.zweigbergk.speedswede.presenter.LoginPresenter;
+import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.view.LoginView;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
@@ -78,5 +82,10 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mPresenter.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void useContextTo(Client<Context> client) {
+        client.supply(this.getBaseContext());
     }
 }

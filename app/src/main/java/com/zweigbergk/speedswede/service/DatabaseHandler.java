@@ -1,32 +1,29 @@
 package com.zweigbergk.speedswede.service;
 
-import android.net.Uri;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.Constants;
-import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
+import com.zweigbergk.speedswede.service.eventListener.MessageListener;
 import com.zweigbergk.speedswede.util.Client;
 
-import com.zweigbergk.speedswede.core.local.*;
-import com.zweigbergk.speedswede.util.TestFactory;
-
-import junit.framework.Test;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public enum DatabaseHandler {
     INSTANCE;
@@ -38,6 +35,8 @@ public enum DatabaseHandler {
     public static final String POOL = "pool";
     public static final String USER_NAME = "displayName";
     public static final String UID = "uid";
+
+    private User mLoggedInUser;
 
     private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -85,113 +84,48 @@ public enum DatabaseHandler {
     public void removeUserFromPool(User user) {
         mDatabaseReference.child(POOL).child(user.getUid()).setValue(null);
     }
+
+    public String getActiveUserId() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+            for (UserInfo profile : user.getProviderData()) {
+                String uid = profile.getUid();
+                if (uid != null)
+                    return uid;
+            }
+        }
+
+        return null;
+    }
+
     public User getLoggedInUser() {
-        return new User() {
-            @Override
-            public String getUid() {
-                return FirebaseAuth.getInstance().getCurrentUser().getUid();
-            }
+        if (mLoggedInUser == null) {
+            String name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+            String uid = getActiveUserId();
+            mLoggedInUser = new UserProfile(name, uid);
+        }
 
-            @Override
-            public boolean isAnonymous() {
-                return FirebaseAuth.getInstance().getCurrentUser().isAnonymous();
-            }
+        return mLoggedInUser;
+    }
 
-            @Override
-            public String getDisplayName() {
-                return FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-            }
+    public boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
-            @Override
-            public Uri getPhotoUrl() {
-                return FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
-            }
-
-            @Override
-            public String getEmail() {
-                return FirebaseAuth.getInstance().getCurrentUser().getEmail();
-            }
-        };
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public void registerConversationListener(String chatUid, Client<DataChange<Message>> client) {
         DatabaseReference conversationReference = fetchChatConversationByUid(chatUid);
         conversationReference.keepSynced(true);
 
-        conversationReference.addChildEventListener(new ChildEventListener() {
-            // NOTE: onChildAdded() runs once for every existing child at the time of attaching.
-            // Thus there is no need for an initial SingleValueEventListener.
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Message message = dataSnapshot.getValue(Message.class);
-                Log.d(Constants.DEBUG, "We have a new message: " + message.getText());
-                client.supply(DataChange.added(message));
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Message message = dataSnapshot.getValue(Message.class);
-                client.supply(DataChange.modified(message));
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Message message = dataSnapshot.getValue(Message.class);
-                client.supply(DataChange.removed(message));
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d(Constants.ERROR, databaseError.getMessage());
-                client.supply(DataChange.cancelled(null));
-            }
-        });
+        conversationReference.addChildEventListener(new MessageListener(client));
     }
 
     public void postMessageToChat(String chatId, Message message) {
         mDatabaseReference.child(CHATS).child(chatId).child(CONVERSATION).push().setValue(message);
-    }
-
-    public static class DataChange<ObjectType> {
-
-        private final ConversationEvent mEvent;
-        private final ObjectType mData;
-
-        DataChange(ObjectType data, ConversationEvent event) {
-            mData = data;
-            mEvent = event;
-        }
-
-        public ObjectType getItem() {
-            return mData;
-        }
-
-        public ConversationEvent getEvent() {
-            return mEvent;
-        }
-
-        static <ObjectType> DataChange<ObjectType> added(ObjectType data) {
-            return new DataChange<>(data, ConversationEvent.MESSAGE_ADDED);
-        }
-
-        static <ObjectType> DataChange<ObjectType> modified(ObjectType data) {
-            return new DataChange<>(data, ConversationEvent.MESSAGE_MODIFIED);
-        }
-
-        static <ObjectType> DataChange<ObjectType> removed(ObjectType data) {
-            return new DataChange<>(data, ConversationEvent.MESSAGE_REMOVED);
-        }
-
-        static <ObjectType> DataChange<ObjectType> cancelled(ObjectType data) {
-            return new DataChange<>(data, ConversationEvent.INTERRUPED);
-        }
-
-
     }
 
 }

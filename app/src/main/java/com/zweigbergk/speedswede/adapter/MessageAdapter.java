@@ -12,8 +12,8 @@ import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.service.ConversationEvent;
+import com.zweigbergk.speedswede.service.DataChange;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
-import com.zweigbergk.speedswede.service.DatabaseHandler.DataChange;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.Executable;
 

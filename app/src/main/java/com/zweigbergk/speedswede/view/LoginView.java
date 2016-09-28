@@ -1,15 +1,16 @@
 package com.zweigbergk.speedswede.view;
 
+import android.content.Context;
 import android.view.View;
-import android.widget.Button;
 
 import com.facebook.login.widget.LoginButton;
+import com.zweigbergk.speedswede.util.Client;
 
 public interface LoginView {
     LoginButton getLoginButton();
-//    Button getLoginButton();
     void startChatActivity();
     void onLoginClick(View.OnClickListener listener);
     void showProgressCircle();
     void hideContent();
+    void useContextTo(Client<Context> client);
 }

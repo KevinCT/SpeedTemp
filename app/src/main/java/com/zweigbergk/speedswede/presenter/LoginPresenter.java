@@ -1,46 +1,56 @@
 package com.zweigbergk.speedswede.presenter;
 
-
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
 
 import com.facebook.AccessToken;
-import com.facebook.Profile;
-import com.google.firebase.auth.FirebaseAuth;
 import com.zweigbergk.speedswede.ActivityAttachable;
 import com.zweigbergk.speedswede.LoginActivity;
-import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.interactor.LoginInteractor;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
-import com.zweigbergk.speedswede.util.TestFactory;
-import com.zweigbergk.speedswede.view.LoginView;
+import com.zweigbergk.speedswede.service.LocalStorage;
 
 public class LoginPresenter implements ActivityAttachable, LoginInteractor.LoginListener {
 
-    private LoginView mView;
+    private LoginActivity mActivity;
     private LoginInteractor mInteractor;
 
     public LoginPresenter(LoginActivity activity) {
-        mView = activity;
+        mActivity = activity;
 
         mInteractor = new LoginInteractor();
         mInteractor.setLoginListener(this);
-        mInteractor.registerLoginCallback(activity, mView.getLoginButton());
+        mInteractor.registerLoginCallback(mActivity, activity.getLoginButton());
 
+        mActivity.useContextTo(this::handleAutomaticLogin);
 
-        if (hasLoggedInUser()) {
-            showLoadingScreen();
-            AccessToken token = AccessToken.getCurrentAccessToken();
-            mInteractor.handleFacebookAccessToken(activity, token);
+        mActivity.onLoginClick(button -> showLoadingScreen());
+    }
+
+    private void handleAutomaticLogin(Context context) {
+        boolean connected = DatabaseHandler.INSTANCE.isNetworkAvailable(context);
+        if (connected) {
+            Log.d("DEBUG2", "Connected.");
+            if (hasLoggedInUser()) {
+                Log.d("DEBUG2", "hasLoggedInUser.");
+                AccessToken token = AccessToken.getCurrentAccessToken();
+                loginWithToken(token);
             }
+        } else {
+            loginInOfflineMode();
+        }
+    }
 
-        mView.onLoginClick(view -> {
-            if (!hasLoggedInUser()) {
-                showLoadingScreen();
-            } else {
-                Log.d("DEBUG", "We have AccessToken. Do nothing.");
-            }
-        });
+    private void loginWithToken(AccessToken token) {
+        showLoadingScreen();
+        mInteractor.handleFacebookAccessToken(mActivity, token);
+    }
+
+    private void loginInOfflineMode() {
+        LocalStorage.INSTANCE.loadSavedUserId(mActivity);
     }
 
     private boolean hasLoggedInUser() {
@@ -48,13 +58,13 @@ public class LoginPresenter implements ActivityAttachable, LoginInteractor.Login
     }
 
     private void showLoadingScreen() {
-        mView.showProgressCircle();
-        mView.hideContent();
+        mActivity.showProgressCircle();
+        mActivity.hideContent();
     }
 
     @Override
     public void onLogin() {
-        mView.startChatActivity();
+        mActivity.startChatActivity();
     }
 
     @Override
