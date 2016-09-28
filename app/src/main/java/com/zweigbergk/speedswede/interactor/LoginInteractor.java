@@ -15,31 +15,26 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.zweigbergk.speedswede.ActivityAttachable;
+import com.zweigbergk.speedswede.util.Client;
 
 public class LoginInteractor implements ActivityAttachable {
 
     //public static final String TAG = "LoginInteractor";
     public static final String TAG = "DEBUG";
 
-    private LoginListener mLoginListener;
+    public static final boolean LOGIN_SUCCESS = true;
+    public static final boolean LOGIN_FAILED = false;
+
     private CallbackManager mCallbackManager;
 
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
-    public void setLoginListener(LoginListener listener) {
-        mLoginListener = listener;
-    }
-
-    public LoginInteractor() {
+    public LoginInteractor(Client<Boolean> client) {
         mCallbackManager = CallbackManager.Factory.create();
         mAuthStateListener = firebaseAuth -> {
             FirebaseUser user = firebaseAuth.getCurrentUser();
-            if (user != null) {
-                Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                mLoginListener.onLogin();
-            } else {
-                Log.d(TAG, "onAuthStateChanged:signed_out");
-            }
+            boolean result = user != null ? LOGIN_SUCCESS : LOGIN_FAILED;
+            client.supply(result);
         };
     }
 
@@ -94,10 +89,6 @@ public class LoginInteractor implements ActivityAttachable {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public interface LoginListener {
-        void onLogin();
     }
 
     @Override

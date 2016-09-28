@@ -27,7 +27,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity implements MainView {
 
-    private static final boolean ON_CREATE_LOGOUT = true;
+    private static final boolean ON_CREATE_LOGOUT = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

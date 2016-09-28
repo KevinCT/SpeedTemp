@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -16,6 +17,8 @@ import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.view.LoginView;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
+
+
 
 
     public static final String TAG = "LoginActivity";
@@ -53,18 +56,27 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     }
 
     @Override
-    public void showProgressCircle() {
-        mProgressCircle.setVisibility(View.VISIBLE);
+    public void setProgressCircleVisibility(int visibility) {
+        mProgressCircle.setVisibility(visibility);
     }
 
+
     @Override
-    public void hideContent() {
-        mContentLayout.setVisibility(View.GONE);
+    public void setContentVisibility(int visibility) {
+        mContentLayout.setVisibility(visibility);
     }
 
     @Override
     public LoginButton getLoginButton() {
         return mLoginButton;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.d(TAG, "Resuming...");
+        ((LoginPresenter)mPresenter).invalidateState();
     }
 
     @Override

@@ -10,7 +10,7 @@ public interface LoginView {
     LoginButton getLoginButton();
     void startChatActivity();
     void onLoginClick(View.OnClickListener listener);
-    void showProgressCircle();
-    void hideContent();
+    void setProgressCircleVisibility(int visibility);
+    void setContentVisibility(int visibility);
     void useContextTo(Client<Context> client);
 }

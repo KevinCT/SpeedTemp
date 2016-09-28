@@ -1,6 +1,5 @@
 package com.zweigbergk.speedswede.presenter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -13,7 +12,11 @@ import com.zweigbergk.speedswede.interactor.LoginInteractor;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
 import com.zweigbergk.speedswede.service.LocalStorage;
 
-public class LoginPresenter implements ActivityAttachable, LoginInteractor.LoginListener {
+public class LoginPresenter implements ActivityAttachable {
+
+    public enum State { NORMAL, LOADING }
+
+    public static final String TAG = "LoginPresenter";
 
     private LoginActivity mActivity;
     private LoginInteractor mInteractor;
@@ -21,13 +24,12 @@ public class LoginPresenter implements ActivityAttachable, LoginInteractor.Login
     public LoginPresenter(LoginActivity activity) {
         mActivity = activity;
 
-        mInteractor = new LoginInteractor();
-        mInteractor.setLoginListener(this);
+        mInteractor = new LoginInteractor(this::onAuthResult);
         mInteractor.registerLoginCallback(mActivity, activity.getLoginButton());
 
         mActivity.useContextTo(this::handleAutomaticLogin);
 
-        mActivity.onLoginClick(button -> showLoadingScreen());
+        mActivity.onLoginClick(button -> setViewState(State.LOADING));
     }
 
     private void handleAutomaticLogin(Context context) {
@@ -45,7 +47,7 @@ public class LoginPresenter implements ActivityAttachable, LoginInteractor.Login
     }
 
     private void loginWithToken(AccessToken token) {
-        showLoadingScreen();
+        setViewState(State.LOADING);
         mInteractor.handleFacebookAccessToken(mActivity, token);
     }
 
@@ -57,14 +59,38 @@ public class LoginPresenter implements ActivityAttachable, LoginInteractor.Login
         return AccessToken.getCurrentAccessToken() != null;
     }
 
-    private void showLoadingScreen() {
-        mActivity.showProgressCircle();
-        mActivity.hideContent();
+    private void setViewState(State state) {
+        int progressCircleVisibility, contentVisibility;
+
+        switch (state) {
+            case NORMAL:
+                progressCircleVisibility = View.GONE;
+                contentVisibility = View.VISIBLE;
+                break;
+            case LOADING:
+                progressCircleVisibility = View.VISIBLE;
+                contentVisibility = View.GONE;
+                break;
+            default:
+                progressCircleVisibility = View.GONE;
+                contentVisibility = View.VISIBLE;
+        }
+
+        mActivity.setProgressCircleVisibility(progressCircleVisibility);
+        mActivity.setContentVisibility(contentVisibility);
     }
 
-    @Override
-    public void onLogin() {
-        mActivity.startChatActivity();
+    public void onAuthResult(boolean result) {
+        if (result == LoginInteractor.LOGIN_SUCCESS) {
+            Log.d(TAG, "onAuthStateChanged:signed_in");
+            mActivity.startChatActivity();
+        } else {
+            Log.d(TAG, "onAuthStateChanged:signed_out");
+        }
+    }
+
+    public void invalidateState() {
+        setViewState(State.NORMAL);
     }
 
     @Override

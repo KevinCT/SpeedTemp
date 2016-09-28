@@ -4,5 +4,6 @@ package com.zweigbergk.speedswede;
  * responsibilities of said class. */
 public interface Attachable {
     void onStart();
+
     void onStop();
 }
