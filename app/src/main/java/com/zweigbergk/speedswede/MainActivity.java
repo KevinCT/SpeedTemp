@@ -27,13 +27,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity implements MainView {
 
-    public interface ViewListener {
-//        void onLoginClick();
-    }
-
-    private static final boolean ON_CREATE_LOGOUT = false;
-
-    private ViewListener mViewListener;
+    private static final boolean ON_CREATE_LOGOUT = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
 
-        mViewListener = new MainPresenter(this);
+        new MainPresenter(this);
         setUpContent();
 
         // TODO Remove once we have logout functionality.
