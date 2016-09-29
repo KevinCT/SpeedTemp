@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,27 +80,16 @@ public class ChatFragment extends Fragment {
         int scrollOffset = chatRecyclerView.computeVerticalScrollOffset();
         int scrollHeight = chatRecyclerView.computeVerticalScrollRange() - chatRecyclerView.computeVerticalScrollExtent();
 
-        if (chatRecyclerView.getChildCount() <= 0) {
+        if (chatRecyclerView.getAdapter().getItemCount() <= 0) {
             return;
         }
 
         // Only scroll to the bottom if the new message was posted by us,
         //   OR if you are at the relative bottom of the chat.
         if ((message.getUid() != null && message.getUid().equals(DatabaseHandler.INSTANCE.getActiveUserId()))
-                || (scrollHeight - scrollOffset < getHeightOfRecentMessages(3))) {
+                || (scrollHeight - scrollOffset < chatRecyclerView.getHeight())) {
             chatRecyclerView.post(() -> chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount() - 1));
         }
 
-    }
-
-    private int getHeightOfRecentMessages(int count) {
-        int pointer = chatRecyclerView.getChildCount() - 1;
-        count = Math.min(count, pointer);
-        int height = 0;
-        while(count-- > 0) {
-            height += chatRecyclerView.getChildAt(pointer - count).getHeight()
-                    + getResources().getDimension(R.dimen.spacing_normal);
-        }
-        return height;
     }
 }
