@@ -7,12 +7,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Message;
-import com.zweigbergk.speedswede.service.ConversationEvent;
 import com.zweigbergk.speedswede.service.DataChange;
-import com.zweigbergk.speedswede.service.DatabaseHandler;
 import com.zweigbergk.speedswede.util.Client;
-
-import java.util.Date;
 
 public class MessageListener implements ChildEventListener {
 

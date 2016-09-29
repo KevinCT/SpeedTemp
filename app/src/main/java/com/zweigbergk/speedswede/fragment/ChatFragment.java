@@ -4,17 +4,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.adapter.MessageAdapter;
 import com.zweigbergk.speedswede.core.Message;
-import com.zweigbergk.speedswede.service.ConversationEvent;
+import com.zweigbergk.speedswede.service.DatabaseEvent;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
 
 import java.util.Date;
@@ -57,7 +55,7 @@ public class ChatFragment extends Fragment {
 
         Message message = new Message(DatabaseHandler.INSTANCE.getLoggedInUser().getUid(),messageText,(new Date()).getTime());
         DatabaseHandler.INSTANCE.postMessageToChat(mCurrentChatId, message);
-//        DatabaseHandler.INSTANCE.postMessageToChat(DUMMY_CHAT_UID, message);
+
         chatMessageText.setText("");
 
     }
@@ -72,7 +70,7 @@ public class ChatFragment extends Fragment {
         chatRecyclerView.setAdapter(adapter);
         DatabaseHandler.INSTANCE.registerConversationListener(mCurrentChatId, adapter::onListChanged);
 
-        adapter.addEventCallback(ConversationEvent.MESSAGE_ADDED, this::smoothScrollToBottomOfList);
+        adapter.addEventCallback(DatabaseEvent.ADDED, this::smoothScrollToBottomOfList);
     }
 
     private void smoothScrollToBottomOfList(Message message) {

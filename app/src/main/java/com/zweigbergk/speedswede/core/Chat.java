@@ -73,4 +73,9 @@ public class Chat {
                 this.getSecondUser().equals(otherChat.getSecondUser()) &&
                 this.getConversation().equals(otherChat.getConversation());
     }
+
+    @Override
+    public String toString() {
+        return "First user: " + getFirstUser() + "\nSecond user: " + getSecondUser();
+    }
 }

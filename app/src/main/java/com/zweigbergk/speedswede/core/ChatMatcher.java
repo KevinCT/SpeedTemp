@@ -1,36 +1,56 @@
 package com.zweigbergk.speedswede.core;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.zweigbergk.speedswede.service.DataChange;
+import com.zweigbergk.speedswede.service.DatabaseEvent;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
+import com.zweigbergk.speedswede.util.Client;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public enum ChatMatcher {
     INSTANCE;
 
     private List<User> mUserPool;
 
+    private Map<DatabaseEvent, List<Client<User>>> eventCallbacks;
+
     ChatMatcher() {
         mUserPool = new LinkedList<>();
-//        DatabaseHandler.INSTANCE.getMatchingPool(this::handleUser);
 
-        DatabaseHandler.INSTANCE.registerPoolListener(dataChange -> Log.d("Loggar user ", dataChange.getItem().getUid()));
+        eventCallbacks = new HashMap<>();
 
+        for(DatabaseEvent event : DatabaseEvent.values()) {
+            eventCallbacks.put(event, new ArrayList<>());
+        }
     }
 
+    public void handleUser(DataChange<User> dataChange) {
+        User user = dataChange.getItem();
 
-    private void handleUser(User user) {
-        mUserPool.add(user);
+        switch (dataChange.getEvent()) {
+            case ADDED:
+                mUserPool.add(user);
+                executeCallbacks(DatabaseEvent.ADDED, user);
+                break;
+            case REMOVED:
+                mUserPool.remove(user);
+                executeCallbacks(DatabaseEvent.REMOVED, user);
+                break;
+            default:
+                break;
+        }
     }
 
     /** Include user in the matching process */
     public void pushUser(User user) {
-        Log.d("Length before pushing ", "" + mUserPool.size());
-        //mUserPool.add(user);
         DatabaseHandler.INSTANCE.addUserToPool(user);
-        Log.d("Length after pushing ", "" + mUserPool.size());
     }
 
     /** Remove user from the matching process */
@@ -49,6 +69,21 @@ public enum ChatMatcher {
         return null;
     }
 
+    public void addEventCallback(DatabaseEvent event, Client<User> callback) {
+        eventCallbacks.get(event).add(callback);
+    }
+
+    public void removeEventCallback(DatabaseEvent event, Client<User> callback) {
+        eventCallbacks.get(event).remove(callback);
+    }
+
+    private void executeCallbacks(DatabaseEvent event, User user) {
+        List<Client<User>> clients = eventCallbacks.get(event);
+        for (Client<User> client : clients) {
+            client.supply(user);
+        }
+    }
+
     public Chat match() {
         Log.d("Users in pool: ", ""+mUserPool.size());
         if(mUserPool.size() > 1) {
@@ -56,8 +91,10 @@ public enum ChatMatcher {
             List<User> copiedList = new LinkedList<>();
             copiedList.add(mUserPool.get(0));
             copiedList.add(mUserPool.get(1));
-            mUserPool.remove(0);
-            mUserPool.remove(0);
+
+            DatabaseHandler.INSTANCE.removeUserFromPool(copiedList.get(0));
+            DatabaseHandler.INSTANCE.removeUserFromPool(copiedList.get(1));
+
             return new Chat(copiedList.get(0), copiedList.get(1));
         }
         return null;

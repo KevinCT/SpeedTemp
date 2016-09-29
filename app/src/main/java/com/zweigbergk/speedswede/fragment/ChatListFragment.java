@@ -2,36 +2,19 @@ package com.zweigbergk.speedswede.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.util.StringBuilderPrinter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
-import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
+import com.zweigbergk.speedswede.service.DatabaseEvent;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
-import com.zweigbergk.speedswede.util.TestFactory;
-
-import junit.framework.Test;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class ChatListFragment extends Fragment {
 
@@ -46,7 +29,12 @@ public class ChatListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ChatMatcher.INSTANCE.addEventCallback(DatabaseEvent.ADDED, this::onUserAddedToChatPool);
 
+    }
+
+    private void onUserAddedToChatPool(User user) {
+        Chat chat = ChatMatcher.INSTANCE.match();
     }
 
     @Override
@@ -87,8 +75,6 @@ public class ChatListFragment extends Fragment {
 
 
     public void addUser(View view) {
-
-
-
+        ChatMatcher.INSTANCE.pushUser(new UserProfile("Namn", DatabaseHandler.INSTANCE.getLoggedInUser().getUid()));
     }
 }

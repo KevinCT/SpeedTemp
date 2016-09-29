@@ -28,4 +28,19 @@ public class UserProfile implements User {
     public String toString() {
         return this.getUid();
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) {
+            return false;
+        }
+
+        if (!other.getClass().equals(this.getClass())) {
+            return false;
+        }
+
+        UserProfile otherUserProfile = (UserProfile) other;
+
+        return otherUserProfile.getUid().equals(this.getUid());
+    }
 }

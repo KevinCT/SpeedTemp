@@ -54,38 +54,7 @@ public enum DatabaseHandler {
         poolReference.keepSynced(true);
 
         poolReference.addChildEventListener(new UserPoolListener(client));
-    }
 
-    public void getMatchingPool(Client<User> client) {
-        List<String> userStrings = new LinkedList<>();
-
-        mDatabaseReference.child(POOL).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                User user = new UserProfile((String) dataSnapshot.child(USER_NAME).getValue(), (String) dataSnapshot.child(UID).getValue());
-                client.supply(user);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     public void addUserToPool(User user) {

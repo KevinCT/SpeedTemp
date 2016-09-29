@@ -27,11 +27,15 @@ public class UserPoolListener implements ChildEventListener {
         User user = new UserProfile(dataSnapshot.child("displayName").getValue().toString(),
                 dataSnapshot.child("uid").getValue().toString());
 
+        Log.d("UserPoolListener", "added");
+
         mClient.supply(DataChange.added(user));
     }
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        Log.d("UserPoolListener", "changed");
+
         User user = new UserProfile(dataSnapshot.child("displayName").getValue().toString(),
                 dataSnapshot.child("uid").getValue().toString());
         mClient.supply(DataChange.modified(user));
