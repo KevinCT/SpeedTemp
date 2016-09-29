@@ -164,28 +164,6 @@ public enum DatabaseHandler {
         });
     }
 
-    public void getChatById(String id, Client<Chat> client) {
-       /* Chat cachedChat = DataCache.INSTANCE.getCachedChatById(id);
-        if (cachedChat != null) {
-            client.supply(cachedChat);
-            return;
-        }*/
-
-        mDatabaseReference.child(CHATS).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Chat chat = convertToChat(dataSnapshot);
-                //DataCache.INSTANCE.cache(user);
-
-                client.supply(chat);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
     public void addUserToPool(User user) {
         mDatabaseReference.child(POOL).child(user.getUid()).setValue(user);
     }
@@ -236,7 +214,11 @@ public enum DatabaseHandler {
     }
 
     public void postMessageToChat(Chat chat, Message message) {
-        mDatabaseReference.child(CHATS).child(chat.getId()).child(MESSAGES).push().setValue(message);
+        getChatWithId(chat.getId(), chatInDatabase -> {
+            if (chatInDatabase != null) {
+                mDatabaseReference.child(CHATS).child(chat.getId()).child(MESSAGES).push().setValue(message);
+            }
+        });
     }
 
     public void pushChat(Chat chat) {
@@ -244,7 +226,7 @@ public enum DatabaseHandler {
     }
 
     public void banUser(String chatId ){
-        getChatById(chatId, chat -> {
+        getChatWithId(chatId, chat -> {
             Banner banner = getBans(getActiveUserId());
             banner.addBan(getActiveUserId(), chat.getFirstUser().getUid(), chat.getSecondUser().getUid());
             mDatabaseReference.child(BANS).child(getActiveUserId()).setValue(banner);
