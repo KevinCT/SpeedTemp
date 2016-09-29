@@ -14,9 +14,9 @@ import com.zweigbergk.speedswede.service.LocalStorage;
 
 public class LoginPresenter implements ActivityAttachable {
 
-    public enum State { NORMAL, LOADING }
+    private enum State { NORMAL, LOADING }
 
-    public static final String TAG = "LoginPresenter";
+    private static final String TAG = "LoginPresenter";
 
     private LoginActivity mActivity;
     private LoginInteractor mInteractor;
@@ -24,8 +24,8 @@ public class LoginPresenter implements ActivityAttachable {
     public LoginPresenter(LoginActivity activity) {
         mActivity = activity;
 
-        mInteractor = new LoginInteractor(this::onAuthResult);
-        mInteractor.registerLoginCallback(mActivity, activity.getLoginButton());
+        mInteractor = new LoginInteractor();
+        mInteractor.registerLoginCallback(this::onAuthResult, activity.getLoginButton());
 
         mActivity.useContextTo(this::handleAutomaticLogin);
 
@@ -48,7 +48,7 @@ public class LoginPresenter implements ActivityAttachable {
 
     private void loginWithToken(AccessToken token) {
         setViewState(State.LOADING);
-        mInteractor.handleFacebookAccessToken(mActivity, token);
+        mInteractor.handleFacebookAccessToken(this::onAuthResult, token);
     }
 
     private void loginInOfflineMode() {
@@ -99,12 +99,10 @@ public class LoginPresenter implements ActivityAttachable {
 
     @Override
     public void onStart() {
-        mInteractor.onStart();
     }
 
     @Override
     public void onStop() {
-        mInteractor.onStop();
     }
 
     @Override
