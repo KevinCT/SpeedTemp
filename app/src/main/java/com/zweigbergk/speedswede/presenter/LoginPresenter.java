@@ -90,7 +90,11 @@ public class LoginPresenter implements ActivityAttachable {
     }
 
     public void invalidateState() {
-        setViewState(State.NORMAL);
+        if (hasLoggedInUser()) {
+            setViewState(State.LOADING);
+        } else {
+            setViewState(State.NORMAL);
+        }
     }
 
     @Override

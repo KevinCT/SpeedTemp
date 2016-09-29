@@ -75,7 +75,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     public void onResume() {
         super.onResume();
 
-        Log.d(TAG, "Resuming...");
         ((LoginPresenter)mPresenter).invalidateState();
     }
 

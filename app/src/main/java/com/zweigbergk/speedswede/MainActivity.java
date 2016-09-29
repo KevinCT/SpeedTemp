@@ -1,11 +1,9 @@
 package com.zweigbergk.speedswede;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -16,10 +14,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
-import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.presenter.MainPresenter;
-import com.zweigbergk.speedswede.service.DatabaseHandler;
-import com.zweigbergk.speedswede.util.TestFactory;
 import com.zweigbergk.speedswede.view.MainView;
 
 import java.security.MessageDigest;
@@ -27,7 +22,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity implements MainView {
 
-    private static final boolean ON_CREATE_LOGOUT = false;
+    private static final boolean LOGOUT_ON_STARTUP = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         setUpContent();
 
         // TODO Remove once we have logout functionality.
-        if (ON_CREATE_LOGOUT) {
+        if (LOGOUT_ON_STARTUP) {
             LoginManager.getInstance().logOut();
             FirebaseAuth.getInstance().signOut();
         }

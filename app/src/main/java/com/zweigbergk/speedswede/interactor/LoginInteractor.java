@@ -17,6 +17,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.zweigbergk.speedswede.ActivityAttachable;
 import com.zweigbergk.speedswede.util.Client;
 
+import java.util.concurrent.Executor;
+
 public class LoginInteractor implements ActivityAttachable {
 
     //public static final String TAG = "LoginInteractor";
@@ -72,7 +74,7 @@ public class LoginInteractor implements ActivityAttachable {
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         FirebaseAuth.getInstance().signInWithCredential(credential)
-                .addOnCompleteListener(activity, task -> {
+                .addOnCompleteListener(executor, task -> {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
                         // If sign in fails, display a message to the user. If sign in succeeds
