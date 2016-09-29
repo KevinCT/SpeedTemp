@@ -16,6 +16,7 @@ import com.zweigbergk.speedswede.adapter.MessageAdapter;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.service.ConversationEvent;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
+import com.zweigbergk.speedswede.service.LocalStorage;
 
 import java.util.Date;
 
@@ -56,9 +57,11 @@ public class ChatFragment extends Fragment {
         String messageText = chatMessageText.getText().toString();
 
         Message message = new Message(DatabaseHandler.INSTANCE.getLoggedInUser().getUid(),messageText,(new Date()).getTime());
-        DatabaseHandler.INSTANCE.postMessageToChat(mCurrentChatId, message);
+
+            DatabaseHandler.INSTANCE.postMessageToChat(mCurrentChatId, message);
 //        DatabaseHandler.INSTANCE.postMessageToChat(DUMMY_CHAT_UID, message);
-        chatMessageText.setText("");
+            chatMessageText.setText("");
+
 
     }
 

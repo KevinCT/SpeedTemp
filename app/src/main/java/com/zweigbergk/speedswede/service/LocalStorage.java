@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.zweigbergk.speedswede.LoginActivity;
+import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.presenter.ChatPresenter;
 
 public enum LocalStorage {
@@ -35,4 +36,5 @@ public enum LocalStorage {
             Toast.makeText(activity, "No previous user could be found.", Toast.LENGTH_SHORT).show();
         }
     }
+
 }
