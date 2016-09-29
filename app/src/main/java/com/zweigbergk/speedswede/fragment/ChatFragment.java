@@ -77,7 +77,7 @@ public class ChatFragment extends Fragment {
 
     private void smoothScrollToBottomOfList(Message message) {
         //Only scroll to the bottom if the new message was posted by us.
-        if (message.getUid() != null && message.getUid().equals(DatabaseHandler.INSTANCE.getLoggedInUser().getDisplayName())) {
+        if (message.getUid() != null && message.getUid().equals(DatabaseHandler.INSTANCE.getActiveUserId())) {
             chatRecyclerView.post(() -> chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount() - 1));
         }
     }
