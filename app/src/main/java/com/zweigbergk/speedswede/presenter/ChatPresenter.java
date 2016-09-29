@@ -1,5 +1,6 @@
 package com.zweigbergk.speedswede.presenter;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.zweigbergk.speedswede.ChatActivity;
@@ -22,6 +23,9 @@ public class ChatPresenter implements ChatActivity.ViewListener {
         mInteractor = new ChatInteractor();
 
         Log.d("DEBUG", "User id: " + DatabaseHandler.INSTANCE.getActiveUserId());
+
+        DatabaseHandler.INSTANCE.addUser();
+
         mView.useContextTo(LocalStorage.INSTANCE::saveActiveUserId);
         DatabaseHandler.INSTANCE.registerPoolListener(dataChange -> ChatMatcher.INSTANCE.handleUser(dataChange));
 

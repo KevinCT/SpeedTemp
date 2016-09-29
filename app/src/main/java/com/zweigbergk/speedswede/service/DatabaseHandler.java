@@ -34,6 +34,7 @@ public enum DatabaseHandler {
     public static final String CONVERSATION = "conversation";
     public static final String CHATS = "chats";
     public static final String POOL = "pool";
+    public static final String USER = "user";
     public static final String USER_NAME = "displayName";
     public static final String UID = "uid";
     public static final String BANS = "bans";
@@ -59,6 +60,10 @@ public enum DatabaseHandler {
 
     public void addUserToPool(User user) {
         mDatabaseReference.child(POOL).child(user.getUid()).setValue(user);
+    }
+
+    public void addUser() {
+        mDatabaseReference.child(USER).child(getActiveUserId()).setValue(getLoggedInUser());
     }
 
 
