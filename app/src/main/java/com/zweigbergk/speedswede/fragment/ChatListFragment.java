@@ -1,8 +1,6 @@
 package com.zweigbergk.speedswede.fragment;
 
 import android.os.Bundle;
-<<<<<<< HEAD
-
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
 
