@@ -1,6 +1,5 @@
 package com.zweigbergk.speedswede.adapter;
 
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,11 +10,10 @@ import android.widget.TextView;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.service.ConversationEvent;
+import com.zweigbergk.speedswede.service.DatabaseEvent;
 import com.zweigbergk.speedswede.service.DataChange;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
 import com.zweigbergk.speedswede.util.Client;
-import com.zweigbergk.speedswede.util.Executable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +23,7 @@ import java.util.Map;
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
     private List<Message> mMessages;
     private User mUser;
-    private Map<ConversationEvent, List<Client<Message>>> eventCallbacks;
+    private Map<DatabaseEvent, List<Client<Message>>> eventCallbacks;
 
 
     public MessageAdapter(List<Message> messages) {
@@ -33,7 +31,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         eventCallbacks = new HashMap<>();
         mMessages = messages;
 
-        for (ConversationEvent event : ConversationEvent.values()) {
+        for (DatabaseEvent event : DatabaseEvent.values()) {
             eventCallbacks.put(event, new ArrayList<>());
         }
     }
@@ -44,16 +42,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     public void onListChanged(DataChange<Message> change) {
         Message message = change.getItem();
-        ConversationEvent event = change.getEvent();
+        DatabaseEvent event = change.getEvent();
 
         switch (event) {
-            case MESSAGE_ADDED:
+            case ADDED:
                 addMessage(message);
                 break;
-            case MESSAGE_MODIFIED:
+            case MODIFIED:
                 updateMessage(message);
                 break;
-            case MESSAGE_REMOVED:
+            case REMOVED:
                 removeMessage(message);
                 break;
             case INTERRUPED:
@@ -64,11 +62,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
     }
 
-    public void addEventCallback(ConversationEvent event, Client<Message> callback) {
+    public void addEventCallback(DatabaseEvent event, Client<Message> callback) {
         eventCallbacks.get(event).add(callback);
     }
 
-    public void removeEventCallback(ConversationEvent event, Client<Message> callback) {
+    public void removeEventCallback(DatabaseEvent event, Client<Message> callback) {
         eventCallbacks.get(event).remove(callback);
     }
 
@@ -80,7 +78,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 messageInList.copyTextFrom(message);
                 notifyItemChanged(position);
 
-                executeCallbacks(ConversationEvent.MESSAGE_MODIFIED, message);
+                executeCallbacks(DatabaseEvent.MODIFIED, message);
                 return;
             }
         }
@@ -90,7 +88,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         mMessages.add(message);
         notifyItemInserted(getItemCount() - 1);
 
-        executeCallbacks(ConversationEvent.MESSAGE_ADDED, message);
+        executeCallbacks(DatabaseEvent.ADDED, message);
     }
 
     private void removeMessage(Message message) {
@@ -99,14 +97,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         mMessages.remove(message);
         notifyItemRemoved(position);
 
-        executeCallbacks(ConversationEvent.MESSAGE_REMOVED, message);
+        executeCallbacks(DatabaseEvent.REMOVED, message);
     }
 
     private boolean isSameMessage(@NonNull Message message1, Message message2) {
         return message1.equals(message2);
     }
 
-    private void executeCallbacks(ConversationEvent event, Message message) {
+    private void executeCallbacks(DatabaseEvent event, Message message) {
         List<Client<Message>> clients = eventCallbacks.get(event);
         for (Client<Message> client : clients) {
             client.supply(message);

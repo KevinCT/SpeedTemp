@@ -15,9 +15,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.firebase.database.ValueEventListener;
+import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
+import com.zweigbergk.speedswede.service.eventListener.ChatListener;
 import com.zweigbergk.speedswede.service.eventListener.MessageListener;
 import com.zweigbergk.speedswede.service.eventListener.UserPoolListener;
 import com.zweigbergk.speedswede.util.Client;
@@ -34,6 +36,7 @@ public enum DatabaseHandler {
     public static final String CONVERSATION = "conversation";
     public static final String CHATS = "chats";
     public static final String POOL = "pool";
+    public static final String USER = "user";
     public static final String USER_NAME = "displayName";
     public static final String UID = "uid";
     public static final String BANS = "bans";
@@ -43,6 +46,23 @@ public enum DatabaseHandler {
     private List<User> mBanList = new ArrayList<>();
 
     private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+
+    private DatabaseReference fetchChats() {
+        return mDatabaseReference.child(CHATS);
+    }
+
+    public static User convertToUser(DataSnapshot snapshot) {
+        User user = new UserProfile(snapshot.child("displayName").getValue().toString(),
+                snapshot.child("uid").getValue().toString());
+        return user;
+    }
+
+    public void registerChatListener(Client<DataChange<Chat>> client) {
+        DatabaseReference chatReference = fetchChats();
+        chatReference.keepSynced(true);
+
+        chatReference.addChildEventListener(new ChatListener(client));
+    }
 
     // TODO: Implement fetchMatchingPool and registerPoolListener instead of getMatchingPool /Andreas
     private DatabaseReference fetchMatchingPool() {
@@ -54,42 +74,15 @@ public enum DatabaseHandler {
         poolReference.keepSynced(true);
 
         poolReference.addChildEventListener(new UserPoolListener(client));
-    }
 
-    public void getMatchingPool(Client<User> client) {
-        List<String> userStrings = new LinkedList<>();
-
-        mDatabaseReference.child(POOL).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                User user = new UserProfile((String) dataSnapshot.child(USER_NAME).getValue(), (String) dataSnapshot.child(UID).getValue());
-                client.supply(user);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     public void addUserToPool(User user) {
         mDatabaseReference.child(POOL).child(user.getUid()).setValue(user);
+    }
+
+    public void addUser() {
+        mDatabaseReference.child(USER).child(getActiveUserId()).setValue(getLoggedInUser());
     }
 
 
@@ -142,6 +135,10 @@ public enum DatabaseHandler {
 
     public void postMessageToChat(String chatId, Message message) {
         mDatabaseReference.child(CHATS).child(chatId).child(CONVERSATION).push().setValue(message);
+    }
+
+    public void pushChat(Chat chat) {
+        mDatabaseReference.child(CHATS).push().setValue(chat);
     }
 
     public void banUser(String uID, User stranger ){

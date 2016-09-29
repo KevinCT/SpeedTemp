@@ -10,6 +10,7 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.service.DataChange;
+import com.zweigbergk.speedswede.service.DatabaseHandler;
 import com.zweigbergk.speedswede.util.Client;
 
 public class UserPoolListener implements ChildEventListener {
@@ -20,18 +21,22 @@ public class UserPoolListener implements ChildEventListener {
         mClient = client;
     }
 
+
     // NOTE: onChildAdded() runs once for every existing child at the time of attaching.
     // Thus there is no need for an initial SingleValueEventListener.
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        User user = new UserProfile(dataSnapshot.child("displayName").getValue().toString(),
-                dataSnapshot.child("uid").getValue().toString());
+
+        User user = DatabaseHandler.convertToUser(dataSnapshot);
+        Log.d("UserPoolListener", "added");
 
         mClient.supply(DataChange.added(user));
     }
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        Log.d("UserPoolListener", "changed");
+
         User user = new UserProfile(dataSnapshot.child("displayName").getValue().toString(),
                 dataSnapshot.child("uid").getValue().toString());
         mClient.supply(DataChange.modified(user));

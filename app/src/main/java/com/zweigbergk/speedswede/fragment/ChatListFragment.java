@@ -1,6 +1,7 @@
 package com.zweigbergk.speedswede.fragment;
 
 import android.os.Bundle;
+<<<<<<< HEAD
 
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
@@ -17,13 +18,25 @@ import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.adapter.ChatAdapter;
 import com.zweigbergk.speedswede.adapter.ChatListAdapter;
 
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.zweigbergk.speedswede.R;
+import com.zweigbergk.speedswede.core.Chat;
+import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
+import com.zweigbergk.speedswede.service.DatabaseEvent;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
 
 import java.util.Arrays;
 
 public class ChatListFragment extends ListFragment {
+
 
 
     private ChatListAdapter mAdapter;
@@ -36,7 +49,13 @@ public class ChatListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setUp();
+
+        ChatMatcher.INSTANCE.addEventCallback(DatabaseEvent.ADDED, this::onUserAddedToChatPool);
+
+    }
+
+    private void onUserAddedToChatPool(User user) {
+        ChatMatcher.INSTANCE.match();
     }
 
     @Override
@@ -61,12 +80,6 @@ public class ChatListFragment extends ListFragment {
         return view;
     }
 
-    private void setUp() {
-        mAdapter = new ChatListAdapter(getSupportFragmentManager(), null);
-        mListView = (ListView) findViewById(R.id.chat_listView);
-        mListView.setAdapter(mAdapter);
-    }
-
     private void updateDebugArea(TextView debugArea) {
 //        StringBuilder usersInPool = new StringBuilder();
 
@@ -83,8 +96,6 @@ public class ChatListFragment extends ListFragment {
 
 
     public void addUser(View view) {
-
-
-
+        ChatMatcher.INSTANCE.pushUser(new UserProfile("Namn", DatabaseHandler.INSTANCE.getLoggedInUser().getUid()));
     }
 }

@@ -10,11 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.adapter.MessageAdapter;
 import com.zweigbergk.speedswede.core.Message;
-import com.zweigbergk.speedswede.service.ConversationEvent;
+import com.zweigbergk.speedswede.service.DatabaseEvent;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
 import com.zweigbergk.speedswede.service.LocalStorage;
 
@@ -56,12 +55,13 @@ public class ChatFragment extends Fragment {
         EditText chatMessageText = ((EditText) this.getView().findViewById(R.id.fragment_chat_message_text));
         String messageText = chatMessageText.getText().toString();
 
-        Message message = new Message(DatabaseHandler.INSTANCE.getLoggedInUser().getUid(),messageText,(new Date()).getTime());
 
+        if (messageText.length() > 0) {
+            Message message = new Message(DatabaseHandler.INSTANCE.getLoggedInUser().getUid(), messageText, (new Date()).getTime());
             DatabaseHandler.INSTANCE.postMessageToChat(mCurrentChatId, message);
 //        DatabaseHandler.INSTANCE.postMessageToChat(DUMMY_CHAT_UID, message);
             chatMessageText.setText("");
-
+        }
 
     }
 
@@ -75,13 +75,23 @@ public class ChatFragment extends Fragment {
         chatRecyclerView.setAdapter(adapter);
         DatabaseHandler.INSTANCE.registerConversationListener(mCurrentChatId, adapter::onListChanged);
 
-        adapter.addEventCallback(ConversationEvent.MESSAGE_ADDED, this::smoothScrollToBottomOfList);
+        adapter.addEventCallback(DatabaseEvent.ADDED, this::smoothScrollToBottomOfList);
     }
 
     private void smoothScrollToBottomOfList(Message message) {
-        //Only scroll to the bottom if the new message was posted by us.
-        if (message.getUid() != null && message.getUid().equals(DatabaseHandler.INSTANCE.getActiveUserId())) {
+        int scrollOffset = chatRecyclerView.computeVerticalScrollOffset();
+        int scrollHeight = chatRecyclerView.computeVerticalScrollRange() - chatRecyclerView.computeVerticalScrollExtent();
+
+        if (chatRecyclerView.getAdapter().getItemCount() <= 0) {
+            return;
+        }
+
+        // Only scroll to the bottom if the new message was posted by us,
+        //   OR if you are at the relative bottom of the chat.
+        if ((message.getUid() != null && message.getUid().equals(DatabaseHandler.INSTANCE.getActiveUserId()))
+                || (scrollHeight - scrollOffset < chatRecyclerView.getHeight())) {
             chatRecyclerView.post(() -> chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount() - 1));
         }
+
     }
 }

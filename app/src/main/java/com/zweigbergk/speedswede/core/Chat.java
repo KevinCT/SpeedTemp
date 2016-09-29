@@ -6,56 +6,71 @@ import java.util.List;
 
 public class Chat {
 
-    private final User mFirstUser, mSecondUser;
-    private List<Message> mConversation;
-    private String mId;
-    private long mTimeStamp;
+    private final User firstUser, secondUser;
+    private List<Message> conversation;
+    private String id;
+    private long timeStamp;
+
+    public Chat() {
+        // Need one without args
+        firstUser = new UserProfile("Dummy1", "Dummy1");
+        secondUser = new UserProfile("Dummy2", "Dummy2");
+    }
 
     public Chat(User firstUser, User secondUser) {
-        mFirstUser = firstUser;
-        mSecondUser = secondUser;
+        this.firstUser = firstUser;
+        this.secondUser = secondUser;
 
-        mConversation = new ArrayList<>();
-        mTimeStamp = (new Date()).getTime();
+        conversation = new ArrayList<>();
+        timeStamp = (new Date()).getTime();
 
-        mId = Long.toString(firstUser.hashCode() * 5 +
+        id = Long.toString(firstUser.hashCode() * 5 +
                 secondUser.hashCode() * 7 +
-                mTimeStamp);
-
+                timeStamp);
     }
+
+    public Chat(String id, long timeStamp, List<Message> messages, User firstUser, User secondUser) {
+        this.firstUser = firstUser;
+        this.secondUser = secondUser;
+
+        this.id = id;
+        this.timeStamp = timeStamp;
+        this.conversation = messages;
+    }
+
     public boolean includesUser(User user) {
-        return mFirstUser.equals(user) || mSecondUser.equals(user);
+        return firstUser.equals(user) || secondUser.equals(user);
     }
 
     public User getFirstUser() {
-        return mFirstUser;
+        return firstUser;
     }
 
     public User getSecondUser() {
-        return mSecondUser;
+        return secondUser;
     }
 
     public long getTimeStamp() {
-        return mTimeStamp;
+        return timeStamp;
     }
 
     public List<Message> getConversation() {
         List<Message> conversationClone = new ArrayList<>();
-        for (Message m : mConversation) {
+        for (Message m : conversation) {
             conversationClone.add(m.clone());
         }
         return conversationClone;
     }
     
     public String getId() {
-        return mId;
+        return id;
     }
 
     public void postMessage(User user, Message message) throws IllegalArgumentException {
         if (!includesUser(user)) {
             throw new IllegalArgumentException("User provided ["+user.getUid()+"] is not a member of this chat.");
         }
-        mConversation.add(message);
+        conversation.add(message);
     }
 
     @Override
@@ -72,5 +87,10 @@ public class Chat {
                 this.getFirstUser().equals(otherChat.getFirstUser()) &&
                 this.getSecondUser().equals(otherChat.getSecondUser()) &&
                 this.getConversation().equals(otherChat.getConversation());
+    }
+
+    @Override
+    public String toString() {
+        return "First user: " + getFirstUser() + "\nSecond user: " + getSecondUser();
     }
 }
