@@ -34,7 +34,7 @@ public class ChatListFragment extends Fragment {
     }
 
     private void onUserAddedToChatPool(User user) {
-        Chat chat = ChatMatcher.INSTANCE.match();
+        ChatMatcher.INSTANCE.match();
     }
 
     @Override

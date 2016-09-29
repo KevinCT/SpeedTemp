@@ -15,9 +15,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.firebase.database.ValueEventListener;
+import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
+import com.zweigbergk.speedswede.service.eventListener.ChatListener;
 import com.zweigbergk.speedswede.service.eventListener.MessageListener;
 import com.zweigbergk.speedswede.service.eventListener.UserPoolListener;
 import com.zweigbergk.speedswede.util.Client;
@@ -44,6 +46,23 @@ public enum DatabaseHandler {
     private List<User> mBanList = new ArrayList<>();
 
     private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+
+    private DatabaseReference fetchChats() {
+        return mDatabaseReference.child(CHATS);
+    }
+
+    public static User convertToUser(DataSnapshot snapshot) {
+        User user = new UserProfile(snapshot.child("displayName").getValue().toString(),
+                snapshot.child("uid").getValue().toString());
+        return user;
+    }
+
+    public void registerChatListener(Client<DataChange<Chat>> client) {
+        DatabaseReference chatReference = fetchChats();
+        chatReference.keepSynced(true);
+
+        chatReference.addChildEventListener(new ChatListener(client));
+    }
 
     // TODO: Implement fetchMatchingPool and registerPoolListener instead of getMatchingPool /Andreas
     private DatabaseReference fetchMatchingPool() {
@@ -116,6 +135,10 @@ public enum DatabaseHandler {
 
     public void postMessageToChat(String chatId, Message message) {
         mDatabaseReference.child(CHATS).child(chatId).child(CONVERSATION).push().setValue(message);
+    }
+
+    public void pushChat(Chat chat) {
+        mDatabaseReference.child(CHATS).push().setValue(chat);
     }
 
     public void banUser(String uID, User stranger ){

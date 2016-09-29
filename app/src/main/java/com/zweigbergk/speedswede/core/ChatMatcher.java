@@ -84,7 +84,7 @@ public enum ChatMatcher {
         }
     }
 
-    public Chat match() {
+    public void match() {
         Log.d("Users in pool: ", ""+mUserPool.size());
         if(mUserPool.size() > 1) {
             // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
@@ -95,9 +95,8 @@ public enum ChatMatcher {
             DatabaseHandler.INSTANCE.removeUserFromPool(copiedList.get(0));
             DatabaseHandler.INSTANCE.removeUserFromPool(copiedList.get(1));
 
-            return new Chat(copiedList.get(0), copiedList.get(1));
+            DatabaseHandler.INSTANCE.pushChat(new Chat(copiedList.get(0), copiedList.get(1)));
         }
-        return null;
     }
 
     public void clear() {
