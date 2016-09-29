@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede.service.eventListener;
+package com.zweigbergk.speedswede.database.eventListener;
 
 import android.util.Log;
 
@@ -7,7 +7,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Message;
-import com.zweigbergk.speedswede.service.DataChange;
+import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.util.Client;
 
 public class MessageListener implements ChildEventListener {

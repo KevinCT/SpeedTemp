@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede;
+package com.zweigbergk.speedswede.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.presenter.MainPresenter;
 import com.zweigbergk.speedswede.view.MainView;
 

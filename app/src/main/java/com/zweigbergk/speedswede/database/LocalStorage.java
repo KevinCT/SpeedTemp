@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede.service;
+package com.zweigbergk.speedswede.database;
 
 import android.content.Context;
 import android.content.SharedPreferences;

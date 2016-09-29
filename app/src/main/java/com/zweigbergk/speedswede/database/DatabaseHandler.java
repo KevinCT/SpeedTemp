@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede.service;
+package com.zweigbergk.speedswede.database;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -17,9 +17,9 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
-import com.zweigbergk.speedswede.service.eventListener.ChatListener;
-import com.zweigbergk.speedswede.service.eventListener.MessageListener;
-import com.zweigbergk.speedswede.service.eventListener.UserPoolListener;
+import com.zweigbergk.speedswede.database.eventListener.ChatListener;
+import com.zweigbergk.speedswede.database.eventListener.MessageListener;
+import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
 import com.zweigbergk.speedswede.util.Client;
 
 import java.util.ArrayList;

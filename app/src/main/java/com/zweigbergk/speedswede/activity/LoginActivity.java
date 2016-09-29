@@ -1,17 +1,15 @@
-package com.zweigbergk.speedswede;
+package com.zweigbergk.speedswede.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.facebook.login.widget.LoginButton;
+import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.presenter.LoginPresenter;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.view.LoginView;

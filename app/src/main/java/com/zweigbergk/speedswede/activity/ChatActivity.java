@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede;
+package com.zweigbergk.speedswede.activity;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.adapter.ChatAdapter;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;

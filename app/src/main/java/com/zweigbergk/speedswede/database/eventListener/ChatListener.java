@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede.service.eventListener;
+package com.zweigbergk.speedswede.database.eventListener;
 
 import android.util.Log;
 
@@ -10,8 +10,7 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
-import com.zweigbergk.speedswede.service.DataChange;
-import com.zweigbergk.speedswede.service.DatabaseHandler;
+import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.util.Client;
 
 import java.util.ArrayList;
