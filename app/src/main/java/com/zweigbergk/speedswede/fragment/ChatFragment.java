@@ -56,10 +56,12 @@ public class ChatFragment extends Fragment {
         EditText chatMessageText = ((EditText) this.getView().findViewById(R.id.fragment_chat_message_text));
         String messageText = chatMessageText.getText().toString();
 
-        Message message = new Message(DatabaseHandler.INSTANCE.getLoggedInUser().getUid(),messageText,(new Date()).getTime());
-        DatabaseHandler.INSTANCE.postMessageToChat(mCurrentChatId, message);
+        if (messageText.length() > 0) {
+            Message message = new Message(DatabaseHandler.INSTANCE.getLoggedInUser().getUid(), messageText, (new Date()).getTime());
+            DatabaseHandler.INSTANCE.postMessageToChat(mCurrentChatId, message);
 //        DatabaseHandler.INSTANCE.postMessageToChat(DUMMY_CHAT_UID, message);
-        chatMessageText.setText("");
+            chatMessageText.setText("");
+        }
 
     }
 
