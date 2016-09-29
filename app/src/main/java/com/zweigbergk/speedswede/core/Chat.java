@@ -1,5 +1,7 @@
 package com.zweigbergk.speedswede.core;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +13,9 @@ public class Chat {
     private String id;
     private long timeStamp;
 
-    public Chat() {
+    private boolean inactive;
+
+    private Chat() {
         // Need one without args
         firstUser = new UserProfile("Dummy1", "Dummy1");
         secondUser = new UserProfile("Dummy2", "Dummy2");
@@ -30,8 +34,7 @@ public class Chat {
     }
 
     public Chat(String id, long timeStamp, List<Message> messages, User firstUser, User secondUser) {
-        this.firstUser = firstUser;
-        this.secondUser = secondUser;
+        this(firstUser, secondUser);
 
         this.id = id;
         this.timeStamp = timeStamp;
@@ -40,6 +43,16 @@ public class Chat {
 
     public boolean includesUser(User user) {
         return firstUser.equals(user) || secondUser.equals(user);
+    }
+
+    @Exclude
+    public boolean isInactive() {
+        return inactive;
+    }
+
+    @Exclude
+    public void setInactive(boolean inactive) {
+        this.inactive = inactive;
     }
 
     public User getFirstUser() {
