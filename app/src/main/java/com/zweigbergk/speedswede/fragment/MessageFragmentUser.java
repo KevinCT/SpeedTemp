@@ -1,13 +1,6 @@
 package com.zweigbergk.speedswede.fragment;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
-
-import com.zweigbergk.speedswede.ChatActivity;
-import com.zweigbergk.speedswede.R;
 
 /**
  * Created by FEngelbrektsson on 21/09/16.

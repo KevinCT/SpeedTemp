@@ -34,7 +34,8 @@ public class Chat {
     }
 
     public Chat(String id, long timeStamp, List<Message> messages, User firstUser, User secondUser) {
-        this(firstUser, secondUser);
+        this.firstUser = firstUser;
+        this.secondUser = secondUser;
 
         this.id = id;
         this.timeStamp = timeStamp;

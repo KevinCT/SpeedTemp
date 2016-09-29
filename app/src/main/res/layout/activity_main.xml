@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/spacing_normal"
     android:paddingRight="@dimen/spacing_normal"
     android:paddingTop="@dimen/spacing_normal"
-    tools:context="com.zweigbergk.speedswede.MainActivity"
+    tools:context="com.zweigbergk.speedswede.activity.MainActivity"
     android:background="@color/colorPrimary">
 
     <ImageView

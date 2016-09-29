@@ -1,11 +1,10 @@
 package com.zweigbergk.speedswede.core;
 
-import android.provider.ContactsContract;
 import android.util.Log;
 
-import com.zweigbergk.speedswede.service.DataChange;
-import com.zweigbergk.speedswede.service.DatabaseEvent;
-import com.zweigbergk.speedswede.service.DatabaseHandler;
+import com.zweigbergk.speedswede.database.DataChange;
+import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.Client;
 
 import java.util.ArrayList;

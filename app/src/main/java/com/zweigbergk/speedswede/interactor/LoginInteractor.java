@@ -14,10 +14,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 
-import com.zweigbergk.speedswede.ActivityAttachable;
+import com.zweigbergk.speedswede.util.ActivityAttachable;
 import com.zweigbergk.speedswede.util.Client;
-
-import java.util.concurrent.Executor;
 
 public class LoginInteractor implements ActivityAttachable {
 

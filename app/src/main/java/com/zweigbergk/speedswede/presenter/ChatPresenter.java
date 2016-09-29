@@ -1,37 +1,64 @@
 package com.zweigbergk.speedswede.presenter;
 
-import android.provider.ContactsContract;
 import android.util.Log;
 
-import com.zweigbergk.speedswede.ChatActivity;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
-import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.interactor.ChatInteractor;
-import com.zweigbergk.speedswede.service.DataChange;
-import com.zweigbergk.speedswede.service.DatabaseEvent;
-import com.zweigbergk.speedswede.service.DatabaseHandler;
-import com.zweigbergk.speedswede.service.LocalStorage;
+import com.zweigbergk.speedswede.database.DataChange;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.database.LocalStorage;
+
+import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.util.MockFactory;
 import com.zweigbergk.speedswede.view.ChatView;
 
-public class ChatPresenter implements ChatActivity.ViewListener {
+import java.util.Arrays;
+import java.util.List;
+
+public class ChatPresenter {
 
     public static final String USER_ID = "user_state";
 
     private ChatView mView;
     private ChatInteractor mInteractor;
 
-    public ChatPresenter(ChatActivity activity) {
-        mView = activity;
+    public ChatPresenter(ChatView view) {
+        mView = view;
         mInteractor = new ChatInteractor();
 
         Log.d("DEBUG", "User id: " + DatabaseHandler.INSTANCE.getActiveUserId());
-
         DatabaseHandler.INSTANCE.addUser();
 
+        updateDeveloperChat();
+
         mView.useContextTo(LocalStorage.INSTANCE::saveActiveUserId);
-        DatabaseHandler.INSTANCE.registerPoolListener(dataChange -> ChatMatcher.INSTANCE.handleUser(dataChange));
-        DatabaseHandler.INSTANCE.registerChatListener(dataChange -> this.handleChat(dataChange));
+        DatabaseHandler.INSTANCE.registerPoolListener(ChatMatcher.INSTANCE::handleUser);
+        DatabaseHandler.INSTANCE.registerChatListener(this::handleChat);
+    }
+
+    //Creates a developer chat if one is not present
+    private void updateDeveloperChat() {
+        // TODO when implementing a real version of the chatBuilder, use
+        // TODO DatabaseHandler.INSTANCE.generateId() instead.
+        String temporaryIDForSimplicity = DatabaseHandler.INSTANCE.getActiveUserId();
+
+        // These are the methods that want to use the Chat once it's built
+        List<Client<Chat>> clientList = Arrays.asList(
+                DatabaseHandler.INSTANCE::pushChat,
+                mView::setChatForChatFragment);
+
+        DatabaseHandler.INSTANCE.getChatWithId(temporaryIDForSimplicity, chat -> {
+            if (chat == null) {
+                buildChat(temporaryIDForSimplicity, clientList);
+            } else {
+                mView.setChatForChatFragment(chat);
+            }
+        });
+    }
+
+    private void buildChat(String chatId, List<Client<Chat>> clientList) {
+        MockFactory.runChatBuilder(clientList, chatId);
     }
 
     public void handleChat(DataChange<Chat> dataChange) {

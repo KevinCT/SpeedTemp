@@ -3,7 +3,7 @@ package com.zweigbergk.speedswede.core;
 import java.util.Date;
 public class Message {
 
-    private String uid;
+    private String id;
     private String text;
     private final long timeStamp;
 
@@ -12,26 +12,26 @@ public class Message {
         timeStamp = 0;
     }
 
-    public Message(String uid, String text, long timeStamp) {
-        this.uid = uid;
+    public Message(String id, String text, long timeStamp) {
+        this.id = id;
         this.text = text;
         this.timeStamp = timeStamp;
     }
 
-    public Message(String uid, String text) {
-        this(uid, text, (new Date()).getTime());
+    public Message(String id, String text) {
+        this(id, text, (new Date()).getTime());
     }
 
-    public void setUid(String uid){
-        this.uid = uid;
+    public void setId(String id){
+        this.id = id;
     }
 
     public void setText(String text){
         this.text = text;
     }
 
-    public String getUid() {
-        return uid;
+    public String getId() {
+        return id;
     }
 
     public String getText() {
@@ -58,12 +58,17 @@ public class Message {
 
         Message otherMessage = (Message) other;
 
-        return otherMessage.getUid().equals(this.getUid())
+        return otherMessage.getId().equals(this.getId())
                 && otherMessage.getTimeStamp() == this.getTimeStamp();
     }
 
     public Message clone() {
-        return new Message(uid, text, timeStamp);
+        return new Message(id, text, timeStamp);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Message { id = [%s], text = [%s], timestamp = [%s] }", id, text, timeStamp + "");
     }
 
 }

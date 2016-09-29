@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/spacing_normal"
     android:paddingRight="@dimen/spacing_normal"
     android:paddingTop="@dimen/spacing_normal"
-    tools:context="com.zweigbergk.speedswede.LoginActivity"
+    tools:context="com.zweigbergk.speedswede.activity.LoginActivity"
     android:id="@+id/activity_login_root">
 
     <!-- All content must be inside this RelativeLayout, otherwise code may break.

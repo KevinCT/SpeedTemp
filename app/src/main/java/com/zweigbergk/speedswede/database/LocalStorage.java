@@ -5,9 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.zweigbergk.speedswede.LoginActivity;
-import com.zweigbergk.speedswede.core.Message;
+import com.zweigbergk.speedswede.activity.LoginActivity;
 import com.zweigbergk.speedswede.presenter.ChatPresenter;
 
 public enum LocalStorage {

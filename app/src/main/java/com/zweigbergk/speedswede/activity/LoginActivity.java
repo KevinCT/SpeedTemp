@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import com.facebook.login.widget.LoginButton;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.presenter.LoginPresenter;
+import com.zweigbergk.speedswede.util.ActivityAttachable;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.view.LoginView;
 

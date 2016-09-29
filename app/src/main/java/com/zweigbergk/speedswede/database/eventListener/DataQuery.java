@@ -1,4 +1,24 @@
 package com.zweigbergk.speedswede.database.eventListener;
 
-public class DataQuery {
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.zweigbergk.speedswede.util.Client;
+
+public class DataQuery implements ValueEventListener {
+
+    private Client<DataSnapshot> mClient;
+
+    public DataQuery(Client<DataSnapshot> client) {
+        mClient = client;
+    }
+
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            mClient.supply(dataSnapshot);
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+        }
 }

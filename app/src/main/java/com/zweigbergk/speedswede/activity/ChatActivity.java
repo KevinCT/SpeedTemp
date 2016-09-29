@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.adapter.ChatAdapter;
+import com.zweigbergk.speedswede.core.Chat;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
 import com.zweigbergk.speedswede.presenter.ChatPresenter;
@@ -19,17 +21,12 @@ import java.util.Arrays;
 
 public class ChatActivity extends AppCompatActivity implements ChatView {
 
-    public interface ViewListener {
-
-    }
-
-    private ViewListener mViewListener;
+    public static final String TAG = ChatActivity.class.getSimpleName().toUpperCase();
 
     private ChatAdapter mAdapter;
     private ViewPager mPager;
 
-    private final Fragment mChatFragment = new ChatFragment();
-    private final Fragment mChatFragment2 = new ChatFragment();
+    private final ChatFragment mChatFragment = new ChatFragment();
     private final Fragment mChatListFragment = new ChatListFragment();
 
 
@@ -42,11 +39,11 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         setUpContent();
 
-        mViewListener = new ChatPresenter(this);
+        new ChatPresenter(this);
     }
 
     private void setUpContent() {
-        mAdapter = new ChatAdapter(getSupportFragmentManager(), Arrays.asList(mChatListFragment, mChatFragment, mChatFragment2));
+        mAdapter = new ChatAdapter(getSupportFragmentManager(), Arrays.asList(mChatListFragment, mChatFragment));
         mPager = (ViewPager) findViewById(R.id.chat_viewpager);
         mPager.setAdapter(mAdapter);
     }
@@ -54,6 +51,12 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     @Override
     public void useContextTo(Client<Context> client) {
         client.supply(this.getBaseContext());
+    }
+
+    @Override
+    public void setChatForChatFragment(Chat chat) {
+        Log.d(TAG, "Inserting chat: " + chat.getId());
+        mChatFragment.setChat(chat);
     }
 
 }

@@ -10,9 +10,9 @@ import android.widget.TextView;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.service.DatabaseEvent;
-import com.zweigbergk.speedswede.service.DataChange;
-import com.zweigbergk.speedswede.service.DatabaseHandler;
+import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.database.DataChange;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.Client;
 
 import java.util.ArrayList;
@@ -85,8 +85,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     private void addMessage(Message message) {
-        mMessages.add(message);
-        notifyItemInserted(getItemCount() - 1);
+        if (!mMessages.contains(message)) {
+            mMessages.add(message);
+            notifyItemInserted(getItemCount() - 1);
+        }
 
         executeCallbacks(DatabaseEvent.ADDED, message);
     }
@@ -138,7 +140,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public int getItemViewType(int position){
-        if(mMessages.get(position).getUid().equals(mUser.getUid())){
+        if(mMessages.get(position).getId().equals(mUser.getUid())){
             return 1;
 
         }

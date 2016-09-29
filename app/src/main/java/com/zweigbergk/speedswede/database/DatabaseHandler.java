@@ -3,6 +3,7 @@ package com.zweigbergk.speedswede.database;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -18,22 +19,32 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
+import com.zweigbergk.speedswede.database.eventListener.DataQuery;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
 import com.zweigbergk.speedswede.util.Client;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public enum DatabaseHandler {
     INSTANCE;
 
-    DatabaseHandler() { }
+    public static final String TAG = DatabaseHandler.class.getSimpleName().toUpperCase();
 
-    public static final String CONVERSATION = "conversation";
+    private Map<String, MessageListener> messageListeners;
+
+    DatabaseHandler() {
+        messageListeners = new HashMap<>();
+    }
+
+    public static final String MESSAGES = "messages";
     public static final String CHATS = "chats";
     public static final String POOL = "pool";
-    public static final String USER = "user";
+    public static final String USER = "users";
     public static final String USER_NAME = "displayName";
     public static final String UID = "uid";
     public static final String BANS = "bans";
@@ -41,7 +52,6 @@ public enum DatabaseHandler {
     private User mLoggedInUser;
    // private HashMap<String,List<User>> banMap;
     private Banner mBanner = new Banner();
-    private Chat mChat = new Chat();
 
     private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -53,6 +63,64 @@ public enum DatabaseHandler {
         User user = new UserProfile(snapshot.child("displayName").getValue().toString(),
                 snapshot.child("uid").getValue().toString());
         return user;
+    }
+
+    public void addChatMessageClient(Chat chat, Client<DataChange<Message>> client) {
+        if (!hasMessageListenerForChat(chat)) {
+            createMessageListenerForChat(chat);
+        }
+
+        messageListeners.get(chat.getId()).addClient(client);
+    }
+
+    public Chat convertToChat(DataSnapshot snapshot) {
+        Log.d(TAG, snapshot.toString());
+        if (snapshot.getValue() == null)
+            return null;
+
+        //TODO: is key also its id????
+        String id = snapshot.getKey();
+        long timeStamp = (long) snapshot.child("timeStamp").getValue();
+        User firstUser = new UserProfile("user1", "user1");
+        User secondUser = new UserProfile("user2", "user2");
+        DataSnapshot messagesSnapshot = snapshot.child("conversation");
+
+        List<Message> messages = new ArrayList<>();
+        for (DataSnapshot messageSnapshot : messagesSnapshot.getChildren()) {
+            Message message = messageSnapshot.getValue(Message.class);
+            messages.add(message);
+        }
+        Chat chat = new Chat(id, timeStamp, messages, firstUser, secondUser);
+        return chat;
+    }
+
+    public void getChatWithId(String id, Client<Chat> client) {
+        mDatabaseReference.child(CHATS).child(id).addListenerForSingleValueEvent(
+                new DataQuery(snapshot -> client.supply(convertToChat(snapshot))));
+    }
+
+    private boolean hasMessageListenerForChat(Chat chat) {
+        return messageListeners.containsKey(chat.getId());
+    }
+
+    private void createMessageListenerForChat(Chat chat) {
+        MessageListener messageListener = new MessageListener(Collections.emptySet());
+
+        //Connect our listener to the chat in our database
+        DatabaseReference ref = mDatabaseReference.child(CHATS).child(chat.getId()).child(MESSAGES);
+        ref.addChildEventListener(messageListener);
+
+        //Add it to the listener-list so that we can attach clients to it
+        messageListeners.put(chat.getId(), messageListener);
+    }
+
+    public void removeChatMessageClient(Chat chat, Client<DataChange<Message>> client) {
+        if (!messageListeners.containsKey(chat.getId())) {
+            Log.e(TAG, String.format("WARNING: Tried removing client: [%s] from chat with id: [%s]", client.toString(), chat.getId()));
+            return;
+        }
+
+        messageListeners.get(chat.getId()).removeClient(client);
     }
 
     public void registerChatListener(Client<DataChange<Chat>> client) {
@@ -72,7 +140,50 @@ public enum DatabaseHandler {
         poolReference.keepSynced(true);
 
         poolReference.addChildEventListener(new UserPoolListener(client));
+    }
 
+    public void getUserById(String uid, Client<User> client) {
+        User cachedUser = DataCache.INSTANCE.getCachedUserById(uid);
+        if (cachedUser != null) {
+            client.supply(cachedUser);
+            return;
+        }
+
+        mDatabaseReference.child(USER).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = convertToUser(dataSnapshot);
+                DataCache.INSTANCE.cache(user);
+
+                client.supply(user);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void getChatById(String id, Client<Chat> client) {
+       /* Chat cachedChat = DataCache.INSTANCE.getCachedChatById(id);
+        if (cachedChat != null) {
+            client.supply(cachedChat);
+            return;
+        }*/
+
+        mDatabaseReference.child(CHATS).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Chat chat = convertToChat(dataSnapshot);
+                //DataCache.INSTANCE.cache(user);
+
+                client.supply(chat);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     public void addUserToPool(User user) {
@@ -120,31 +231,25 @@ public enum DatabaseHandler {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public void registerConversationListener(String chatUid, Client<DataChange<Message>> client) {
-        DatabaseReference conversationReference = fetchChatConversationByUid(chatUid);
-        conversationReference.keepSynced(true);
-
-        conversationReference.addChildEventListener(new MessageListener(client));
+    public String generateId() {
+        return mDatabaseReference.push().getKey();
     }
 
-    private DatabaseReference fetchChatConversationByUid(String chatUid) {
-        return mDatabaseReference.child(CHATS).child(chatUid).child(CONVERSATION);
-    }
-
-    public void postMessageToChat(String chatId, Message message) {
-        mDatabaseReference.child(CHATS).child(chatId).child(CONVERSATION).push().setValue(message);
+    public void postMessageToChat(Chat chat, Message message) {
+        mDatabaseReference.child(CHATS).child(chat.getId()).child(MESSAGES).push().setValue(message);
     }
 
     public void pushChat(Chat chat) {
-        mDatabaseReference.child(CHATS).push().setValue(chat);
+        mDatabaseReference.child(CHATS).child(chat.getId()).setValue(chat);
     }
 
-    public void banUser(String chatID ){
-
-        Banner banner = getBans(getActiveUserId());
-        banner.addBan(getActiveUserId(),getChat(chatID).getFirstUser().getUid(),getChat(chatID).getSecondUser().getUid());
-        mDatabaseReference.child(BANS).child(getActiveUserId()).setValue(banner);
-        //mDatabaseReference.child("Global"+BANS).push().setValue(strangerID);
+    public void banUser(String chatId ){
+        getChatById(chatId, chat -> {
+            Banner banner = getBans(getActiveUserId());
+            banner.addBan(getActiveUserId(), chat.getFirstUser().getUid(), chat.getSecondUser().getUid());
+            mDatabaseReference.child(BANS).child(getActiveUserId()).setValue(banner);
+            //mDatabaseReference.child("Global"+BANS).push().setValue(strangerID);
+        });
     }
 
 
@@ -169,25 +274,8 @@ public enum DatabaseHandler {
     public void removeBan(String uID, String strangerID){
         Banner banner = getBans(uID);
         banner.removeBan(strangerID);
+
         mDatabaseReference.child(BANS).child(uID).setValue(banner);
 
     }
-
-    public Chat getChat(String chatID){
-        mDatabaseReference.child(CHATS).child(chatID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mChat = dataSnapshot.getValue(Chat.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                mChat = new Chat();
-
-            }
-        });
-        return mChat;
-    }
-
-
 }

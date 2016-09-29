@@ -26,8 +26,8 @@ import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
-import com.zweigbergk.speedswede.service.DatabaseEvent;
-import com.zweigbergk.speedswede.service.DatabaseHandler;
+import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 
 import java.util.Arrays;
 
@@ -73,10 +73,10 @@ public class ChatListFragment extends Fragment {
     private void updateDebugArea(TextView debugArea) {
 //        StringBuilder usersInPool = new StringBuilder();
 
-//        DatabaseHandler.INSTANCE.getMatchingPool(user -> usersInPool.append(user.getUid() + "\n"));
+//        DatabaseHandler.INSTANCE.getMatchingPool(user -> usersInPool.append(user.getId() + "\n"));
 //        for (User user : ChatMatcher.INSTANCE.getPool()) {
-//            usersInPool.append(user.getUid() + "\n");
-//            debugArea.setText("Users in pool2:\n" + user.getUid().toString());
+//            usersInPool.append(user.getId() + "\n");
+//            debugArea.setText("Users in pool2:\n" + user.getId().toString());
 ////            Log.d("User in pool: ", );
 //        }
 //

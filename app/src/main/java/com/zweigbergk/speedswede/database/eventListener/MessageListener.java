@@ -9,13 +9,27 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.util.Lists;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MessageListener implements ChildEventListener {
+    public static final String TAG = MessageListener.class.getSimpleName().toUpperCase();
 
-    private Client<DataChange<Message>> mClient;
+    private Set<Client<DataChange<Message>>> mClients;
 
-    public MessageListener(Client<DataChange<Message>> client) {
-        mClient = client;
+    public MessageListener(Collection<Client<DataChange<Message>>> clients) {
+        mClients = new HashSet<>(clients);
+    }
+
+    public void addClient(Client<DataChange<Message>> client) {
+        mClients.add(client);
+    }
+
+    public void removeClient(Client<DataChange<Message>> client) {
+        mClients.remove(client);
     }
 
     // NOTE: onChildAdded() runs once for every existing child at the time of attaching.
@@ -24,19 +38,19 @@ public class MessageListener implements ChildEventListener {
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Message message = dataSnapshot.getValue(Message.class);
         Log.d(Constants.DEBUG, "We have a new message: " + message.getText());
-        mClient.supply(DataChange.added(message));
+        Lists.forEach(mClients, client -> client.supply(DataChange.added(message)));
     }
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
         Message message = dataSnapshot.getValue(Message.class);
-        mClient.supply(DataChange.modified(message));
+        Lists.forEach(mClients, client -> client.supply(DataChange.modified(message)));
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
         Message message = dataSnapshot.getValue(Message.class);
-        mClient.supply(DataChange.removed(message));
+        Lists.forEach(mClients, client -> client.supply(DataChange.removed(message)));
     }
 
     @Override
@@ -47,6 +61,11 @@ public class MessageListener implements ChildEventListener {
     @Override
     public void onCancelled(DatabaseError databaseError) {
         Log.d(Constants.ERROR, databaseError.getMessage());
-        mClient.supply(DataChange.cancelled(null));
+        Lists.forEach(mClients, client -> client.supply(DataChange.cancelled(null)));
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other != null && this.getClass() == other.getClass() && hashCode() == other.hashCode();
     }
 }

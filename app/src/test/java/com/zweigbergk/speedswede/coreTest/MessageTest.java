@@ -21,15 +21,15 @@ public class MessageTest {
 
     @Test
     public void initialMessageContent() {
-        assertTrue(this.message.getUid().equals("initialUid") &&
+        assertTrue(this.message.getId().equals("initialUid") &&
             this.message.getText().equals("initialMessage"));
     }
 
     @Test
     public void setGetUid() {
         String testUid = "testUid";
-        this.message.setUid(testUid);
-        assertTrue(this.message.getUid().equals(testUid));
+        this.message.setId(testUid);
+        assertTrue(this.message.getId().equals(testUid));
     }
 
     @Test

@@ -14,24 +14,22 @@ import android.widget.EditText;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.adapter.MessageAdapter;
+import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
-import com.zweigbergk.speedswede.service.DatabaseEvent;
-import com.zweigbergk.speedswede.service.DatabaseHandler;
-import com.zweigbergk.speedswede.service.LocalStorage;
+import com.zweigbergk.speedswede.database.DataChange;
+import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.util.Client;
 
 import java.util.Date;
 
-public class ChatFragment extends Fragment {
+public class ChatFragment extends Fragment implements Client<DataChange<Message>> {
+    public static final String TAG = ChatFragment.class.getSimpleName().toUpperCase();
+
     private RecyclerView chatRecyclerView;
+    private Chat mChat;
 
-    public static final String DUMMY_CHAT_UID = "Chat123";
-
-    public String mCurrentChatId;
-
-    public ChatFragment() {
-        // Required empty public constructor
-    }
-
+    private EditText mInputBox;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +47,7 @@ public class ChatFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.blockUser:
 
-                DatabaseHandler.INSTANCE.banUser(mCurrentChatId);
+                DatabaseHandler.INSTANCE.banUser(mChat.getSecondUser().getUid());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -59,41 +57,68 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
-        if (mCurrentChatId == null || mCurrentChatId.equals("")) {
-            mCurrentChatId = "privateChatUser_"+DatabaseHandler.INSTANCE.getLoggedInUser().getUid();
-        }
-//        mCurrentChatId = "privateChatUser_742nxCA9qvUF4ZIRGqA9sWfgooH2"; // Andreas facebook-id
+        view.findViewById(R.id.fragment_chat_post_message).setOnClickListener(this::onButtonClick);
 
         initializeRecyclerView(view);
 
-        view.findViewById(R.id.fragment_chat_post_message).setOnClickListener(this::onButtonClick);
+        mInputBox = (EditText) view.findViewById(R.id.fragment_chat_message_text);
 
         return view;
     }
 
+    public void setChat(Chat newChat) {
+        Chat oldChat = mChat;
+
+        //We no longer want updates from the old chat. Remove us as a client from the old chat.
+        if (oldChat != null) {
+            DatabaseHandler.INSTANCE.removeChatMessageClient(oldChat, this);
+        }
+
+        //We DO want updates from the new chat! Add us as a client to that one :)
+        DatabaseHandler.INSTANCE.addChatMessageClient(newChat, this);
+
+        mChat = newChat;
+    }
+
     private void onButtonClick(View view) {
-        EditText chatMessageText = ((EditText) this.getView().findViewById(R.id.fragment_chat_message_text));
-        String messageText = chatMessageText.getText().toString();
+        String messageText = mInputBox.getText().toString();
 
 
         if (messageText.length() > 0) {
-            Message message = new Message(DatabaseHandler.INSTANCE.getLoggedInUser().getUid(), messageText, (new Date()).getTime());
-            DatabaseHandler.INSTANCE.postMessageToChat(mCurrentChatId, message);
-//        DatabaseHandler.INSTANCE.postMessageToChat(DUMMY_CHAT_UID, message);
-            chatMessageText.setText("");
+            postMessage(messageText);
         }
+    }
 
+    private void postMessage(String text) {
+        Message message = new Message(DatabaseHandler.INSTANCE.getActiveUserId(), text, getCurrentTime());
+        DatabaseHandler.INSTANCE.postMessageToChat(mChat, message);
+
+        MessageAdapter adapter = getMessageAdapter();
+        adapter.onListChanged(DataChange.added(message));
+
+        clearInputField();
+    }
+
+    private MessageAdapter getMessageAdapter() {
+        return (MessageAdapter) chatRecyclerView.getAdapter();
+    }
+
+    private void clearInputField() {
+        mInputBox.setText("");
+    }
+
+    private long getCurrentTime() {
+        return new Date().getTime();
     }
 
     private void initializeRecyclerView(View view) {
         chatRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_chat_recycler_view);
-        LinearLayoutManager layoutManager= new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         chatRecyclerView.setLayoutManager(layoutManager);
         layoutManager.setStackFromEnd(true);
 
         MessageAdapter adapter = new MessageAdapter();
         chatRecyclerView.setAdapter(adapter);
-        DatabaseHandler.INSTANCE.registerConversationListener(mCurrentChatId, adapter::onListChanged);
 
         adapter.addEventCallback(DatabaseEvent.ADDED, this::smoothScrollToBottomOfList);
     }
@@ -108,10 +133,18 @@ public class ChatFragment extends Fragment {
 
         // Only scroll to the bottom if the new message was posted by us,
         //   OR if you are at the relative bottom of the chat.
-        if ((message.getUid() != null && message.getUid().equals(DatabaseHandler.INSTANCE.getActiveUserId()))
+        if ((message.getId() != null && message.getId().equals(DatabaseHandler.INSTANCE.getActiveUserId()))
                 || (scrollHeight - scrollOffset < chatRecyclerView.getHeight())) {
-            chatRecyclerView.post(() -> chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount() - 1));
+            chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount() - 1);
         }
 
+    }
+
+    @Override
+    public void supply(DataChange<Message> dataChange) {
+        Log.d(TAG, String.format("Calling onListChanged with change: [%s] and item: [%s]",
+                dataChange.getEvent().toString(), dataChange.getItem().toString()));
+
+        ((MessageAdapter)chatRecyclerView.getAdapter()).onListChanged(dataChange);
     }
 }
