@@ -65,13 +65,7 @@ public class ChatListFragment extends Fragment {
         //chatList = (ListView) view.findViewById(R.id.chat_listView);
         //chatList.setAdapter();
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
-        view.findViewById(R.id.block_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                User stranger= new UserProfile("name","uid");
-                DatabaseHandler.INSTANCE.banUser(DatabaseHandler.INSTANCE.getActiveUserId(),stranger);
-            }
-        });
+
 
         //this.updateDebugArea((TextView) view.findViewById(R.id.fragment_chat_list_debug_area));
 
