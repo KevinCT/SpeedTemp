@@ -33,12 +33,10 @@ import com.zweigbergk.speedswede.service.DatabaseHandler;
 
 import java.util.Arrays;
 
-public class ChatListFragment extends ListFragment {
+public class ChatListFragment extends Fragment {
 
-
-
-    private ChatListAdapter mAdapter;
-    private ListView mListView;
+    //ListView chatList;
+    //ChatListAdapter chatListAdapter;
 
     public ChatListFragment() {
         // Required empty public constructor
@@ -64,6 +62,8 @@ public class ChatListFragment extends ListFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
+        //chatList = (ListView) view.findViewById(R.id.chat_listView);
+        //chatList.setAdapter();
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
         view.findViewById(R.id.block_button).setOnClickListener(new View.OnClickListener() {
             @Override
