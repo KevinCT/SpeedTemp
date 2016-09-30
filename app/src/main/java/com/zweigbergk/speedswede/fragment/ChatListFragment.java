@@ -1,6 +1,21 @@
 package com.zweigbergk.speedswede.fragment;
 
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.support.v4.view.ViewPager;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.zweigbergk.speedswede.R;
+
+import com.zweigbergk.speedswede.adapter.ChatAdapter;
+import com.zweigbergk.speedswede.adapter.ChatListAdapter;
+
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +29,12 @@ import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.service.DatabaseEvent;
 import com.zweigbergk.speedswede.service.DatabaseHandler;
 
+import java.util.Arrays;
+
 public class ChatListFragment extends Fragment {
 
-    private TextView mChatText;
-
+    //ListView chatList;
+    //ChatListAdapter chatListAdapter;
 
     public ChatListFragment() {
         // Required empty public constructor
@@ -43,16 +60,12 @@ public class ChatListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
+        //chatList = (ListView) view.findViewById(R.id.chat_listView);
+        //chatList.setAdapter();
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
-        view.findViewById(R.id.block_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                User stranger= new UserProfile("name","uid");
-                DatabaseHandler.INSTANCE.banUser(DatabaseHandler.INSTANCE.getActiveUserId(),stranger);
-            }
-        });
 
-        this.updateDebugArea((TextView) view.findViewById(R.id.fragment_chat_list_debug_area));
+
+        //this.updateDebugArea((TextView) view.findViewById(R.id.fragment_chat_list_debug_area));
 
         return view;
     }

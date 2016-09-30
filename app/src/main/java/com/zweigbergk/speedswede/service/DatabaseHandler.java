@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
@@ -39,7 +40,8 @@ public enum DatabaseHandler {
     public static final String STRIKES = "strikes";
     private User mLoggedInUser;
    // private HashMap<String,List<User>> banMap;
-    private List<User> mBanList = new ArrayList<>();
+    private Banner mBanner = new Banner();
+    private Chat mChat = new Chat();
 
     private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -137,39 +139,55 @@ public enum DatabaseHandler {
         mDatabaseReference.child(CHATS).push().setValue(chat);
     }
 
-    public void banUser(String uID, User stranger ){
-        List<User> banList = getBanList(uID);
-        banList.add(stranger);
-        mDatabaseReference.child(BANS).child(uID).setValue(banList);
-        mDatabaseReference.child("Global"+BANS).push().setValue(stranger.getUid());
+    public void banUser(String chatID ){
+
+        Banner banner = getBans(getActiveUserId());
+        banner.addBan(getActiveUserId(),getChat(chatID).getFirstUser().getUid(),getChat(chatID).getSecondUser().getUid());
+        mDatabaseReference.child(BANS).child(getActiveUserId()).setValue(banner);
+        //mDatabaseReference.child("Global"+BANS).push().setValue(strangerID);
     }
 
 
-    public List<User> getBanList(String uID){
+    public Banner getBans(String uID){
         mDatabaseReference.child(BANS).child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mBanList=(List<User>) dataSnapshot.getValue();
+                mBanner = dataSnapshot.getValue(Banner.class);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                mBanList= new ArrayList<>();
+                mBanner = new Banner();
 
             }
 
         });
-        return mBanList;
+        return mBanner;
 
     }
 
-    public void removeBan(String uID, User stranger){
-        List<User> banList = getBanList(uID);
-        banList.remove(stranger);
-        mDatabaseReference.child(BANS).child(uID).setValue(banList);
+    public void removeBan(String uID, String strangerID){
+        Banner banner = getBans(uID);
+        banner.removeBan(strangerID);
+        mDatabaseReference.child(BANS).child(uID).setValue(banner);
 
     }
 
+    public Chat getChat(String chatID){
+        mDatabaseReference.child(CHATS).child(chatID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mChat = dataSnapshot.getValue(Chat.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                mChat = new Chat();
+
+            }
+        });
+        return mChat;
+    }
 
 
 }
