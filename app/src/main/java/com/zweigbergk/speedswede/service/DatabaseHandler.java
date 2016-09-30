@@ -3,17 +3,14 @@ package com.zweigbergk.speedswede.service;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
@@ -25,7 +22,6 @@ import com.zweigbergk.speedswede.service.eventListener.UserPoolListener;
 import com.zweigbergk.speedswede.util.Client;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public enum DatabaseHandler {
