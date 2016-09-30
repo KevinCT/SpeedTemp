@@ -84,8 +84,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
     private void onButtonClick(View view) {
         String messageText = mInputBox.getText().toString();
 
-
-        if (messageText.length() > 0) {
+        if (messageText.trim().length() > 0) {
             postMessage(messageText);
         }
     }
