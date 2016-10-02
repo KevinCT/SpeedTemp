@@ -17,6 +17,10 @@ import static android.media.CamcorderProfile.get;
 
 public class ChatListAdapter extends BaseAdapter {
 
+    TextView description;
+
+    TextView header;
+
     ArrayList<Chat> mChats;
 
     public ChatListAdapter(ArrayList<Chat> chats) {
@@ -47,11 +51,11 @@ public class ChatListAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_chat_list_item, parent, false);
         }
 
-        TextView header = (TextView) convertView.findViewById(R.id.header_textView);
+        header = (TextView) convertView.findViewById(R.id.header_textView);
 
         header.setText(mChats.get(position).getId()); //Or the name of the other user?
 
-        TextView description = (TextView) convertView.findViewById(R.id.description_textView);
+        description = (TextView) convertView.findViewById(R.id.description_textView);
 
         List<Message> lastConversation = mChats.get(position).getConversation();
 
