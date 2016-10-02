@@ -1,5 +1,6 @@
 package com.zweigbergk.speedswede.presenter;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.zweigbergk.speedswede.core.Chat;
@@ -18,8 +19,6 @@ import java.util.List;
 
 public class ChatPresenter {
 
-    public static final String USER_ID = "user_state";
-
     private ChatView mView;
     private ChatInteractor mInteractor;
 
@@ -27,14 +26,21 @@ public class ChatPresenter {
         mView = view;
         mInteractor = new ChatInteractor();
 
-        Log.d("DEBUG", "User id: " + DatabaseHandler.INSTANCE.getActiveUserId());
-        DatabaseHandler.INSTANCE.addUser();
+        mView.useContextTo(this::addUserToDatabase);
 
         updateDeveloperChat();
 
-        mView.useContextTo(LocalStorage.INSTANCE::saveActiveUserId);
         DatabaseHandler.INSTANCE.registerPoolListener(ChatMatcher.INSTANCE::handleUser);
         DatabaseHandler.INSTANCE.registerChatListener(this::handleChat);
+    }
+
+    private void addUserToDatabase(Context context) {
+        if (DatabaseHandler.INSTANCE.isNetworkAvailable(context)) {
+            Log.d("DEBUG", "User id: " + DatabaseHandler.INSTANCE.getActiveUserId());
+            DatabaseHandler.INSTANCE.addUser();
+
+            mView.useContextTo(LocalStorage.INSTANCE::saveActiveUser);
+        }
     }
 
     //Creates a developer chat if one is not present

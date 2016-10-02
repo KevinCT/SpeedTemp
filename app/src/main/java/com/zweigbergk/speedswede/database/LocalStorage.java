@@ -5,34 +5,41 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.google.firebase.auth.AuthCredential;
 import com.zweigbergk.speedswede.activity.LoginActivity;
-import com.zweigbergk.speedswede.presenter.ChatPresenter;
+import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.core.UserProfile;
+import com.zweigbergk.speedswede.interactor.LoginInteractor;
 
 public enum LocalStorage {
     INSTANCE;
 
-    public static final String USER_ID = "user_state";
+    public static final String TAG = LocalStorage.class.getSimpleName().toUpperCase();
 
-    public void saveActiveUserId(Context context) {
+    public static final String USER_ID = "user_id";
+    public static final String USER_NAME = "user_name";
+    public static final String CREDENTIAL = "user_name";
+
+    public void saveActiveUser(Context context) {
         if (DatabaseHandler.INSTANCE.getActiveUserId() != null) {
             SharedPreferences localState = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = localState.edit();
             editor.putString(USER_ID, DatabaseHandler.INSTANCE.getActiveUserId());
+            editor.putString(USER_NAME, DatabaseHandler.INSTANCE.getLoggedInUser().getDisplayName());
+            //editor.put(CREDENTIAL, LoginInteractor.userCredential);
             editor.apply();
         }
     }
 
-    public void loadSavedUserId(LoginActivity activity) {
+    public User getSavedUser(LoginActivity activity) {
         SharedPreferences localState = PreferenceManager.getDefaultSharedPreferences(activity);
-        String state = localState.getString(ChatPresenter.USER_ID, null);
-        Log.d("DEBUG", state == null ? "null" : state);
+        String id = localState.getString(USER_ID, null);
+        String name = localState.getString(USER_NAME, null);
+        Log.d(TAG, "Id of loaded user: " + (id == null ? "null" : id));
+        Log.d(TAG, "Name of loaded user: " + (name == null ? "null" : name));
 
-        if (state != null) {
-            Log.d("DEBUG", "Starting ChatActivity with old user session ID");
-            activity.startChatActivity();
-        } else {
-            Toast.makeText(activity, "No previous user could be found.", Toast.LENGTH_SHORT).show();
-        }
+        return id == null ? null : new UserProfile(name, id);
     }
 
 }

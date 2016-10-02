@@ -27,7 +27,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
     public MessageAdapter(List<Message> messages) {
-        mUser= DatabaseHandler.INSTANCE.getLoggedInUser();
+        mUser = DatabaseHandler.INSTANCE.getLoggedInUser();
         eventCallbacks = new HashMap<>();
         mMessages = messages;
 

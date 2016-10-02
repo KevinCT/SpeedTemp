@@ -1,6 +1,7 @@
 package com.zweigbergk.speedswede.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -15,6 +16,7 @@ import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.zweigbergk.speedswede.R;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.presenter.MainPresenter;
 import com.zweigbergk.speedswede.view.MainView;
 
@@ -24,13 +26,21 @@ import java.security.NoSuchAlgorithmException;
 public class MainActivity extends AppCompatActivity implements MainView {
 
     private static final boolean LOGOUT_ON_STARTUP = false;
+    private static boolean calledAlready = false;
+
+    public static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        if (!calledAlready)
+        {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            DatabaseHandler.INSTANCE.registerConnectionHandling();
+            calledAlready = true;
+        }
 
         printKeyHash(this);
 
@@ -47,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
         }
 
         startLoginActivity();
+
+        context = getBaseContext();
     }
 
     public static String printKeyHash(Activity context) {

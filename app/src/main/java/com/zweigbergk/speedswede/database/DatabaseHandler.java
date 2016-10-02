@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.zweigbergk.speedswede.activity.MainActivity;
 import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
@@ -44,12 +45,16 @@ public enum DatabaseHandler {
     public static final String MESSAGES = "messages";
     public static final String CHATS = "chats";
     public static final String POOL = "pool";
-    public static final String USER = "users";
+    public static final String USERS = "users";
     public static final String USER_NAME = "displayName";
     public static final String UID = "uid";
     public static final String BANS = "bans";
     public static final String STRIKES = "strikes";
+
     private User mLoggedInUser;
+
+    private boolean mFirebaseConnectionStatus = false;
+
    // private HashMap<String,List<User>> banMap;
     private Banner mBanner = new Banner();
 
@@ -74,7 +79,6 @@ public enum DatabaseHandler {
     }
 
     public Chat convertToChat(DataSnapshot snapshot) {
-        Log.d(TAG, snapshot.toString());
         if (snapshot.getValue() == null)
             return null;
 
@@ -96,7 +100,14 @@ public enum DatabaseHandler {
 
     public void getChatWithId(String id, Client<Chat> client) {
         mDatabaseReference.child(CHATS).child(id).addListenerForSingleValueEvent(
-                new DataQuery(snapshot -> client.supply(convertToChat(snapshot))));
+                new DataQuery(snapshot -> {
+                    Chat chat = convertToChat(snapshot);
+                    client.supply(chat);
+                }));
+    }
+
+    public boolean hasConnection() {
+        return mFirebaseConnectionStatus;
     }
 
     private boolean hasMessageListenerForChat(Chat chat) {
@@ -149,13 +160,15 @@ public enum DatabaseHandler {
             return;
         }
 
-        mDatabaseReference.child(USER).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabaseReference.child(USERS).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = convertToUser(dataSnapshot);
-                DataCache.INSTANCE.cache(user);
+                if (dataSnapshot.exists()) {
+                    User user = convertToUser(dataSnapshot);
+                    DataCache.INSTANCE.cache(user);
 
-                client.supply(user);
+                    client.supply(user);
+                }
             }
 
             @Override
@@ -169,7 +182,7 @@ public enum DatabaseHandler {
     }
 
     public void addUser() {
-        mDatabaseReference.child(USER).child(getActiveUserId()).setValue(getLoggedInUser());
+        mDatabaseReference.child(USERS).child(getActiveUserId()).setValue(getLoggedInUser());
     }
 
 
@@ -178,6 +191,14 @@ public enum DatabaseHandler {
     }
 
     public String getActiveUserId() {
+        if (getLoggedInUser() != null) {
+            return getLoggedInUser().getUid();
+        }
+
+        return getFirebaseAuthUid();
+    }
+
+    private String getFirebaseAuthUid() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
@@ -194,11 +215,19 @@ public enum DatabaseHandler {
     public User getLoggedInUser() {
         if (mLoggedInUser == null) {
             String name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-            String uid = getActiveUserId();
-            mLoggedInUser = new UserProfile(name, uid);
+            String uid = getFirebaseAuthUid();
+            setLoggedInUser(new UserProfile(name, uid));
         }
 
         return mLoggedInUser;
+    }
+
+    public void setLoggedInUser(User user) {
+        mLoggedInUser = user;
+    }
+
+    public boolean hasFirebaseConnection() {
+        return mFirebaseConnectionStatus;
     }
 
     public boolean isNetworkAvailable(Context context) {
@@ -219,6 +248,10 @@ public enum DatabaseHandler {
                 mDatabaseReference.child(CHATS).child(chat.getId()).child(MESSAGES).push().setValue(message);
             }
         });
+    }
+
+    private Context getBaseContext() {
+        return MainActivity.context;
     }
 
     public void pushChat(Chat chat) {
@@ -252,5 +285,28 @@ public enum DatabaseHandler {
         return mBanner;
 
     }
-    
+
+    public void removeBan(String uID, String strangerID){
+        Banner banner = getBans(uID);
+        banner.removeBan(strangerID);
+
+        mDatabaseReference.child(BANS).child(uID).setValue(banner);
+    }
+
+    public void registerConnectionHandling() {
+        DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+        connectedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                boolean connectionStatus = snapshot.getValue(Boolean.class);
+                Log.d(TAG, "Firebase connection status changed to: " + connectionStatus);
+                mFirebaseConnectionStatus = connectionStatus;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                System.err.println("Listener was cancelled");
+            }
+        });
+    }
 }

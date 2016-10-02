@@ -5,13 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.zweigbergk.speedswede.R;
-
 import com.zweigbergk.speedswede.adapter.ChatListAdapter;
-import com.zweigbergk.speedswede.adapter.ChatListFragmentAdapter;
 
 import android.support.v4.app.Fragment;
 
@@ -22,7 +21,6 @@ import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 
 import java.util.ArrayList;
-
 public class ChatListFragment extends Fragment {
 
     ListView chatList;

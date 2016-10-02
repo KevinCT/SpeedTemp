@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
+
+import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.ActivityAttachable;
 import com.zweigbergk.speedswede.activity.LoginActivity;
 import com.zweigbergk.speedswede.interactor.LoginInteractor;
@@ -35,13 +38,14 @@ public class LoginPresenter implements ActivityAttachable {
     private void handleAutomaticLogin(Context context) {
         boolean connected = DatabaseHandler.INSTANCE.isNetworkAvailable(context);
         if (connected) {
-            Log.d("DEBUG2", "Connected.");
+            Log.d(TAG, "Network is available.");
             if (hasLoggedInUser()) {
-                Log.d("DEBUG2", "hasLoggedInUser.");
+                Log.d(TAG, "We have a logged in user. Using token to log in.");
                 AccessToken token = AccessToken.getCurrentAccessToken();
                 loginWithToken(token);
             }
         } else {
+            Log.d(TAG, "Network is unavailable. Trying Offline Mode...");
             loginInOfflineMode();
         }
     }
@@ -52,7 +56,16 @@ public class LoginPresenter implements ActivityAttachable {
     }
 
     private void loginInOfflineMode() {
-        LocalStorage.INSTANCE.loadSavedUserId(mActivity);
+        User user = LocalStorage.INSTANCE.getSavedUser(mActivity);
+
+        if (user != null) {
+            Log.d(TAG, "Found saved user in LocalStorage. Starting ChatActivity.");
+            DatabaseHandler.INSTANCE.setLoggedInUser(user);
+            mActivity.startChatActivity();
+        } else {
+            Toast.makeText(mActivity, "No previous user could be found.", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "loginInOfflineMode: No previous user could be found.");
+        }
     }
 
     private boolean hasLoggedInUser() {
@@ -80,7 +93,7 @@ public class LoginPresenter implements ActivityAttachable {
         mActivity.setContentVisibility(contentVisibility);
     }
 
-    public void onAuthResult(boolean result) {
+    private void onAuthResult(boolean result) {
         if (result == LoginInteractor.LOGIN_SUCCESS) {
             Log.d(TAG, "onAuthStateChanged:signed_in");
             mActivity.startChatActivity();

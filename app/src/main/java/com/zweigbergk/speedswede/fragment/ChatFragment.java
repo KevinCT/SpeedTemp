@@ -147,8 +147,8 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
 
     @Override
     public void supply(DataChange<Message> dataChange) {
-        Log.d(TAG, String.format("Calling onListChanged with change: [%s] and item: [%s]",
-                dataChange.getEvent().toString(), dataChange.getItem().toString()));
+        Log.d(TAG, String.format("Calling onListChanged with change: [%s] and messageText: [%s]",
+                dataChange.getEvent().toString(), dataChange.getItem().getText()));
 
         ((MessageAdapter)chatRecyclerView.getAdapter()).onListChanged(dataChange);
     }

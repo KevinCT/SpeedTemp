@@ -11,6 +11,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FacebookAuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -18,6 +19,8 @@ import com.zweigbergk.speedswede.util.ActivityAttachable;
 import com.zweigbergk.speedswede.util.Client;
 
 public class LoginInteractor implements ActivityAttachable {
+
+    public static AuthCredential userCredential;
 
     //public static final String TAG = "LoginInteractor";
     public static final String TAG = "DEBUG";
@@ -62,9 +65,8 @@ public class LoginInteractor implements ActivityAttachable {
     public void handleFacebookAccessToken(Client<Boolean> authClient, AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
         Log.d(TAG, "user: " + token.getUserId());
-
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        FirebaseAuth.getInstance().signInWithCredential(credential)
+        userCredential = FacebookAuthProvider.getCredential(token.getToken());
+        FirebaseAuth.getInstance().signInWithCredential(userCredential)
                 .addOnCompleteListener(task -> {
                     Log.d("DEBUG2", "WE GOT IN!!");
                     Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());

@@ -59,5 +59,4 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         Log.d(TAG, "Inserting chat: " + chat.getId());
         mChatFragment.setChat(chat);
     }
-
 }

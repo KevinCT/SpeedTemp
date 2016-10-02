@@ -7,15 +7,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
-import com.zweigbergk.speedswede.core.Message;
-import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.Client;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ChatListener implements ChildEventListener {
 
