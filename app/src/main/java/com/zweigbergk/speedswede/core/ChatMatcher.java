@@ -1,5 +1,6 @@
 package com.zweigbergk.speedswede.core;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.zweigbergk.speedswede.database.DataChange;
@@ -8,6 +9,7 @@ import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.Client;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -85,17 +87,26 @@ public enum ChatMatcher {
 
     public void match() {
         Log.d("Users in pool: ", ""+mUserPool.size());
-        if(mUserPool.size() > 1) {
-            // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
-            List<User> copiedList = new LinkedList<>();
-            copiedList.add(mUserPool.get(0));
-            copiedList.add(mUserPool.get(1));
+        if(Collections.disjoint(mUserPool,DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId()).getBanList())) {
+            if (mUserPool.size() > 1) {
+                // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
+                List<User> copiedList = new LinkedList<>();
+                copiedList.add(mUserPool.get(0));
+                copiedList.add(mUserPool.get(1));
 
-            DatabaseHandler.INSTANCE.removeUserFromPool(copiedList.get(0));
-            DatabaseHandler.INSTANCE.removeUserFromPool(copiedList.get(1));
+                DatabaseHandler.INSTANCE.removeUserFromPool(copiedList.get(0));
+                DatabaseHandler.INSTANCE.removeUserFromPool(copiedList.get(1));
 
-            DatabaseHandler.INSTANCE.pushChat(new Chat(copiedList.get(0), copiedList.get(1)));
+                DatabaseHandler.INSTANCE.pushChat(new Chat(copiedList.get(0), copiedList.get(1)));
+            }
         }
+        else {
+            List<User> unionList = mUserPool;
+            unionList.retainAll(DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId()).getBanList());
+            mUserPool.removeAll(unionList);
+            match();
+        }
+
     }
 
     public void clear() {
