@@ -20,6 +20,7 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.interactor.BanInteractor;
 import com.zweigbergk.speedswede.util.Client;
 
 import java.util.Date;
@@ -29,12 +30,15 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
 
     private RecyclerView chatRecyclerView;
     private Chat mChat;
+    //TODO presenter between interactor and fragment
+    private BanInteractor banInteractor;
 
     private EditText mInputBox;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        banInteractor = new BanInteractor();
     }
 
     @Override
@@ -48,7 +52,8 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
         switch (item.getItemId()) {
             case R.id.blockUser:
 
-                DatabaseHandler.INSTANCE.banUser(mChat.getSecondUser().getUid());
+                //DatabaseHandler.INSTANCE.banUser(mChat.getSecondUser().getUid());
+                banInteractor.addBan(DatabaseHandler.INSTANCE.getActiveUserId(),mChat.getFirstUser().getUid(),mChat.getSecondUser().getUid());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

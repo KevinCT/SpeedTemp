@@ -225,15 +225,15 @@ public enum DatabaseHandler {
         mDatabaseReference.child(CHATS).child(chat.getId()).setValue(chat);
     }
 
-    public void banUser(String chatId ){
-        getChatWithId(chatId, chat -> {
+    public void sendObject(String child, Object object ){
+        /*getChatWithId(chatId, chat -> {
             Banner banner = getBans(getActiveUserId());
             banner.addBan(getActiveUserId(), chat.getFirstUser().getUid(), chat.getSecondUser().getUid());
             mDatabaseReference.child(BANS).child(getActiveUserId()).setValue(banner);
             //mDatabaseReference.child("Global"+BANS).push().setValue(strangerID);
-        });
+        });*/
+        mDatabaseReference.child(BANS).child(getActiveUserId()).setValue(object);
     }
-
 
     public Banner getBans(String uID){
         mDatabaseReference.child(BANS).child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
