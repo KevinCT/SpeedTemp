@@ -80,6 +80,12 @@ public class Chat {
         return id;
     }
 
+    public long getIdAsLong() {
+        return firstUser.hashCode() * 5 +
+                secondUser.hashCode() * 7 +
+                timeStamp;
+    }
+
     public void postMessage(User user, Message message) throws IllegalArgumentException {
         if (!includesUser(user)) {
             throw new IllegalArgumentException("User provided ["+user.getUid()+"] is not a member of this chat.");

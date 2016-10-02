@@ -9,8 +9,8 @@ import android.util.Log;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.adapter.ChatAdapter;
+import com.zweigbergk.speedswede.adapter.ChatListFragmentAdapter;
 import com.zweigbergk.speedswede.core.Chat;
-import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
 import com.zweigbergk.speedswede.presenter.ChatPresenter;
@@ -24,6 +24,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     public static final String TAG = ChatActivity.class.getSimpleName().toUpperCase();
 
     private ChatAdapter mAdapter;
+    private ChatListFragmentAdapter mChatlistFragmentAdapter;
     private ViewPager mPager;
 
     private final ChatFragment mChatFragment = new ChatFragment();

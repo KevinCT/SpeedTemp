@@ -1,40 +1,33 @@
 package com.zweigbergk.speedswede.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.support.v4.view.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.zweigbergk.speedswede.R;
 
-import com.zweigbergk.speedswede.adapter.ChatAdapter;
 import com.zweigbergk.speedswede.adapter.ChatListAdapter;
+import com.zweigbergk.speedswede.adapter.ChatListFragmentAdapter;
 
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class ChatListFragment extends Fragment {
 
-    //ListView chatList;
-    //ChatListAdapter chatListAdapter;
+    ListView chatList;
+    ChatListAdapter mChatlistAdapter;
+
 
     public ChatListFragment() {
         // Required empty public constructor
@@ -60,8 +53,11 @@ public class ChatListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
-        //chatList = (ListView) view.findViewById(R.id.chat_listView);
-        //chatList.setAdapter();
+        chatList = (ListView) view.findViewById(R.id.chat_listView);
+
+        mChatlistAdapter = new ChatListAdapter(new ArrayList<>()); //Chats here
+        chatList.setAdapter(mChatlistAdapter);
+
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
 
 
