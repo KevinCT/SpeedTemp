@@ -252,12 +252,5 @@ public enum DatabaseHandler {
         return mBanner;
 
     }
-
-    public void removeBan(String uID, String strangerID){
-        Banner banner = getBans(uID);
-        banner.removeBan(strangerID);
-
-        mDatabaseReference.child(BANS).child(uID).setValue(banner);
-
-    }
+    
 }

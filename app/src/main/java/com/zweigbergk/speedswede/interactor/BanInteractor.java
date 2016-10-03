@@ -23,11 +23,15 @@ public class BanInteractor  {
 
     public void addBan(String uID, String firstUser, String secondUser){
         mBanner.addBan(uID,firstUser,secondUser);
-        DatabaseHandler.INSTANCE.sendObject(null,mBanner);
+        DatabaseHandler.INSTANCE.sendObject("bans",mBanner);
 
     }
 
-    public void removeBan(){
+    public void removeBan(String strangerID){
+        mBanner.removeBan();
+        mBanner.removeBan(strangerID);
+        DatabaseHandler.INSTANCE.sendObject("bans",mBanner);
+
     }
 
 
