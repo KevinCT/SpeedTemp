@@ -28,7 +28,6 @@ public class BanInteractor  {
     }
 
     public void removeBan(String strangerID){
-        mBanner.removeBan();
         mBanner.removeBan(strangerID);
         DatabaseHandler.INSTANCE.sendObject("bans",mBanner);
 
