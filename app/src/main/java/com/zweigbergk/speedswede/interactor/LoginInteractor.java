@@ -25,8 +25,7 @@ public class LoginInteractor implements ActivityAttachable {
     //public static final String TAG = "LoginInteractor";
     public static final String TAG = "DEBUG";
 
-    public static final boolean LOGIN_SUCCESS = true;
-    public static final boolean LOGIN_FAILED = false;
+    public enum AuthResult { SUCCESS, FAIL }
 
     private CallbackManager mCallbackManager;
 
@@ -34,7 +33,7 @@ public class LoginInteractor implements ActivityAttachable {
         mCallbackManager = CallbackManager.Factory.create();
     }
 
-    public void registerLoginCallback(Client<Boolean> authClient, LoginButton button) {
+    public void registerLoginCallback(Client<AuthResult> authClient, LoginButton button) {
         button.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -62,7 +61,7 @@ public class LoginInteractor implements ActivityAttachable {
         return msg.equals("CONNECTION_FAILURE");
     }
 
-    public void handleFacebookAccessToken(Client<Boolean> authClient, AccessToken token) {
+    public void handleFacebookAccessToken(Client<AuthResult> authClient, AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
         Log.d(TAG, "user: " + token.getUserId());
         userCredential = FacebookAuthProvider.getCredential(token.getToken());
@@ -71,9 +70,9 @@ public class LoginInteractor implements ActivityAttachable {
                     Log.d("DEBUG2", "WE GOT IN!!");
                     Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
                     if (task.isSuccessful()) {
-                        authClient.supply(LOGIN_SUCCESS);
+                        authClient.supply(AuthResult.SUCCESS);
                     } else {
-                        authClient.supply(LOGIN_FAILED);
+                        authClient.supply(AuthResult.FAIL);
                         Log.w(TAG, "signInWithCredential failed: ", task.getException());
                     }
                     });

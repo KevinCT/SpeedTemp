@@ -93,12 +93,16 @@ public class LoginPresenter implements ActivityAttachable {
         mActivity.setContentVisibility(contentVisibility);
     }
 
-    private void onAuthResult(boolean result) {
-        if (result == LoginInteractor.LOGIN_SUCCESS) {
-            Log.d(TAG, "onAuthStateChanged:signed_in");
-            mActivity.startChatActivity();
-        } else {
-            Log.d(TAG, "onAuthStateChanged:signed_out");
+    private void onAuthResult(LoginInteractor.AuthResult result) {
+        switch (result) {
+            case SUCCESS:
+                Log.d(TAG, "onAuthStateChanged:signed_in");
+                mActivity.startChatActivity();
+                break;
+            case FAIL:
+                Log.d(TAG, "onAuthStateChanged:signed_out");
+                DatabaseHandler.INSTANCE.logout();
+                break;
         }
     }
 

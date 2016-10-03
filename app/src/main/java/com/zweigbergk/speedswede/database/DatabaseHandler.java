@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
@@ -36,12 +37,6 @@ public enum DatabaseHandler {
 
     public static final String TAG = DatabaseHandler.class.getSimpleName().toUpperCase();
 
-    private Map<String, MessageListener> messageListeners;
-
-    DatabaseHandler() {
-        messageListeners = new HashMap<>();
-    }
-
     public static final String MESSAGES = "messages";
     public static final String CHATS = "chats";
     public static final String POOL = "pool";
@@ -51,11 +46,15 @@ public enum DatabaseHandler {
     public static final String BANS = "bans";
     public static final String STRIKES = "strikes";
 
-    private User mLoggedInUser;
-
     private boolean mFirebaseConnectionStatus = false;
 
-   // private HashMap<String,List<User>> banMap;
+    private Map<String, MessageListener> messageListeners;
+
+    DatabaseHandler() {
+        messageListeners = new HashMap<>();
+    }
+
+    private User mLoggedInUser;
     private Banner mBanner = new Banner();
 
     private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
@@ -284,6 +283,12 @@ public enum DatabaseHandler {
         });
         return mBanner;
 
+    }
+
+    public void logout() {
+        LoginManager.getInstance().logOut();
+        FirebaseAuth.getInstance().signOut();
+        mLoggedInUser = null;
     }
 
     public void removeBan(String uID, String strangerID){
