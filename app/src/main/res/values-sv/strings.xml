@@ -6,9 +6,9 @@
     <string name="facebook_app_id">616859141821100</string>
     <string name="fb_login_protocol_scheme">fb616859141821100</string>
 
-    <string name="hint_message_input_field">Write a message...</string>
+    <string name="hint_message_input_field">Skriv ett meddelande...</string>
     <string name="message_dummy_text">Vi rockar en testningschatt, till världens bästa festningsapp.</string>
 
-    <string name="leta_kompis">Match with a user</string>
-    <string name="block_user">Block user</string>
+    <string name="block_user">Blockera användare</string>
+    <string name="leta_kompis">Matcha med en användare</string>
 </resources>

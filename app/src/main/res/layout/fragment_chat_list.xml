@@ -7,14 +7,6 @@
     <!-- TODO: Update blank fragment layout -->
 
     <Button
-        android:text="Block"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/block_button"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
-
-    <Button
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:text="@string/leta_kompis"
@@ -35,7 +27,6 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/block_button"
         android:id="@+id/chat_listView" />
 
 </RelativeLayout>
