@@ -23,7 +23,7 @@ public class DataChange<ObjectType> {
     }
 
     public static <ObjectType> DataChange<ObjectType> modified(ObjectType data) {
-        return new DataChange<>(data, DatabaseEvent.MODIFIED);
+        return new DataChange<>(data, DatabaseEvent.CHANGED);
     }
 
     public static <ObjectType> DataChange<ObjectType> removed(ObjectType data) {

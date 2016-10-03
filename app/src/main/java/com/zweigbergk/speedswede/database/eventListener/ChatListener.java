@@ -7,17 +7,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
-import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.firebase.DbChatHandler;
-import com.zweigbergk.speedswede.util.Client;
 
-import java.util.Collection;
+import java.util.Collections;
 
 public class ChatListener extends FirebaseDataListener<Chat> implements ChildEventListener {
 
-    public ChatListener(Collection<Client<DataChange<Chat>>> clients) {
-        super(clients);
+    public static final String TAG = ChatListener.class.getSimpleName().toUpperCase();
+
+    public ChatListener() {
+        super(Collections.emptySet());
     }
 
     private void notifyAdded(Chat chat) {
@@ -38,6 +38,7 @@ public class ChatListener extends FirebaseDataListener<Chat> implements ChildEve
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        Log.d(TAG, "Got chat with key: " + dataSnapshot.getKey());
         DbChatHandler.INSTANCE.convertToChat(dataSnapshot, this::notifyAdded);
     }
 

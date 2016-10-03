@@ -1,5 +1,7 @@
 package com.zweigbergk.speedswede.core;
 
+import com.google.firebase.auth.FirebaseUser;
+
 public class UserProfile implements User {
 
     private String mName, mUid;
@@ -17,6 +19,10 @@ public class UserProfile implements User {
     @Override
     public String getDisplayName() {
         return mName;
+    }
+
+    public static UserProfile from(FirebaseUser user) {
+        return user == null ? null : new UserProfile(user.getDisplayName(), user.getUid());
     }
 
     @Override

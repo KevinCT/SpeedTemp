@@ -5,47 +5,52 @@ import android.util.Log;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.core.UserProfile;
-import com.zweigbergk.speedswede.database.DataChange;
-import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
 
-public class UserPoolListener implements ChildEventListener {
+import java.util.Collections;
 
-    private Client<DataChange<User>> mClient;
+public class UserPoolListener extends FirebaseDataListener<User> implements ChildEventListener {
 
-    public UserPoolListener(Client<DataChange<User>> client) {
-        mClient = client;
+    public UserPoolListener() {
+        super(Collections.emptySet());
     }
 
+    private void notifyAdded(User user) {
+        notifyClients(DatabaseEvent.ADDED, user);
+    }
 
-    // NOTE: onChildAdded() runs once for every existing child at the time of attaching.
-    // Thus there is no need for an initial SingleValueEventListener.
+    private void notifyRemoved(User user) {
+        notifyClients(DatabaseEvent.REMOVED, user);
+    }
+
+    private void notifyChanged(User user) {
+        notifyClients(DatabaseEvent.CHANGED, user);
+    }
+
+    private void notifyInterrupted() {
+        notifyClients(DatabaseEvent.INTERRUPED, null);
+    }
+
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-        User user = DatabaseHandler.convertToUser(dataSnapshot);
-        Log.d("UserPoolListener", "added");
-
-        mClient.supply(DataChange.added(user));
+        User user = DbUserHandler.INSTANCE.convertToUser(dataSnapshot);
+        notifyAdded(user);
     }
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        Log.d("UserPoolListener", "changed");
-
-        User user = new UserProfile(dataSnapshot.child("displayName").getValue().toString(),
-                dataSnapshot.child("uid").getValue().toString());
-        mClient.supply(DataChange.modified(user));
+        User user = DbUserHandler.INSTANCE.convertToUser(dataSnapshot);
+        notifyChanged(user);
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
-        User user = new UserProfile(dataSnapshot.child("displayName").getValue().toString(),
-                dataSnapshot.child("uid").getValue().toString());
-        mClient.supply(DataChange.removed(user));
+        User user = DbUserHandler.INSTANCE.convertToUser(dataSnapshot);
+        notifyRemoved(user);
     }
 
     @Override
@@ -56,6 +61,6 @@ public class UserPoolListener implements ChildEventListener {
     @Override
     public void onCancelled(DatabaseError databaseError) {
         Log.d(Constants.ERROR, databaseError.getMessage());
-        mClient.supply(DataChange.cancelled(null));
+        notifyInterrupted();
     }
 }

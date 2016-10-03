@@ -12,11 +12,11 @@ import android.util.Log;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginManager;
-import com.google.firebase.auth.FirebaseAuth;
+
 import com.google.firebase.database.FirebaseDatabase;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
 import com.zweigbergk.speedswede.presenter.MainPresenter;
 import com.zweigbergk.speedswede.view.MainView;
 
@@ -28,36 +28,32 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private static final boolean LOGOUT_ON_STARTUP = false;
     private static boolean calledAlready = false;
 
-    public static Context context;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (!calledAlready)
-        {
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(getApplication());
+
+        if (!calledAlready) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            DatabaseHandler.INSTANCE.initialize();
             DatabaseHandler.INSTANCE.registerConnectionHandling();
             calledAlready = true;
         }
 
         printKeyHash(this);
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(getApplication());
-
         new MainPresenter(this);
         setUpContent();
 
         // TODO Remove once we have logout functionality.
         if (LOGOUT_ON_STARTUP) {
-            DatabaseHandler.INSTANCE.logout();
+            DbUserHandler.INSTANCE.logout();
         }
 
         startLoginActivity();
-
-        context = getBaseContext();
     }
 
     public static String printKeyHash(Activity context) {

@@ -1,6 +1,9 @@
 package com.zweigbergk.speedswede.core;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+
 public class Message {
 
     private String id;

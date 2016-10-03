@@ -20,6 +20,8 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.database.firebase.DbChatHandler;
+import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
 import com.zweigbergk.speedswede.interactor.BanInteractor;
 import com.zweigbergk.speedswede.util.Client;
 
@@ -53,7 +55,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
             case R.id.blockUser:
 
                 //DatabaseHandler.INSTANCE.banUser(mChat.getSecondUser().getUid());
-                banInteractor.addBan(DatabaseHandler.INSTANCE.getActiveUserId(),mChat.getFirstUser().getUid(),mChat.getSecondUser().getUid());
+                banInteractor.addBan(DbUserHandler.INSTANCE.getActiveUserId(),mChat.getFirstUser().getUid(),mChat.getSecondUser().getUid());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -75,16 +77,18 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
     public void setChat(Chat newChat) {
         Chat oldChat = mChat;
 
+        //Remove the messages from the old chat
+        getMessageAdapter().clear();
+
         //We no longer want updates from the old chat. Remove us as a client from the old chat.
         if (oldChat != null) {
-            DatabaseHandler.INSTANCE.removeChatMessageClient(oldChat, this);
+            DbChatHandler.INSTANCE.removeMessageClient(oldChat, this);
         }
 
         //We DO want updates from the new chat! Add us as a client to that one :)
-        DatabaseHandler.INSTANCE.addChatMessageClient(newChat, this);
+        DbChatHandler.INSTANCE.addMesageClient(newChat, this);
 
         mChat = newChat;
-        getMessageAdapter().clear();
     }
 
     private void onButtonClick(View view) {
@@ -96,8 +100,8 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
     }
 
     private void postMessage(String text) {
-        Message message = new Message(DatabaseHandler.INSTANCE.getActiveUserId(), text, getCurrentTime());
-        DatabaseHandler.INSTANCE.postMessageToChat(mChat, message);
+        Message message = new Message(DbUserHandler.INSTANCE.getActiveUserId(), text, getCurrentTime());
+        DbChatHandler.INSTANCE.postMessageToChat(mChat, message);
 
         MessageAdapter adapter = getMessageAdapter();
         adapter.onListChanged(DataChange.added(message));
@@ -139,7 +143,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
 
         // Only scroll to the bottom if the new message was posted by us,
         //   OR if you are at the relative bottom of the chat.
-        if ((message.getId() != null && message.getId().equals(DatabaseHandler.INSTANCE.getActiveUserId()))
+        if ((message.getId() != null && message.getId().equals(DbUserHandler.INSTANCE.getActiveUserId()))
                 || (scrollHeight - scrollOffset < chatRecyclerView.getHeight())) {
             chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount() - 1);
         }

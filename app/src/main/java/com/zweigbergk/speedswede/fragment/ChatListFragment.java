@@ -19,7 +19,7 @@ import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
-import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
 
 import java.util.ArrayList;
 public class ChatListFragment extends Fragment {
@@ -36,7 +36,7 @@ public class ChatListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ChatMatcher.INSTANCE.addEventCallback(DatabaseEvent.ADDED, this::onUserAddedToChatPool);
+        ChatMatcher.INSTANCE.addPoolClient(DatabaseEvent.ADDED, this::onUserAddedToChatPool);
 
     }
 
@@ -63,22 +63,7 @@ public class ChatListFragment extends Fragment {
         return view;
     }
 
-    private void updateDebugArea(TextView debugArea) {
-//        StringBuilder usersInPool = new StringBuilder();
-
-//        DatabaseHandler.INSTANCE.getMatchingPool(user -> usersInPool.append(user.getId() + "\n"));
-//        for (User user : ChatMatcher.INSTANCE.getPool()) {
-//            usersInPool.append(user.getId() + "\n");
-//            debugArea.setText("Users in pool2:\n" + user.getId().toString());
-////            Log.d("User in pool: ", );
-//        }
-//
-//        debugArea.setText("Users in pool2:\n" + usersInPool.toString());
-    }
-
-
-
     public void addUser(View view) {
-        ChatMatcher.INSTANCE.pushUser(new UserProfile("Namn", DatabaseHandler.INSTANCE.getLoggedInUser().getUid()));
+        ChatMatcher.INSTANCE.pushUser(new UserProfile("Namn", DbUserHandler.INSTANCE.getLoggedInUser().getUid()));
     }
 }

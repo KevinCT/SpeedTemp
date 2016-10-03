@@ -10,6 +10,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.zweigbergk.speedswede.activity.LoginActivity;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
+import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
 import com.zweigbergk.speedswede.interactor.LoginInteractor;
 
 public enum LocalStorage {
@@ -22,11 +23,11 @@ public enum LocalStorage {
     public static final String CREDENTIAL = "user_name";
 
     public void saveActiveUser(Context context) {
-        if (DatabaseHandler.INSTANCE.getActiveUserId() != null) {
+        if (DbUserHandler.INSTANCE.getActiveUserId() != null) {
             SharedPreferences localState = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = localState.edit();
-            editor.putString(USER_ID, DatabaseHandler.INSTANCE.getActiveUserId());
-            editor.putString(USER_NAME, DatabaseHandler.INSTANCE.getLoggedInUser().getDisplayName());
+            editor.putString(USER_ID, DbUserHandler.INSTANCE.getActiveUserId());
+            editor.putString(USER_NAME, DbUserHandler.INSTANCE.getLoggedInUser().getDisplayName());
             //editor.put(CREDENTIAL, LoginInteractor.userCredential);
             editor.apply();
         }

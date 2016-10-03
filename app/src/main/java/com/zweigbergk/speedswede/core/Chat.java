@@ -2,9 +2,11 @@ package com.zweigbergk.speedswede.core;
 
 import com.google.firebase.database.Exclude;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Chat {
 
@@ -79,6 +81,7 @@ public class Chat {
         return id;
     }
 
+    @Exclude
     public long getIdAsLong() {
         return firstUser.hashCode() * 5 +
                 secondUser.hashCode() * 7 +
@@ -87,10 +90,14 @@ public class Chat {
 
     public void postMessage(User user, Message message) throws IllegalArgumentException {
         if (!includesUser(user)) {
-            throw new IllegalArgumentException("User provided ["+user.getUid()+"] is not a member of this chat.");
+            throw new IllegalArgumentException(String.format("User provided [%s] is not a member of this chat.", user.getUid()));
         }
         lastMessageTimeStamp = (new Date()).getTime();
         conversation.add(message);
+    }
+
+    public String getReadableTime() {
+        return new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss", Locale.ENGLISH).format(new Date(timeStamp));
     }
 
     @Override

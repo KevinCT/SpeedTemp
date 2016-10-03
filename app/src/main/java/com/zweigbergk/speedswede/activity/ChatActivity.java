@@ -56,7 +56,11 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     @Override
     public void setChatForChatFragment(Chat chat) {
-        Log.d(TAG, "Inserting chat: " + chat.getId());
-        mChatFragment.setChat(chat);
+        if (chat != null) {
+            Log.d(TAG, "Setting chat for ChatFragment, chat ID: " + chat.getId());
+            mChatFragment.setChat(chat);
+        } else {
+            Log.e(TAG, "WARNING! Tried to set a null chat as the active chat for ChatFragment.");
+        }
     }
 }

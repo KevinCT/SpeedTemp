@@ -4,6 +4,7 @@ import android.provider.ContactsContract;
 
 import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
 
 /**
  * Created by Kevin on 2016-10-03.
@@ -13,8 +14,8 @@ public class BanInteractor  {
     private Banner mBanner;
 
     public BanInteractor(){
-        if(DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId())!=null) {
-            mBanner = DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId());
+        if(DatabaseHandler.INSTANCE.getBans(DbUserHandler.INSTANCE.getActiveUserId())!=null) {
+            mBanner = DatabaseHandler.INSTANCE.getBans(DbUserHandler.INSTANCE.getActiveUserId());
         }
         else {
             mBanner = new Banner();

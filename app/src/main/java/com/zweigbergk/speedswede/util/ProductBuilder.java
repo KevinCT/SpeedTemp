@@ -20,11 +20,14 @@ public class ProductBuilder<Product> {
 
     private List<Client<Product>> mClients;
 
+    private Set<BuilderKey> mFinishedKeys;
+
     /** @param keys The keys that are required to be non-null for the builder to call complete() */
     public ProductBuilder(Blueprint<Product> blueprint, BuilderKey... keys) {
         mObjects = new HashMap<>();
         mBlueprint = blueprint;
         mRequiredKeys = new HashSet<>();
+        mFinishedKeys = new HashSet<>();
         require(keys);
 
         mClients = new ArrayList<>();
@@ -42,6 +45,7 @@ public class ProductBuilder<Product> {
 
     public void append(BuilderKey key, Object data) {
         mObjects.put(key, data);
+        mFinishedKeys.add(key);
 
         Log.d(TAG, "Appending: " + data.toString());
 
@@ -53,7 +57,7 @@ public class ProductBuilder<Product> {
 
     private boolean hasMetRequirements() {
         for (BuilderKey key : mRequiredKeys) {
-            if (mObjects.get(key) == null) {
+            if (!mFinishedKeys.contains(key)) {
                 return false;
             }
         }

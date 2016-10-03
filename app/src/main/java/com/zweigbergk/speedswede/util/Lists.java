@@ -1,11 +1,10 @@
 package com.zweigbergk.speedswede.util;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class Lists {
-    public static <E> void forEach(Collection<E> collection, Client<E> client) {
+    public static <E> void forEach(Iterable<E> collection, Client<E> client) {
         for (E element : collection)
             client.supply(element);
     }

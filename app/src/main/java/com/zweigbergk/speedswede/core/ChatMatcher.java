@@ -5,11 +5,12 @@ import android.util.Log;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.database.firebase.DbChatHandler;
+import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.Lists;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,21 +21,22 @@ public enum ChatMatcher {
 
     private List<User> mUserPool;
 
-    private Map<DatabaseEvent, List<Client<User>>> listeners;
+    private Map<DatabaseEvent, List<Client<User>>> clients;
 
     ChatMatcher() {
         mUserPool = new LinkedList<>();
-        listeners = new HashMap<>();
+        clients = new HashMap<>();
 
         for(DatabaseEvent event : DatabaseEvent.values()) {
-            listeners.put(event, new ArrayList<>());
+            clients.put(event, new ArrayList<>());
         }
     }
 
     public void handleUser(DataChange<User> dataChange) {
         User user = dataChange.getItem();
+        DatabaseEvent event = dataChange.getEvent();
 
-        switch (dataChange.getEvent()) {
+        switch (event) {
             case ADDED:
                 addUserLocally(user);
                 break;
@@ -58,7 +60,7 @@ public enum ChatMatcher {
     }
 
     private boolean isBlocked(User user) {
-        String activeUserId = DatabaseHandler.INSTANCE.getActiveUserId();
+        String activeUserId = DbUserHandler.INSTANCE.getActiveUserId();
         Banner banner = DatabaseHandler.INSTANCE.getBans(activeUserId);
 
         if (banner != null) {
@@ -78,12 +80,12 @@ public enum ChatMatcher {
 
     /** Include user in the matching process */
     public void pushUser(User user) {
-        DatabaseHandler.INSTANCE.addUserToPool(user);
+        DbUserHandler.INSTANCE.addUserToPool(user);
     }
 
     /** Remove user from the matching process */
     public void removeUser(User user) {
-        DatabaseHandler.INSTANCE.removeUserFromPool(user);
+        DbUserHandler.INSTANCE.removeUserFromPool(user);
     }
 
     public boolean hasUserInPool(User user) {
@@ -97,16 +99,16 @@ public enum ChatMatcher {
         return null;
     }
 
-    public void addEventCallback(DatabaseEvent event, Client<User> callback) {
-        listeners.get(event).add(callback);
+    public void addPoolClient(DatabaseEvent event, Client<User> callback) {
+        clients.get(event).add(callback);
     }
 
-    public void removeEventCallback(DatabaseEvent event, Client<User> callback) {
-        listeners.get(event).remove(callback);
+    public void removePoolClient(DatabaseEvent event, Client<User> callback) {
+        clients.get(event).remove(callback);
     }
 
     private void notifyListeners(DatabaseEvent event, User user) {
-        List<Client<User>> clients = listeners.get(event);
+        List<Client<User>> clients = this.clients.get(event);
         for (Client<User> client : clients) {
             client.supply(user);
         }
@@ -118,11 +120,11 @@ public enum ChatMatcher {
                 // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
                 List<User> matchedUsers = Lists.getFirstElements(mUserPool, 2);
 
-                Lists.forEach(matchedUsers, DatabaseHandler.INSTANCE::removeUserFromPool);
+                Lists.forEach(matchedUsers, DbUserHandler.INSTANCE::removeUserFromPool);
 
                 Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
                 client.supply(chat);
-                DatabaseHandler.INSTANCE.pushChat(chat);
+                DbChatHandler.INSTANCE.pushChat(chat);
             }
     }
 
@@ -136,9 +138,5 @@ public enum ChatMatcher {
 
     public void clear() {
         mUserPool.clear();
-    }
-
-    public List<User> getPool() {
-        return mUserPool;
     }
 }

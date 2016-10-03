@@ -78,7 +78,7 @@ public class MatchTest {
         ChatMatcher.INSTANCE.removeUser(user5);
     }
 
-    @Test
+    /*@Test
     public void testMatch() {
         ChatMatcher.INSTANCE.clear();
         ChatMatcher.INSTANCE.pushUser(user1);
@@ -92,5 +92,5 @@ public class MatchTest {
         //assertTrue(ChatMatcher.INSTANCE.getFirstInPool() == user3);
         ChatMatcher.INSTANCE.removeUser(user3);
 
-    }
+    }*/
 }

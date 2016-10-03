@@ -13,6 +13,7 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
 import com.zweigbergk.speedswede.util.Client;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
     public MessageAdapter(List<Message> messages) {
-        mUser = DatabaseHandler.INSTANCE.getLoggedInUser();
+        mUser = DbUserHandler.INSTANCE.getLoggedInUser();
         eventCallbacks = new HashMap<>();
         mMessages = messages;
 
@@ -52,7 +53,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             case ADDED:
                 addMessage(message);
                 break;
-            case MODIFIED:
+            case CHANGED:
                 updateMessage(message);
                 break;
             case REMOVED:
@@ -82,7 +83,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 messageInList.copyTextFrom(message);
                 notifyItemChanged(position);
 
-                executeCallbacks(DatabaseEvent.MODIFIED, message);
+                executeCallbacks(DatabaseEvent.CHANGED, message);
                 return;
             }
         }
