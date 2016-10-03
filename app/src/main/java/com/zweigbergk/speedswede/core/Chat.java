@@ -12,6 +12,7 @@ public class Chat {
     private List<Message> conversation;
     private String id;
     private long timeStamp;
+    private long lastMessageTimeStamp;
 
     private boolean inactive;
 
@@ -28,9 +29,7 @@ public class Chat {
         conversation = new ArrayList<>();
         timeStamp = (new Date()).getTime();
 
-        id = Long.toString(firstUser.hashCode() * 5 +
-                secondUser.hashCode() * 7 +
-                timeStamp);
+        id = firstUser.getUid() + "-" + secondUser.getUid();
     }
 
     public Chat(String id, long timeStamp, List<Message> messages, User firstUser, User secondUser) {
@@ -90,6 +89,7 @@ public class Chat {
         if (!includesUser(user)) {
             throw new IllegalArgumentException("User provided ["+user.getUid()+"] is not a member of this chat.");
         }
+        lastMessageTimeStamp = (new Date()).getTime();
         conversation.add(message);
     }
 

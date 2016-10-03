@@ -1,0 +1,12 @@
+Om du har skit på master:
+git stash
+git branch -d fix
+git checkout -b fix
+git stash pop
+git checkout master
+git pull
+git checkout fix
+git rebase master
+git checkout master
+git merge fix
+git push
