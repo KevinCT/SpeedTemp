@@ -64,6 +64,6 @@ public class ChatListFragment extends Fragment {
     }
 
     public void addUser(View view) {
-        ChatMatcher.INSTANCE.pushUser(new UserProfile("Namn", DbUserHandler.INSTANCE.getLoggedInUser().getUid()));
+        ChatMatcher.INSTANCE.pushUser(DbUserHandler.INSTANCE.getLoggedInUser());
     }
 }
