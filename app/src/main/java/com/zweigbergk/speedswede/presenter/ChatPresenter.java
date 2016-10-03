@@ -19,6 +19,9 @@ import java.util.List;
 
 public class ChatPresenter {
 
+    public static final String TEST_BOT_ID = "wS0GTtAOaRhztVGhaJYzFY4kQI82";
+
+
     private ChatView mView;
     private ChatInteractor mInteractor;
 
@@ -47,14 +50,16 @@ public class ChatPresenter {
     private void updateDeveloperChat() {
         // TODO when implementing a real version of the chatBuilder, use
         // TODO DatabaseHandler.INSTANCE.generateId() instead.
-        String temporaryIDForSimplicity = DatabaseHandler.INSTANCE.getActiveUserId();
+        String tempId = String.format("%s-%s",
+                DatabaseHandler.INSTANCE.getActiveUserId(),
+                TEST_BOT_ID);
 
         // These are the methods that want to use the Chat once it's built
         List<Client<Chat>> clientList = Arrays.asList(
                 DatabaseHandler.INSTANCE::pushChat,
                 mView::setChatForChatFragment);
 
-        DatabaseHandler.INSTANCE.getChatWithId(temporaryIDForSimplicity, chat -> {
+        DatabaseHandler.INSTANCE.getChatWithId(tempId, chat -> {
             if (chat == null) {
                 buildChat(clientList);
             } else {

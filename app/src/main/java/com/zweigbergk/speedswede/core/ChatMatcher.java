@@ -85,7 +85,7 @@ public enum ChatMatcher {
         }
     }
 
-    public void match() {
+    public void match(Client<Chat> client) {
         Log.d("Users in pool: ", ""+mUserPool.size());
         if(!containsBannedUser()) {
             if (mUserPool.size() > 1) {
@@ -97,12 +97,14 @@ public enum ChatMatcher {
                 DatabaseHandler.INSTANCE.removeUserFromPool(copiedList.get(0));
                 DatabaseHandler.INSTANCE.removeUserFromPool(copiedList.get(1));
 
-                DatabaseHandler.INSTANCE.pushChat(new Chat(copiedList.get(0), copiedList.get(1)));
+                Chat chat = new Chat(copiedList.get(0), copiedList.get(1));
+                client.supply(chat);
+                DatabaseHandler.INSTANCE.pushChat(chat);
             }
         }
         else {
             removeBannedUser();
-            match();
+            match(client);
         }
 
     }

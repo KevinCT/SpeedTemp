@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.zweigbergk.speedswede.R;
+import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.adapter.ChatListAdapter;
 
 import android.support.v4.app.Fragment;
@@ -40,7 +41,8 @@ public class ChatListFragment extends Fragment {
     }
 
     private void onUserAddedToChatPool(User user) {
-        ChatMatcher.INSTANCE.match();
+        ChatActivity activity = (ChatActivity) getActivity();
+        ChatMatcher.INSTANCE.match(activity::setChatForChatFragment);
     }
 
     @Override
