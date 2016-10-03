@@ -110,14 +110,32 @@ public enum ChatMatcher {
     }
 
     private void removeBannedUser(){
-        List<User> unionList = mUserPool;
+
+        List<String> unionList = getUserIdList();
         unionList.retainAll(DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId()).getBanList());
-        mUserPool.removeAll(unionList);
+        for(int i=0;i<mUserPool.size();i++){
+            if (unionList.contains(mUserPool.get(i).getUid())){
+                mUserPool.remove(i);
+            }
+        }
     }
 
     private boolean containsBannedUser(){
-//        return !Collections.disjoint(mUserPool,DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId()).getBanList());
-        return false;
+        if(DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId())!=null) {
+            return !Collections.disjoint(getUserIdList(), DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId()).getBanList());
+        }
+        else {
+            return false;
+        }
+
+    }
+
+    private List<String> getUserIdList(){
+        List<String> userNameList = new ArrayList<>();
+        for(int i=0;i<mUserPool.size();i++){
+            userNameList.add(mUserPool.get(i).getUid());
+        }
+        return userNameList;
     }
 
     public void clear() {
