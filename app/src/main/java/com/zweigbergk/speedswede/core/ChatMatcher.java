@@ -116,7 +116,8 @@ public enum ChatMatcher {
     }
 
     private boolean containsBannedUser(){
-        return !Collections.disjoint(mUserPool,DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId()).getBanList());
+//        return !Collections.disjoint(mUserPool,DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId()).getBanList());
+        return false;
     }
 
     public void clear() {
