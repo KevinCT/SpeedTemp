@@ -1,12 +1,12 @@
 package com.zweigbergk.speedswede.core;
 
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.util.Lists;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,15 +20,14 @@ public enum ChatMatcher {
 
     private List<User> mUserPool;
 
-    private Map<DatabaseEvent, List<Client<User>>> eventCallbacks;
+    private Map<DatabaseEvent, List<Client<User>>> listeners;
 
     ChatMatcher() {
         mUserPool = new LinkedList<>();
-
-        eventCallbacks = new HashMap<>();
+        listeners = new HashMap<>();
 
         for(DatabaseEvent event : DatabaseEvent.values()) {
-            eventCallbacks.put(event, new ArrayList<>());
+            listeners.put(event, new ArrayList<>());
         }
     }
 
@@ -37,16 +36,44 @@ public enum ChatMatcher {
 
         switch (dataChange.getEvent()) {
             case ADDED:
-                mUserPool.add(user);
-                executeCallbacks(DatabaseEvent.ADDED, user);
+                addUserLocally(user);
                 break;
             case REMOVED:
-                mUserPool.remove(user);
-                executeCallbacks(DatabaseEvent.REMOVED, user);
+                removeUserLocally(user);
                 break;
             default:
                 break;
         }
+    }
+
+    /** Adds user to the local pool of users. Does nothing if the incoming user is blocked by our
+     * logged in user. */
+    private void addUserLocally(User user) {
+        if (isBlocked(user)) {
+            return;
+        }
+
+        mUserPool.add(user);
+        notifyListeners(DatabaseEvent.ADDED, user);
+    }
+
+    private boolean isBlocked(User user) {
+        String activeUserId = DatabaseHandler.INSTANCE.getActiveUserId();
+        Banner banner = DatabaseHandler.INSTANCE.getBans(activeUserId);
+
+        if (banner != null) {
+            List<String> bannedIds = DatabaseHandler.INSTANCE.getBans(activeUserId).getBanList();
+
+            return !bannedIds.contains(user.getUid());
+        } else {
+            return false;
+        }
+    }
+
+    /** Removes user from the local pool of users */
+    private void removeUserLocally(User user){
+        mUserPool.remove(user);
+        notifyListeners(DatabaseEvent.REMOVED, user);
     }
 
     /** Include user in the matching process */
@@ -60,7 +87,7 @@ public enum ChatMatcher {
     }
 
     public boolean hasUserInPool(User user) {
-        return mUserPool.contains(user.getUid());
+        return mUserPool.contains(user);
     }
 
     public User getFirstInPool() {
@@ -71,15 +98,15 @@ public enum ChatMatcher {
     }
 
     public void addEventCallback(DatabaseEvent event, Client<User> callback) {
-        eventCallbacks.get(event).add(callback);
+        listeners.get(event).add(callback);
     }
 
     public void removeEventCallback(DatabaseEvent event, Client<User> callback) {
-        eventCallbacks.get(event).remove(callback);
+        listeners.get(event).remove(callback);
     }
 
-    private void executeCallbacks(DatabaseEvent event, User user) {
-        List<Client<User>> clients = eventCallbacks.get(event);
+    private void notifyListeners(DatabaseEvent event, User user) {
+        List<Client<User>> clients = listeners.get(event);
         for (Client<User> client : clients) {
             client.supply(user);
         }
@@ -87,47 +114,16 @@ public enum ChatMatcher {
 
     public void match(Client<Chat> client) {
         Log.d("Users in pool: ", ""+mUserPool.size());
-        if(!containsBannedUser()) {
             if (mUserPool.size() > 1) {
                 // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
-                List<User> copiedList = new LinkedList<>();
-                copiedList.add(mUserPool.get(0));
-                copiedList.add(mUserPool.get(1));
+                List<User> matchedUsers = Lists.getFirstElements(mUserPool, 2);
 
-                DatabaseHandler.INSTANCE.removeUserFromPool(copiedList.get(0));
-                DatabaseHandler.INSTANCE.removeUserFromPool(copiedList.get(1));
+                Lists.forEach(matchedUsers, DatabaseHandler.INSTANCE::removeUserFromPool);
 
-                Chat chat = new Chat(copiedList.get(0), copiedList.get(1));
+                Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
                 client.supply(chat);
                 DatabaseHandler.INSTANCE.pushChat(chat);
             }
-        }
-        else {
-            removeBannedUser();
-            match(client);
-        }
-
-    }
-
-    private void removeBannedUser(){
-
-        List<String> unionList = getUserIdList();
-        unionList.retainAll(DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId()).getBanList());
-        for(int i=0;i<mUserPool.size();i++){
-            if (unionList.contains(mUserPool.get(i).getUid())){
-                mUserPool.remove(i);
-            }
-        }
-    }
-
-    private boolean containsBannedUser(){
-        if(DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId())!=null) {
-            return !Collections.disjoint(getUserIdList(), DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId()).getBanList());
-        }
-        else {
-            return false;
-        }
-
     }
 
     private List<String> getUserIdList(){
