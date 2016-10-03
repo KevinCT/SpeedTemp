@@ -8,28 +8,16 @@ import com.google.firebase.database.DatabaseError;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.database.DataChange;
+import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.util.Client;
-import com.zweigbergk.speedswede.util.Lists;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
-public class MessageListener implements ChildEventListener {
+public class MessageListener extends FirebaseDataListener<Message> implements ChildEventListener {
     public static final String TAG = MessageListener.class.getSimpleName().toUpperCase();
 
-    private Set<Client<DataChange<Message>>> mClients;
-
     public MessageListener(Collection<Client<DataChange<Message>>> clients) {
-        mClients = new HashSet<>(clients);
-    }
-
-    public void addClient(Client<DataChange<Message>> client) {
-        mClients.add(client);
-    }
-
-    public void removeClient(Client<DataChange<Message>> client) {
-        mClients.remove(client);
+        super(clients);
     }
 
     // NOTE: onChildAdded() runs once for every existing child at the time of attaching.
@@ -38,19 +26,19 @@ public class MessageListener implements ChildEventListener {
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Message message = dataSnapshot.getValue(Message.class);
         Log.d(Constants.DEBUG, "We have a new message: " + message.getText());
-        Lists.forEach(mClients, client -> client.supply(DataChange.added(message)));
+        notifyClients(DatabaseEvent.ADDED, message);
     }
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
         Message message = dataSnapshot.getValue(Message.class);
-        Lists.forEach(mClients, client -> client.supply(DataChange.modified(message)));
+        notifyClients(DatabaseEvent.CHANGED, message);
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
         Message message = dataSnapshot.getValue(Message.class);
-        Lists.forEach(mClients, client -> client.supply(DataChange.removed(message)));
+        notifyClients(DatabaseEvent.REMOVED, message);
     }
 
     @Override
@@ -61,7 +49,7 @@ public class MessageListener implements ChildEventListener {
     @Override
     public void onCancelled(DatabaseError databaseError) {
         Log.d(Constants.ERROR, databaseError.getMessage());
-        Lists.forEach(mClients, client -> client.supply(DataChange.cancelled(null)));
+        notifyClients(DatabaseEvent.INTERRUPED, null);
     }
 
     @Override
