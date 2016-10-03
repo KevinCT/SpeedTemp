@@ -87,7 +87,7 @@ public enum ChatMatcher {
 
     public void match() {
         Log.d("Users in pool: ", ""+mUserPool.size());
-        if(Collections.disjoint(mUserPool,DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId()).getBanList())) {
+        if(!containsBannedUser()) {
             if (mUserPool.size() > 1) {
                 // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
                 List<User> copiedList = new LinkedList<>();
@@ -101,12 +101,20 @@ public enum ChatMatcher {
             }
         }
         else {
-            List<User> unionList = mUserPool;
-            unionList.retainAll(DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId()).getBanList());
-            mUserPool.removeAll(unionList);
+            removeBannedUser();
             match();
         }
 
+    }
+
+    private void removeBannedUser(){
+        List<User> unionList = mUserPool;
+        unionList.retainAll(DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId()).getBanList());
+        mUserPool.removeAll(unionList);
+    }
+
+    private boolean containsBannedUser(){
+        return !Collections.disjoint(mUserPool,DatabaseHandler.INSTANCE.getBans(DatabaseHandler.INSTANCE.getActiveUserId()).getBanList());
     }
 
     public void clear() {
