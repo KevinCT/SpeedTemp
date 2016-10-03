@@ -84,6 +84,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
         DatabaseHandler.INSTANCE.addChatMessageClient(newChat, this);
 
         mChat = newChat;
+        getMessageAdapter().clear();
     }
 
     private void onButtonClick(View view) {

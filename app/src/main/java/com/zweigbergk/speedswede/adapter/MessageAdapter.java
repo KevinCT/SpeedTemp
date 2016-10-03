@@ -40,6 +40,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         this(new ArrayList<>());
     }
 
+    public void clear() {
+        mMessages.clear();
+    }
+
     public void onListChanged(DataChange<Message> change) {
         Message message = change.getItem();
         DatabaseEvent event = change.getEvent();
