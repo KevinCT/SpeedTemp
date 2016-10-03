@@ -24,24 +24,16 @@ public class MockFactory {
         return new UserProfile(name, uid);
     }
 
-    public static void runChatBuilder(Collection<Client<Chat>> clients, String chatId) {
-        // (String id, long timeStamp, List<Message> messages, User firstUser, User secondUser)
-        long timeStamp = new Date().getTime();
+    public static void runChatBuilder(Collection<Client<Chat>> clients) {
         String activeUserId = DatabaseHandler.INSTANCE.getActiveUserId();
 
         ProductBuilder<Chat> builder = new ProductBuilder<>(chatBlueprint);
-        builder.require(BuilderKey.ID, BuilderKey.TIMESTAMP, BuilderKey.FIRST_USER,
+        builder.require(BuilderKey.FIRST_USER,
                 BuilderKey.SECOND_USER);
 
         for (Client<Chat> client : clients) {
             builder.addClient(client);
         }
-
-        //Append chat ID
-        builder.append(BuilderKey.ID, chatId);
-
-        //Append timestamp
-        builder.append(BuilderKey.TIMESTAMP, timeStamp);
 
         //Append active user
         DatabaseHandler.INSTANCE.getUserById(activeUserId, user -> builder.append(BuilderKey.FIRST_USER, user));
@@ -51,12 +43,10 @@ public class MockFactory {
     }
 
     private static ProductBuilder.Blueprint<Chat> chatBlueprint = items -> {
-        String newId = (String) items.get(BuilderKey.ID);
-        long newTimeStamp = (long) items.get(BuilderKey.TIMESTAMP);
         User user1 = (User) items.get(BuilderKey.FIRST_USER);
         User user2 = (User) items.get(BuilderKey.SECOND_USER);
 
-        return new Chat(newId, newTimeStamp, new ArrayList<>(), user1, user2);
+        return new Chat(user1, user2);
     };
 
 }

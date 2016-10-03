@@ -56,15 +56,15 @@ public class ChatPresenter {
 
         DatabaseHandler.INSTANCE.getChatWithId(temporaryIDForSimplicity, chat -> {
             if (chat == null) {
-                buildChat(temporaryIDForSimplicity, clientList);
+                buildChat(clientList);
             } else {
                 mView.setChatForChatFragment(chat);
             }
         });
     }
 
-    private void buildChat(String chatId, List<Client<Chat>> clientList) {
-        MockFactory.runChatBuilder(clientList, chatId);
+    private void buildChat(List<Client<Chat>> clientList) {
+        MockFactory.runChatBuilder(clientList);
     }
 
     public void handleChat(DataChange<Chat> dataChange) {
