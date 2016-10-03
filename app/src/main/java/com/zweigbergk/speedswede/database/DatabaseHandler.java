@@ -267,8 +267,6 @@ public enum DatabaseHandler {
         mDatabaseReference.child(BANS).child(getActiveUserId()).setValue(object);
     }
 
-    public List<>
-
     public Banner getBans(String uID){
         mDatabaseReference.child(BANS).child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

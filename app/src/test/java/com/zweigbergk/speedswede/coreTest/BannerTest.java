@@ -18,31 +18,36 @@ import static org.junit.Assert.assertTrue;
  */
 
 public class BannerTest {
-    Banner banner;
+    private Banner mBanner;
+    private String mStrangerID;
+    private String mUID;
+
 
     @Before
     public void initialize(){
-        this.banner = new Banner();
+        mBanner = new Banner();
+        mStrangerID = "strangerID";
+        mUID = "uID";
     }
 
     @Test
-    public void addBanTest(){
-        String strangerID = "strangerID";
-        banner.addBan(strangerID);
-        assertTrue(banner.getBanList().contains(strangerID));
-    }
-
-    @Test
-    public void removeBanTest(){
-        String strangerID = "strangerID";
-        banner.removeBan(strangerID);
-        assertFalse(banner.getBanList().contains(strangerID));
+    public void addRemoveBanTest(){
+        mBanner.addBan(mUID,mUID,mStrangerID);
+        assertTrue(mBanner.getBanList().contains(mStrangerID));
+        mBanner.removeBan(mStrangerID);
+        assertFalse(mBanner.getBanList().contains(mStrangerID));
     }
 
     @Test
     public void setGetTest(){
         List<String> banList = new ArrayList<>();
-        banner.setBanList(banList);
-        assertTrue(banner.getBanList().equals(banList));
+        mBanner.setBanList(banList);
+        assertTrue(mBanner.getBanList().equals(banList));
+    }
+
+    @Test
+    public void isBannedTest(){
+        mBanner.addBan(mUID,mUID,mStrangerID);
+        assertTrue(mBanner.isBanned(mStrangerID));
     }
 }
