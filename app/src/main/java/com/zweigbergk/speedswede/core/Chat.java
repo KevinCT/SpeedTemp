@@ -15,14 +15,9 @@ public class Chat {
     private String id;
     private long timeStamp;
     private long lastMessageTimeStamp;
+    private String name;
 
     private boolean inactive;
-
-    private Chat() {
-        // Need one without args
-        firstUser = new UserProfile("Dummy1", "Dummy1");
-        secondUser = new UserProfile("Dummy2", "Dummy2");
-    }
 
     public Chat(User firstUser, User secondUser) {
         this.firstUser = firstUser;
@@ -34,17 +29,22 @@ public class Chat {
         id = firstUser.getUid() + "-" + secondUser.getUid();
     }
 
-    public Chat(String id, long timeStamp, List<Message> messages, User firstUser, User secondUser) {
+    public Chat(String id, String name, long timeStamp, List<Message> messages, User firstUser, User secondUser) {
         this.firstUser = firstUser;
         this.secondUser = secondUser;
 
         this.id = id;
+        this.name = name;
         this.timeStamp = timeStamp;
         this.conversation = messages;
     }
 
     public boolean includesUser(User user) {
         return firstUser.equals(user) || secondUser.equals(user);
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     @Exclude
@@ -118,6 +118,6 @@ public class Chat {
 
     @Override
     public String toString() {
-        return "First user: " + getFirstUser() + "\nSecond user: " + getSecondUser();
+        return "[Chat ToString] First user: " + getFirstUser() + "\nSecond user: " + getSecondUser();
     }
 }

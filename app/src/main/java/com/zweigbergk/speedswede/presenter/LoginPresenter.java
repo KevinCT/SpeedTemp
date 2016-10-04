@@ -103,6 +103,7 @@ public class LoginPresenter implements ActivityAttachable {
             case FAIL:
                 Log.d(TAG, "onAuthStateChanged:signed_out");
                 DbUserHandler.INSTANCE.logout();
+                setViewState(State.NORMAL);
                 break;
         }
     }

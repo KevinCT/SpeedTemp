@@ -15,6 +15,8 @@ import java.util.Collections;
 
 public class UserPoolListener extends FirebaseDataListener<User> implements ChildEventListener {
 
+    public static final String TAG = UserPoolListener.class.getSimpleName().toUpperCase();
+
     public UserPoolListener() {
         super(Collections.emptySet());
     }
@@ -38,6 +40,7 @@ public class UserPoolListener extends FirebaseDataListener<User> implements Chil
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         User user = DbUserHandler.INSTANCE.convertToUser(dataSnapshot);
+        Log.d(TAG, String.format("User with name %s has been added to UserPoolListener.onChildAdded()", user.getDisplayName()));
         notifyAdded(user);
     }
 
