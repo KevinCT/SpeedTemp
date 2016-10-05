@@ -32,6 +32,7 @@ public enum DbChatHandler {
     public static final String TAG = DbChatHandler.class.getSimpleName().toUpperCase();
 
     public static final String CHATS = "chats";
+    public static final String USER_CHAT = "user_chat";
     public static final String MESSAGES = "messages";
     public static final String TIMESTAMP = "timeStamp";
     public static final String FIRST_USER = "firstUser";
@@ -79,6 +80,7 @@ public enum DbChatHandler {
 
     public void pushChat(Chat chat) {
         mDatabaseReference.child(CHATS).child(chat.getId()).setValue(chat);
+        mDatabaseReference.child(USER_CHAT).child(DbUserHandler.INSTANCE.getActiveUserId()).setValue(chat.getId());
     }
 
     public void getChatWithId(String id, Client<Chat> client) {
