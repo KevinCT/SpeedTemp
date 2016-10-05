@@ -13,7 +13,7 @@ import java.util.Locale;
 
 public class Chat {
 
-    private final User firstUser, secondUser;
+    private User firstUser, secondUser;
     private List<Message> conversation;
     private String id;
     private long timeStamp;
@@ -94,6 +94,14 @@ public class Chat {
     
     public String getId() {
         return id;
+    }
+
+    public void setFirstUser(User user) {
+        this.firstUser = user;
+    }
+
+    public void setSecondUser(User user) {
+        this.secondUser = user;
     }
 
     @Exclude

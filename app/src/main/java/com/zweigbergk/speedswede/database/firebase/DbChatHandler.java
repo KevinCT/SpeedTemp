@@ -52,6 +52,15 @@ public enum DbChatHandler {
         initializeChatListListener();
     }
 
+    public void removeUserFromChat(Chat chat, User user) {
+        if(DbUserHandler.INSTANCE.getActiveUserId() == chat.getFirstUser().getUid()) {
+            chat.setFirstUser(null);
+        }
+        else if(DbUserHandler.INSTANCE.getActiveUserId() == chat.getSecondUser().getUid()) {
+            chat.setSecondUser(null);
+        }
+    }
+
     private void initializeChatListListener() {
         chatListListener = new ChatListener();
         DatabaseReference ref = mDatabaseReference.child(CHATS);

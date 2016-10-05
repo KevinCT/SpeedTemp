@@ -20,10 +20,12 @@ import com.zweigbergk.speedswede.adapter.ChatListAdapter;
 
 import android.support.v4.app.Fragment;
 
+import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.database.firebase.DbChatHandler;
 import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
 
 import java.util.ArrayList;
