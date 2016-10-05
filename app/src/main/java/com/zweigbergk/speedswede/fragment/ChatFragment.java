@@ -84,6 +84,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
     public void setChat(Chat newChat) {
         Chat oldChat = mChat;
 
+        chatRecyclerView.setRecycledViewPool(null);
         //Remove the messages from the old chat
         getMessageAdapter().clear();
 
