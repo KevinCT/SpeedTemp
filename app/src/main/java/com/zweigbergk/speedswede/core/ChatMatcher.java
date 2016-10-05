@@ -34,13 +34,14 @@ public enum ChatMatcher {
     }
 
     public void handleUser(DataChange<User> dataChange) {
-        Log.d(TAG, "Caught user: " + dataChange.getItem().getDisplayName());
+        Log.d(TAG, "handleUser: " + dataChange.getItem().getDisplayName());
         User user = dataChange.getItem();
         DatabaseEvent event = dataChange.getEvent();
 
         switch (event) {
             case ADDED:
                 addUserLocally(user);
+                Log.d(TAG, "addUserLocally: " + dataChange.getItem().getDisplayName());
                 break;
             case REMOVED:
                 removeUserLocally(user);
@@ -58,6 +59,7 @@ public enum ChatMatcher {
         }
 
         mUserPool.add(user);
+        Log.d(TAG, "Added user. Poolsize: " + mUserPool.size());
         notifyListeners(DatabaseEvent.ADDED, user);
     }
 
@@ -68,7 +70,7 @@ public enum ChatMatcher {
         if (banner != null) {
             List<String> bannedIds = DatabaseHandler.INSTANCE.getBans(activeUserId).getBanList();
 
-            return !bannedIds.contains(user.getUid());
+            return bannedIds.contains(user.getUid());
         } else {
             return false;
         }
@@ -101,8 +103,8 @@ public enum ChatMatcher {
         return null;
     }
 
-    public void addPoolClient(DatabaseEvent event, Client<User> callback) {
-        clients.get(event).add(callback);
+    public void addPoolClient(DatabaseEvent event, Client<User> client) {
+        clients.get(event).add(client);
     }
 
     public void removePoolClient(DatabaseEvent event, Client<User> callback) {
@@ -118,7 +120,7 @@ public enum ChatMatcher {
     }
 
     public void match(Client<Chat> client) {
-        Log.d("Users in pool: ", ""+mUserPool.size());
+        Log.d(TAG, "Users in pool: " + mUserPool.size());
             if (mUserPool.size() > 1) {
                 // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
                 List<User> matchedUsers = Lists.getFirstElements(mUserPool, 2);

@@ -15,7 +15,7 @@ import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.database.eventListener.DataQuery;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.UserToChatListener;
-import com.zweigbergk.speedswede.util.BuilderKey;
+import com.zweigbergk.speedswede.util.ProductLock;
 import com.zweigbergk.speedswede.util.ChatFactory;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.Lists;
@@ -33,7 +33,7 @@ public enum DbChatHandler {
     public static final String TAG = DbChatHandler.class.getSimpleName().toUpperCase();
 
     public static final String CHATS = "chats";
-    public static final String USER_CHAT = "user_chat";
+    public static final String USER_TO_CHAT = "user_chat";
     public static final String MESSAGES = "messages";
     public static final String TIMESTAMP = "timeStamp";
     public static final String FIRST_USER = "firstUser";
@@ -41,7 +41,7 @@ public enum DbChatHandler {
     public static final String NAME = "name";
 
 
-    private DatabaseReference mDatabaseReference;
+    private DatabaseReference mRoot;
 
     private Map<String, MessageListener> messageListeners;
     private ChatListener chatsListener;
@@ -49,10 +49,10 @@ public enum DbChatHandler {
     private UserToChatListener mUserToChatListener;
 
     public void initialize() {
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mRoot = FirebaseDatabase.getInstance().getReference();
 
         messageListeners = new HashMap<>();
-        initializeChatsListener();
+       // initializeChatsListener();
         initializeUserToChatListener();
     }
 
@@ -67,29 +67,38 @@ public enum DbChatHandler {
 
     private void initializeUserToChatListener() {
         mUserToChatListener = new UserToChatListener();
-        DatabaseReference ref = mDatabaseReference.child(USER_CHAT)
+        DatabaseReference ref = mRoot.child(USER_TO_CHAT)
                 .child(DbUserHandler.INSTANCE.getActiveUserId());
 
         ref.addChildEventListener(mUserToChatListener);
         ref.keepSynced(true);
     }
 
+    // TODO Remove chats listener? We shouldn't have a listener that observes EVERY chat, right?
     private void initializeChatsListener() {
         chatsListener = new ChatListener();
-        DatabaseReference ref = mDatabaseReference.child(CHATS);
+        DatabaseReference ref = mRoot.child(CHATS);
         ref.addChildEventListener(chatsListener);
         ref.keepSynced(true);
     }
 
-    public void getActiveUserChats(Client<List<Chat>> client) {
-        Log.d(TAG, "getActiveUserChats");
+    /*private List<Chat> chatListBlueprint(Map<ProductLock, Object> items) {
+
+    }*/
+
+    public void getChatsByActiveUser(Client<List<Chat>> client) {
+        //ProductBuilder<List<Chat>> builder = new ProductBuilder<List<Chat>>()
+
+
+
+        Log.d(TAG, "getChatsByActiveUser");
         String uid = DbUserHandler.INSTANCE.getActiveUserId();
-        DatabaseReference ref = mDatabaseReference.child(USER_CHAT).child(uid);
+        DatabaseReference ref = mRoot.child(USER_TO_CHAT).child(uid);
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "getActiveUserChats:onDataChange");
+                Log.d(TAG, "getChatsByActiveUser:onDataChange");
 
                 CompilerSetup setup = new CompilerSetup();
                 setup.get(loadChats(dataSnapshot)).sendTo(client);
@@ -110,7 +119,7 @@ public enum DbChatHandler {
     }
 
     public void postMessageToChat(Chat chat, Message message) {
-        DatabaseReference ref = mDatabaseReference.child(CHATS).child(chat.getId());
+        DatabaseReference ref = mRoot.child(CHATS).child(chat.getId());
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -118,7 +127,7 @@ public enum DbChatHandler {
                 boolean chatExists = dataSnapshot.exists();
                 if (chatExists) {
                     Log.d(TAG, "Chat wasn't null, posting message!");
-                    mDatabaseReference.child(CHATS).child(chat.getId()).child(MESSAGES).push().setValue(message);
+                    mRoot.child(CHATS).child(chat.getId()).child(MESSAGES).push().setValue(message);
                 }
             }
 
@@ -130,12 +139,12 @@ public enum DbChatHandler {
     }
 
     public void pushChat(Chat chat) {
-        mDatabaseReference.child(CHATS).child(chat.getId()).setValue(chat);
-        mDatabaseReference.child(USER_CHAT).child(DbUserHandler.INSTANCE.getActiveUserId()).child(chat.getId()).setValue(1);
+        mRoot.child(CHATS).child(chat.getId()).setValue(chat);
+        mRoot.child(USER_TO_CHAT).child(DbUserHandler.INSTANCE.getActiveUserId()).child(chat.getId()).setValue(1);
     }
 
     public void getUserChats(User user) {
-        mDatabaseReference.child(USER_CHAT).child(user.getUid()).addChildEventListener(mUserToChatListener);
+        mRoot.child(USER_TO_CHAT).child(user.getUid()).addChildEventListener(mUserToChatListener);
     }
 
     public void addUserChatsClient(Client<List<Chat>> client) {
@@ -143,7 +152,7 @@ public enum DbChatHandler {
     }
 
     public void getChatWithId(String id, Client<Chat> client) {
-        mDatabaseReference.child(CHATS).child(id).addListenerForSingleValueEvent(
+        mRoot.child(CHATS).child(id).addListenerForSingleValueEvent(
                 new DataQuery(snapshot -> convertToChat(snapshot, client::supply)));
     }
 
@@ -159,8 +168,8 @@ public enum DbChatHandler {
         }
 
         ProductBuilder<Chat> chatBuilder = new ProductBuilder<>(ChatFactory::getReconstructionBlueprint);
-        chatBuilder.requireKeys(BuilderKey.ID, BuilderKey.NAME, BuilderKey.TIMESTAMP, BuilderKey.MESSAGE_LIST,
-                BuilderKey.FIRST_USER, BuilderKey.SECOND_USER);
+        chatBuilder.attachLocks(ProductLock.ID, ProductLock.NAME, ProductLock.TIMESTAMP, ProductLock.MESSAGE_LIST,
+                ProductLock.FIRST_USER, ProductLock.SECOND_USER);
 
         chatBuilder.addClient(client);
 
@@ -175,22 +184,31 @@ public enum DbChatHandler {
         String firstUserId = ChatFactory.getUserId(snapshot.child(FIRST_USER));
         String secondUserId = ChatFactory.getUserId(snapshot.child(SECOND_USER));
 
-        chatBuilder.append(BuilderKey.ID, chatId);
-        chatBuilder.append(BuilderKey.NAME, name);
-        chatBuilder.append(BuilderKey.TIMESTAMP, chatTimestamp);
-        chatBuilder.append(BuilderKey.MESSAGE_LIST, messageList);
-        DbUserHandler.INSTANCE.getUserById(firstUserId, user -> chatBuilder.append(BuilderKey.FIRST_USER, user));
-        DbUserHandler.INSTANCE.getUserById(secondUserId, user -> chatBuilder.append(BuilderKey.SECOND_USER, user));
+        chatBuilder.addItem(ProductLock.ID, chatId);
+        chatBuilder.addItem(ProductLock.NAME, name);
+        chatBuilder.addItem(ProductLock.TIMESTAMP, chatTimestamp);
+        chatBuilder.addItem(ProductLock.MESSAGE_LIST, messageList);
+        DbUserHandler.INSTANCE.getUserById(firstUserId, user -> chatBuilder.addItem(ProductLock.FIRST_USER, user));
+        DbUserHandler.INSTANCE.getUserById(secondUserId, user -> chatBuilder.addItem(ProductLock.SECOND_USER, user));
+    }
+
+    public void delete(DatabaseReference ref) {
+        ref.removeValue();
     }
 
     public void convertToChatById(String id, Client<Chat> client) {
-        DatabaseReference ref = mDatabaseReference.child(CHATS).child(id).getRef();
+        DatabaseReference ref = mRoot.child(CHATS).child(id).getRef();
         Log.d(TAG, String.format("convertToChatById for ID: [%s]\nref: %s", id, ref.toString()));
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "Inside ValueEventListener, onDataChange. Snapshot: " + dataSnapshot.getValue());
-                convertToChat(dataSnapshot, client::supply);
+                if (dataSnapshot.getValue() != null) {
+                    Log.d(TAG, "Inside ValueEventListener, onDataChange. Snapshot: " + dataSnapshot.getValue());
+                    convertToChat(dataSnapshot, client::supply);
+                } else {
+                    DatabaseReference invalidRef = mRoot.child(USER_TO_CHAT).child(id);
+                    delete(invalidRef);
+                }
             }
 
             @Override
@@ -253,7 +271,7 @@ public enum DbChatHandler {
         MessageListener messageListener = new MessageListener(Collections.emptySet());
 
         //Connect our listener to the chat in our database
-        DatabaseReference ref = mDatabaseReference.child(CHATS).child(chat.getId()).child(MESSAGES);
+        DatabaseReference ref = mRoot.child(CHATS).child(chat.getId()).child(MESSAGES);
         ref.addChildEventListener(messageListener);
 
         //Add it to the listener-list so that we can attach clients to it

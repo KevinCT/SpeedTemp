@@ -37,35 +37,35 @@ public class ChatFactory {
         String activeUserId = DbUserHandler.INSTANCE.getActiveUserId();
 
         ProductBuilder<Chat> builder = new ProductBuilder<>(newChatBlueprint);
-        builder.requireKeys(BuilderKey.FIRST_USER,
-                BuilderKey.SECOND_USER);
+        builder.attachLocks(ProductLock.FIRST_USER,
+                ProductLock.SECOND_USER);
 
         for (Client<Chat> client : clients) {
             builder.addClient(client);
         }
 
         //Append active user
-        DbUserHandler.INSTANCE.getUserById(activeUserId, user -> builder.append(BuilderKey.FIRST_USER, user));
+        DbUserHandler.INSTANCE.getUserById(activeUserId, user -> builder.addItem(ProductLock.FIRST_USER, user));
 
         //Append test user
-        DbUserHandler.INSTANCE.getUserById(Constants.TEST_USER_UID, user -> builder.append(BuilderKey.SECOND_USER, user));
+        DbUserHandler.INSTANCE.getUserById(Constants.TEST_USER_UID, user -> builder.addItem(ProductLock.SECOND_USER, user));
     }
 
     private static ProductBuilder.Blueprint<Chat> newChatBlueprint = items -> {
-        User user1 = (User) items.get(BuilderKey.FIRST_USER);
-        User user2 = (User) items.get(BuilderKey.SECOND_USER);
+        User user1 = (User) items.get(ProductLock.FIRST_USER);
+        User user2 = (User) items.get(ProductLock.SECOND_USER);
 
         return new Chat(user1, user2);
     };
 
-    public static Chat getReconstructionBlueprint(Map<BuilderKey, Object> items) {
-        User user1 = (User) items.get(BuilderKey.FIRST_USER);
-        User user2 = (User) items.get(BuilderKey.SECOND_USER);
+    public static Chat getReconstructionBlueprint(Map<ProductLock, Object> items) {
+        User user1 = (User) items.get(ProductLock.FIRST_USER);
+        User user2 = (User) items.get(ProductLock.SECOND_USER);
 
-        long timestamp = (long) items.get(BuilderKey.TIMESTAMP);
-        String id = (String) items.get(BuilderKey.ID);
-        String name = (String) items.get(BuilderKey.NAME);
-        List<Message> messages = (List) items.get(BuilderKey.MESSAGE_LIST);
+        long timestamp = (long) items.get(ProductLock.TIMESTAMP);
+        String id = (String) items.get(ProductLock.ID);
+        String name = (String) items.get(ProductLock.NAME);
+        List<Message> messages = (List) items.get(ProductLock.MESSAGE_LIST);
 
         return new Chat(id, name, timestamp, messages, user1, user2);
     }

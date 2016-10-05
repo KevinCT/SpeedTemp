@@ -25,7 +25,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity implements MainView {
 
-    private static final boolean LOGOUT_ON_STARTUP = true;
+    private static final boolean LOGOUT_ON_STARTUP = false;
     private static boolean calledAlready = false;
 
     @Override

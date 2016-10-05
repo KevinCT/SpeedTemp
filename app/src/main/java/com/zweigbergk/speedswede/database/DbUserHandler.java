@@ -1,5 +1,7 @@
 package com.zweigbergk.speedswede.database;
 
+import android.util.Log;
+
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -11,10 +13,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import com.zweigbergk.speedswede.Constants;
+import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
 import com.zweigbergk.speedswede.util.Client;
+
+import java.util.List;
 
 public enum DbUserHandler {
     INSTANCE;
@@ -24,14 +29,14 @@ public enum DbUserHandler {
     public static final String POOL = "pool";
     public static final String USERS = "users";
 
-    private DatabaseReference mDatabaseReference;
+    private DatabaseReference mRoot;
 
     private UserPoolListener userPoolListener;
 
     private User mLoggedInUser;
 
     public void initialize() {
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mRoot = FirebaseDatabase.getInstance().getReference();
 
         initializeUserPoolListener();
     }
@@ -45,7 +50,7 @@ public enum DbUserHandler {
     private void initializeUserPoolListener() {
         userPoolListener = new UserPoolListener();
 
-        DatabaseReference ref = mDatabaseReference.child(POOL);
+        DatabaseReference ref = mRoot.child(POOL);
         ref.addChildEventListener(userPoolListener);
         ref.keepSynced(true);
     }
@@ -57,7 +62,7 @@ public enum DbUserHandler {
 
     public void getUserById(String uid, Client<User> client) {
 
-        mDatabaseReference.child(USERS).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+        mRoot.child(USERS).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -76,16 +81,16 @@ public enum DbUserHandler {
     }
 
     public void addUserToPool(User user) {
-        mDatabaseReference.child(POOL).child(user.getUid()).setValue(user);
+        mRoot.child(POOL).child(user.getUid()).setValue(user);
     }
 
     public void pushUser(User user) {
-        mDatabaseReference.child(USERS).child(user.getUid()).setValue(user);
+        mRoot.child(USERS).child(user.getUid()).setValue(user);
     }
 
 
     public void removeUserFromPool(User user) {
-        mDatabaseReference.child(POOL).child(user.getUid()).setValue(null);
+        mRoot.child(POOL).child(user.getUid()).setValue(null);
     }
 
     public String getActiveUserId() {

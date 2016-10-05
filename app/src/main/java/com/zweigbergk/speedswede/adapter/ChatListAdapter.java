@@ -56,7 +56,7 @@ public class ChatListAdapter extends BaseAdapter {
 
         header = (TextView) convertView.findViewById(R.id.header_textView);
 
-        header.setText(mChats.get(position).getId()); //Or the name of the other user?
+        header.setText(mChats.get(position).getName()); //Or the name of the other user?
 
         description = (TextView) convertView.findViewById(R.id.description_textView);
 

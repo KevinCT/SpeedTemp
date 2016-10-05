@@ -4,11 +4,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ProductBuilder<Product> {
     public static final String TAG = ProductBuilder.class.getSimpleName().toUpperCase();
@@ -17,49 +14,38 @@ public class ProductBuilder<Product> {
 
     private List<Client<Product>> mClients;
 
-    private KeyRequirement keyRequirement;
+    private TreasureChest mTreasureChest;
 
-    /** @param keys The keys that are required to be non-null for the builder to call complete() */
-    public ProductBuilder(Blueprint<Product> blueprint, BuilderKey... keys) {
+    /** @param locks The locks that are required to be non-null for the builder to call complete() */
+    public ProductBuilder(Blueprint<Product> blueprint, ProductLock... locks) {
 
         mBlueprint = blueprint;
 
         mClients = new ArrayList<>();
 
-        keyRequirement = new KeyRequirement();
-        Lists.forEach(Arrays.asList(keys), keyRequirement::addKey);
+        mTreasureChest = new TreasureChest();
+        Lists.forEach(Arrays.asList(locks), mTreasureChest::addLock);
     }
 
-    public void requireKeys(BuilderKey... keys) {
-        Lists.forEach(Arrays.asList(keys), keyRequirement::addKey);
+    public void attachLocks(ProductLock... locks) {
+        Lists.forEach(Arrays.asList(locks), mTreasureChest::addLock);
     }
 
     private void complete() {
-        Product product = mBlueprint.realize(mObjects);
-        //Log.d(TAG, "We required : " + mRequiredKeys);
+        Product product = mBlueprint.makeFromItems(mTreasureChest.getItems());
+        Log.d(TAG, product.toString());
         Lists.forEach(mClients, listener -> listener.supply(product));
     }
 
-    public void append(BuilderKey key, Object data) {
-        mObjects.put(key, data);
-        mFinishedKeys.add(key);
+    public void addItem(ProductLock lock, Object data) {
+        mTreasureChest.put(lock, data);
 
-        //Log.d(TAG, "Appending: " + data.toString());
+        Log.d(TAG, "Appending: " + data.toString());
 
-        if (hasMetRequirements()) {
-            //Log.d(TAG, "We have all keys. Completing...");
+        if (mTreasureChest.isOpened()) {
+            Log.d(TAG, "All locks have been opened. Completing...");
             complete();
         }
-    }
-
-    private boolean hasMetRequirements() {
-        for (BuilderKey key : mRequiredKeys) {
-            if (!mFinishedKeys.contains(key)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     public void addClient(Client<Product> client) {
@@ -71,6 +57,6 @@ public class ProductBuilder<Product> {
     }
 
     public interface Blueprint<Product> {
-        Product realize(Map<BuilderKey, Object> map);
+        Product makeFromItems(Map<ProductLock, Object> map);
     }
 }

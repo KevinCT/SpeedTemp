@@ -44,7 +44,7 @@ public class ChatPresenter {
         Log.d("CHATPRESENTER", " we in chatpresenter");
         ChatMatcher.INSTANCE.addPoolClient(DatabaseEvent.ADDED, this::onUserAddedToChatPool);
         DbUserHandler.INSTANCE.addUserPoolClient(ChatMatcher.INSTANCE::handleUser);
-        DbChatHandler.INSTANCE.addChatListClient(this::handleChat);
+        //DbChatHandler.INSTANCE.addChatListClient(this::handleChat);
     }
 
     private void addUserToDatabase(Context context) {
