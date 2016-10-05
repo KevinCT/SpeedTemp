@@ -51,9 +51,9 @@ public enum LocalStorage {
         editor.apply();
     }
 
-    public String getLanguage(Context context){
+    public String getLanguage(Context context, String deviceLanguage){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String language = preferences.getString(LANGUAGE,null);
+        String language = preferences.getString(LANGUAGE, deviceLanguage);
         return language;
     }
 
