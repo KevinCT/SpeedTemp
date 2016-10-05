@@ -29,4 +29,8 @@
         <!--<item name="android:background">#000000</item>-->
     </style>
 
+    <style name="PreferenceScreen" parent="AppTheme">
+        <!--<item name="android:title">@color/colorPrimaryDark</item>-->
+    </style>
+
 </resources>

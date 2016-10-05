@@ -23,4 +23,6 @@
     <string name="settings_summary_notifications">Choose whether you want to be notified when new chat messages or matches appear.</string>
     <string name="settings_pref_matchskill">Match with skill</string>
     <string name="settings_summary_matchskill">Preferred skill to be matched with.</string>
+    <string name="settings_pref_app_lang">App Language</string>
+    <string name="settings_pref_app_lang_default">English</string>
 </resources>

@@ -3,7 +3,7 @@
 
     <PreferenceCategory
         android:title="@string/settings_title_skills"
-        android:key="pref_cat_skills">
+        android:key="pref_cat_skills" >
 
         <CheckBoxPreference
             android:key="pref_my_skill"
@@ -17,17 +17,28 @@
             android:defaultValue="false" />
     </PreferenceCategory>
 
-    <CheckBoxPreference
-        android:key="pref_notifications"
-        android:title="@string/settings_pref_notifications"
-        android:summary="@string/settings_summary_notifications"
-        android:defaultValue="true" />
-    <!--<ListPreference-->
-        <!--android:dependency="pref_sync"-->
-        <!--android:key="pref_syncConnectionType"-->
-        <!--android:title="@string/pref_syncConnectionType"-->
-        <!--android:dialogTitle="@string/pref_syncConnectionType"-->
-        <!--android:entries="@array/pref_syncConnectionTypes_entries"-->
-        <!--android:entryValues="@array/pref_syncConnectionTypes_values"-->
-        <!--android:defaultValue="@string/pref_syncConnectionTypes_default" />-->
+    <PreferenceCategory
+        android:title="Languages"
+        android:key="pref_cat_languages">
+
+        <ListPreference
+            android:dependency="pref_app_language"
+            android:key="pref_app_language"
+            android:title="@string/settings_pref_app_lang"
+            android:dialogTitle="Choose language:"
+            android:entries="@array/settings_pref_app_lang_entries"
+            android:entryValues="@array/settings_pref_app_lang_values"
+            android:defaultValue="@string/settings_pref_app_lang_default" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Other"
+        android:key="pref_cat_other">
+
+        <CheckBoxPreference
+            android:key="pref_notifications"
+            android:title="@string/settings_pref_notifications"
+            android:summary="@string/settings_summary_notifications"
+            android:defaultValue="true" />
+    </PreferenceCategory>
 </PreferenceScreen>
