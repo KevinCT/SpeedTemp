@@ -15,6 +15,7 @@ import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.database.eventListener.DataQuery;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
+import com.zweigbergk.speedswede.database.eventListener.UserChatsListener;
 import com.zweigbergk.speedswede.util.BuilderKey;
 import com.zweigbergk.speedswede.util.ChatFactory;
 import com.zweigbergk.speedswede.util.Client;
@@ -45,11 +46,14 @@ public enum DbChatHandler {
     private Map<String, MessageListener> messageListeners;
     private ChatListener chatListListener;
 
+    private UserChatsListener mUserChatsListener;
+
     public void initialize() {
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         messageListeners = new HashMap<>();
         initializeChatListListener();
+        mUserChatsListener = new UserChatsListener();
     }
 
     private void initializeChatListListener() {
@@ -81,7 +85,15 @@ public enum DbChatHandler {
 
     public void pushChat(Chat chat) {
         mDatabaseReference.child(CHATS).child(chat.getId()).setValue(chat);
-        mDatabaseReference.child(USER_CHAT).child(DbUserHandler.INSTANCE.getActiveUserId()).setValue(chat.getId());
+        mDatabaseReference.child(USER_CHAT).child(DbUserHandler.INSTANCE.getActiveUserId()).child(chat.getId()).setValue(1);
+    }
+
+    public void getUserChats(User user) {
+        mDatabaseReference.child(USER_CHAT).child(user.getUid()).addChildEventListener(mUserChatsListener);
+    }
+
+    public void addUserChatsClient(Client<List<Chat>> client) {
+//        mUserChatsListener.addClient(client);
     }
 
     public void getChatWithId(String id, Client<Chat> client) {
