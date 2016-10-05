@@ -67,8 +67,9 @@ public class ChatFactory {
             long timestamp = (long) items.get(BuilderKey.TIMESTAMP);
             String id = (String) items.get(BuilderKey.ID);
             List<Message> messages = (List) items.get(BuilderKey.MESSAGE_LIST);
+            String chatName = (String) items.get(BuilderKey.CHAT_NAME);
 
-            return new Chat(id, timestamp, messages, user1, user2);
+            return new Chat(id, timestamp, messages, user1, user2, chatName);
     }
 
     public static String getUserId(DataSnapshot snapshot) {

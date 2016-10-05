@@ -1,6 +1,7 @@
 package com.zweigbergk.speedswede.core;
 
 import com.google.firebase.database.Exclude;
+import com.zweigbergk.speedswede.interactor.ChatInteractor;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,7 +16,9 @@ public class Chat {
     private String id;
     private long timeStamp;
     private long lastMessageTimeStamp;
+    private String chatName;
 
+    private ChatInteractor chatInteractor;
     private boolean inactive;
 
     private Chat() {
@@ -28,16 +31,19 @@ public class Chat {
         this.firstUser = firstUser;
         this.secondUser = secondUser;
 
+        this.chatName = chatInteractor.getRandomChatName();
+
         conversation = new ArrayList<>();
         timeStamp = (new Date()).getTime();
 
         id = firstUser.getUid() + "-" + secondUser.getUid();
     }
 
-    public Chat(String id, long timeStamp, List<Message> messages, User firstUser, User secondUser) {
+    public Chat(String id, long timeStamp, List<Message> messages, User firstUser, User secondUser, String chatName) {
         this.firstUser = firstUser;
         this.secondUser = secondUser;
 
+        this.chatName = chatName;
         this.id = id;
         this.timeStamp = timeStamp;
         this.conversation = messages;
@@ -67,6 +73,10 @@ public class Chat {
 
     public long getTimeStamp() {
         return timeStamp;
+    }
+
+    public String getChatName() {
+        return chatName;
     }
 
     public List<Message> getConversation() {
