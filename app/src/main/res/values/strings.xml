@@ -13,5 +13,14 @@
     <string name="block_user">Block user</string>
 
     <string name="change_language">Change language</string>
+
     <string name="settings">Settings</string>
+
+    <string name="settings_title_skills">Language skills</string>
+    <string name="settings_pref_myskill">My Swedish Skill</string>
+    <string name="settings_summary_myskill">Are you skilled in the swedish language?</string>
+    <string name="settings_pref_notifications">Notifications</string>
+    <string name="settings_summary_notifications">Choose whether you want to be notified when new chat messages or matches appear.</string>
+    <string name="settings_pref_matchskill">Match with skill</string>
+    <string name="settings_summary_matchskill">Preferred skill to be matched with.</string>
 </resources>

@@ -14,6 +14,7 @@ import com.zweigbergk.speedswede.adapter.ChatListFragmentAdapter;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
+import com.zweigbergk.speedswede.fragment.SettingsFragment;
 import com.zweigbergk.speedswede.presenter.ChatPresenter;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.view.ChatView;
