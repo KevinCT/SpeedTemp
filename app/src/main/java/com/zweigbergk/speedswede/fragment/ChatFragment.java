@@ -61,6 +61,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
                 FragmentManager manager = getFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.add(android.R.id.content, new ChangeLanguageFragment());
+                transaction.addToBackStack(null);
                 transaction.commit();
                 return true;
             default:

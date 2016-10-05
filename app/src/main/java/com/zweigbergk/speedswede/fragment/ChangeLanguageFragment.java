@@ -30,11 +30,13 @@ public class ChangeLanguageFragment extends Fragment {
         view.findViewById(R.id.changeSwedishBtn).setOnClickListener(view1 -> {
             LanguageChanger.changeLanguage("sv", getContext());
             getActivity().recreate();;
+            getFragmentManager().popBackStack();
         });
 
         view.findViewById(R.id.changeEnglishBtn).setOnClickListener(view1 -> {
             LanguageChanger.changeLanguage("en", getContext());
             getActivity().recreate();
+            getFragmentManager().popBackStack();
         });
         return view;
     }
