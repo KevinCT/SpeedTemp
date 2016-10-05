@@ -55,7 +55,6 @@ public enum LocalStorage {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String language = preferences.getString(LANGUAGE,null);
         return language;
-        return null;
     }
 
 }
