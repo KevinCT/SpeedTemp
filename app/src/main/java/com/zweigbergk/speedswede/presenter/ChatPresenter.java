@@ -32,6 +32,9 @@ public class ChatPresenter {
         mView = view;
         mInteractor = new ChatInteractor();
 
+        DbChatHandler.INSTANCE.initialize();
+        DbUserHandler.INSTANCE.initialize();
+
         mView.useContextTo(this::addUserToDatabase);
 
         updateDeveloperChat();

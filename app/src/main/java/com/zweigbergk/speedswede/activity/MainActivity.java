@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
         if (!calledAlready) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-            DatabaseHandler.INSTANCE.initialize();
             DatabaseHandler.INSTANCE.registerConnectionHandling();
             calledAlready = true;
         }

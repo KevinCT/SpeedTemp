@@ -19,6 +19,8 @@ public class UserPoolListener extends FirebaseDataListener<User> implements Chil
 
     public UserPoolListener() {
         super(Collections.emptySet());
+
+        Log.d(TAG, "In constructor");
     }
 
     private void notifyAdded(User user) {
