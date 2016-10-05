@@ -12,7 +12,7 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DataChange;
-import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
+import com.zweigbergk.speedswede.database.DbUserHandler;
 import com.zweigbergk.speedswede.util.Client;
 
 import java.util.ArrayList;

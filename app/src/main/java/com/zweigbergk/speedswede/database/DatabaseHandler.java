@@ -5,7 +5,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
@@ -15,18 +14,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.core.Banner;
-import com.zweigbergk.speedswede.core.Chat;
-import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.core.UserProfile;
-import com.zweigbergk.speedswede.database.eventListener.MessageListener;
-import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
-import com.zweigbergk.speedswede.database.firebase.DbChatHandler;
-import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
-import com.zweigbergk.speedswede.util.Client;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public enum DatabaseHandler {
     INSTANCE;

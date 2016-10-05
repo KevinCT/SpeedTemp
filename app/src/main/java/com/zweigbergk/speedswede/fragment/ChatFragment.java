@@ -21,9 +21,8 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
-import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.database.firebase.DbChatHandler;
-import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
+import com.zweigbergk.speedswede.database.DbChatHandler;
+import com.zweigbergk.speedswede.database.DbUserHandler;
 import com.zweigbergk.speedswede.interactor.BanInteractor;
 import com.zweigbergk.speedswede.util.Client;
 

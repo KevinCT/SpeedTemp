@@ -13,20 +13,13 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.zweigbergk.speedswede.R;
-import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.adapter.ChatListAdapter;
 
 import android.support.v4.app.Fragment;
 
-import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
-import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.database.DatabaseEvent;
-import com.zweigbergk.speedswede.database.firebase.DbChatHandler;
-import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
-
-import java.util.ArrayList;
-import java.util.Random;
+import com.zweigbergk.speedswede.database.DbChatHandler;
+import com.zweigbergk.speedswede.database.DbUserHandler;
 
 public class ChatListFragment extends Fragment {
 
@@ -35,15 +28,10 @@ public class ChatListFragment extends Fragment {
     ListView chatList;
     ChatListAdapter mChatlistAdapter;
 
-    public ChatListFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        ChatMatcher.INSTANCE.addPoolClient(DatabaseEvent.ADDED, this::onUserAddedToChatPool);
     }
 
     @Override
@@ -65,12 +53,6 @@ public class ChatListFragment extends Fragment {
         }
     }
 
-    private void onUserAddedToChatPool(User user) {
-        Log.d(TAG, " onUserAddedToChatPool " + user.getUid());
-        ChatActivity activity = (ChatActivity) getActivity();
-        ChatMatcher.INSTANCE.match(activity::setChatForChatFragment);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -78,8 +60,15 @@ public class ChatListFragment extends Fragment {
 
         chatList = (ListView) view.findViewById(R.id.chat_listView);
 
-        mChatlistAdapter = new ChatListAdapter(new ArrayList<>()); //Chats here
+        mChatlistAdapter = new ChatListAdapter();
         chatList.setAdapter(mChatlistAdapter);
+
+        //Reads every chat user is active in from the database and puts them in our adapter
+        DbChatHandler.INSTANCE.getActiveUserChats(mChatlistAdapter::addChats);
+
+        //Adds us as clients to any changes in the user's chat on the database. If a chat of our user
+        // is added/removed/changed, our onListChanged will be notified.
+        DbChatHandler.INSTANCE.addUserToChatClient(mChatlistAdapter::onListChanged);
 
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
 
@@ -91,7 +80,6 @@ public class ChatListFragment extends Fragment {
 
     public void addUser(View view) {
         ChatMatcher.INSTANCE.pushUser(DbUserHandler.INSTANCE.getLoggedInUser());
-        Log.d(TAG, "WHATEVER");
     }
 
     public void startSettings() {

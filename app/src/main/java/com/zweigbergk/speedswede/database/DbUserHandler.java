@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede.database.firebase;
+package com.zweigbergk.speedswede.database;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -13,7 +13,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
-import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
 import com.zweigbergk.speedswede.util.Client;
 

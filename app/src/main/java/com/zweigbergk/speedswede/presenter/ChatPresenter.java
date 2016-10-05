@@ -6,8 +6,10 @@ import android.util.Log;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
-import com.zweigbergk.speedswede.database.firebase.DbChatHandler;
-import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
+import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.database.DbChatHandler;
+import com.zweigbergk.speedswede.database.DbUserHandler;
 import com.zweigbergk.speedswede.interactor.ChatInteractor;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
@@ -40,6 +42,7 @@ public class ChatPresenter {
         updateDeveloperChat();
 
         Log.d("CHATPRESENTER", " we in chatpresenter");
+        ChatMatcher.INSTANCE.addPoolClient(DatabaseEvent.ADDED, this::onUserAddedToChatPool);
         DbUserHandler.INSTANCE.addUserPoolClient(ChatMatcher.INSTANCE::handleUser);
         DbChatHandler.INSTANCE.addChatListClient(this::handleChat);
     }
@@ -54,12 +57,15 @@ public class ChatPresenter {
         }
     }
 
+    private void onUserAddedToChatPool(User user) {
+        Log.d(TAG, " onUserAddedToChatPool " + user.getUid());
+        ChatMatcher.INSTANCE.match(mView::setChatForChatFragment);
+    }
+
     //Creates a developer chat if one is not present
     private void updateDeveloperChat() {
         DbUserHandler.INSTANCE.pushTestUser();
 
-        // TODO when implementing a real version of the chatBuilder, use
-        // TODO DatabaseHandler.INSTANCE.generateId() instead.
         String tempId = String.format("%s-%s",
                 DbUserHandler.INSTANCE.getActiveUserId(),
                 Constants.TEST_USER_UID);

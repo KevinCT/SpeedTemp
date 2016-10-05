@@ -9,6 +9,9 @@ import android.widget.TextView;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
+import com.zweigbergk.speedswede.database.DataChange;
+import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.util.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +26,9 @@ public class ChatListAdapter extends BaseAdapter {
 
     ArrayList<Chat> mChats;
 
-    public ChatListAdapter(ArrayList<Chat> chats) {
+    public ChatListAdapter() {
 
-        mChats = chats;
+        mChats = new ArrayList<>();
     }
 
     @Override
@@ -65,8 +68,35 @@ public class ChatListAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void onListChanged(DataChange<Chat> change) {
+        Chat chat = change.getItem();
+        DatabaseEvent event = change.getEvent();
+
+        switch (event) {
+            case ADDED:
+                addChat(chat);
+                break;
+            case CHANGED:
+                // TODO (Is it needed? Probably not)
+                break;
+            case REMOVED:
+                removeChat(chat);
+                break;
+            case INTERRUPED:
+                // TODO
+                //Handle failure to respond to a change in the database by creating a listener
+                // for connection and call onListChanged() once connection is reestablished
+                break;
+        }
+    }
+
     public void addChat(Chat chat) {
         mChats.add(chat);
+        notifyDataSetChanged();
+    }
+
+    public void addChats(List<Chat> chats) {
+        Lists.forEach(chats, mChats::add);
         notifyDataSetChanged();
     }
 

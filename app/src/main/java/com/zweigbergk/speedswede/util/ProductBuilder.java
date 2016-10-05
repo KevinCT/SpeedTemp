@@ -39,7 +39,7 @@ public class ProductBuilder<Product> {
 
     private void complete() {
         Product product = mBlueprint.realize(mObjects);
-        Log.d(TAG, "We required : " + mRequiredKeys);
+        //Log.d(TAG, "We required : " + mRequiredKeys);
         Lists.forEach(mClients, listener -> listener.supply(product));
     }
 
@@ -47,10 +47,10 @@ public class ProductBuilder<Product> {
         mObjects.put(key, data);
         mFinishedKeys.add(key);
 
-        Log.d(TAG, "Appending: " + data.toString());
+        //Log.d(TAG, "Appending: " + data.toString());
 
         if (hasMetRequirements()) {
-            Log.d(TAG, "We have all keys. Completing...");
+            //Log.d(TAG, "We have all keys. Completing...");
             complete();
         }
     }

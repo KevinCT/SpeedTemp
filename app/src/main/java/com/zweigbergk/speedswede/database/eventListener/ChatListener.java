@@ -8,7 +8,7 @@ import com.google.firebase.database.DatabaseError;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
-import com.zweigbergk.speedswede.database.firebase.DbChatHandler;
+import com.zweigbergk.speedswede.database.DbChatHandler;
 
 import java.util.Collections;
 

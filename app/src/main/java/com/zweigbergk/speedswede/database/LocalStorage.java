@@ -4,14 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.google.firebase.auth.AuthCredential;
 import com.zweigbergk.speedswede.activity.LoginActivity;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
-import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
-import com.zweigbergk.speedswede.interactor.LoginInteractor;
 
 public enum LocalStorage {
     INSTANCE;

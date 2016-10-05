@@ -8,21 +8,22 @@ import com.google.firebase.database.DatabaseError;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
-import com.zweigbergk.speedswede.database.firebase.DbChatHandler;
+import com.zweigbergk.speedswede.database.DbChatHandler;
 
 import java.util.Collections;
 
-public class UserChatsListener extends FirebaseDataListener<Chat> implements ChildEventListener {
+public class UserToChatListener extends FirebaseDataListener<Chat> implements ChildEventListener {
 
-    public static final String TAG = UserChatsListener.class.getSimpleName().toUpperCase();
+    public static final String TAG = UserToChatListener.class.getSimpleName().toUpperCase();
 
-    public UserChatsListener() {
+    public UserToChatListener() {
         super(Collections.emptySet());
 
         Log.d(TAG, "In constructor");
     }
 
     private void notifyAdded(Chat chat) {
+        Log.d(TAG, String.format("notifyAdded with chat: [%s]", chat.getId()));
         notifyClients(DatabaseEvent.ADDED, chat);
     }
 
@@ -40,17 +41,22 @@ public class UserChatsListener extends FirebaseDataListener<Chat> implements Chi
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        DbChatHandler.INSTANCE.convertToChat(dataSnapshot, this::notifyAdded);
+        String chatId = dataSnapshot.getKey();
+        Log.d(TAG, String.format("onChildAdded, snapshot key: [%s]", chatId));
+
+        DbChatHandler.INSTANCE.convertToChatById(chatId, this::notifyAdded);
     }
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        DbChatHandler.INSTANCE.convertToChat(dataSnapshot, this::notifyChanged);
+        String chatId = dataSnapshot.getKey();
+        DbChatHandler.INSTANCE.convertToChatById(chatId, this::notifyChanged);
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
-        DbChatHandler.INSTANCE.convertToChat(dataSnapshot, this::notifyRemoved);
+        String chatId = dataSnapshot.getKey();
+        DbChatHandler.INSTANCE.convertToChatById(chatId, this::notifyRemoved);
     }
 
     @Override

@@ -9,7 +9,7 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
+import com.zweigbergk.speedswede.database.DbUserHandler;
 import com.zweigbergk.speedswede.util.ActivityAttachable;
 import com.zweigbergk.speedswede.activity.LoginActivity;
 import com.zweigbergk.speedswede.interactor.LoginInteractor;

@@ -1,10 +1,8 @@
 package com.zweigbergk.speedswede.interactor;
 
-import android.provider.ContactsContract;
-
 import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
+import com.zweigbergk.speedswede.database.DbUserHandler;
 
 /**
  * Created by Kevin on 2016-10-03.
