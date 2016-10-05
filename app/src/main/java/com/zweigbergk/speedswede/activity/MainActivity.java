@@ -15,6 +15,7 @@ import com.facebook.appevents.AppEventsLogger;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.zweigbergk.speedswede.R;
+import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
 import com.zweigbergk.speedswede.presenter.MainPresenter;
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
         }
 
         startLoginActivity();
+
+        LanguageChanger.onCreate(this);
     }
 
     public static String printKeyHash(Activity context) {

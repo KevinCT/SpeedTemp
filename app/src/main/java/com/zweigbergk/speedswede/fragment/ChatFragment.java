@@ -2,6 +2,8 @@ package com.zweigbergk.speedswede.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -53,9 +55,13 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.blockUser:
-
-                //DatabaseHandler.INSTANCE.banUser(mChat.getSecondUser().getUid());
                 banInteractor.addBan(DbUserHandler.INSTANCE.getActiveUserId(),mChat.getFirstUser().getUid(),mChat.getSecondUser().getUid());
+                return true;
+            case R.id.changeLangauge:
+                FragmentManager manager = getFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.add(android.R.id.content, new ChangeLanguageFragment());
+                transaction.commit();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
