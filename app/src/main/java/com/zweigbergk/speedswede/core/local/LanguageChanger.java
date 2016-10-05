@@ -3,6 +3,7 @@ package com.zweigbergk.speedswede.core.local;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.util.Log;
 
 import com.zweigbergk.speedswede.database.LocalStorage;
 
@@ -15,7 +16,7 @@ import java.util.Locale;
 public class LanguageChanger {
 
     public static void onCreate(Context context){
-        String language = LocalStorage.INSTANCE.getLanguage(context);
+        String language = LocalStorage.INSTANCE.getLanguage(context, Locale.getDefault().getLanguage());
         saveLanguage(context, language);
         changeLanguage(language, context);
 
@@ -25,9 +26,6 @@ public class LanguageChanger {
         Configuration config;
         config = resources.getConfiguration();
 
-        if(language == null) {
-            return;
-        }
         switch(language){
             case "sv":
                 config.locale = new Locale("sv");
