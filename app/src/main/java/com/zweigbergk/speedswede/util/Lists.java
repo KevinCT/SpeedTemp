@@ -10,6 +10,17 @@ public class Lists {
             client.supply(element);
     }
 
+    public static <E> List<E> filter(Iterable<E> collection, Query<E> query) {
+        List<E> result = new ArrayList<>();
+        forEach(collection, e -> {
+                if (query.matches(e)) {
+                    result.add(e);
+                }
+        });
+
+        return result;
+    }
+
     public static <E> List<E> getFirstElements(List<E> collection, int value) {
         List<E> result = new ArrayList<>();
 
@@ -18,5 +29,10 @@ public class Lists {
         }
 
         return result;
+    }
+
+    public static <E> E getLast(List<E> collection) {
+        return collection.size() != 0 ?
+                collection.get(collection.size() - 1) : null;
     }
 }

@@ -61,8 +61,10 @@ public class ChatListAdapter extends BaseAdapter {
         description = (TextView) convertView.findViewById(R.id.description_textView);
 
         List<Message> lastConversation = mChats.get(position).getConversation();
+        Message latestMessage = Lists.getLast(lastConversation);
 
-        description.setText(lastConversation.get(lastConversation.size()).getText());
+        String text =  latestMessage == null ? "N/A" : latestMessage.getText();
+        description.setText(text);
 
 
         return convertView;
@@ -96,7 +98,7 @@ public class ChatListAdapter extends BaseAdapter {
     }
 
     public void addChats(List<Chat> chats) {
-        Lists.forEach(chats, mChats::add);
+        mChats.addAll(Lists.filter(chats, chat -> !mChats.contains(chat)));
         notifyDataSetChanged();
     }
 

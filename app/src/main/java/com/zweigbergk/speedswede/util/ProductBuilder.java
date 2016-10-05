@@ -13,28 +13,25 @@ import java.util.Set;
 public class ProductBuilder<Product> {
     public static final String TAG = ProductBuilder.class.getSimpleName().toUpperCase();
 
-    private Map<BuilderKey, Object> mObjects;
-
-    private Set<BuilderKey> mRequiredKeys;
     private Blueprint<Product> mBlueprint;
 
     private List<Client<Product>> mClients;
 
-    private Set<BuilderKey> mFinishedKeys;
+    private KeyRequirement keyRequirement;
 
     /** @param keys The keys that are required to be non-null for the builder to call complete() */
     public ProductBuilder(Blueprint<Product> blueprint, BuilderKey... keys) {
-        mObjects = new HashMap<>();
+
         mBlueprint = blueprint;
-        mRequiredKeys = new HashSet<>();
-        mFinishedKeys = new HashSet<>();
-        require(keys);
 
         mClients = new ArrayList<>();
+
+        keyRequirement = new KeyRequirement();
+        Lists.forEach(Arrays.asList(keys), keyRequirement::addKey);
     }
 
-    public void require(BuilderKey... keys) {
-        Lists.forEach(Arrays.asList(keys), key -> mRequiredKeys.add(key));
+    public void requireKeys(BuilderKey... keys) {
+        Lists.forEach(Arrays.asList(keys), keyRequirement::addKey);
     }
 
     private void complete() {

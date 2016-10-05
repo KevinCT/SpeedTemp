@@ -2,7 +2,6 @@ package com.zweigbergk.speedswede.database;
 
 import android.util.Log;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +38,7 @@ public enum DbChatHandler {
     public static final String TIMESTAMP = "timeStamp";
     public static final String FIRST_USER = "firstUser";
     public static final String SECOND_USER = "secondUser";
+    public static final String NAME = "name";
 
 
     private DatabaseReference mDatabaseReference;
@@ -82,19 +82,17 @@ public enum DbChatHandler {
     }
 
     public void getActiveUserChats(Client<List<Chat>> client) {
-        List<Chat> result = new ArrayList<>();
-
+        Log.d(TAG, "getActiveUserChats");
         String uid = DbUserHandler.INSTANCE.getActiveUserId();
         DatabaseReference ref = mDatabaseReference.child(USER_CHAT).child(uid);
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot idSnapshot : dataSnapshot.getChildren()) {
-                    convertToChatById(idSnapshot.getKey(), result::add);
-                }
-                Log.d(TAG, String.format("Returning from getActiveUserChats with %d entries.", result.size()));
-                client.supply(result);
+                Log.d(TAG, "getActiveUserChats:onDataChange");
+
+                CompilerSetup setup = new CompilerSetup();
+                setup.get(loadChats(dataSnapshot)).sendTo(client);
             }
 
             @Override
@@ -102,6 +100,13 @@ public enum DbChatHandler {
 
             }
         });
+    }
+
+    private ChatListCompiler loadChats(DataSnapshot chatIdsSnapshot) {
+        ChatListCompiler asyncList = new ChatListCompiler();
+        asyncList.run(chatIdsSnapshot);
+
+        return asyncList;
     }
 
     public void postMessageToChat(Chat chat, Message message) {
@@ -154,12 +159,13 @@ public enum DbChatHandler {
         }
 
         ProductBuilder<Chat> chatBuilder = new ProductBuilder<>(ChatFactory::getReconstructionBlueprint);
-        chatBuilder.require(BuilderKey.ID, BuilderKey.NAME, BuilderKey.TIMESTAMP, BuilderKey.MESSAGE_LIST,
+        chatBuilder.requireKeys(BuilderKey.ID, BuilderKey.NAME, BuilderKey.TIMESTAMP, BuilderKey.MESSAGE_LIST,
                 BuilderKey.FIRST_USER, BuilderKey.SECOND_USER);
 
         chatBuilder.addClient(client);
 
         String chatId = snapshot.getKey();
+        String name = (String) snapshot.child(NAME).getValue();
 
         long chatTimestamp = (long) snapshot.child(TIMESTAMP).getValue();
 
@@ -170,6 +176,7 @@ public enum DbChatHandler {
         String secondUserId = ChatFactory.getUserId(snapshot.child(SECOND_USER));
 
         chatBuilder.append(BuilderKey.ID, chatId);
+        chatBuilder.append(BuilderKey.NAME, name);
         chatBuilder.append(BuilderKey.TIMESTAMP, chatTimestamp);
         chatBuilder.append(BuilderKey.MESSAGE_LIST, messageList);
         DbUserHandler.INSTANCE.getUserById(firstUserId, user -> chatBuilder.append(BuilderKey.FIRST_USER, user));

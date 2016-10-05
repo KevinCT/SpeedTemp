@@ -64,6 +64,8 @@ public class ChatListFragment extends Fragment {
         chatList.setAdapter(mChatlistAdapter);
 
         //Reads every chat user is active in from the database and puts them in our adapter
+        //NOTE: This is not needed right now. However, if ChatListFragment is not the get fragment
+        // in ChatActivity in the future, this WILL be necessary. Do not remove.
         DbChatHandler.INSTANCE.getActiveUserChats(mChatlistAdapter::addChats);
 
         //Adds us as clients to any changes in the user's chat on the database. If a chat of our user

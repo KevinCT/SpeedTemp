@@ -37,7 +37,7 @@ public class ChatFactory {
         String activeUserId = DbUserHandler.INSTANCE.getActiveUserId();
 
         ProductBuilder<Chat> builder = new ProductBuilder<>(newChatBlueprint);
-        builder.require(BuilderKey.FIRST_USER,
+        builder.requireKeys(BuilderKey.FIRST_USER,
                 BuilderKey.SECOND_USER);
 
         for (Client<Chat> client : clients) {
