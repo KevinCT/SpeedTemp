@@ -2,6 +2,7 @@ package com.zweigbergk.speedswede.fragment;
 
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
 import java.util.ArrayList;
 public class ChatListFragment extends Fragment {
 
+    public static final String TAG = ChatListFragment.class.getSimpleName().toUpperCase();
+
     ListView chatList;
     ChatListAdapter mChatlistAdapter;
 
@@ -41,6 +44,7 @@ public class ChatListFragment extends Fragment {
     }
 
     private void onUserAddedToChatPool(User user) {
+        Log.d(TAG, " onUserAddedToChatPool " + user.getUid());
         ChatActivity activity = (ChatActivity) getActivity();
         ChatMatcher.INSTANCE.match(activity::setChatForChatFragment);
     }
@@ -65,5 +69,6 @@ public class ChatListFragment extends Fragment {
 
     public void addUser(View view) {
         ChatMatcher.INSTANCE.pushUser(DbUserHandler.INSTANCE.getLoggedInUser());
+        Log.d(TAG, "WHATEVER");
     }
 }
