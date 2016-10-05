@@ -56,7 +56,6 @@ public class ChatListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_chat_list_settings_button:
-//                Log.d("DEBUG", "pressing settings button??");
                 startSettings();
                 return true;
 
