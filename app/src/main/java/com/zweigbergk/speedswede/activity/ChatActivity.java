@@ -1,6 +1,7 @@
 package com.zweigbergk.speedswede.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -36,8 +37,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        Log.d("DEBUGGING", "ChatActivity!");
-
         setUpContent();
 
         new ChatPresenter(this);
@@ -62,5 +61,10 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         } else {
             Log.e(TAG, "WARNING! Tried to set a null chat as the active chat for ChatFragment.");
         }
+    }
+
+    public void startSettings() {
+        Intent intent = new Intent(ChatActivity.this, SettingsActivity.class);
+        startActivity(intent);
     }
 }
