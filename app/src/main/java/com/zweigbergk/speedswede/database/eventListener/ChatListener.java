@@ -33,7 +33,7 @@ public class ChatListener extends FirebaseDataListener<Chat> implements ChildEve
     }
 
     private void notifyInterrupted() {
-        notifyClients(DatabaseEvent.INTERRUPED, null);
+        notifyClients(DatabaseEvent.INTERRUPTED, null);
     }
 
     @Override

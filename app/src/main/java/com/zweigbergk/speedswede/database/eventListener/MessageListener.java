@@ -49,7 +49,7 @@ public class MessageListener extends FirebaseDataListener<Message> implements Ch
     @Override
     public void onCancelled(DatabaseError databaseError) {
         Log.d(Constants.ERROR, databaseError.getMessage());
-        notifyClients(DatabaseEvent.INTERRUPED, null);
+        notifyClients(DatabaseEvent.INTERRUPTED, null);
     }
 
     @Override

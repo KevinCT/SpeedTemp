@@ -7,10 +7,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
-import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.firebase.DbChatHandler;
-import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
 
 import java.util.Collections;
 
@@ -37,7 +35,7 @@ public class UserChatsListener extends FirebaseDataListener<Chat> implements Chi
     }
 
     private void notifyInterrupted() {
-        notifyClients(DatabaseEvent.INTERRUPED, null);
+        notifyClients(DatabaseEvent.INTERRUPTED, null);
     }
 
     @Override

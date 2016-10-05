@@ -37,7 +37,7 @@ public abstract class FirebaseDataListener<T> {
             case CHANGED:
                 dataChange = DataChange.modified(item);
                 break;
-            case INTERRUPED: default:
+            case INTERRUPTED: default:
                 dataChange = DataChange.cancelled(item);
                 break;
         }

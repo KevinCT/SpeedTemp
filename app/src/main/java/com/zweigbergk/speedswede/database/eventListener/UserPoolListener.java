@@ -36,7 +36,7 @@ public class UserPoolListener extends FirebaseDataListener<User> implements Chil
     }
 
     private void notifyInterrupted() {
-        notifyClients(DatabaseEvent.INTERRUPED, null);
+        notifyClients(DatabaseEvent.INTERRUPTED, null);
     }
 
     @Override

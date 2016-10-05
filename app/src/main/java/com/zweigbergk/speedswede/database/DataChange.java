@@ -31,6 +31,6 @@ public class DataChange<ObjectType> {
     }
 
     public static <ObjectType> DataChange<ObjectType> cancelled(ObjectType data) {
-        return new DataChange<>(data, DatabaseEvent.INTERRUPED);
+        return new DataChange<>(data, DatabaseEvent.INTERRUPTED);
     }
 }

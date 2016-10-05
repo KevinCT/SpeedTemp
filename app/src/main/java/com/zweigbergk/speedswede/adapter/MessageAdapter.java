@@ -12,7 +12,6 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DataChange;
-import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
 import com.zweigbergk.speedswede.util.Client;
 
@@ -59,7 +58,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             case REMOVED:
                 removeMessage(message);
                 break;
-            case INTERRUPED:
+            case INTERRUPTED:
                 // TODO
                 //Handle failure to respond to a change in the database by creating a listener
                 // for connection and call onListChanged() once connection is reestablished
