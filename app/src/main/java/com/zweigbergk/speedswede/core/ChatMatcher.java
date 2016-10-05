@@ -112,6 +112,7 @@ public enum ChatMatcher {
     private void notifyListeners(DatabaseEvent event, User user) {
         List<Client<User>> clients = this.clients.get(event);
         for (Client<User> client : clients) {
+            Log.d(TAG, "Supplying listener with a user");
             client.supply(user);
         }
     }

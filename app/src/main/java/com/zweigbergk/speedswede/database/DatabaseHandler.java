@@ -37,11 +37,6 @@ public enum DatabaseHandler {
 
     private boolean mFirebaseConnectionStatus = false;
 
-    public void initialize() {
-        DbChatHandler.INSTANCE.initialize();
-        DbUserHandler.INSTANCE.initialize();
-    }
-
     private Banner mBanner = new Banner();
 
     private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();

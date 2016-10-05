@@ -10,6 +10,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 
+import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.database.eventListener.DataQuery;

@@ -49,8 +49,8 @@ public enum DbUserHandler {
         DatabaseReference ref = mDatabaseReference.child(POOL);
         ref.addChildEventListener(userPoolListener);
         ref.keepSynced(true);
-
     }
+
     public User convertToUser(DataSnapshot snapshot) {
         return new UserProfile(snapshot.child("displayName").getValue().toString(),
                 snapshot.child("uid").getValue().toString());

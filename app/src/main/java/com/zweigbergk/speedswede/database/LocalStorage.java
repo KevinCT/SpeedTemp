@@ -49,15 +49,12 @@ public enum LocalStorage {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(LANGUAGE, language);
         editor.apply();
-
-
     }
 
     public String getLanguage(Context context){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String language = preferences.getString(LANGUAGE,null);
         return language;
-
     }
 
 }
