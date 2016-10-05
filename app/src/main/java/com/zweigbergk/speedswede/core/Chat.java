@@ -1,5 +1,7 @@
 package com.zweigbergk.speedswede.core;
 
+import android.util.Log;
+
 import com.google.firebase.database.Exclude;
 import com.zweigbergk.speedswede.interactor.ChatInteractor;
 
@@ -23,9 +25,12 @@ public class Chat {
     private boolean inactive;
 
     public Chat(User firstUser, User secondUser) {
+        chatInteractor = new ChatInteractor();
         this.firstUser = firstUser;
         this.secondUser = secondUser;
 
+
+        Log.d("CHAT:", "SETTING CHATNAME IN CONSTRUCTOR");
         this.name = chatInteractor.getRandomChatName();
 
         conversation = new ArrayList<>();
@@ -50,6 +55,10 @@ public class Chat {
 
     public String getName() {
         return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Exclude

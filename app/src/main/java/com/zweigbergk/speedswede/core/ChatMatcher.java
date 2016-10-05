@@ -126,6 +126,7 @@ public enum ChatMatcher {
 
                 Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
                 client.supply(chat);
+                Log.d("CHATMATCHER: NAME: ", chat.getName() + "");
                 DbChatHandler.INSTANCE.pushChat(chat);
             }
     }

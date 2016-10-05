@@ -36,6 +36,7 @@ public class ChatPresenter {
 
         updateDeveloperChat();
 
+        Log.d("CHATPRESENTER", " we in chatpresenter");
         DbUserHandler.INSTANCE.addUserPoolClient(ChatMatcher.INSTANCE::handleUser);
         DbChatHandler.INSTANCE.addChatListClient(this::handleChat);
     }

@@ -58,7 +58,6 @@ public enum DbChatHandler {
     }
 
     public void postMessageToChat(Chat chat, Message message) {
-        Log.d(TAG, "postMessageToChat with chatID: " + chat.getId());
         DatabaseReference ref = mDatabaseReference.child(CHATS).child(chat.getId());
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
