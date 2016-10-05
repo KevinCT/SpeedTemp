@@ -12,19 +12,20 @@ import com.zweigbergk.speedswede.util.Lists;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public enum ChatMatcher {
     INSTANCE;
 
+    public static final String TAG = ChatMatcher.class.getSimpleName().toUpperCase();
+
     private List<User> mUserPool;
 
     private Map<DatabaseEvent, List<Client<User>>> clients;
 
     ChatMatcher() {
-        mUserPool = new LinkedList<>();
+        mUserPool = new ArrayList<>();
         clients = new HashMap<>();
 
         for(DatabaseEvent event : DatabaseEvent.values()) {
@@ -33,6 +34,7 @@ public enum ChatMatcher {
     }
 
     public void handleUser(DataChange<User> dataChange) {
+        Log.d(TAG, "Caught user: " + dataChange.getItem().getDisplayName());
         User user = dataChange.getItem();
         DatabaseEvent event = dataChange.getEvent();
 

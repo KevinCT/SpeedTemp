@@ -11,4 +11,6 @@
 
     <string name="leta_kompis">Match with a user</string>
     <string name="block_user">Block user</string>
+
+    <string name="change_language">Change language</string>
 </resources>

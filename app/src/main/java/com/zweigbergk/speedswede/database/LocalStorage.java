@@ -21,6 +21,7 @@ public enum LocalStorage {
     public static final String USER_ID = "user_id";
     public static final String USER_NAME = "user_name";
     public static final String CREDENTIAL = "user_name";
+    public static final String LANGUAGE = "language";
 
     public void saveActiveUser(Context context) {
         if (DbUserHandler.INSTANCE.getActiveUserId() != null) {
@@ -41,6 +42,22 @@ public enum LocalStorage {
         Log.d(TAG, "Name of loaded user: " + (name == null ? "null" : name));
 
         return id == null ? null : new UserProfile(name, id);
+    }
+
+    public void saveSettings(Context context, String language){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(LANGUAGE, language);
+        editor.apply();
+
+
+    }
+
+    public String getLanguage(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String language = preferences.getString(LANGUAGE,null);
+        return language;
+
     }
 
 }

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.adapter.ChatListAdapter;
@@ -37,7 +38,6 @@ public class ChatListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         ChatMatcher.INSTANCE.addPoolClient(DatabaseEvent.ADDED, this::onUserAddedToChatPool);
-
     }
 
     private void onUserAddedToChatPool(User user) {

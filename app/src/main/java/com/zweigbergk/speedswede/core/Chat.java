@@ -16,22 +16,17 @@ public class Chat {
     private String id;
     private long timeStamp;
     private long lastMessageTimeStamp;
-    private String chatName;
+
+    private String name;
 
     private ChatInteractor chatInteractor;
     private boolean inactive;
-
-    private Chat() {
-        // Need one without args
-        firstUser = new UserProfile("Dummy1", "Dummy1");
-        secondUser = new UserProfile("Dummy2", "Dummy2");
-    }
 
     public Chat(User firstUser, User secondUser) {
         this.firstUser = firstUser;
         this.secondUser = secondUser;
 
-        this.chatName = chatInteractor.getRandomChatName();
+        this.name = chatInteractor.getRandomChatName();
 
         conversation = new ArrayList<>();
         timeStamp = (new Date()).getTime();
@@ -39,18 +34,22 @@ public class Chat {
         id = firstUser.getUid() + "-" + secondUser.getUid();
     }
 
-    public Chat(String id, long timeStamp, List<Message> messages, User firstUser, User secondUser, String chatName) {
+    public Chat(String id, String name, long timeStamp, List<Message> messages, User firstUser, User secondUser) {
         this.firstUser = firstUser;
         this.secondUser = secondUser;
 
-        this.chatName = chatName;
         this.id = id;
+        this.name = name;
         this.timeStamp = timeStamp;
         this.conversation = messages;
     }
 
     public boolean includesUser(User user) {
         return firstUser.equals(user) || secondUser.equals(user);
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     @Exclude
@@ -75,9 +74,6 @@ public class Chat {
         return timeStamp;
     }
 
-    public String getChatName() {
-        return chatName;
-    }
 
     public List<Message> getConversation() {
         List<Message> conversationClone = new ArrayList<>();
@@ -128,6 +124,6 @@ public class Chat {
 
     @Override
     public String toString() {
-        return "First user: " + getFirstUser() + "\nSecond user: " + getSecondUser();
+        return "[Chat ToString] First user: " + getFirstUser() + "\nSecond user: " + getSecondUser();
     }
 }

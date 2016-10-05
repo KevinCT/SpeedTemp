@@ -3,6 +3,7 @@ package com.zweigbergk.speedswede.presenter;
 import android.content.Context;
 import android.util.Log;
 
+import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.database.firebase.DbChatHandler;
@@ -22,8 +23,6 @@ import java.util.List;
 public class ChatPresenter {
 
     public static final String TAG = ChatPresenter.class.getSimpleName().toUpperCase();
-
-    public static final String TEST_BOT_ID = "wS0GTtAOaRhztVGhaJYzFY4kQI82";
 
 
     private ChatView mView;
@@ -59,7 +58,7 @@ public class ChatPresenter {
         // TODO DatabaseHandler.INSTANCE.generateId() instead.
         String tempId = String.format("%s-%s",
                 DbUserHandler.INSTANCE.getActiveUserId(),
-                TEST_BOT_ID);
+                Constants.TEST_USER_UID);
 
         // These are the methods that want to use the Chat once it's built
         List<Client<Chat>> clientList = Arrays.asList(

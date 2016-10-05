@@ -3,8 +3,10 @@ package com.zweigbergk.speedswede.database.firebase;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 
@@ -56,9 +58,22 @@ public enum DbChatHandler {
     }
 
     public void postMessageToChat(Chat chat, Message message) {
-        getChatWithId(chat.getId(), chatInDatabase -> {
-            if (chatInDatabase != null) {
-                mDatabaseReference.child(CHATS).child(chat.getId()).child(MESSAGES).push().setValue(message);
+        Log.d(TAG, "postMessageToChat with chatID: " + chat.getId());
+        DatabaseReference ref = mDatabaseReference.child(CHATS).child(chat.getId());
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean chatExists = dataSnapshot.exists();
+                if (chatExists) {
+                    Log.d(TAG, "Chat wasn't null, posting message!");
+                    mDatabaseReference.child(CHATS).child(chat.getId()).child(MESSAGES).push().setValue(message);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
@@ -84,14 +99,13 @@ public enum DbChatHandler {
         }
 
         ProductBuilder<Chat> chatBuilder = new ProductBuilder<>(ChatFactory::getReconstructionBlueprint);
-        chatBuilder.require(BuilderKey.ID, BuilderKey.TIMESTAMP, BuilderKey.MESSAGE_LIST,
+        chatBuilder.require(BuilderKey.ID, BuilderKey.NAME, BuilderKey.TIMESTAMP, BuilderKey.MESSAGE_LIST,
                 BuilderKey.FIRST_USER, BuilderKey.SECOND_USER);
 
         chatBuilder.addClient(client);
 
         String chatId = snapshot.getKey();
 
-        Log.d(TAG, snapshot.child(TIMESTAMP).getRef().toString());
         long chatTimestamp = (long) snapshot.child(TIMESTAMP).getValue();
 
         Iterable<DataSnapshot> messageSnapshots = snapshot.child(MESSAGES).getChildren();

@@ -8,8 +8,6 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
-import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.database.firebase.DbChatHandler;
 import com.zweigbergk.speedswede.database.firebase.DbUserHandler;
 
 import java.util.Collection;
@@ -61,15 +59,15 @@ public class ChatFactory {
     };
 
     public static Chat getReconstructionBlueprint(Map<BuilderKey, Object> items) {
-            User user1 = (User) items.get(BuilderKey.FIRST_USER);
-            User user2 = (User) items.get(BuilderKey.SECOND_USER);
+        User user1 = (User) items.get(BuilderKey.FIRST_USER);
+        User user2 = (User) items.get(BuilderKey.SECOND_USER);
 
-            long timestamp = (long) items.get(BuilderKey.TIMESTAMP);
-            String id = (String) items.get(BuilderKey.ID);
-            List<Message> messages = (List) items.get(BuilderKey.MESSAGE_LIST);
-            String chatName = (String) items.get(BuilderKey.CHAT_NAME);
+        long timestamp = (long) items.get(BuilderKey.TIMESTAMP);
+        String id = (String) items.get(BuilderKey.ID);
+        String name = (String) items.get(BuilderKey.NAME);
+        List<Message> messages = (List) items.get(BuilderKey.MESSAGE_LIST);
 
-            return new Chat(id, timestamp, messages, user1, user2, chatName);
+        return new Chat(id, name, timestamp, messages, user1, user2);
     }
 
     public static String getUserId(DataSnapshot snapshot) {
