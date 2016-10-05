@@ -12,4 +12,5 @@
     <string name="block_user">Blockera användare</string>
     <string name="leta_kompis">Matcha med en användare</string>
     <string name="change_language">Ändra språk</string>
+    <string name="settings">Inställningar</string>
 </resources>

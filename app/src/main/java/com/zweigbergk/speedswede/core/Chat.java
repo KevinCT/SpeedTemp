@@ -21,7 +21,7 @@ public class Chat {
 
     private String name;
 
-    private ChatInteractor chatInteractor;
+    private ChatInteractor chatInteractor = new ChatInteractor();
     private boolean inactive;
 
     public Chat(User firstUser, User secondUser) {
