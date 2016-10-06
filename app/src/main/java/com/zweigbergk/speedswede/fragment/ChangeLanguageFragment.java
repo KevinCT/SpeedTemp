@@ -1,12 +1,14 @@
 package com.zweigbergk.speedswede.fragment;
 
 
-import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
@@ -27,6 +29,13 @@ public class ChangeLanguageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_change_language, container, false);
+
+        final ImageButton buttonSwedish = (ImageButton) view.findViewById(R.id.button_swedish);
+
+        Drawable flagSweden = Drawable.createFromPath("@drawable/sweden.png");
+
+        buttonSwedish.setBackground(flagSweden);
+
         view.findViewById(R.id.changeSwedishBtn).setOnClickListener(view1 -> {
             LanguageChanger.changeLanguage("sv", getContext());
             getActivity().recreate();;
