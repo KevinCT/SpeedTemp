@@ -9,10 +9,6 @@ import com.zweigbergk.speedswede.database.LocalStorage;
 
 import java.util.Locale;
 
-/**
- * Created by kevin on 04/10/2016.
- */
-
 public class LanguageChanger {
 
     public static void onCreate(Context context){

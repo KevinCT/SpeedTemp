@@ -54,6 +54,39 @@ public enum DbChatHandler {
         messageListeners = new HashMap<>();
        // initializeChatsListener();
         initializeUserToChatListener();
+
+        tryQuery();
+    }
+
+    private void tryQuery() {
+        Log.d(TAG, "Start");
+
+        mRoot.child(CHATS).orderByChild(FIRST_USER).equalTo(DbUserHandler.INSTANCE.getActiveUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "First user: " + dataSnapshot.getRef().toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mRoot.child(CHATS).orderByChild(SECOND_USER).equalTo(DbUserHandler.INSTANCE.getActiveUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "Second user: " + dataSnapshot.getRef().toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
     }
 
     public void removeUserFromChat(Chat chat, User user) {
