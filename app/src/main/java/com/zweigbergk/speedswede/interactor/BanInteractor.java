@@ -12,8 +12,8 @@ public class BanInteractor  {
     private Banner mBanner;
 
     public BanInteractor(){
-        if(DatabaseHandler.INSTANCE.getBans(DbUserHandler.INSTANCE.getActiveUserId())!=null) {
-            mBanner = DatabaseHandler.INSTANCE.getBans(DbUserHandler.INSTANCE.getActiveUserId());
+        if(DatabaseHandler.INSTANCE.getBans(DbUserHandler.INSTANCE.getLoggedInUserId())!=null) {
+            mBanner = DatabaseHandler.INSTANCE.getBans(DbUserHandler.INSTANCE.getLoggedInUserId());
         }
         else {
             mBanner = new Banner();

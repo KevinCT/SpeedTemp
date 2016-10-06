@@ -64,7 +64,7 @@ public enum ChatMatcher {
     }
 
     private boolean isBlocked(User user) {
-        String activeUserId = DbUserHandler.INSTANCE.getActiveUserId();
+        String activeUserId = DbUserHandler.INSTANCE.getLoggedInUserId();
         Banner banner = DatabaseHandler.INSTANCE.getBans(activeUserId);
 
         if (banner != null) {

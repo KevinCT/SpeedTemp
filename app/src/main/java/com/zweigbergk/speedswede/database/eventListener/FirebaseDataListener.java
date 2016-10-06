@@ -6,6 +6,7 @@ import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.Lists;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +14,11 @@ public abstract class FirebaseDataListener<T> {
 
     private Set<Client<DataChange<T>>> mClients;
 
-    public FirebaseDataListener(Collection<Client<DataChange<T>>> clients) {
+    FirebaseDataListener() {
+        this(Collections.emptySet());
+    }
+
+    FirebaseDataListener(Collection<Client<DataChange<T>>> clients) {
         mClients = new HashSet<>(clients);
     }
 
@@ -43,5 +48,25 @@ public abstract class FirebaseDataListener<T> {
         }
 
         Lists.forEach(mClients, client -> client.supply(dataChange));
+    }
+
+    protected void notifyAdded(T item) {
+        notifyClients(DatabaseEvent.ADDED, item);
+    }
+
+    protected void notifyRemoved(T item) {
+        notifyClients(DatabaseEvent.REMOVED, item);
+    }
+
+    protected void notifyChanged(T item) {
+        notifyClients(DatabaseEvent.CHANGED, item);
+    }
+
+    protected void notifyInterrupted() {
+        notifyClients(DatabaseEvent.INTERRUPTED, null);
+    }
+
+    public void call(Client<DataChange<T>> client) {
+        mClients.add(client);
     }
 }

@@ -95,7 +95,7 @@ public enum DbUserHandler {
         mRoot.child(POOL).child(user.getUid()).setValue(null);
     }
 
-    public String getActiveUserId() {
+    public String getLoggedInUserId() {
         if (getLoggedInUser() != null) {
             return getLoggedInUser().getUid();
         }

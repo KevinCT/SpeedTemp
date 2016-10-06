@@ -16,6 +16,8 @@ public class ProductBuilder<Product> {
 
     private TreasureChest mTreasureChest;
 
+    private Product mCompletedProduct;
+
     /** @param locks The locks that are required to be non-null for the builder to call complete() */
     public ProductBuilder(Blueprint<Product> blueprint, ProductLock... locks) {
 
@@ -32,16 +34,15 @@ public class ProductBuilder<Product> {
     }
 
     private void complete() {
-        Product product = mBlueprint.makeFromItems(mTreasureChest.getItems());
-        Log.d(TAG, product.toString());
+        mCompletedProduct = mBlueprint.makeFromItems(mTreasureChest.getItems());
+        Log.d(TAG, mCompletedProduct.toString());
 
-        if (mClients.size() == 0) {
-            Log.e(TAG, String.format("WARNING! [NO_CLIENT_ATTACHED] Productbuilder with object:" +
-                    "[%s] has no attached clients.", product));
-        } else {
-            Lists.forEach(mClients, listener -> listener.supply(product));
-            Log.d(TAG, "Completing!");
-        }
+        Lists.forEach(mClients, client -> {
+            client.supply(mCompletedProduct);
+            mClients.remove(client);
+        });
+
+        Log.d(TAG, "Completing!");
     }
 
     public void requireState(ProductLock key, StateRequirement requirement) {
@@ -66,8 +67,23 @@ public class ProductBuilder<Product> {
         }
     }
 
-    public void addClient(Client<Product> client) {
+    public void thenNotify(Client<Product> client) {
         mClients.add(client);
+        if (hasProduct()) {
+            client.supply(mCompletedProduct);
+        }
+    }
+
+    public void thenPassTo(Client<Product> client) {
+        thenNotify(client);
+    }
+
+    public void then(Client<Product> client) {
+        thenNotify(client);
+    }
+
+    private boolean hasProduct() {
+        return mCompletedProduct != null;
     }
 
     public void removeClient(Client<Product> client) {

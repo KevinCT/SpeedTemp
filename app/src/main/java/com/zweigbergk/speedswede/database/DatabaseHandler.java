@@ -64,12 +64,12 @@ public enum DatabaseHandler {
 
     public void sendObject(String child, Object object ){
         /*getChatWithId(chatId, chat -> {
-            Banner banner = getBans(getActiveUserId());
-            banner.addBan(getActiveUserId(), chat.getFirstUser().getUid(), chat.getSecondUser().getUid());
-            mDatabaseReference.child(BANS).child(getActiveUserId()).setValue(banner);
+            Banner banner = getBans(getLoggedInUserId());
+            banner.addBan(getLoggedInUserId(), chat.getFirstUser().getUid(), chat.getSecondUser().getUid());
+            mDatabaseReference.child(BANS).child(getLoggedInUserId()).setValue(banner);
             //mDatabaseReference.child("Global"+BANS).push().setValue(strangerID);
         });*/
-        mDatabaseReference.child(BANS).child(DbUserHandler.INSTANCE.getActiveUserId()).setValue(object);
+        mDatabaseReference.child(BANS).child(DbUserHandler.INSTANCE.getLoggedInUserId()).setValue(object);
     }
 
     public Banner getBans(String uID){

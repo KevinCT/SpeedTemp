@@ -2,31 +2,29 @@ package com.zweigbergk.speedswede.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.adapter.ChatListAdapter;
-
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.database.DbChatHandler;
+import com.zweigbergk.speedswede.database.DbChatHandler.Node;
 import com.zweigbergk.speedswede.database.DbUserHandler;
 
 public class ChatListFragment extends Fragment {
 
     public static final String TAG = ChatListFragment.class.getSimpleName().toUpperCase();
 
-    ListView chatList;
-    ChatListAdapter mChatlistAdapter;
+    ListView chatListView;
+    ChatListAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,12 +55,12 @@ public class ChatListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
-        chatList = (ListView) view.findViewById(R.id.chat_listView);
+        chatListView = (ListView) view.findViewById(R.id.chat_listView);
 
-        mChatlistAdapter = new ChatListAdapter();
-        chatList.setAdapter(mChatlistAdapter);
+        mAdapter = new ChatListAdapter();
+        chatListView.setAdapter(mAdapter);
 
-        DbChatHandler.INSTANCE.addClientToChatListListener(mChatlistAdapter::addChats);
+        DbChatHandler.INSTANCE.onChatChanged().call(mAdapter::notifyChange);
 
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
 

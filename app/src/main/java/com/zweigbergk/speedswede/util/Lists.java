@@ -1,6 +1,7 @@
 package com.zweigbergk.speedswede.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,6 +20,16 @@ public class Lists {
         });
 
         return result;
+    }
+
+    /**Adds all elements from one collection to another.
+     *
+     * @param target Collection for which to add elements
+     * @param source Collection from which to take elements
+     *
+     */
+    public static void addAll(Collection target, Collection source) {
+        forEach(source, target::add);
     }
 
     public static <E> List<E> getFirstElements(List<E> collection, int value) {

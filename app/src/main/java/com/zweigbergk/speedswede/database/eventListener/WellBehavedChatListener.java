@@ -6,38 +6,37 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.zweigbergk.speedswede.Constants;
+import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.database.DbChatHandler;
 import com.zweigbergk.speedswede.util.Client;
 
 import java.util.Collection;
 
-public class MessageListener extends FirebaseDataListener<Message> implements ChildEventListener {
-    public static final String TAG = MessageListener.class.getSimpleName().toUpperCase();
+public class WellBehavedChatListener extends FirebaseDataListener<Chat> implements ChildEventListener {
+    public static final String TAG = WellBehavedChatListener.class.getSimpleName().toUpperCase();
 
-    public MessageListener(Collection<Client<DataChange<Message>>> clients) {
-        super(clients);
+    public WellBehavedChatListener() {
+        super();
     }
 
     // NOTE: onChildAdded() runs once for every existing child at the time of attaching.
     // Thus there is no need for an initial SingleValueEventListener.
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        Message message = dataSnapshot.getValue(Message.class);
-        notifyAdded(message);
+        DbChatHandler.INSTANCE.createChatFrom(dataSnapshot).then(this::notifyAdded);
     }
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        Message message = dataSnapshot.getValue(Message.class);
-        notifyChanged(message);
+        DbChatHandler.INSTANCE.createChatFrom(dataSnapshot).then(this::notifyChanged);
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
-        Message message = dataSnapshot.getValue(Message.class);
-        notifyRemoved(message);
+        DbChatHandler.INSTANCE.createChatFrom(dataSnapshot).then(this::notifyRemoved);
     }
 
     @Override

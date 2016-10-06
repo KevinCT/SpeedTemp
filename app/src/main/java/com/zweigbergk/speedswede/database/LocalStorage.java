@@ -20,10 +20,10 @@ public enum LocalStorage {
     public static final String LANGUAGE = "language";
 
     public void saveActiveUser(Context context) {
-        if (DbUserHandler.INSTANCE.getActiveUserId() != null) {
+        if (DbUserHandler.INSTANCE.getLoggedInUserId() != null) {
             SharedPreferences localState = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = localState.edit();
-            editor.putString(USER_ID, DbUserHandler.INSTANCE.getActiveUserId());
+            editor.putString(USER_ID, DbUserHandler.INSTANCE.getLoggedInUserId());
             editor.putString(USER_NAME, DbUserHandler.INSTANCE.getLoggedInUser().getDisplayName());
             //editor.put(CREDENTIAL, LoginInteractor.userCredential);
             editor.apply();

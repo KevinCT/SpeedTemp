@@ -10,16 +10,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 
-import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.database.eventListener.ChatListListener;
-import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.database.eventListener.DataQuery;
+import com.zweigbergk.speedswede.database.eventListener.FirebaseDataListener;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
-import com.zweigbergk.speedswede.database.eventListener.UserToChatListener;
+import com.zweigbergk.speedswede.database.eventListener.WellBehavedChatListener;
+import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.ProductLock;
 import com.zweigbergk.speedswede.util.ChatFactory;
 import com.zweigbergk.speedswede.util.Client;
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 
 import java.util.ArrayList;
@@ -31,79 +29,7 @@ import java.util.Map;
 public enum DbChatHandler {
     INSTANCE;
 
-    public static final String TAG = DbChatHandler.class.getSimpleName().toUpperCase();
-
-    public static final String CHATS = "chats";
-    public static final String USER_TO_CHAT = "user_chat";
-    public static final String MESSAGES = "messages";
-    public static final String TIMESTAMP = "timeStamp";
-    public static final String FIRST_USER = "firstUser";
-    public static final String SECOND_USER = "secondUser";
-    public static final String NAME = "name";
-
-
-    private DatabaseReference mRoot;
-
-    private Map<String, MessageListener> messageListeners;
-    private ChatListener chatsListener;
-
-    private UserToChatListener mUserToChatListener;
-
-    private ChatListListener mChatListListener;
-
-    public void initialize() {
-        mRoot = FirebaseDatabase.getInstance().getReference();
-
-        messageListeners = new HashMap<>();
-//        initializeChatsListener();
-        //initializeUserToChatListener();
-        initializeChatListListener();
-//        tryQuery();
-
-
-    }
-
-    private void tryQuery() {
-        Log.d(TAG, "Start");
-
-        mRoot.child(CHATS).orderByChild(FIRST_USER).equalTo(DbUserHandler.INSTANCE.getActiveUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "First user: " + dataSnapshot.getRef().toString());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        mRoot.child(CHATS).orderByChild(SECOND_USER).equalTo(DbUserHandler.INSTANCE.getActiveUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "Second user: " + dataSnapshot.getRef().toString());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public void addClientToChatListListener(Client<List<Chat>> client) {
-        mChatListListener.addClient(client);
-    }
-
-    public void removeClientFromChatListListener(Client<List<Chat>> client) {
-        mChatListListener.removeClient(client);
-    }
-
-    public void initializeChatListListener() {
-        mChatListListener = new ChatListListener(Collections.EMPTY_LIST);
-        mRoot.child(CHATS).addValueEventListener(mChatListListener);
-
-    }
+    public enum Node { CHATS }
 
     enum ChatAttribute {
         FIRST_USER, SECOND_USER;
@@ -120,6 +46,52 @@ public enum DbChatHandler {
         }
     }
 
+    public static final String TAG = DbChatHandler.class.getSimpleName().toUpperCase();
+
+    public static final String CHATS = "chats";
+    public static final String USER_TO_CHAT = "user_chat";
+    public static final String MESSAGES = "messages";
+    public static final String TIMESTAMP = "timeStamp";
+    public static final String FIRST_USER = "firstUser";
+    public static final String SECOND_USER = "secondUser";
+    public static final String NAME = "name";
+
+
+    private DatabaseReference mRoot;
+
+    private Map<String, MessageListener> messageListeners;
+
+    private WellBehavedChatListener mChatsListener;
+
+    public void initialize() {
+        mRoot = FirebaseDatabase.getInstance().getReference();
+
+        messageListeners = new HashMap<>();
+        registerListener(Node.CHATS);
+    }
+
+    private void registerListener(Node type) {
+        switch (type) {
+            case CHATS:
+                registerChatsListener();
+        }
+    }
+
+    private void registerChatsListener() {
+        mChatsListener = new WellBehavedChatListener();
+
+        String uid = DbUserHandler.INSTANCE.getLoggedInUserId();
+        mRoot.child(CHATS).orderByChild("firstUser/uid").equalTo(uid).
+                addChildEventListener(mChatsListener);
+
+        mRoot.child(CHATS).orderByChild("secondUser/uid").equalTo(uid).
+                addChildEventListener(mChatsListener);
+    }
+
+    public FirebaseDataListener<Chat> onChatChanged() {
+        return mChatsListener;
+    }
+
     public DatabaseReference getDbRoot() {
         return mRoot;
     }
@@ -131,82 +103,22 @@ public enum DbChatHandler {
     }
 
     public void removeActiveUserFromChat(Chat chat) {
-        if(DbUserHandler.INSTANCE.getActiveUserId() == chat.getFirstUser().getUid()) {
+        if(DbUserHandler.INSTANCE.getLoggedInUserId() == chat.getFirstUser().getUid()) {
             setChatAttribute(chat, ChatAttribute.FIRST_USER, null);
             chat.setFirstUser(null);
         }
-        else if(DbUserHandler.INSTANCE.getActiveUserId() == chat.getSecondUser().getUid()) {
+        else if(DbUserHandler.INSTANCE.getLoggedInUserId() == chat.getSecondUser().getUid()) {
             setChatAttribute(chat, ChatAttribute.SECOND_USER, null);
             chat.setSecondUser(null);
         }
     }
 
-    private void initializeUserToChatListener() {
-        mUserToChatListener = new UserToChatListener();
-        DatabaseReference ref = mRoot.child(USER_TO_CHAT)
-                .child(DbUserHandler.INSTANCE.getActiveUserId());
-
-        ref.addChildEventListener(mUserToChatListener);
-        ref.keepSynced(true);
-    }
-
-    private void initializeChatsListener() {
-        List<Chat> list = new ArrayList<>();
-
-        ProductBuilder<List<Chat>> pb = new ProductBuilder<>(
-                items -> (List<Chat>) items.get(ProductLock.CHAT_LIST),
-                ProductLock.CHAT_LIST);
-
-
-//        mRoot.child(CHATS).orderByChild(FIRST_USER)
-//                .equalTo(DbUserHandler.INSTANCE.getActiveUserId())
-//                .addValueEventListener(new ValueEventListener() {
-
-        mRoot.child(CHATS).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                Log.d(TAG, "onDataChange");
-
-
-                long amount = dataSnapshot.getChildrenCount();
-
-                Log.d(TAG, "Amount: " + amount);
-
-                pb.requireState(ProductLock.CHAT_LIST, list -> ((List) list).size() == amount);
-
-                pb.addItem(ProductLock.CHAT_LIST, list);
-
-                pb.addClient(product -> {
-                    Log.d(TAG, "add product");
-                    Log.d(TAG, "list " + product.toString());
-                });
-
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    Log.d(TAG, "Looping trough childs");
-                    Log.d(TAG, "Child: " + child.getRef().toString());
-
-                    convertToChat(child, chat -> {
-                        Log.d(TAG, "Adding to list: " + chat.toString());
-//                        list.add(chat);
-//                        pb.updateState();
-                    });
-
-                    Log.d(TAG, child.getKey());
-                }
-                Log.d(TAG, "list size: " + list.size() + "");
-                Log.d(TAG, "dataSnapshot size: " + dataSnapshot.getChildrenCount());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
     private List<Chat> getChatListBlueprint(Map<ProductLock, Object> items) {
-        return (List) items.get(ProductLock.CHAT_LIST);
+        List<Chat> chats = new ArrayList<>();
+        List list = (List) items.get(ProductLock.CHAT_LIST);
+        Lists.addAll(list, chats);
+
+        return chats;
     }
 
     public void getChatsByActiveUser(Client<List<Chat>> client) {
@@ -215,11 +127,11 @@ public enum DbChatHandler {
 
         List<Chat> chats = new ArrayList<>();
         chatBuilder.addItem(ProductLock.CHAT_LIST, chats);
-        chatBuilder.addClient(client);
+        chatBuilder.thenNotify(client);
 
 
         Log.d(TAG, "getChatsByActiveUser");
-        String uid = DbUserHandler.INSTANCE.getActiveUserId();
+        String uid = DbUserHandler.INSTANCE.getLoggedInUserId();
         DatabaseReference ref = mRoot.child(USER_TO_CHAT).child(uid);
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -244,13 +156,6 @@ public enum DbChatHandler {
         });
     }
 
-    private ChatListCompiler loadChats(DataSnapshot chatIdsSnapshot) {
-        ChatListCompiler asyncList = new ChatListCompiler();
-        asyncList.run(chatIdsSnapshot);
-
-        return asyncList;
-    }
-
     public void postMessageToChat(Chat chat, Message message) {
         DatabaseReference ref = mRoot.child(CHATS).child(chat.getId());
 
@@ -273,56 +178,15 @@ public enum DbChatHandler {
 
     public void pushChat(Chat chat) {
         mRoot.child(CHATS).child(chat.getId()).setValue(chat);
-        mRoot.child(USER_TO_CHAT).child(DbUserHandler.INSTANCE.getActiveUserId()).child(chat.getId()).setValue(1);
-    }
-
-    public void getUserChats(User user) {
-        mRoot.child(USER_TO_CHAT).child(user.getUid()).addChildEventListener(mUserToChatListener);
-    }
-
-    public void addUserChatsClient(Client<List<Chat>> client) {
-//        mUserToChatListener.addClient(client);
     }
 
     public void getChatWithId(String id, Client<Chat> client) {
         mRoot.child(CHATS).child(id).addListenerForSingleValueEvent(
-                new DataQuery(snapshot -> convertToChat(snapshot, client::supply)));
+                new DataQuery(snapshot -> ChatFactory.createChatFrom(snapshot, client::supply)));
     }
 
-    /** Supplies a Client with a Chat created from a DataSnapshot. Returns null if the snapshot
-     * points to nothing. */
-    public void convertToChat(DataSnapshot snapshot, Client<Chat> client) {
-        if (snapshot.getValue() == null) {
-            Log.e(TAG, String.format(
-                    "WARNING! Tried to convert non-existing reference to a chat. (Reference: %s)",
-                    snapshot.getRef().toString()));
-            client.supply(null);
-            return;
-        }
-
-        ProductBuilder<Chat> chatBuilder = new ProductBuilder<>(ChatFactory::getReconstructionBlueprint);
-        chatBuilder.attachLocks(ProductLock.ID, ProductLock.NAME, ProductLock.TIMESTAMP, ProductLock.MESSAGE_LIST,
-                ProductLock.FIRST_USER, ProductLock.SECOND_USER);
-
-        chatBuilder.addClient(client);
-
-        String chatId = snapshot.getKey();
-        String name = (String) snapshot.child(NAME).getValue();
-
-        long chatTimestamp = (long) snapshot.child(TIMESTAMP).getValue();
-
-        Iterable<DataSnapshot> messageSnapshots = snapshot.child(MESSAGES).getChildren();
-        List<Message> messageList = asMessageList(messageSnapshots);
-
-        String firstUserId = ChatFactory.getUserId(snapshot.child(FIRST_USER));
-        String secondUserId = ChatFactory.getUserId(snapshot.child(SECOND_USER));
-
-        chatBuilder.addItem(ProductLock.ID, chatId);
-        chatBuilder.addItem(ProductLock.NAME, name);
-        chatBuilder.addItem(ProductLock.TIMESTAMP, chatTimestamp);
-        chatBuilder.addItem(ProductLock.MESSAGE_LIST, messageList);
-        DbUserHandler.INSTANCE.getUserById(firstUserId, user -> chatBuilder.addItem(ProductLock.FIRST_USER, user));
-        DbUserHandler.INSTANCE.getUserById(secondUserId, user -> chatBuilder.addItem(ProductLock.SECOND_USER, user));
+    public ProductBuilder<Chat> createChatFrom(DataSnapshot snapshot) {
+        return ChatFactory.serializeChat(snapshot);
     }
 
     public void delete(DatabaseReference ref) {
@@ -337,7 +201,7 @@ public enum DbChatHandler {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
                     Log.d(TAG, "Inside ValueEventListener, onDataChange. Snapshot: " + dataSnapshot.getValue());
-                    convertToChat(dataSnapshot, client::supply);
+                    createChatFrom(dataSnapshot).thenPassTo(client);
                 } else {
                     DatabaseReference invalidRef = mRoot.child(USER_TO_CHAT).child(id);
                     delete(invalidRef);
@@ -349,16 +213,6 @@ public enum DbChatHandler {
 
             }
         });
-    }
-
-    private List<Message> asMessageList(Iterable<DataSnapshot> snapshot) {
-        List<Message> messages = new ArrayList<>();
-        Lists.forEach(snapshot, messageSnapshot -> {
-            Message message = messageSnapshot.getValue(Message.class);
-            messages.add(message);
-        });
-
-        return messages;
     }
 
     public void addMesageClient(Chat chat, Client<DataChange<Message>> client) {
@@ -382,22 +236,6 @@ public enum DbChatHandler {
         }
 
         messageListeners.get(chat.getId()).removeClient(client);
-    }
-
-    public void addChatListClient(Client<DataChange<Chat>> client) {
-        chatsListener.addClient(client);
-    }
-
-    public void removeChatListClient(Client<DataChange<Chat>> client) {
-        chatsListener.removeClient(client);
-    }
-
-    public void addUserToChatClient(Client<DataChange<Chat>> client) {
-        mUserToChatListener.addClient(client);
-    }
-
-    public void removeUserToChatClient(Client<DataChange<Chat>> client) {
-        mUserToChatListener.removeClient(client);
     }
 
     private void createMessageListenerForChat(Chat chat) {

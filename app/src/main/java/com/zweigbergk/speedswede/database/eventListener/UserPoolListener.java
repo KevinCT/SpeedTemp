@@ -23,22 +23,6 @@ public class UserPoolListener extends FirebaseDataListener<User> implements Chil
         Log.d(TAG, "In constructor");
     }
 
-    private void notifyAdded(User user) {
-        notifyClients(DatabaseEvent.ADDED, user);
-    }
-
-    private void notifyRemoved(User user) {
-        notifyClients(DatabaseEvent.REMOVED, user);
-    }
-
-    private void notifyChanged(User user) {
-        notifyClients(DatabaseEvent.CHANGED, user);
-    }
-
-    private void notifyInterrupted() {
-        notifyClients(DatabaseEvent.INTERRUPTED, null);
-    }
-
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         User user = DbUserHandler.INSTANCE.convertToUser(dataSnapshot);

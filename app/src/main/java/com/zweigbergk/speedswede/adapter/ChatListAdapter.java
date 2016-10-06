@@ -1,6 +1,5 @@
 package com.zweigbergk.speedswede.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,22 +9,17 @@ import android.widget.TextView;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
+import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.database.DbUserHandler;
 import com.zweigbergk.speedswede.util.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.media.CamcorderProfile.get;
-
 public class ChatListAdapter extends BaseAdapter {
-
-    TextView description;
-
-    TextView header;
-
-    ArrayList<Chat> mChats;
+    private ArrayList<Chat> mChats;
 
     public ChatListAdapter() {
 
@@ -50,16 +44,15 @@ public class ChatListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_chat_list_item, parent, false);
         }
 
-        header = (TextView) convertView.findViewById(R.id.header_textView);
+        TextView header = (TextView) convertView.findViewById(R.id.header_textView);
 
         header.setText(mChats.get(position).getName()); //Or the name of the other user?
 
-        description = (TextView) convertView.findViewById(R.id.description_textView);
+        TextView description = (TextView) convertView.findViewById(R.id.description_textView);
 
         List<Message> lastConversation = mChats.get(position).getConversation();
         Message latestMessage = Lists.getLast(lastConversation);
@@ -71,7 +64,7 @@ public class ChatListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void onListChanged(DataChange<Chat> change) {
+    public void notifyChange(DataChange<Chat> change) {
         Chat chat = change.getItem();
         DatabaseEvent event = change.getEvent();
 
@@ -80,26 +73,21 @@ public class ChatListAdapter extends BaseAdapter {
                 addChat(chat);
                 break;
             case CHANGED:
-                // TODO (Is it needed? Probably not)
+                User activeUser = DbUserHandler.INSTANCE.getLoggedInUser();
+                if (!chat.includesUser(activeUser)) {
+                    removeChat(chat);
+                }
                 break;
             case REMOVED:
                 removeChat(chat);
                 break;
-            case INTERRUPTED:
-                // TODO
-                //Handle failure to respond to a change in the database by creating a listener
-                // for connection and call onListChanged() once connection is reestablished
+            default:
                 break;
         }
     }
 
-    public void addChat(Chat chat) {
+    private void addChat(Chat chat) {
         mChats.add(chat);
-        notifyDataSetChanged();
-    }
-
-    public void addChats(List<Chat> chats) {
-        mChats.addAll(Lists.filter(chats, chat -> !mChats.contains(chat)));
         notifyDataSetChanged();
     }
 
@@ -107,7 +95,4 @@ public class ChatListAdapter extends BaseAdapter {
         mChats.remove(chat);
         notifyDataSetChanged();
     }
-
-
-
 }
