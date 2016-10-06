@@ -37,20 +37,25 @@ public class SettingsFragment extends PreferenceFragment {
             Preference preference = findPreference(s);
             //Make sure it only checks when listpreference is open
             if (preference instanceof ListPreference) {
-                String language = preference.getSummary().toString();
+                String language = ((ListPreference) preference).getValue().toString();
+
                 switch (language) {
-                    case "Svenska":
+                    case "sv":
                         LanguageChanger.changeLanguage("sv", getActivity().getBaseContext());
-                        LanguageChanger.languageChanged(true);
-                        getActivity().recreate();
                         break;
-                    case "English":
-                        LanguageChanger.changeLanguage("default", getActivity().getBaseContext());
-                        LanguageChanger.languageChanged(true);
-                        getActivity().recreate();
+                    case "en":
+                        LanguageChanger.changeLanguage("en", getActivity().getBaseContext());
+                        break;
+                    case "ar":
+                        LanguageChanger.changeLanguage("ar", getActivity().getBaseContext());
+                        break;
+                    default:
+                        LanguageChanger.changeLanguage("default",getActivity().getBaseContext());
                         break;
 
                 }
+                LanguageChanger.languageChanged(true);
+                getActivity().recreate();
             }
 
         };

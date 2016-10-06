@@ -3,11 +3,11 @@ package com.zweigbergk.speedswede.core.local;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.util.Log;
 
 import com.zweigbergk.speedswede.database.LocalStorage;
 
 import java.util.Locale;
-import java.util.function.BooleanSupplier;
 
 public class LanguageChanger {
     private static boolean mChanged = false;
@@ -27,6 +27,13 @@ public class LanguageChanger {
             case "sv":
                 config.locale = new Locale("sv");
                 break;
+            case "ar":
+                Log.d("LANGAUGE", language);
+                config.locale = new Locale("ar");
+                break;
+            case "tr":
+                config.locale = new Locale("tr");
+                break;
             default:
                 config.locale = Locale.ENGLISH;
                 break;
@@ -42,7 +49,6 @@ public class LanguageChanger {
     public static void languageChanged(Boolean changed){
         mChanged = changed;
     }
-
 
     public static boolean isChanged(){
         return mChanged;
