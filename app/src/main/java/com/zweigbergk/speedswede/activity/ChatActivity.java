@@ -12,6 +12,7 @@ import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.adapter.ChatAdapter;
 import com.zweigbergk.speedswede.adapter.ChatListFragmentAdapter;
 import com.zweigbergk.speedswede.core.Chat;
+import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
 import com.zweigbergk.speedswede.fragment.SettingsFragment;
@@ -61,6 +62,16 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             mChatFragment.setChat(chat);
         } else {
             Log.e(TAG, "WARNING! Tried to set a null chat as the active chat for ChatFragment.");
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(LanguageChanger.isChanged()){
+            LanguageChanger.languageChanged(false);
+            recreate();
+
         }
     }
 

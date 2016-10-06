@@ -3,13 +3,14 @@ package com.zweigbergk.speedswede.core.local;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.util.Log;
 
 import com.zweigbergk.speedswede.database.LocalStorage;
 
 import java.util.Locale;
+import java.util.function.BooleanSupplier;
 
 public class LanguageChanger {
+    private static boolean mChanged = false;
 
     public static void onCreate(Context context){
         String language = LocalStorage.INSTANCE.getLanguage(context, Locale.getDefault().getLanguage());
@@ -36,6 +37,15 @@ public class LanguageChanger {
 
     private static void saveLanguage(Context context, String language){
         LocalStorage.INSTANCE.saveSettings(context, language);
+    }
+
+    public static void languageChanged(Boolean changed){
+        mChanged = changed;
+    }
+
+
+    public static boolean isChanged(){
+        return mChanged;
     }
 
 }

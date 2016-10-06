@@ -2,7 +2,7 @@
 <resources>
     <string-array name="settings_pref_app_lang_entries">
         <item>English</item>
-        <item>Swedish</item>
+        <item>Svenska</item>
     </string-array>
     <string-array name="settings_pref_app_lang_values">
         <item>E</item>

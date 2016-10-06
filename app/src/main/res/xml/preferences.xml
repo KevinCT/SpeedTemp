@@ -23,6 +23,7 @@
         android:key="pref_cat_language" >
 
         <ListPreference
+            android:summary="%s"
             android:dependency="pref_app_language"
             android:key="pref_app_language"
             android:title="@string/settings_pref_app_lang"
