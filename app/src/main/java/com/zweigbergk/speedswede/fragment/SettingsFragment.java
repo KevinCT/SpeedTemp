@@ -38,17 +38,13 @@ public class SettingsFragment extends PreferenceFragment {
             //Make sure it only checks when listpreference is open
             if (preference instanceof ListPreference) {
                 String language = preference.getSummary().toString();
-                Log.d(language, "languageabove");
                 switch (language) {
                     case "Svenska":
-                        Log.d(language, "language");
                         LanguageChanger.changeLanguage("sv", getActivity().getBaseContext());
-                        Log.d("kurwa",LanguageChanger.isChanged() + "");
                         LanguageChanger.languageChanged(true);
                         getActivity().recreate();
                         break;
                     case "English":
-                        Log.d(language, "language");
                         LanguageChanger.changeLanguage("default", getActivity().getBaseContext());
                         LanguageChanger.languageChanged(true);
                         getActivity().recreate();
