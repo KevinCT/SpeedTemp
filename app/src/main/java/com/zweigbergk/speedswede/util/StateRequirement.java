@@ -1,5 +1,5 @@
 package com.zweigbergk.speedswede.util;
 
-public interface StateRequirement {
-    boolean isFulfilled(Object object);
+public interface StateRequirement<T> {
+    boolean isFulfilled(T object);
 }

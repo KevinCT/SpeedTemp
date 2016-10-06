@@ -34,7 +34,18 @@ public class ProductBuilder<Product> {
     private void complete() {
         Product product = mBlueprint.makeFromItems(mTreasureChest.getItems());
         Log.d(TAG, product.toString());
-        Lists.forEach(mClients, listener -> listener.supply(product));
+
+        if (mClients.size() == 0) {
+            Log.e(TAG, String.format("WARNING! [NO_CLIENT_ATTACHED] Productbuilder with object:" +
+                    "[%s] has no attached clients.", product));
+        } else {
+            Lists.forEach(mClients, listener -> listener.supply(product));
+            Log.d(TAG, "Completing!");
+        }
+    }
+
+    public void requireState(ProductLock key, StateRequirement requirement) {
+        mTreasureChest.requireState(key, requirement);
     }
 
     public void addItem(ProductLock lock, Object data) {

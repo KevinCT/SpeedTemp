@@ -105,13 +105,17 @@ public enum DbChatHandler {
         ref.keepSynced(true);
     }
 
-    /*private List<Chat> chatListBlueprint(Map<ProductLock, Object> items) {
-
-    }*/
+    private List<Chat> getChatListBlueprint(Map<ProductLock, Object> items) {
+        return (List) items.get(ProductLock.CHAT_LIST);
+    }
 
     public void getChatsByActiveUser(Client<List<Chat>> client) {
-        //ProductBuilder<List<Chat>> builder = new ProductBuilder<List<Chat>>()
+        ProductBuilder<List<Chat>> chatBuilder =
+                new ProductBuilder<>(this::getChatListBlueprint, ProductLock.CHAT_LIST);
 
+        List<Chat> chats = new ArrayList<>();
+        chatBuilder.addItem(ProductLock.CHAT_LIST, chats);
+        chatBuilder.addClient(client);
 
 
         Log.d(TAG, "getChatsByActiveUser");
@@ -122,9 +126,15 @@ public enum DbChatHandler {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, "getChatsByActiveUser:onDataChange");
+                long chatCount = dataSnapshot.getChildrenCount();
 
-                CompilerSetup setup = new CompilerSetup();
-                setup.get(loadChats(dataSnapshot)).sendTo(client);
+                //Require (make sure) that we have gotten all chats before returning the object
+                // from the chatBuilder
+                chatBuilder.requireState(ProductLock.CHAT_LIST, object -> ((List) object).size() == chatCount);
+
+                for (DataSnapshot idSnapshot : dataSnapshot.getChildren()) {
+                    DbChatHandler.INSTANCE.convertToChatById(idSnapshot.getKey(), chats::add);
+                }
             }
 
             @Override
