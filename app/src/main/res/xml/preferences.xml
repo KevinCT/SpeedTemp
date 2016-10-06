@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-        android:title="@string/settings_title_skills"
+    <com.zweigbergk.speedswede.util.CustomPreferenceCategory
+        android:title="Language skills"
         android:key="pref_cat_skills" >
 
         <CheckBoxPreference
@@ -15,11 +16,11 @@
             android:title="@string/settings_pref_matchskill"
             android:summary="@string/settings_summary_matchskill"
             android:defaultValue="false" />
-    </PreferenceCategory>
+    </com.zweigbergk.speedswede.util.CustomPreferenceCategory>
 
-    <PreferenceCategory
+    <com.zweigbergk.speedswede.util.CustomPreferenceCategory
         android:title="Languages"
-        android:key="pref_cat_languages">
+        android:key="pref_cat_language" >
 
         <ListPreference
             android:dependency="pref_app_language"
@@ -29,16 +30,16 @@
             android:entries="@array/settings_pref_app_lang_entries"
             android:entryValues="@array/settings_pref_app_lang_values"
             android:defaultValue="@string/settings_pref_app_lang_default" />
-    </PreferenceCategory>
+    </com.zweigbergk.speedswede.util.CustomPreferenceCategory>
 
-    <PreferenceCategory
+    <com.zweigbergk.speedswede.util.CustomPreferenceCategory
         android:title="Other"
-        android:key="pref_cat_other">
+        android:key="pref_cat_other" >
 
         <CheckBoxPreference
             android:key="pref_notifications"
             android:title="@string/settings_pref_notifications"
             android:summary="@string/settings_summary_notifications"
             android:defaultValue="true" />
-    </PreferenceCategory>
+    </com.zweigbergk.speedswede.util.CustomPreferenceCategory>
 </PreferenceScreen>
