@@ -25,4 +25,5 @@
     <string name="settings_summary_matchskill">Preferred skill to be matched with.</string>
     <string name="settings_pref_app_lang">App Language</string>
     <string name="settings_pref_app_lang_default">English</string>
+    <string name="exit_chat">Leave chat</string>
 </resources>

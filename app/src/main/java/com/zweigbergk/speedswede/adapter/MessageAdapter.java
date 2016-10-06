@@ -2,6 +2,7 @@ package com.zweigbergk.speedswede.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DataChange;
+import com.zweigbergk.speedswede.database.DbChatHandler;
 import com.zweigbergk.speedswede.database.DbUserHandler;
 import com.zweigbergk.speedswede.util.Client;
 
@@ -21,6 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
+
+    public static final String TAG = MessageAdapter.class.getSimpleName().toUpperCase();
+
     private List<Message> mMessages;
     private User mUser;
     private Map<DatabaseEvent, List<Client<Message>>> eventCallbacks;
@@ -42,6 +47,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     public void clear() {
         mMessages.clear();
+        notifyDataSetChanged();
     }
 
     public void onListChanged(DataChange<Message> change) {
@@ -89,6 +95,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     private void addMessage(Message message) {
+        Log.d(TAG, "In addMessage");
+
         if (!mMessages.contains(message)) {
             mMessages.add(message);
             notifyItemInserted(getItemCount() - 1);
@@ -99,6 +107,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     private void removeMessage(Message message) {
         int position = mMessages.indexOf(message);
+
+        Log.d(TAG, "In removeMessage");
 
         mMessages.remove(message);
         notifyItemRemoved(position);

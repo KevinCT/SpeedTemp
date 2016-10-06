@@ -16,6 +16,7 @@ import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.adapter.ChatListAdapter;
 
+import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.database.DbChatHandler;
 import com.zweigbergk.speedswede.database.DbUserHandler;
@@ -65,7 +66,12 @@ public class ChatListFragment extends Fragment {
         //Reads every chat user is active in from the database and puts them in our adapter
         //NOTE: This is not needed right now. However, if ChatListFragment is not the get fragment
         // in ChatActivity in the future, this WILL be necessary. Do not remove.
-        DbChatHandler.INSTANCE.getChatsByActiveUser(mChatlistAdapter::addChats);
+        //DbChatHandler.INSTANCE.getChatsByActiveUser(mChatlistAdapter::addChats);
+        // TODO uncomment V
+        /*DbChatHandler.INSTANCE.getChatsByActiveUser(list -> {
+            Log.d(TAG, "Caught the chats from getChatsByActiveUser! Amount: " + list.size());
+            mChatlistAdapter.addChats(list);
+        });*/
 
         //Adds us as clients to any changes in the user's chat on the database. If a chat of our user
         // is added/removed/changed, our onListChanged will be notified.

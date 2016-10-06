@@ -89,11 +89,34 @@ public enum DbChatHandler {
 
     }
 
-    public void removeUserFromChat(Chat chat, User user) {
+    enum ChatAttribute {
+        FIRST_USER, SECOND_USER;
+
+        public String getDbKey() {
+            switch(this) {
+                case FIRST_USER:
+                    return DbChatHandler.FIRST_USER;
+                case SECOND_USER:
+                    return DbChatHandler.SECOND_USER;
+                default:
+                    return null;
+            }
+        }
+    }
+
+    public void setChatAttribute(Chat chat, ChatAttribute attribute, Object value) {
+        String key = attribute.getDbKey();
+
+        mRoot.child(CHATS).child(chat.getId()).child(key).setValue(value);
+    }
+
+    public void removeActiveUserFromChat(Chat chat) {
         if(DbUserHandler.INSTANCE.getActiveUserId() == chat.getFirstUser().getUid()) {
+            setChatAttribute(chat, ChatAttribute.FIRST_USER, null);
             chat.setFirstUser(null);
         }
         else if(DbUserHandler.INSTANCE.getActiveUserId() == chat.getSecondUser().getUid()) {
+            setChatAttribute(chat, ChatAttribute.SECOND_USER, null);
             chat.setSecondUser(null);
         }
     }
@@ -115,13 +138,17 @@ public enum DbChatHandler {
         ref.keepSynced(true);
     }
 
-    /*private List<Chat> chatListBlueprint(Map<ProductLock, Object> items) {
-
-    }*/
+    private List<Chat> getChatListBlueprint(Map<ProductLock, Object> items) {
+        return (List) items.get(ProductLock.CHAT_LIST);
+    }
 
     public void getChatsByActiveUser(Client<List<Chat>> client) {
-        //ProductBuilder<List<Chat>> builder = new ProductBuilder<List<Chat>>()
+        ProductBuilder<List<Chat>> chatBuilder =
+                new ProductBuilder<>(this::getChatListBlueprint, ProductLock.CHAT_LIST);
 
+        List<Chat> chats = new ArrayList<>();
+        chatBuilder.addItem(ProductLock.CHAT_LIST, chats);
+        chatBuilder.addClient(client);
 
 
         Log.d(TAG, "getChatsByActiveUser");
@@ -132,9 +159,15 @@ public enum DbChatHandler {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, "getChatsByActiveUser:onDataChange");
+                long chatCount = dataSnapshot.getChildrenCount();
 
-                CompilerSetup setup = new CompilerSetup();
-                setup.get(loadChats(dataSnapshot)).sendTo(client);
+                //Require (make sure) that we have gotten all chats before returning the object
+                // from the chatBuilder
+                chatBuilder.requireState(ProductLock.CHAT_LIST, object -> ((List) object).size() == chatCount);
+
+                for (DataSnapshot idSnapshot : dataSnapshot.getChildren()) {
+                    DbChatHandler.INSTANCE.convertToChatById(idSnapshot.getKey(), chats::add);
+                }
             }
 
             @Override

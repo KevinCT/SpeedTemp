@@ -1,5 +1,6 @@
 package com.zweigbergk.speedswede.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,5 +107,7 @@ public class ChatListAdapter extends BaseAdapter {
         mChats.remove(chat);
         notifyDataSetChanged();
     }
+
+
 
 }
