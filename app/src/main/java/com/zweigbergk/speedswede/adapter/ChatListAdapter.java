@@ -84,7 +84,7 @@ public class ChatListAdapter extends BaseAdapter {
             case REMOVED:
                 removeChat(chat);
                 break;
-            case INTERRUPED:
+            case INTERRUPTED:
                 // TODO
                 //Handle failure to respond to a change in the database by creating a listener
                 // for connection and call onListChanged() once connection is reestablished

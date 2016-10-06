@@ -13,9 +13,8 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.zweigbergk.speedswede.R;
+import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.adapter.ChatListAdapter;
-
-import android.support.v4.app.Fragment;
 
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.database.DbChatHandler;

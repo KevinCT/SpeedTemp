@@ -1,0 +1,1527 @@
+[33mcommit ef25ee9a6b9cf26bd6f8e4b92dc9983b7b9fd52b[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Wed Oct 5 23:55:46 2016 +0200
+
+    Improve structure of database handling
+
+[33mcommit 0c2138c76a5637f6fd599a6cc5267adeac3cd201[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Wed Oct 5 21:30:51 2016 +0200
+
+    Make chats load into ChatListFragment
+
+[33mcommit 30ea79037caab1a011672a3d64fcd7c62dbb9511[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Wed Oct 5 20:06:56 2016 +0200
+
+    Refactor stuff
+
+[33mcommit 7bd621967e4c0a02e91b8bb49b91aa366ef4ab6f[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Oct 5 22:08:38 2016 +0200
+
+    Minor fix for Database-event
+
+[33mcommit fae3205d4517c870fba2f1fc6e4763d1882b00d6[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Wed Oct 5 21:34:37 2016 +0200
+
+    Add: some standard values in settings screen (not sure about the list though)
+
+[33mcommit 6b162c3d63a4e2d095b918f75b483e8403addbbd[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Wed Oct 5 18:26:25 2016 +0200
+
+    Rework: Settingspage is now up and running, and saves in device settings.
+
+[33mcommit 7435694d310efa63d030d2b686f42760c374814a[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Wed Oct 5 16:23:53 2016 +0200
+
+    Add: back-button in Settings - actionbar
+
+[33mcommit 297f0187f19371a6606e1343259a678bfc4a995a[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Wed Oct 5 16:10:08 2016 +0200
+
+    Add: Settings page
+
+[33mcommit e5b0c85d48a6596fb00d88ebe77b59bb243aa39a[m
+Merge: 437ff3a 6a040fc
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Oct 5 16:20:25 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 437ff3a75e1bad8575bc2eb89bfe941129537de7[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Oct 5 16:20:16 2016 +0200
+
+    Add listener for user chats, not completed
+
+[33mcommit 6a040fc33069ba42da9c12282b1e91e3d9f02316[m
+Merge: a9ce593 47797f2
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Oct 5 16:17:20 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit a9ce59331c50fe0954700bea9b710f3e24d1b072[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Oct 5 16:17:17 2016 +0200
+
+    Add partial functionality for removing users from a chat
+
+[33mcommit 47797f2a035d93d3e86f74cad6d223dd171974f8[m
+Author: KevinCT <kevinchentrieu@gmail.com>
+Date:   Wed Oct 5 16:12:53 2016 +0200
+
+     made default language english if none found
+
+[33mcommit b25ac9a55b880fda5fc12411e18100911e1c6d86[m
+Merge: 7c300cb 347e4da
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Oct 5 15:47:25 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 7c300cb294c00bd82248ba763183e39120ccd23f[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Oct 5 15:47:21 2016 +0200
+
+    Fix recycler in Chatfrag
+
+[33mcommit 347e4daabd4d9e7fc89da7228b0ef558d249a377[m
+Merge: 8972bf1 ca8a696
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Oct 5 15:37:21 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 8972bf1f0411cf515df9b3f2abc41a1513d2d11b[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Oct 5 15:37:18 2016 +0200
+
+    Add USER_CHAT to firebase
+
+[33mcommit ca8a69682bb305c7f3b3eb426fa95eb02a40399c[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Wed Oct 5 15:20:20 2016 +0200
+
+    Fix
+
+[33mcommit a6b5e2b12b627e344153b2f9bd3816763d8bf879[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Wed Oct 5 15:20:07 2016 +0200
+
+    Uncomment stuff
+
+[33mcommit 55bb011cdfe09fb1907ba1cfb0c9a4630800fe70[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Wed Oct 5 15:17:40 2016 +0200
+
+    Fix issues with Firebase synchronization
+
+[33mcommit 724afa0a6634cdceed22059f171c75d104230301[m
+Merge: 5ff4562 9e7b7b2
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Oct 5 14:55:46 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 5ff456265eaac2b6313c3d382d614b18dfe77a29[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Oct 5 14:55:36 2016 +0200
+
+    Minor changes
+
+[33mcommit 9e7b7b2df44a497f27368159ac9990081b738982[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Wed Oct 5 14:32:04 2016 +0200
+
+    Add: settings-button in main chat list.
+
+[33mcommit a6175a9edd7e118466d3a659c2dc48d046e33e06[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Wed Oct 5 12:57:34 2016 +0200
+
+    Fixed weird problem where ChatInteractor was not set before using it.
+
+[33mcommit 8781b1d432ba19267c2d3176ae9dd88a1efbb852[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Oct 5 13:53:38 2016 +0200
+
+    Add instanstiation of chatInteractor
+
+[33mcommit 5af2241c31a7cb8f4bec908c8b5698423d577ac6[m
+Merge: d766b95 4ac6d5f
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Oct 5 12:50:57 2016 +0200
+
+     Fix merge and language bug
+
+[33mcommit d766b955585cddcf20252e8b3e2178471581ab9e[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Oct 5 12:33:57 2016 +0200
+
+     Changed a bunch of stuff and forgot to push
+
+[33mcommit 4ac6d5ff8211f0cfbb38ba08a0e9017ecfa32947[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Wed Oct 5 11:51:32 2016 +0200
+
+     translated to swedish, made languagefragment dissappear after language change
+
+[33mcommit 3ed54fe430c8bf106658472036860440cde10d29[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Wed Oct 5 11:41:56 2016 +0200
+
+     added functionality to change language
+
+[33mcommit 76305a5c3b24f37d42a5363a16a343bd92518b1e[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Oct 5 10:03:27 2016 +0200
+
+    Remove project file backups
+
+[33mcommit a80b33d1dbeaaca06c27918f5ad2064f4d49c8b4[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Tue Oct 4 21:41:37 2016 +0200
+
+    Fix the UserPool chat crash
+
+[33mcommit b276b15cf0b778bde27ae138c7d2c244047dc47f[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Tue Oct 4 00:38:10 2016 +0200
+
+    Add name to user in pool
+
+[33mcommit 713ede357e5c53f6314ec28b3058d8239ba297ff[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Tue Oct 4 00:32:44 2016 +0200
+
+    Refactor database handling into three classes
+
+[33mcommit 009436a742e940790de786473e5b90ce08d4dfc2[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Mon Oct 3 20:14:06 2016 +0200
+
+    Generalize database listeners
+
+[33mcommit 65a4633e9c83a5bf4ff58b5073cc9db3097391e3[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Mon Oct 3 19:37:32 2016 +0200
+
+     fixed errors in banner test, databasehandler
+
+[33mcommit 7b674654cfb038ae796d743719225e3f4e809cc2[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Mon Oct 3 18:57:03 2016 +0200
+
+    Refactor blocked user check in ChatMatcher
+
+[33mcommit 639e6edac321e05fde0d59db9c5d6c58957121b6[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Mon Oct 3 18:58:53 2016 +0200
+
+     added support for swedish language
+
+[33mcommit 5d7ad02e47fae5bc15b3ab47e30e535b4df933db[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Mon Oct 3 18:49:28 2016 +0200
+
+     fixed bug in containsbanneduser
+
+[33mcommit 54ccf995d0cace569e96795d4e5b5bf534165d3b[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Mon Oct 3 17:24:48 2016 +0200
+
+    Removed Kevins banfunction, cuz it crashed program
+
+[33mcommit 9c319b1a40fef4895f5a349facd216ca3a4eb13e[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Mon Oct 3 17:16:38 2016 +0200
+
+    Clear chat fragment messages when changing chat
+
+[33mcommit d745bb8f34e8d14903ecebe3a86bb485f29c28bd[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Mon Oct 3 17:06:26 2016 +0200
+
+    Make ChatMatcher show a chat
+
+[33mcommit 8e0b1a080aa4bf8f9657f8ace0448c4bd7e8a615[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Mon Oct 3 16:52:03 2016 +0200
+
+    Refactor ChatBuilder
+
+[33mcommit ca4a83c72671ad1d8ffd7b07818466cf9db2e07e[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Mon Oct 3 16:52:27 2016 +0200
+
+    Made changes to chat ID
+
+[33mcommit 3e2a5cd3e6e12f3cf94960b3f68dd5a1dbdd2275[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Mon Oct 3 16:22:40 2016 +0200
+
+    Fix issue with endless loading circle
+
+[33mcommit 2de3bf96e0f7895e96469e939273516a8a3425db[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Mon Oct 3 16:35:55 2016 +0200
+
+    Resolve merge issue with R file
+
+[33mcommit 2838cf96a229baed8559061c822cce3f61759423[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Sun Oct 2 22:06:27 2016 +0200
+
+    Fix issues with using the app in offline mode
+
+[33mcommit de304166770f0487653f3fe420708b4d58d82718[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Mon Oct 3 12:29:20 2016 +0200
+
+     fixed error keeping app from starting
+
+[33mcommit dc3921f997d85004d691e541573c176b1be2097c[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Mon Oct 3 11:53:53 2016 +0200
+
+     Removed unused code
+
+[33mcommit cac542c6e261b6746959e06978a26e083237d13f[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Mon Oct 3 11:41:08 2016 +0200
+
+    refactor
+
+[33mcommit e0da8d0509f0fab4fab34f5795b000101396b197[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Mon Oct 3 01:52:47 2016 +0200
+
+     added check to make sure pool doesn't contain banned user
+
+[33mcommit 282b7f7bafcaa55193430d49c5a35a5d73b68df4[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Mon Oct 3 01:11:30 2016 +0200
+
+     Refactor banner according to mvp design
+
+[33mcommit 37fc5ddf4f7e4666b92ce5da1fadbea646609093[m
+Author: petrosdeb <petrosd@student.chalmers.se>
+Date:   Mon Oct 3 00:21:25 2016 +0200
+
+    Small fixes in chatlistadapter
+
+[33mcommit e7e4f85f5eda09a7ff942a8d0e87f4b5c5595764[m
+Author: petrosdeb <petrosd@student.chalmers.se>
+Date:   Mon Oct 3 00:19:11 2016 +0200
+
+    ChatListAdapter done
+
+[33mcommit 9fe74997234ba1bcd577fb59eb20771445d8f7c9[m
+Merge: 174823a 02e90b1
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Fri Sep 30 14:11:23 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 174823a1664e7f6448e3e307f605ccd9cea32f54[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Fri Sep 30 14:11:16 2016 +0200
+
+    Add half-time evaluation
+
+[33mcommit 02e90b18c95f7b4060abca5b08f0747cbccfe45f[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Fri Sep 30 11:26:04 2016 +0200
+
+    Optimized evaluation when checking if message should be sent or not (empty messages will not be sent)
+
+[33mcommit 5526c7957a3fd6a18ce741548b67d9775bbb8a4d[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Fri Sep 30 10:14:31 2016 +0200
+
+    Import log
+
+[33mcommit b241f5c7525b67dba6ab1ccc5e72285f38a14a82[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Fri Sep 30 01:04:33 2016 +0200
+
+    Make small fix
+
+[33mcommit 99635a6c0b16444802acb70febdce9ffe43da5cb[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Fri Sep 30 00:38:37 2016 +0200
+
+    Massively improve chat listener generalizability
+
+[33mcommit d7e168addc9b9b137a4205e8136e0f59863f22ec[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Fri Sep 30 00:30:16 2016 +0200
+
+    Add many new utility interfaces and classes
+    
+    - DataQuery: Provides a Firebase snapshot to a client. It is used
+    to read snapshots from the database, can be used to check whether
+    or not a reference has the value null.
+    
+    - ProductBuilder: Compiles an object from other component objects
+    (possibly asynchronous). Clients that want to use the object will
+    gain access to it as soon as it is built.
+    
+    - BuilderKey: Defines the keyset that can be used with
+    ProductBuilder.
+    
+    - Lists: Defines a forEach() for generic methods.
+    
+    - Query: Acts as a verifier against objects.
+
+[33mcommit 1566542f9167d5c5ad2c12f06abfcdb9c5bea73d[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Thu Sep 29 21:48:42 2016 +0200
+
+    Add 'inactive' variable to Chat
+    
+    This should be set to true when someone leaves a chat, either
+    through explicitly leaving it or through blocking the recipient.
+
+[33mcommit 6a8a771f98db5dd7eb65f032fa194188d7e3b035[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Thu Sep 29 21:47:27 2016 +0200
+
+    Move files around and create clearer structure
+    
+    Activities have been moved to a separate activity package,
+    among other similar albeit smaller changes.
+
+[33mcommit a89dee5352e6c3d1f2469eb904486ccc7f851086[m
+Merge: 37dda74 782bbf9
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Fri Sep 30 08:11:28 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 37dda74ba4458b2af79b946c0b5e861dfd397aa4[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Fri Sep 30 08:11:25 2016 +0200
+
+    Work on connecting two chats
+
+[33mcommit 782bbf98b7867916830ca590d40cfa4216b7332e[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Fri Sep 30 00:00:23 2016 +0200
+
+     refactored ban functionality, added menu to chatfragment
+
+[33mcommit caf08e8c3370d225faabcdee8cb31ca40d1be906[m
+Author: petrosdeb <petrosd@student.chalmers.se>
+Date:   Thu Sep 29 23:15:16 2016 +0200
+
+    Fixed bugs in ChatListFragment
+
+[33mcommit bb1c0a1fedf7c5e116748720665f4646a43211cc[m
+Author: petrosdeb <petrosd@student.chalmers.se>
+Date:   Thu Sep 29 22:42:56 2016 +0200
+
+    Merge conflict
+
+[33mcommit fad10b02f7aaeb621509e9d36f90178bbc069c31[m
+Merge: dbeaefc 5bdf1e3
+Author: petrosdeb <petrosd@student.chalmers.se>
+Date:   Thu Sep 29 22:34:11 2016 +0200
+
+    Merge conflicts resolved
+
+[33mcommit dbeaefc5aa1ad018b949c0eadf29bb2f199d910a[m
+Author: petrosdeb <petrosd@student.chalmers.se>
+Date:   Thu Sep 29 22:27:34 2016 +0200
+
+    ChatListAdapter
+
+[33mcommit 5bdf1e324d557ee8dc280d980f7f2bf2b98047e9[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Thu Sep 29 16:53:43 2016 +0200
+
+    MultiLine input now allowed.
+
+[33mcommit e334b0457d0d4164c67e15e4bb4f6b4c0861b982[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Thu Sep 29 16:41:44 2016 +0200
+
+    Add functionality for pushing chats to database
+
+[33mcommit 58153e4cf883840f6f51746c0149663d80faad86[m
+Merge: ff2862c 51a2eac
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Thu Sep 29 16:17:03 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit ff2862c8f641204fa9f2d550cdbbd0a111b64fdc[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Thu Sep 29 16:16:45 2016 +0200
+
+    Add users to Firebase first time they login
+
+[33mcommit 51a2eac432248ee03fda4e4f6d922defdf9f0ce2[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Thu Sep 29 16:12:43 2016 +0200
+
+    First optimize was bad. Did it over, threw away lots of stuff. Now it's better and lesser.
+
+[33mcommit 82ce452d5939a8c1fe02c19b06a5ade7c6ad32a6[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Thu Sep 29 15:37:48 2016 +0200
+
+    Optimized automatic scroll calculation in chat.
+
+[33mcommit 762eada309ded2c7df7d087e7a6cd05b5d9bf4d7[m
+Merge: 151fca7 5a9d961
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Thu Sep 29 15:27:43 2016 +0200
+
+    Merges...
+
+[33mcommit 151fca7d92329d138a7eb49304f26a1835315049[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Thu Sep 29 15:26:08 2016 +0200
+
+    im a webscout
+
+[33mcommit 5a9d9613920fff0c3167e615970b64b2c656761c[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Thu Sep 29 14:44:10 2016 +0200
+
+    Bug fixed: one could send completely empty messages
+
+[33mcommit fc411142021a113f1efbdb5f8519fcc24b1c95cf[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Thu Sep 29 14:40:05 2016 +0200
+
+    Bug fixed: the chat message list did not scroll to the end when someone else posted (if at the bottom).
+
+[33mcommit 0279a53f9bece2ae1847ca01c9886aa7e6e197e1[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Thu Sep 29 08:10:43 2016 +0200
+
+    Refactor LoginInteractor
+
+[33mcommit cfb8fa79b668d43520820df8a153f9195c926cfd[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Thu Sep 29 08:10:31 2016 +0200
+
+    Fix chat scrolling issue
+
+[33mcommit 7fced1be5101cc9ca6f8e9e198ab2b433fa2ce38[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Thu Sep 29 07:12:59 2016 +0200
+
+    Fix issue with loading circle not appearing
+
+[33mcommit 7cf47a7ef9f92fda69d81328e1080511ecbbcd0d[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Thu Sep 29 00:13:36 2016 +0200
+
+     Fixed bug scroll to bottom when tapping inputfield
+
+[33mcommit 14209b2cf150a49bfb3007fc3c4d857ca7908fd1[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Thu Sep 29 00:02:32 2016 +0200
+
+     Added block functionality
+
+[33mcommit 49f1374449ff93aa517e42416e140aebf5e102f0[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Wed Sep 28 21:01:04 2016 +0200
+
+    Solve endless loading at LoginActivity if user clicks 'x' @ Facebook login fragment
+
+[33mcommit c1191bb21c0736a1e26df1168e425ee0910e9e23[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Wed Sep 28 20:21:43 2016 +0200
+
+    Remove unused variables
+
+[33mcommit 894d72fb40139967feec5334b513aff1a4295bec[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 28 16:35:25 2016 +0200
+
+    Logging out user (for debugging reasons)
+
+[33mcommit ae0c21626d8b511ec955ef32e7a709be17295db0[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 28 16:34:06 2016 +0200
+
+    Refactor chat matching pool
+
+[33mcommit 94798710c1d49eb58a78429c802a436a1167e327[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 28 13:02:47 2016 +0200
+
+    Refactor User Pool Listener into separate file
+
+[33mcommit c4665a15ea5a32636f5ad7289092468cb7c29b86[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 28 11:45:49 2016 +0200
+
+    Begin ractor of getMatchingPool
+
+[33mcommit 9d44642c2dd0c44152b6dfa38ed35f2ae961250c[m
+Merge: 3d9b51c c919672
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 28 11:30:34 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 3d9b51c81fd4fc846dac02ed64bd6d5a058de5d8[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 28 11:30:28 2016 +0200
+
+    Working on connecting two chats
+
+[33mcommit c91967206f4b4e07e1fd9ed649d3cac1b0d08962[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Tue Sep 27 19:34:32 2016 +0200
+
+    Fix bug introduced in previous commit
+
+[33mcommit 5ba9d0c6a4a0383da458799b676d7b0b607ba980[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Tue Sep 27 19:26:55 2016 +0200
+
+    Fix various bugs
+
+[33mcommit f1ffb26a910cebdc26d1b45195b24761ddf42598[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Tue Sep 27 18:03:25 2016 +0200
+
+    Make it possible to use the app in offline mode
+
+[33mcommit 44968a035128d64cc0b037e3edddea54d888d3b1[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Tue Sep 27 18:03:07 2016 +0200
+
+    Update view interfaces
+
+[33mcommit 0abeb2384b52e0858788c5d83be6d40b995d2191[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Tue Sep 27 18:00:19 2016 +0200
+
+    Delete unused files
+
+[33mcommit 334ce31bcfad4aed9af0510eb88b4ac3cc28df53[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Tue Sep 27 14:18:15 2016 +0200
+
+    Enable saving and loading of offline mode data
+
+[33mcommit 46030fb89a1dfe179e6d40a1a5cb138b0569f94c[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 18:29:03 2016 +0200
+
+    Creating stub for creating custom chat objects
+
+[33mcommit 830b62d0ba5104bad3c8f2e6842800b951215059[m
+Merge: 0f14fd0 6189647
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 27 17:13:13 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 0f14fd0fa5a10598b991105145c0edb963737393[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 27 17:13:09 2016 +0200
+
+    dont know tbh
+
+[33mcommit 6189647d83d0943ee5100ef856811303e1248ae3[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 17:12:33 2016 +0200
+
+    Revert to save user instead of Uid in pool
+
+[33mcommit 5d821cf185512116b687d8a211dba9b8cf049f44[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 17:03:40 2016 +0200
+
+    Uid instead of User in pool
+
+[33mcommit 59d84d3a6f02b8944fa1a20aa0144e98df55237f[m
+Merge: 4047a62 78d4835
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 16:59:42 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 4047a62b8b073d40815ef816d79d1c2c2393ef47[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 16:59:38 2016 +0200
+
+    Make use of user id instead of user in matching pool
+
+[33mcommit 78d4835d5a7f4c32989d4ac5a5e5f0ab9f6145ac[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Tue Sep 27 16:53:30 2016 +0200
+
+    Obsolete tests removed, and code added for having a private chat between Andreas and someone.
+
+[33mcommit 941a5a598f0a576482a1c5103477979c2b1c6f80[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 27 16:57:04 2016 +0200
+
+    Again......
+
+[33mcommit 85b327c2b06a4c06ad15a40398b14bffb25059b3[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 27 16:55:53 2016 +0200
+
+    Fixing the crumbs from Andreas..............
+
+[33mcommit 0bb88e0963cd1db44e510d696ecad27448eaa29b[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 16:50:40 2016 +0200
+
+    Pushing only UID to FireBase instead of User object
+
+[33mcommit 2bd832623e642594da693a23015a9629e5a78b27[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 16:45:09 2016 +0200
+
+    Use user ID instead of mock user
+
+[33mcommit 37f99863132110064472b24ab3ceded8b0e1b47f[m
+Merge: 74d4db7 b4109a7
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 16:13:26 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit b4109a7f070e6b15887e77c01c5df18dcfb605c2[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Tue Sep 27 16:12:09 2016 +0200
+
+    Private chat (with only current user).
+
+[33mcommit 74d4db79ce0bf58a5f3cf28de4312e0fa87f0159[m
+Merge: f76c35f 6e9df7f
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 16:05:07 2016 +0200
+
+    Fix merge conflict
+
+[33mcommit f76c35fc222c84e1950886d437ae8f666779a7da[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 16:04:30 2016 +0200
+
+    Add debug area in ChatListFragment
+
+[33mcommit 6e9df7f359a619d0c75e80e1f479937d32b13a09[m
+Merge: 2970c64 455c9d5
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 27 16:02:59 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 2970c64f8c009b5e04ec2c1f47bc094b0d5003a5[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 27 16:02:52 2016 +0200
+
+     Matching is working
+
+[33mcommit 455c9d5b215aace7ddbb732ff853b3d87dbfce4d[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Tue Sep 27 15:43:12 2016 +0200
+
+    Config boolean for signing out at the start of application (set to false).
+
+[33mcommit 9dfc4fcdc09c947894a57c56fa7bdc5a2b03c026[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 27 15:28:03 2016 +0200
+
+    Förlåt
+
+[33mcommit 68ab8fe1346b261a042c236d8ba07c9d128bf218[m
+Merge: ee14e07 0ebc3ba
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 15:22:28 2016 +0200
+
+    Merge
+
+[33mcommit ee14e07446b376d6ec8fb8aa8456e038c178bf91[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 15:21:53 2016 +0200
+
+    Stealing code
+
+[33mcommit 0ebc3ba6ffe1965e44e9bfea4816e2772284f306[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 27 15:04:27 2016 +0200
+
+    alskda
+
+[33mcommit f3e85f5ffa82b36a183b191f9fde5959ef07817e[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 27 14:41:27 2016 +0200
+
+    Tiny error
+
+[33mcommit c773a00cd5d4df4605d73a348fe0f0a9f32da0d8[m
+Merge: b31b2bc 52f6853
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 27 14:40:46 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit b31b2bcb9cceabe09f265088ee03b7598457a6fd[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 27 14:40:40 2016 +0200
+
+    Fc, syncing pool between database and locally
+
+[33mcommit 52f685390870ceffcf41fe8fc5ff234ed5e3fca4[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Tue Sep 27 13:53:54 2016 +0200
+
+     minor fix
+
+[33mcommit a16d37ce393b29fdfa13e6cf486c27ee6270ba04[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 13:14:18 2016 +0200
+
+    Null check in smoothScrollToBottom
+
+[33mcommit ab603028e45b58e5afde10206df31a9830605459[m
+Merge: 32abd4c 2e6637f
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 13:11:48 2016 +0200
+
+    Fix merge conflict
+
+[33mcommit 32abd4c757271879ae795efbbaaf8d870166a46d[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 13:11:08 2016 +0200
+
+    Minor refactor
+
+[33mcommit 2e6637f7bc378ef8d7b9f4a62485ddbd9a156a7f[m
+Merge: c481626 812998a
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 27 12:35:39 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit c4816263d571f81ec23b4bf7ee9b850d2accd68d[m
+Merge: 3b33b84 35c187d
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 27 12:35:32 2016 +0200
+
+    Jonathan dont touch my shit
+
+[33mcommit 812998a80035c6b748c6113a7e3e7e2993bfc656[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Tue Sep 27 12:35:00 2016 +0200
+
+     implemented getusermethod, replaced dummymessage
+
+[33mcommit 3b33b84625df539e372f8037b663c47b51c92037[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 27 12:29:50 2016 +0200
+
+    Added tests and some logic for matching
+
+[33mcommit 35c187d5da8a5496cc712314e451df87d0440388[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Tue Sep 27 11:15:47 2016 +0200
+
+    Implementation of tested methods in Chat class.
+
+[33mcommit 41b99b0124a76a7b5f6ff5f2fb5fc23b30c2bd44[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Tue Sep 27 11:29:32 2016 +0200
+
+    Add initial logic for offline database
+
+[33mcommit 775fdac65224577bff2adaaf4214cb20f4f07882[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 11:28:14 2016 +0200
+
+    Update id in Chat class to make use of profile hashCode
+
+[33mcommit 7a4bb01938ceb8731b16f1b8ea7e240dbe27e278[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 11:23:23 2016 +0200
+
+    Implementing equals
+
+[33mcommit 066e18f3a128a43c9338c65120c2a73e7099bc57[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 11:18:33 2016 +0200
+
+    Uid -> Id
+
+[33mcommit bdf0893454ffcde001d86ad9fc3abd3d89a95bde[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 11:14:19 2016 +0200
+
+    Implementing methods in Chat class
+
+[33mcommit c62451f7facef0c7ad7a755229c4c5c848dab2a5[m
+Merge: 443bff5 a2e53c0
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 11:04:22 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit a2e53c08cc02e7764ff9231aedaf70b7bf36522e[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Tue Sep 27 11:03:13 2016 +0200
+
+    Merge: refactoring in Chat and Message class
+
+[33mcommit 3114d3438f8feff5e4e775aaf1f02237974e93d4[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Tue Sep 27 10:46:27 2016 +0200
+
+    Test for Chat class, minor refactoring in Chat/Message
+
+[33mcommit 443bff5c2db26a2ff00e2150ca89945cf2f883f7[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 10:56:52 2016 +0200
+
+    Remove post message button from chat list
+
+[33mcommit 06a78ea0b8ad94f9eab7a2a4c6ed2ca3c20d9edb[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Tue Sep 27 10:54:29 2016 +0200
+
+    Add unit tests for ChatMatcher, LocalStorage and UserData
+
+[33mcommit 6696988a04e909e65db991f310d389da736cf3f3[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 10:27:59 2016 +0200
+
+    Test for Message class and minor refactor of Message class
+
+[33mcommit 41fc25ef13c82fad4d8cdfb40140f694e3b97bc7[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 09:53:46 2016 +0200
+
+    Reorganizing test packages
+
+[33mcommit ba134a2ac5f896cc0c3c74dcf7bb60945fc6eca4[m
+Merge: 054c93d 857068b
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 09:50:40 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 857068bc3b4bcb480c3fb409e2ede748937181c6[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Mon Sep 26 20:29:17 2016 +0200
+
+    Setup files for testing
+
+[33mcommit 054c93ddecde6c6fcf123585a0c007b144398f4f[m
+Merge: a02cbfe 19b2396
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 08:20:03 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit a02cbfedab17bd140ebd4e51cb7fdfca887f19dc[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 27 08:18:42 2016 +0200
+
+    Remove obsole fetchConversation moethod
+
+[33mcommit 19b2396f6c6b6cf2bc8f26dc1083e9af91e06441[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Tue Sep 27 08:09:20 2016 +0200
+
+    Fix text color in input field
+
+[33mcommit 02a8b045adc86e63c638909de81617eb6e6cc96e[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Mon Sep 26 22:58:02 2016 +0200
+
+     separated user from stranger in chat
+
+[33mcommit 1ab86c39e9017580f3afb56ec3e1e77f8746e6c5[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Mon Sep 26 19:37:17 2016 +0200
+
+    Fix remaining issues with dimens
+
+[33mcommit 2bd0ce804cc16e0d8a884a818187ae8811831f95[m
+Author: Jonathan Kran <jonathan.kran1@gmail.com>
+Date:   Mon Sep 26 19:27:08 2016 +0200
+
+    Fix dimension issues
+
+[33mcommit f7fc030e62f637f21b71d449cefa55da9b0a0c09[m
+Merge: 9c1c196 9ddca86
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Mon Sep 26 18:53:23 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 9ddca86a1cef0b287af0f6643a2cf920b49081d4[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Mon Sep 26 17:04:35 2016 +0200
+
+    Grupprumsbokning!
+
+[33mcommit 9c1c196cb6ce975b17251af7cea02241195e840a[m
+Author: Jonathan <Jonathan>
+Date:   Mon Sep 26 17:03:02 2016 +0200
+
+    Define standard dimensions
+
+[33mcommit 9df67bddc24412ef1c35af3f609c83a6501771a7[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Mon Sep 26 17:03:42 2016 +0200
+
+    Small changes in facebook login button color
+
+[33mcommit 574e426abf90f8191ab6fbc6a8979f9ccd27cfe3[m
+Author: Andreas Carlsson <andreas@carlssonfoto.se>
+Date:   Mon Sep 26 17:02:20 2016 +0200
+
+    Update README.md
+
+[33mcommit 637056665419479fbead42ae560722c2dac6eec5[m
+Author: Andreas Carlsson <andreas@carlssonfoto.se>
+Date:   Mon Sep 26 17:01:05 2016 +0200
+
+    Update README.md
+
+[33mcommit c0c7115234c79c9f6b50d282bce2b55a952328cf[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Mon Sep 26 15:29:00 2016 +0200
+
+    Clear message area when chat message is sent
+
+[33mcommit 01012914b58e45e47ba35f658c8d95945b179b62[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Mon Sep 26 15:21:41 2016 +0200
+
+    Post message from chat view now uses an EditText field
+
+[33mcommit 3d8dd39a7b77123ddb8b413cb591533906c08fb2[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Mon Sep 26 10:02:16 2016 +0200
+
+    Find user input before posting dummy message to DB
+
+[33mcommit 3075ac52f8da3dbfc317afe016c687434ad45e97[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Mon Sep 26 10:00:39 2016 +0200
+
+    Add id to type message area
+
+[33mcommit 67b5917e377d22c93f16823cfe90683b5686beec[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Sun Sep 25 00:09:32 2016 +0200
+
+    Increase responsiveness of the list of messages in ChatFragment
+
+[33mcommit 64d2e8d8e8a5bf734f1edbc933cb0918ca4f0b66[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Sat Sep 24 23:12:07 2016 +0200
+
+    Refactor DatabaseHandler and ChatFragment
+
+[33mcommit 76ce1feb19bd3fe3c986391f01d9435f54727778[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Sat Sep 24 20:27:51 2016 +0200
+
+    Add automatic syncing of data in database
+
+[33mcommit 92d54dd1c051613e022718e2a3b2727ad022a263[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Sat Sep 24 18:23:50 2016 +0200
+
+    Extract resources
+
+[33mcommit 7aeb1e9a6f673ddc9ff159dc5de074f871cb85af[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Sat Sep 24 18:15:41 2016 +0200
+
+    Improve response time of conversation RecyclerView
+
+[33mcommit 4524c8d6f96e8c968631e4381440d29efa8ee4ff[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Sat Sep 24 18:01:11 2016 +0200
+
+    Fix layout issues with the conversation fragment
+
+[33mcommit ea3c9fa24341b853f918f387bcae9b1dad3878c1[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Sat Sep 24 13:50:20 2016 +0200
+
+    Clean up code
+
+[33mcommit c39992bf5c1e318ec95e0bfc7b0fd4ec58ebec5a[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Sat Sep 24 13:26:58 2016 +0200
+
+    Read initial from database via DatabaseHandler
+
+[33mcommit 6d289ba221703cf343abb7e02607f29310f29dde[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Sat Sep 24 13:07:36 2016 +0200
+
+    Make method for adding dummy message to Firebase in Database handler. Fix layout bug in fragment_chat_list
+
+[33mcommit 1d0bb85350779209fe33a49d3b52446c023b48d3[m
+Merge: 7369c06 3eb7c7f
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Sat Sep 24 13:09:35 2016 +0200
+
+    Fix merge conflict
+
+[33mcommit 3eb7c7f0810bd9dedd9254954e398068a9cdb97d[m
+Merge: ba9ef26 6eff85e
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Sat Sep 24 13:04:55 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit ba9ef26fce95b9e5c40ac43c2ab2529a4de87a4b[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Sat Sep 24 13:02:12 2016 +0200
+
+    Replace ListView with RecyclerView
+
+[33mcommit 7369c06ba010962d135e728bb5aab13019ac9f90[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Sat Sep 24 12:26:04 2016 +0200
+
+    Cleanup and remove obsolete code
+
+[33mcommit 710c4c6b0e423fe4ccc471fdf1f19b96c2ea0e58[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Sat Sep 24 12:08:10 2016 +0200
+
+    Another method name refactor
+
+[33mcommit 6eff85e17b91db1383ff02af98fe0bff782f4f2c[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Sat Sep 24 12:04:14 2016 +0200
+
+    Change ambigious method name
+
+[33mcommit b5969a4462ecfb58afd378d37a1cfc541d9d3ab9[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Sat Sep 24 12:00:36 2016 +0200
+
+    Add listeners for messages in database.
+
+[33mcommit 39a073f5ba9f98265c53a53219268fc49b188627[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Sat Sep 24 11:31:33 2016 +0200
+
+    Fix bug in MessageAdapter
+
+[33mcommit 406fbdaadbe1fb6f264f499c0b647e8e449b4d6f[m
+Merge: 31fa944 59f4553
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Fri Sep 23 23:34:49 2016 +0200
+
+    Update comment
+
+[33mcommit 31fa9444386947d074312a3cd497a7d9b22536b5[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Fri Sep 23 23:12:13 2016 +0200
+
+    Fix null pointer
+    
+    Caused by wrong ordering of initialization.
+
+[33mcommit 59f4553f4c23872c783d83d0d0ac83c11ed2a775[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Fri Sep 23 23:12:13 2016 +0200
+
+    Fix null pointer
+    
+    Caused by wrong ordering of initialization.
+
+[33mcommit 32985d52110c4d2984191dbc0db327879e123b58[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Fri Sep 23 22:58:54 2016 +0200
+
+    Add Client<Content> interface
+
+[33mcommit 5c7d82ad4490c7498f96de4f920fabf9db830c3e[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Fri Sep 23 17:48:57 2016 +0200
+
+    Fixed customized facebook login button
+
+[33mcommit ec5f28f9ae51031a27d20f612d2aa69d02f00f34[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Fri Sep 23 17:46:54 2016 +0200
+
+    Fetch messages dynamically from Firebase.
+
+[33mcommit 97355b3569d91ad9f7221a410d5d8c8cf785b37f[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Thu Sep 22 17:42:38 2016 +0200
+
+    New design on logo, added as app-icon and start loading screen.
+
+[33mcommit 78f6316c07270188747d5dc02ef2ed822e2e2b1c[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Thu Sep 22 00:31:08 2016 +0200
+
+     Integrated GUI with messageadapter
+
+[33mcommit 2fb8b192711ad9367810302ba8b167744b4d80fb[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Wed Sep 21 22:51:57 2016 +0200
+
+    Show progress circle while waiting for credential validation
+
+[33mcommit 894b28f402869c15f41b061944a7ee2dc646a102[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Wed Sep 21 22:27:14 2016 +0200
+
+    Remove Facebook login's progress circle
+
+[33mcommit b3b776cad40dddea7f8892e6a83dba11c6a941ae[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Wed Sep 21 22:25:57 2016 +0200
+
+    Add layout elements for progress circle
+
+[33mcommit b9309446a7527c30e6f358fc4f01f65df9a9ea46[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Wed Sep 21 22:24:55 2016 +0200
+
+    Create simple User class
+
+[33mcommit fdf358725af63a136d380a7336f8c5ed5ee25378[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Wed Sep 21 21:54:11 2016 +0200
+
+    Add Executable & Backpack
+    
+    Backpacks are used to pass information between contexts.
+
+[33mcommit 9ef58e877978b5c1f2f9e935ed59a7e05b25e71f[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Wed Sep 21 21:52:18 2016 +0200
+
+    Rename 'model' package to 'core'
+
+[33mcommit fdee39c11f7ca97ff9ffa0889135c2bf0bc0a312[m
+Merge: 0486c64 18ebd5b
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Sep 21 17:46:43 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 0486c64f2eb241eaa62f391aaa05bf90a4e1b4e4[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Sep 21 17:46:33 2016 +0200
+
+    Possible to push messages
+
+[33mcommit 18ebd5b1aaad7d647ee2350dbfca33ac28a16780[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Wed Sep 21 17:43:22 2016 +0200
+
+    Added custom color-scheme in values/colors
+
+[33mcommit 7d1999e631c46fd9b1ebc2067042f8bd37c0caca[m
+Merge: 86d644b 0eda9fd
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 21 16:51:14 2016 +0200
+
+    Fix merge conflicts
+
+[33mcommit 0eda9fd326af799481079788f931cef5064a7f53[m
+Merge: 4cf82fd 1a177ff
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Sep 21 16:50:27 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 86d644be1474d79c1d5ae643a96e127b39027e7d[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 21 16:50:23 2016 +0200
+
+    Make sure timestamp is stored as long instead of string
+
+[33mcommit 4cf82fd99e0f8bf22ecac944c4484541104c333b[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Sep 21 16:50:17 2016 +0200
+
+     bla bla
+
+[33mcommit 1a177ff84f647f5ac1a4c8148381edf929fef2d3[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Wed Sep 21 16:47:38 2016 +0200
+
+    Fix activity change if user already logged in on app startup
+
+[33mcommit 88f84825c99db8af104c32a72bc00cbae4aa15a5[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 21 16:41:50 2016 +0200
+
+    Add constructor for auto generating timestamp
+
+[33mcommit 3ab62dadc4f34ecd983f8c957adcfccd4c747e9d[m
+Merge: 8421bb6 3ba9a3d
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Sep 21 16:09:02 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 8421bb624372d92ce7a7cae87b0ea6b551ddac6d[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Sep 21 16:08:55 2016 +0200
+
+    Added id
+
+[33mcommit dbe09a5d2cc3cf6afe595df87f9a196f4fb0b187[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 21 15:59:42 2016 +0200
+
+    Minor code cleanup
+
+[33mcommit 527978b0db2adba9afc8b7d49ba594a60a493e21[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 21 15:58:53 2016 +0200
+
+    Minor refactor of messages
+
+[33mcommit 3ba9a3d31d3c344d9334a0bb77b5972df625838c[m
+Merge: fb891e4 eb92d56
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Wed Sep 21 15:52:03 2016 +0200
+
+    Merge with master
+
+[33mcommit fb891e4e15792ac87d2a4fa81b5f6cd94ff619a3[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Wed Sep 21 15:50:45 2016 +0200
+
+    Make small changes to login handling
+
+[33mcommit 6dc354fb049cdcaa56a90a0575b23daf0ab210c1[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Wed Sep 21 15:16:13 2016 +0200
+
+    Make it possible to handle logic for no internet connection
+
+[33mcommit eb92d56fcddb0012ae7c987e79d66045b47a3fe0[m
+Merge: a923a15 ce01627
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 21 15:45:38 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit a923a15aecd972b9b31d5bf5a00a2506eb615dbb[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 21 15:35:37 2016 +0200
+
+    Make sure database connection to Firebase is working properly
+
+[33mcommit ce016271a7ebd6685b49d987ad9e9c37e0b4d896[m
+Merge: 23ad216 e084c8f
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Sep 21 14:36:27 2016 +0200
+
+    Merge conflict of doom, fuck manifest
+
+[33mcommit 3a3bc96eabf445168d11af41a772bfb10eb5ff9e[m
+Merge: e0ddd61 e084c8f
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 21 14:23:44 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 23ad216c279b13b80ebb88e64af6dd69762f18f8[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Wed Sep 21 14:13:23 2016 +0200
+
+    Did gui, im best
+
+[33mcommit e084c8f9e81273a93df56ddc2fc4325fb28a5033[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Wed Sep 21 14:06:37 2016 +0200
+
+    Key hash to facebook-method
+
+[33mcommit e0ddd61b685d473d2a13b6b6f921a0868e857df3[m
+Merge: ec6f48a e7d196d
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 21 12:42:42 2016 +0200
+
+    Fix merge conflict in app level gradle.build
+
+[33mcommit ec6f48a7103b2a7aa2164c590d3b2d05faf8ebd5[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Wed Sep 21 12:41:24 2016 +0200
+
+    Working on database testing
+
+[33mcommit e7d196d131cab4129f742a839d94b3e5c0c3b796[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Wed Sep 21 00:34:57 2016 +0200
+
+    Make small changes to logging in
+
+[33mcommit 09b0defde0a2d7d454a3a0e7eb14a093d8328ae7[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Wed Sep 21 00:34:23 2016 +0200
+
+    Swap google-services.json temporarily (?)
+
+[33mcommit f273a8bf9411f44a0d8e251f6af17a591dc278f2[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Tue Sep 20 22:20:40 2016 +0200
+
+    Add logic for Facebook & Firebase authentication
+
+[33mcommit b1ff8d5a0b9fbb4a7fc77efe406ca7882c959e2b[m
+Author: Jonathan Kran <giuinktseo@gmail.com>
+Date:   Tue Sep 20 18:36:15 2016 +0200
+
+    Create Attachable interface.
+    
+    Implementors of this interface should in some way extend
+    the behavior of a class with a lifecycle (eg. an Activity or Fragment)
+
+[33mcommit c235cc1fa89c41ddcfa8fbc34f8042b5a0de17d4[m
+Author: Kevin Chen Trieu <kevinchentrieu@gmail.com>
+Date:   Tue Sep 20 21:40:19 2016 +0200
+
+     messageadapter created, GUI needed
+
+[33mcommit c7e9e2a317739dc427b00e3178fb242d2c36a488[m
+Merge: 3e27a5c 3b5f305
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 20 13:09:35 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 3e27a5c361dfd4ba319f74a9c339ecd56db11447[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Tue Sep 20 13:09:27 2016 +0200
+
+    Added some ui classes
+
+[33mcommit 3b5f3053bcdec277d0308c94a372d9ba1bdd56b7[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Tue Sep 20 12:09:46 2016 +0200
+
+    Changed order of chat and chat-list
+
+[33mcommit e5b07b87f3eb90433d75dac635c6dad3229861bb[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Tue Sep 20 12:03:18 2016 +0200
+
+    Added fragments in chat activity
+
+[33mcommit 83f7c97cf32f349c36a08012a9a18d047ec5562c[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Tue Sep 20 11:42:39 2016 +0200
+
+    Added methods in Main Activity for navigating to different activeties
+
+[33mcommit f6d0a4dabe22e94782bef530d451a3a03019796d[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 20 11:39:53 2016 +0200
+
+    Adding test stub
+
+[33mcommit bf2ce83e6f25ba689c0845ae95a209c266dff124[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Tue Sep 20 11:26:59 2016 +0200
+
+    Created loading-screen with logo (nothing's loading though)
+
+[33mcommit 77ad897880e3ff34011086dc660cbf9e8019eab7[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Tue Sep 20 11:05:45 2016 +0200
+
+    Added inital Firebase setup
+
+[33mcommit 4d4f0e3b58be2978a292e0f2c58d7d22521cecb9[m
+Author: KevinCT <kevinchentrieu@gmail.com>
+Date:   Tue Sep 20 11:04:23 2016 +0200
+
+    created class for message logic
+
+[33mcommit 796bb79b980a7e8fe6772e312e757ef0b82de3c6[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Tue Sep 20 10:44:42 2016 +0200
+
+    Basic java class activity hierarchy setup
+
+[33mcommit b1fd9382ed84370599d788e393e4f1b29b8e8191[m
+Merge: 1f375cf aa75f18
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Mon Sep 19 16:23:05 2016 +0200
+
+    Merge branch 'master' of github.com:ryggan/zweigbergk
+
+[33mcommit 1f375cf1eb372d5993c1235c99de1b1da0fd3142[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Mon Sep 19 16:22:57 2016 +0200
+
+    Hello world
+
+[33mcommit aa75f1845fda207f6851a15331fbc3706f5e205e[m
+Author: bob <robin.lilius@gmail.com>
+Date:   Fri Sep 16 15:17:42 2016 +0200
+
+    Typo
+
+[33mcommit 9aae8172a6ed386d3c16fdf423ad72a999b84ab8[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Fri Sep 16 15:01:49 2016 +0200
+
+    Group room update
+
+[33mcommit cef20f6eb2c81100446e0e3c90b994e8622e9332[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Fri Sep 16 14:51:43 2016 +0200
+
+    Group room update
+
+[33mcommit dd4950a3cb19cd09c2467a05d1d131e1487cf7e4[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Fri Sep 16 14:44:31 2016 +0200
+
+    Updated README
+
+[33mcommit c220f19343c12169f3257b4ce44d59c39ff9f263[m
+Author: Felix Engelbrektsson <ugglan00@gmail.com>
+Date:   Fri Sep 16 14:04:49 2016 +0200
+
+    added docs and vision statement
+
+[33mcommit 07ccfa0ff5c2c8aad2d541c20af60e990961cf13[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Fri Sep 16 13:39:28 2016 +0200
+
+    Changed Java version to 1.8
+
+[33mcommit 67c8c8f5510583f3ae166bf8657d208f959123b6[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Fri Sep 16 13:24:51 2016 +0200
+
+    Added Readme
+
+[33mcommit f1e5833cd2d3d76ed44b5e750b25d610ad7e5c92[m
+Author: ryggan <andreas@carlssonfoto.se>
+Date:   Fri Sep 16 13:24:13 2016 +0200
+
+    Initial commit
