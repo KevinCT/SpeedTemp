@@ -49,7 +49,6 @@ public class ChatListFragment extends Fragment {
 
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
@@ -63,19 +62,7 @@ public class ChatListFragment extends Fragment {
         mChatlistAdapter = new ChatListAdapter();
         chatList.setAdapter(mChatlistAdapter);
 
-        //Reads every chat user is active in from the database and puts them in our adapter
-        //NOTE: This is not needed right now. However, if ChatListFragment is not the get fragment
-        // in ChatActivity in the future, this WILL be necessary. Do not remove.
-        //DbChatHandler.INSTANCE.getChatsByActiveUser(mChatlistAdapter::addChats);
-        // TODO uncomment V
-        /*DbChatHandler.INSTANCE.getChatsByActiveUser(list -> {
-            Log.d(TAG, "Caught the chats from getChatsByActiveUser! Amount: " + list.size());
-            mChatlistAdapter.addChats(list);
-        });*/
-
-        //Adds us as clients to any changes in the user's chat on the database. If a chat of our user
-        // is added/removed/changed, our onListChanged will be notified.
-        //DbChatHandler.INSTANCE.addUserToChatClient(mChatlistAdapter::onListChanged);
+        DbChatHandler.INSTANCE.addClientToChatListListener(mChatlistAdapter::addChats);
 
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
 

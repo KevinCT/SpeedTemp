@@ -141,6 +141,9 @@ public class Chat {
 
     @Override
     public String toString() {
-        return "[Chat ToString] First user: " + getFirstUser() + "\nSecond user: " + getSecondUser();
+        if (getFirstUser() == null || getSecondUser() == null) {
+            return "[Chat toString] Null user";
+        }
+        return "[Chat toString] First user: " + getFirstUser().getDisplayName() + "\nSecond user: " + getSecondUser().getDisplayName();
     }
 }

@@ -11,6 +11,7 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.database.eventListener.ChatListListener;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.database.eventListener.DataQuery;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
@@ -48,14 +49,18 @@ public enum DbChatHandler {
 
     private UserToChatListener mUserToChatListener;
 
+    private ChatListListener mChatListListener;
+
     public void initialize() {
         mRoot = FirebaseDatabase.getInstance().getReference();
 
         messageListeners = new HashMap<>();
-       // initializeChatsListener();
+//        initializeChatsListener();
         //initializeUserToChatListener();
+        initializeChatListListener();
+//        tryQuery();
 
-        tryQuery();
+
     }
 
     private void tryQuery() {
@@ -84,8 +89,19 @@ public enum DbChatHandler {
 
             }
         });
+    }
 
+    public void addClientToChatListListener(Client<List<Chat>> client) {
+        mChatListListener.addClient(client);
+    }
 
+    public void removeClientFromChatListListener(Client<List<Chat>> client) {
+        mChatListListener.removeClient(client);
+    }
+
+    public void initializeChatListListener() {
+        mChatListListener = new ChatListListener(Collections.EMPTY_LIST);
+        mRoot.child(CHATS).addValueEventListener(mChatListListener);
 
     }
 
@@ -134,12 +150,59 @@ public enum DbChatHandler {
         ref.keepSynced(true);
     }
 
-    // TODO Remove chats listener? We shouldn't have a listener that observes EVERY chat, right?
     private void initializeChatsListener() {
-        chatsListener = new ChatListener();
-        DatabaseReference ref = mRoot.child(CHATS);
-        ref.addChildEventListener(chatsListener);
-        ref.keepSynced(true);
+        List<Chat> list = new ArrayList<>();
+
+        ProductBuilder<List<Chat>> pb = new ProductBuilder<>(
+                items -> (List<Chat>) items.get(ProductLock.CHAT_LIST),
+                ProductLock.CHAT_LIST);
+
+
+//        mRoot.child(CHATS).orderByChild(FIRST_USER)
+//                .equalTo(DbUserHandler.INSTANCE.getActiveUserId())
+//                .addValueEventListener(new ValueEventListener() {
+
+        mRoot.child(CHATS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Log.d(TAG, "onDataChange");
+
+
+                long amount = dataSnapshot.getChildrenCount();
+
+                Log.d(TAG, "Amount: " + amount);
+
+                pb.requireState(ProductLock.CHAT_LIST, list -> ((List) list).size() == amount);
+
+                pb.addItem(ProductLock.CHAT_LIST, list);
+
+                pb.addClient(product -> {
+                    Log.d(TAG, "add product");
+                    Log.d(TAG, "list " + product.toString());
+                });
+
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    Log.d(TAG, "Looping trough childs");
+                    Log.d(TAG, "Child: " + child.getRef().toString());
+
+                    convertToChat(child, chat -> {
+                        Log.d(TAG, "Adding to list: " + chat.toString());
+//                        list.add(chat);
+//                        pb.updateState();
+                    });
+
+                    Log.d(TAG, child.getKey());
+                }
+                Log.d(TAG, "list size: " + list.size() + "");
+                Log.d(TAG, "dataSnapshot size: " + dataSnapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private List<Chat> getChatListBlueprint(Map<ProductLock, Object> items) {

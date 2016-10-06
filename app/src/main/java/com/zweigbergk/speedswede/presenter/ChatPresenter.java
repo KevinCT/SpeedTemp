@@ -54,58 +54,6 @@ public class ChatPresenter {
         //DbUserHandler.INSTANCE.addUserPoolClient(ChatMatcher.INSTANCE::handleUser);
         //DbChatHandler.INSTANCE.addChatListClient(this::handleChat);
 
-        runTest();
-    }
-
-    private void runTest() {
-        Log.d(TAG, "runTest start");
-
-        List<String> list = new ArrayList<>();
-
-        ProductBuilder<List<String>> pb = new ProductBuilder<>(items -> {
-            Log.d(TAG, "run blueprint");
-            return (List) items.get(ProductLock.CHAT_LIST);
-        }, ProductLock.CHAT_LIST);
-
-        DatabaseReference db = DbChatHandler.INSTANCE.getDbRoot();
-
-        db.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "in on datachange: " + dataSnapshot.getRef().toString());
-                long amount = dataSnapshot.getChildrenCount();
-
-                pb.requireState(ProductLock.CHAT_LIST, list -> {
-                    return ((List) list).size() == amount;
-                });
-
-                pb.addItem(ProductLock.CHAT_LIST, list);
-
-                pb.addClient(product -> {
-                    Log.d(TAG, "add product");
-                    Log.d(TAG, "list " + product.toString());
-                });
-
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    list.add(child.getKey());
-
-                    Log.d(TAG, child.getKey());
-                }
-                Log.d(TAG, "list size: " + list.size() + "");
-                Log.d(TAG, "dataSnapshot size: " + dataSnapshot.getChildrenCount());
-
-                pb.updateState();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-
-
     }
 
     private void addUserToDatabase(Context context) {

@@ -51,8 +51,6 @@ public class ProductBuilder<Product> {
     public void addItem(ProductLock lock, Object data) {
         mTreasureChest.put(lock, data);
 
-        Log.d(TAG, "Appending: " + data.toString());
-
         if (mTreasureChest.isOpened()) {
             Log.d(TAG, "All locks have been opened. Completing...");
             complete();
