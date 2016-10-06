@@ -16,10 +16,6 @@ import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.view.LoginView;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
-
-
-
-
     public static final String TAG = "LoginActivity";
 
     private ActivityAttachable mPresenter;
