@@ -13,4 +13,6 @@
     <string name="leta_kompis">Matcha med en användare</string>
     <string name="change_language">Ändra språk</string>
     <string name="settings">Inställningar</string>
+    <string name="exit_chat">Lämna chat</string>
+
 </resources>

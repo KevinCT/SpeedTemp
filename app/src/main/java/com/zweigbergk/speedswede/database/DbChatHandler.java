@@ -56,11 +56,34 @@ public enum DbChatHandler {
         initializeUserToChatListener();
     }
 
-    public void removeUserFromChat(Chat chat, User user) {
+    enum ChatAttribute {
+        FIRST_USER, SECOND_USER;
+
+        public String getDbKey() {
+            switch(this) {
+                case FIRST_USER:
+                    return DbChatHandler.FIRST_USER;
+                case SECOND_USER:
+                    return DbChatHandler.SECOND_USER;
+                default:
+                    return null;
+            }
+        }
+    }
+
+    public void setChatAttribute(Chat chat, ChatAttribute attribute, Object value) {
+        String key = attribute.getDbKey();
+
+        mRoot.child(CHATS).child(chat.getId()).child(key).setValue(value);
+    }
+
+    public void removeActiveUserFromChat(Chat chat) {
         if(DbUserHandler.INSTANCE.getActiveUserId() == chat.getFirstUser().getUid()) {
+            setChatAttribute(chat, ChatAttribute.FIRST_USER, null);
             chat.setFirstUser(null);
         }
         else if(DbUserHandler.INSTANCE.getActiveUserId() == chat.getSecondUser().getUid()) {
+            setChatAttribute(chat, ChatAttribute.SECOND_USER, null);
             chat.setSecondUser(null);
         }
     }

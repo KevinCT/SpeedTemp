@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.zweigbergk.speedswede.R;
+import com.zweigbergk.speedswede.adapter.ChatListAdapter;
 import com.zweigbergk.speedswede.adapter.MessageAdapter;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
@@ -32,6 +33,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
     public static final String TAG = ChatFragment.class.getSimpleName().toUpperCase();
 
     private RecyclerView chatRecyclerView;
+    private ChatListAdapter chatListAdapter;
     private Chat mChat;
     //TODO presenter between interactor and fragment
     private BanInteractor banInteractor;
@@ -42,6 +44,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         banInteractor = new BanInteractor();
+        chatListAdapter = new ChatListAdapter();
     }
 
     @Override
@@ -63,6 +66,8 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
                 transaction.addToBackStack(null);
                 transaction.commit();
                 return true;
+            case R.id.exitChat:
+                terminateChat(mChat);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -78,6 +83,11 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
         mInputBox = (EditText) view.findViewById(R.id.fragment_chat_message_text);
 
         return view;
+    }
+
+    public void terminateChat(Chat chat) {
+        DbChatHandler.INSTANCE.removeActiveUserFromChat(chat);
+        chatListAdapter.removeChat(chat);
     }
 
     public void setChat(Chat newChat) {

@@ -62,22 +62,24 @@ public enum DbUserHandler {
 
     public void getUserById(String uid, Client<User> client) {
 
-        mRoot.child(USERS).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    User user = convertToUser(dataSnapshot);
+        if(uid != null) {
+            mRoot.child(USERS).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        User user = convertToUser(dataSnapshot);
 
-                    client.supply(user);
-                } else {
-                    client.supply(null);
+                        client.supply(user);
+                    } else {
+                        client.supply(null);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
     }
 
     public void addUserToPool(User user) {

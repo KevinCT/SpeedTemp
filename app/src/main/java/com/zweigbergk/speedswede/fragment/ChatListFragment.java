@@ -16,6 +16,7 @@ import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.adapter.ChatListAdapter;
 
+import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.database.DbChatHandler;
 import com.zweigbergk.speedswede.database.DbUserHandler;
