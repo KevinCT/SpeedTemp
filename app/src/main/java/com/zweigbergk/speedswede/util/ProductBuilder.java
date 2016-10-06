@@ -59,6 +59,15 @@ public class ProductBuilder<Product> {
         }
     }
 
+    public void updateState() {
+        mTreasureChest.updateState();
+
+        if (mTreasureChest.isOpened()) {
+            Log.d(TAG, "All locks have been opened. Completing...");
+            complete();
+        }
+    }
+
     public void addClient(Client<Product> client) {
         mClients.add(client);
     }

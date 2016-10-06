@@ -75,7 +75,7 @@ public class ChatListFragment extends Fragment {
 
         //Adds us as clients to any changes in the user's chat on the database. If a chat of our user
         // is added/removed/changed, our onListChanged will be notified.
-        DbChatHandler.INSTANCE.addUserToChatClient(mChatlistAdapter::onListChanged);
+        //DbChatHandler.INSTANCE.addUserToChatClient(mChatlistAdapter::onListChanged);
 
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
 

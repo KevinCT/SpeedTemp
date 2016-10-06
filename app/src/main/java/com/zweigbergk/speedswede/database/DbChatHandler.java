@@ -53,7 +53,7 @@ public enum DbChatHandler {
 
         messageListeners = new HashMap<>();
        // initializeChatsListener();
-        initializeUserToChatListener();
+        //initializeUserToChatListener();
 
         tryQuery();
     }
@@ -102,6 +102,10 @@ public enum DbChatHandler {
                     return null;
             }
         }
+    }
+
+    public DatabaseReference getDbRoot() {
+        return mRoot;
     }
 
     public void setChatAttribute(Chat chat, ChatAttribute attribute, Object value) {

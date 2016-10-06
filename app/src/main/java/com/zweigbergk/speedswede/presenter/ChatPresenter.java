@@ -3,6 +3,10 @@ package com.zweigbergk.speedswede.presenter;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
@@ -17,8 +21,12 @@ import com.zweigbergk.speedswede.database.LocalStorage;
 
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.ChatFactory;
+import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.ProductBuilder;
+import com.zweigbergk.speedswede.util.ProductLock;
 import com.zweigbergk.speedswede.view.ChatView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,12 +47,65 @@ public class ChatPresenter {
 
         mView.useContextTo(this::addUserToDatabase);
 
-        updateDeveloperChat();
+        //updateDeveloperChat();
 
         Log.d("CHATPRESENTER", " we in chatpresenter");
-        ChatMatcher.INSTANCE.addPoolClient(DatabaseEvent.ADDED, this::onUserAddedToChatPool);
-        DbUserHandler.INSTANCE.addUserPoolClient(ChatMatcher.INSTANCE::handleUser);
+        //ChatMatcher.INSTANCE.addPoolClient(DatabaseEvent.ADDED, this::onUserAddedToChatPool);
+        //DbUserHandler.INSTANCE.addUserPoolClient(ChatMatcher.INSTANCE::handleUser);
         //DbChatHandler.INSTANCE.addChatListClient(this::handleChat);
+
+        runTest();
+    }
+
+    private void runTest() {
+        Log.d(TAG, "runTest start");
+
+        List<String> list = new ArrayList<>();
+
+        ProductBuilder<List<String>> pb = new ProductBuilder<>(items -> {
+            Log.d(TAG, "run blueprint");
+            return (List) items.get(ProductLock.CHAT_LIST);
+        }, ProductLock.CHAT_LIST);
+
+        DatabaseReference db = DbChatHandler.INSTANCE.getDbRoot();
+
+        db.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "in on datachange: " + dataSnapshot.getRef().toString());
+                long amount = dataSnapshot.getChildrenCount();
+
+                pb.requireState(ProductLock.CHAT_LIST, list -> {
+                    return ((List) list).size() == amount;
+                });
+
+                pb.addItem(ProductLock.CHAT_LIST, list);
+
+                pb.addClient(product -> {
+                    Log.d(TAG, "add product");
+                    Log.d(TAG, "list " + product.toString());
+                });
+
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    list.add(child.getKey());
+
+                    Log.d(TAG, child.getKey());
+                }
+                Log.d(TAG, "list size: " + list.size() + "");
+                Log.d(TAG, "dataSnapshot size: " + dataSnapshot.getChildrenCount());
+
+                pb.updateState();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
     }
 
     private void addUserToDatabase(Context context) {
