@@ -3,10 +3,10 @@ package com.zweigbergk.speedswede.database;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 
-public enum UsersManipulator {
+public enum UserListReference {
     INSTANCE;
 
-    static UsersManipulator getInstance() {
+    static UserListReference getInstance() {
         return INSTANCE;
     }
 

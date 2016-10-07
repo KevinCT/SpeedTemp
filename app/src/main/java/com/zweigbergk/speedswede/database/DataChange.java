@@ -1,16 +1,16 @@
 package com.zweigbergk.speedswede.database;
 
-public class DataChange<ObjectType> {
+public class DataChange<T> {
 
     private final DatabaseEvent mEvent;
-    private final ObjectType mData;
+    private final T mData;
 
-    DataChange(ObjectType data, DatabaseEvent event) {
+    DataChange(T data, DatabaseEvent event) {
         mData = data;
         mEvent = event;
     }
 
-    public ObjectType getItem() {
+    public T getItem() {
         return mData;
     }
 
@@ -18,19 +18,19 @@ public class DataChange<ObjectType> {
         return mEvent;
     }
 
-    public static <ObjectType> DataChange<ObjectType> added(ObjectType data) {
+    public static <T> DataChange<T> added(T data) {
         return new DataChange<>(data, DatabaseEvent.ADDED);
     }
 
-    public static <ObjectType> DataChange<ObjectType> modified(ObjectType data) {
+    public static <T> DataChange<T> modified(T data) {
         return new DataChange<>(data, DatabaseEvent.CHANGED);
     }
 
-    public static <ObjectType> DataChange<ObjectType> removed(ObjectType data) {
+    public static <T> DataChange<T> removed(T data) {
         return new DataChange<>(data, DatabaseEvent.REMOVED);
     }
 
-    public static <ObjectType> DataChange<ObjectType> cancelled(ObjectType data) {
+    public static <T> DataChange<T> cancelled(T data) {
         return new DataChange<>(data, DatabaseEvent.INTERRUPTED);
     }
 }

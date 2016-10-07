@@ -9,8 +9,8 @@ import com.zweigbergk.speedswede.util.ProductBuilder;
 import java.util.Arrays;
 import java.util.List;
 
-public class UserManipulator {
-    public static final String TAG = UserManipulator.class.getSimpleName().toUpperCase();
+public class UserReference {
+    public static final String TAG = UserReference.class.getSimpleName().toUpperCase();
 
     enum UserAttribute {
         NAME, ID, NOTIFICATIONS, LANGUAGE, SWEDISH_SKILL, STRANGER_SWEDISH_SKILL;
@@ -37,12 +37,12 @@ public class UserManipulator {
 
     private final User mUser;
 
-    private UserManipulator(User user) {
+    private UserReference(User user) {
         mUser = user;
     }
 
-    static UserManipulator create(User user) {
-        return new UserManipulator(user);
+    static UserReference create(User user) {
+        return new UserReference(user);
     }
 
     public void push() {

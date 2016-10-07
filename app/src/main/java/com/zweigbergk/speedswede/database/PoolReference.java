@@ -4,10 +4,10 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 
-public enum PoolManipulator {
+public enum PoolReference {
     INSTANCE;
 
-    static PoolManipulator getInstance() {
+    static PoolReference getInstance() {
         return INSTANCE;
     }
 
