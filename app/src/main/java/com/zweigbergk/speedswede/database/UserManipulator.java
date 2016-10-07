@@ -49,7 +49,7 @@ public class UserManipulator {
     }
 
     public void pull() {
-        DbUserHandler.getInstance().getUserById(mUser.getUid());
+        DbUserHandler.getInstance().getUser(mUser.getUid());
     }
 
     public void setName(String name) {
@@ -63,16 +63,24 @@ public class UserManipulator {
     }
 
     public void setPreference(User.Preference preference, boolean value) {
+        if (!preference.accepts(value)) {
+            throw new RuntimeException(String.format(
+                    "Preference [ %s ] can not be set to a boolean value.", preference));
+        }
+
         switch (preference) {
             case NOTIFICATIONS:
                 setNotifications(value);
                 break;
-            default:
-                throw new RuntimeException(String.format("Preference [ %s ] can not be set to a boolean value.", preference));
         }
     }
 
     public void setPreference(User.Preference preference, long value) {
+        if (!preference.accepts(value)) {
+            throw new RuntimeException(String.format(
+                    "Preference [ %s ] can not be set to a long value.", preference));
+        }
+
         switch (preference) {
             case SWEDISH_SKILL:
                 setSwedishSkill(value);
@@ -80,18 +88,19 @@ public class UserManipulator {
             case STRANGER_SWEDISH_SKILL:
                 setStrangerSwedishSkill(value);
                 break;
-            default:
-                throw new RuntimeException(String.format("Preference [ %s ] can not be set to a long value.", preference));
         }
     }
 
     public void setPreference(User.Preference preference, String value) {
+        if (!preference.accepts(value)) {
+            throw new RuntimeException(String.format(
+                    "Preference [ %s ] can not be set to a string value.", preference));
+        }
+
         switch (preference) {
             case LANGUAGE:
                 setLanguage(value);
                 break;
-            default:
-                throw new RuntimeException(String.format("Preference [ %s ] can not be set to a long value.", preference));
         }
     }
 

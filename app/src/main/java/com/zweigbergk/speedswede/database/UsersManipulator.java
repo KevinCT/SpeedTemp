@@ -23,6 +23,6 @@ public enum UsersManipulator {
     }
 
     public ProductBuilder<User> pull(String userId) {
-        return DbUserHandler.getInstance().getUserById(userId);
+        return DbUserHandler.getInstance().getUser(userId);
     }
 }

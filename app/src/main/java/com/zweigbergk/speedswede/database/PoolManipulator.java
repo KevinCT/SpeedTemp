@@ -1,6 +1,7 @@
 package com.zweigbergk.speedswede.database;
 
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.util.Client;
 
 public enum PoolManipulator {
     INSTANCE;
@@ -24,5 +25,13 @@ public enum PoolManipulator {
 
     public void removeUser(User user) {
         DbUserHandler.getInstance().removeUserFromPool(user);
+    }
+
+    public void bind(Client<DataChange<User>> client) {
+        DbUserHandler.getInstance().getPoolListener().bind(client);
+    }
+
+    public void unbind(Client<DataChange<User>> client) {
+        DbUserHandler.getInstance().getPoolListener().unbind(client);
     }
 }
