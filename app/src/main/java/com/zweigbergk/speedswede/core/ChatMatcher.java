@@ -49,8 +49,6 @@ public enum ChatMatcher {
         }
 
         mUsersInPool.add(user);
-        match(chat -> Log.d(TAG, "Chat received: " + chat));
-        Log.d(TAG, "Added user. Poolsize: " + mUsersInPool.size());
     }
 
     /** Removes user from the local pool of users */
