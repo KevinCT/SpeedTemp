@@ -2,13 +2,22 @@ package com.zweigbergk.speedswede.core;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Map;
+
 public class UserProfile implements User {
 
     private String mName, mUid;
 
+    private Map<Preference, Object> mPreferences;
+
     public UserProfile(String name, String uid) {
         mName = name;
         mUid = uid;
+    }
+
+    public UserProfile withPreferences(Map<Preference, Object> preferences) {
+        mPreferences = preferences;
+        return this;
     }
 
     @Override
@@ -19,6 +28,11 @@ public class UserProfile implements User {
     @Override
     public String getDisplayName() {
         return mName;
+    }
+
+    @Override
+    public Object getPreference(Preference preference) {
+        return mPreferences.get(preference);
     }
 
     public static UserProfile from(FirebaseUser user) {
