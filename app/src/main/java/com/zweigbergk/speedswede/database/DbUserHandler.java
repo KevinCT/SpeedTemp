@@ -10,15 +10,26 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
-import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.database.eventListener.WellBehavedUserListener;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 import com.zweigbergk.speedswede.util.ProductLock;
+import com.zweigbergk.speedswede.core.User.Preference;
+
+import java.util.HashMap;
+import java.util.Map;
+import static com.zweigbergk.speedswede.Constants.USERS;
+import static com.zweigbergk.speedswede.Constants.preference;
+import static com.zweigbergk.speedswede.Constants.NOTIFICATIONS;
+import static com.zweigbergk.speedswede.Constants.LANGUAGE;
+import static com.zweigbergk.speedswede.Constants.SWEDISH_SKILL;
+import static com.zweigbergk.speedswede.Constants.STRANGER_SWEDISH_SKILL;
 
 enum DbUserHandler {
     INSTANCE;
@@ -27,6 +38,7 @@ enum DbUserHandler {
 
     private DatabaseReference mRoot;
 
+    private WellBehavedUserListener mUsersListener;
     private UserPoolListener mUserPoolListener;
 
     private User mLoggedInUser;
@@ -48,6 +60,16 @@ enum DbUserHandler {
         mLoggedInUser = null;
     }
 
+    // NOTE: Listening to all Users all the time is not optimal.
+    // It's whatever if it doesn't cause issues.
+    void registerUsersListener() {
+        mUsersListener = new WellBehavedUserListener();
+
+        Query userRef = mRoot.child(USERS);
+        userRef.keepSynced(true);
+        userRef.addChildEventListener(mUsersListener);
+    }
+
     private void initializeUserPoolListener() {
         mUserPoolListener = new UserPoolListener();
 
@@ -57,40 +79,12 @@ enum DbUserHandler {
         ref.keepSynced(true);
     }
 
-    User convertToUser(DataSnapshot snapshot) {
-        return new UserProfile(snapshot.child("displayName").getValue().toString(),
-                snapshot.child("uid").getValue().toString());
-    }
-
-    ProductBuilder<User> getUserById(String uid) {
-        ProductBuilder<User> builder = new ProductBuilder<>(items -> {
-            String name = (String) items.get(ProductLock.NAME);
-            String id = (String) items.get(ProductLock.ID);
-            return new UserProfile(name, id);
-        });
-        builder.attachLocks(ProductLock.NAME, ProductLock.ID);
-
-        if(uid != null) {
-            mRoot.child(Constants.USERS).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    builder.addItem(ProductLock.NAME,
-                            dataSnapshot.child(Constants.DISPLAY_NAME).getValue());
-                    builder.addItem(ProductLock.ID,
-                            dataSnapshot.child(Constants.USER_ID).getValue());
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
-        }
-
-        return builder;
+    WellBehavedUserListener getUserListener() {
+        return mUsersListener;
     }
 
     void addUserToPool(User user) {
-        mRoot.child(Constants.POOL).child(user.getUid()).setValue(user);
+        mRoot.child(Constants.POOL).child(user.getUid()).setValue(user.getUid());
     }
 
     void pushUser(User user) {
@@ -100,6 +94,12 @@ enum DbUserHandler {
 
     void removeUserFromPool(User user) {
         mRoot.child(Constants.POOL).child(user.getUid()).setValue(null);
+    }
+
+    void setUserAttribute(User user, UserManipulator.UserAttribute attribute, Object value) {
+        String key = attribute.getDbKey();
+
+        mRoot.child(USERS).child(user.getUid()).child(key).setValue(value);
     }
 
     String getActiveUserId() {
@@ -141,7 +141,7 @@ enum DbUserHandler {
     }
 
     void pushTestUser() {
-        getUserById(Constants.TEST_USER_UID).then(user -> {
+        getUser(Constants.TEST_USER_UID).then(user -> {
             if (user == null) {
                 UserProfile testUserProfile = new UserProfile("TestBot", Constants.TEST_USER_UID);
                 DbUserHandler.INSTANCE.pushUser(testUserProfile);
@@ -152,4 +152,56 @@ enum DbUserHandler {
     UserPoolListener getPoolListener() {
         return mUserPoolListener;
     }
+
+    ProductBuilder<User> getUser(String uid) {
+        ProductBuilder<User> builder = new ProductBuilder<>(userBlueprint);
+
+        builder.attachLocks(ProductLock.NAME, ProductLock.ID, ProductLock.NOTIFICATIONS,
+                ProductLock.LANGUAGE, ProductLock.SWEDISH_SKILL, ProductLock.STRANGER_SWEDISH_SKILL);
+
+        if(uid != null) {
+            mRoot.child(Constants.USERS).child(uid).addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            builder.addItem(ProductLock.NAME,
+                                    dataSnapshot.child(Constants.DISPLAY_NAME).getValue());
+
+                            builder.addItem(ProductLock.ID,
+                                    dataSnapshot.child(Constants.USER_ID).getValue());
+
+                            builder.addItem(ProductLock.NOTIFICATIONS,
+                                    dataSnapshot.child(preference(NOTIFICATIONS)).getValue());
+
+                            builder.addItem(ProductLock.LANGUAGE,
+                                    dataSnapshot.child(preference(LANGUAGE)).getValue());
+
+                            builder.addItem(ProductLock.SWEDISH_SKILL,
+                                    dataSnapshot.child(preference(SWEDISH_SKILL)).getValue());
+
+                            builder.addItem(ProductLock.STRANGER_SWEDISH_SKILL,
+                                    dataSnapshot.child(preference(STRANGER_SWEDISH_SKILL)).getValue());
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+        }
+
+        return builder;
+    }
+
+    private static final ProductBuilder.Blueprint<User> userBlueprint = items -> {
+        String name = items.getString(ProductLock.NAME);
+        String id = items.getString(ProductLock.ID);
+
+        Map<User.Preference, Object> preferences = new HashMap<>();
+        preferences.put(Preference.NOTIFICATIONS, items.getBoolean(ProductLock.NOTIFICATIONS));
+        preferences.put(Preference.LANGUAGE, items.getString(ProductLock.LANGUAGE));
+        preferences.put(Preference.SWEDISH_SKILL, items.getLong(ProductLock.SWEDISH_SKILL));
+        preferences.put(Preference.STRANGER_SWEDISH_SKILL, items.getLong(ProductLock.STRANGER_SWEDISH_SKILL));
+
+        return new UserProfile(name, id).withPreferences(preferences);
+    };
 }
