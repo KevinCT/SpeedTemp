@@ -5,7 +5,6 @@ import android.util.Log;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.Lists;
 
 import java.util.ArrayList;
@@ -48,6 +47,10 @@ public enum ChatMatcher {
         }
 
         mUsersInPool.add(user);
+        Log.d(TAG, "Added user. Poolsize: " + mUsersInPool.size());
+
+        User activeUser = DatabaseHandler.getInstance().getActiveUser();
+        DatabaseHandler.getPool().ifContains(activeUser).then(this::match);
     }
 
     /** Removes user from the local pool of users */
@@ -78,19 +81,18 @@ public enum ChatMatcher {
         DatabaseHandler.getPool().remove(user);
     }
 
-    public void match(Client<Chat> client) {
+    public void match() {
         Log.d(TAG, "Users in pool: " + mUsersInPool.size());
-            if (mUsersInPool.size() > 1) {
-                // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
-                List<User> matchedUsers = Lists.getFirstElements(mUsersInPool, 2);
+        if (mUsersInPool.size() > 1) {
+            // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
+            List<User> matchedUsers = Lists.getFirstElements(mUsersInPool, 2);
 
-                Lists.forEach(matchedUsers, DatabaseHandler.getPool()::remove);
+            Lists.forEach(matchedUsers, DatabaseHandler.getPool()::remove);
 
-                Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
-                client.supply(chat);
-                Log.d("CHATMATCHER: NAME: ", chat.getName() + "");
-                DatabaseHandler.get(chat).push();
-            }
+            Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
+            Log.d("CHATMATCHER: NAME: ", chat.getName() + "");
+            DatabaseHandler.get(chat).push();
+        }
     }
 
     private List<String> getUserIdList(){

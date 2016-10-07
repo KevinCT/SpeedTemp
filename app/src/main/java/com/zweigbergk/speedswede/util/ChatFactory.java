@@ -116,7 +116,7 @@ public class ChatFactory {
         String name = items.getString(ProductLock.NAME);
 
         List<Message> messages = new ArrayList<>();
-        List list = (List) items.get(ProductLock.MESSAGE_LIST);
+        List list = items.getList(ProductLock.MESSAGE_LIST);
         Lists.addAll(messages, list);
 
         return new Chat(id, name, timestamp, messages, user1, user2);

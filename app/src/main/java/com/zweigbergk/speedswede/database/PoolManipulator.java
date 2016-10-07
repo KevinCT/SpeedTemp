@@ -2,6 +2,7 @@ package com.zweigbergk.speedswede.database;
 
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.util.ProductBuilder;
 
 public enum PoolManipulator {
     INSTANCE;
@@ -11,8 +12,8 @@ public enum PoolManipulator {
     }
 
 
-    public UserCheck contains(User user) {
-        return PoolUserCheck.ifExists(user);
+    public ProductBuilder<Boolean> ifContains(User user) {
+        return DbUserHandler.getInstance().isInUserPool(user);
     }
 
     public void push(User user) {

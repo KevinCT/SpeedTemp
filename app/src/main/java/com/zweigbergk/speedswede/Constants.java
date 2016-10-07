@@ -1,11 +1,8 @@
 package com.zweigbergk.speedswede;
 
-import android.util.Log;
-
 import com.zweigbergk.speedswede.util.Lists;
 
 import java.util.Arrays;
-import java.util.Locale;
 
 public class Constants {
     public static final String ERROR = "ERROR";

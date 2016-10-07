@@ -21,10 +21,10 @@ import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.WellBehavedChatListener;
 import com.zweigbergk.speedswede.util.ChatFactory;
 import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 
 import static com.zweigbergk.speedswede.Constants.CHATS;
-import static com.zweigbergk.speedswede.Constants.USERS;
 
 enum DbChatHandler {
     INSTANCE;
@@ -71,11 +71,6 @@ enum DbChatHandler {
         mRoot.child(CHATS).child(chat.getId()).child(key).setValue(value);
     }
 
-    void removeActiveUserFromChat(Chat chat) {
-        User activeUser = DbUserHandler.INSTANCE.getActiveUser();
-        DatabaseHandler.get(chat).removeUser(activeUser);
-    }
-
     /**
      * Should <u>not</u> be used explicitly. Use a {@link ChatManipulator} instead.
      * */
@@ -83,6 +78,9 @@ enum DbChatHandler {
         mRoot.child(CHATS).child(chat.getId()).child(Constants.MESSAGES).push().setValue(message);
     }
 
+    /**
+     * Should <u>not</u> be used explicitly. Use DatabaseHandler.get(user).push instead.
+     * */
     void pushChat(Chat chat) {
         mRoot.child(CHATS).child(chat.getId()).setValue(chat);
     }
@@ -134,6 +132,7 @@ enum DbChatHandler {
             Log.e(TAG, String.format("WARNING: Tried removing client: [%s] from chat with id: [%s]," +
                     " but the client was not attached to the message listener.",
                     client.toString(), chat.getId()));
+            new Exception().printStackTrace();
             return;
         }
 

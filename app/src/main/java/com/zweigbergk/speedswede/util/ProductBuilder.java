@@ -23,16 +23,32 @@ public class ProductBuilder<Product> {
 
     private Product mCompletedProduct;
 
+    //Error flag. If this is set, the builder will return null to all its listeners.
+    private boolean mBuildFailed;
+
+    public static <Product> ProductBuilder<Product> shell() {
+        return new ProductBuilder<>(null);
+    }
+
     /** @param locks The locks that are required to be non-null for the builder to call complete() */
     public ProductBuilder(Blueprint<Product> blueprint, ProductLock... locks) {
 
         mBlueprint = blueprint;
+        mBuildFailed = false;
 
         mClients = new ArrayList<>();
         mExecutables = new ArrayList<>();
 
         mTreasureChest = new TreasureChest();
         Lists.forEach(Arrays.asList(locks), mTreasureChest::addLock);
+    }
+
+    public void setBlueprint(Blueprint<Product> blueprint) {
+        if (mBlueprint != null) {
+            Log.e(TAG, "WARNING! Replacing an existing blueprint. At: " + Thread.currentThread().getStackTrace().toString());
+        }
+
+        mBlueprint = blueprint;
     }
 
     public void attachLocks(ProductLock... locks) {
@@ -43,6 +59,12 @@ public class ProductBuilder<Product> {
         mCompletedProduct = mBlueprint.makeFromItems(mTreasureChest.getItems());
         Log.d(TAG, mCompletedProduct.toString());
 
+        notifyListeners();
+
+        Log.d(TAG, "Completing!");
+    }
+
+    private void notifyListeners() {
         Lists.forEach(mClients, client -> {
             client.supply(mCompletedProduct);
             mClients.remove(client);
@@ -52,8 +74,6 @@ public class ProductBuilder<Product> {
             executable.run();
             mExecutables.remove(executable);
         });
-
-        Log.d(TAG, "Completing!");
     }
 
     public void requireState(ProductLock key, StateRequirement requirement) {
@@ -82,7 +102,11 @@ public class ProductBuilder<Product> {
         if (!hasProduct()) {
             mClients.add(client);
         } else {
-            client.supply(mCompletedProduct);
+            if (!mBuildFailed) {
+                client.supply(mCompletedProduct);
+            } else {
+                client.supply(null);
+            }
         }
     }
 
@@ -90,7 +114,18 @@ public class ProductBuilder<Product> {
         if (!hasProduct()) {
             mExecutables.add(executable);
         } else {
-            executable.run();
+                executable.run();
+        }
+    }
+
+    /**
+     * CAREFUL! Sets the interrupted error flag. This will make the builder return null to all
+     * its listeners.
+     * */
+    public void setBuildFailed(boolean value) {
+        mBuildFailed = value;
+        if (mBuildFailed) {
+            notifyListeners();
         }
     }
 
@@ -99,7 +134,7 @@ public class ProductBuilder<Product> {
     }
 
     private boolean hasProduct() {
-        return mCompletedProduct != null;
+        return mCompletedProduct != null || mBuildFailed;
     }
 
     public interface Blueprint<Product> {

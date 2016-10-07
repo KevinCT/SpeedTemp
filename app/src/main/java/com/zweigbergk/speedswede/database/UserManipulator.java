@@ -4,6 +4,7 @@ package com.zweigbergk.speedswede.database;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.util.ProductBuilder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,8 +49,8 @@ public class UserManipulator {
         DbUserHandler.getInstance().pushUser(mUser);
     }
 
-    public void pull() {
-        DbUserHandler.getInstance().getUser(mUser.getUid());
+    public ProductBuilder<User> pull() {
+        return DbUserHandler.getInstance().getUser(mUser.getUid());
     }
 
     public void setName(String name) {

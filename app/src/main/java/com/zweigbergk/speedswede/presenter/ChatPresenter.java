@@ -32,15 +32,6 @@ public class ChatPresenter {
         //updateDeveloperChat();
 
         Log.d("CHATPRESENTER", " we in chatpresenter");
-        //ChatMatcher.INSTANCE.addPoolClient(DatabaseEvent.ADDED, this::onUserAddedToChatPool);
-        //DbUserHandler.INSTANCE.addUserPoolClient(ChatMatcher.INSTANCE::handleUser);
-        //DbChatHandler.INSTANCE.addChatListClient(this::handleChat);
-
-    }
-
-    private void onUserAddedToChatPool(User user) {
-        Log.d(TAG, " onUserAddedToChatPool " + user.getUid());
-        ChatMatcher.INSTANCE.match(mView::setChatForChatFragment);
     }
 
     //Creates a developer chat if one is not present
@@ -66,20 +57,5 @@ public class ChatPresenter {
                 mView.setChatForChatFragment(chat);
             }
         });
-    }
-
-    public void handleChat(DataChange<Chat> dataChange) {
-        Chat chat = dataChange.getItem();
-
-        switch (dataChange.getEvent()) {
-            case ADDED:
-                Log.d("Adding chat", chat.toString());
-                break;
-            case REMOVED:
-
-                break;
-            default:
-                break;
-        }
     }
 }

@@ -11,11 +11,11 @@ public enum UsersManipulator {
     }
 
 
-    public UserCheck ifContains(User user) {
-        return NormalUserCheck.ifExists(user);
+    public ProductBuilder<Boolean> ifContains(User user) {
+        return DbUserHandler.getInstance().userExists(user);
     }
-    public UserCheck ifContains(String userId) {
-        return NormalUserCheck.ifExists(userId);
+    public ProductBuilder<Boolean> ifContains(String userId) {
+        return DbUserHandler.getInstance().userExists(userId);
     }
 
     public void push(User user) {
