@@ -12,7 +12,7 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
-import com.zweigbergk.speedswede.database.DbUserHandler;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.Lists;
 
 import java.util.ArrayList;
@@ -29,6 +29,10 @@ public class ChatListAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         return mChats.size();
+    }
+
+    public Chat getChatAt(int index) {
+        return mChats.get(index);
     }
 
     @Override
@@ -73,7 +77,7 @@ public class ChatListAdapter extends BaseAdapter {
                 addChat(chat);
                 break;
             case CHANGED:
-                User activeUser = DbUserHandler.INSTANCE.getLoggedInUser();
+                User activeUser = DatabaseHandler.getInstance().getActiveUser();
                 if (!chat.includesUser(activeUser)) {
                     removeChat(chat);
                 }

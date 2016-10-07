@@ -6,8 +6,5 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.util.Client;
 
 public interface ChatView {
-    /** Used if a client needs access to the application context */
-    void useContextTo(Client<Context> client);
-
     void setChatForChatFragment(Chat chat);
 }

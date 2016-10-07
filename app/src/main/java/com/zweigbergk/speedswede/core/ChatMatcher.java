@@ -5,32 +5,22 @@ import android.util.Log;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.database.DbChatHandler;
-import com.zweigbergk.speedswede.database.DbUserHandler;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.ProductBuilder;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public enum ChatMatcher {
     INSTANCE;
 
     public static final String TAG = ChatMatcher.class.getSimpleName().toUpperCase();
 
-    private List<User> mUserPool;
-
-    private Map<DatabaseEvent, List<Client<User>>> clients;
+    private List<User> mUsersInPool;
 
     ChatMatcher() {
-        mUserPool = new ArrayList<>();
-        clients = new HashMap<>();
-
-        for(DatabaseEvent event : DatabaseEvent.values()) {
-            clients.put(event, new ArrayList<>());
-        }
+        mUsersInPool = new ArrayList<>();
     }
 
     public void handleUser(DataChange<User> dataChange) {
@@ -58,13 +48,18 @@ public enum ChatMatcher {
             return;
         }
 
-        mUserPool.add(user);
-        Log.d(TAG, "Added user. Poolsize: " + mUserPool.size());
-        notifyListeners(DatabaseEvent.ADDED, user);
+        mUsersInPool.add(user);
+        match(chat -> Log.d(TAG, "Chat received: " + chat));
+        Log.d(TAG, "Added user. Poolsize: " + mUsersInPool.size());
+    }
+
+    /** Removes user from the local pool of users */
+    private void removeUserLocally(User user){
+        mUsersInPool.remove(user);
     }
 
     private boolean isBlocked(User user) {
-        String activeUserId = DbUserHandler.INSTANCE.getLoggedInUserId();
+        String activeUserId = DatabaseHandler.getInstance().getActiveUserId();
         Banner banner = DatabaseHandler.INSTANCE.getBans(activeUserId);
 
         if (banner != null) {
@@ -76,73 +71,40 @@ public enum ChatMatcher {
         }
     }
 
-    /** Removes user from the local pool of users */
-    private void removeUserLocally(User user){
-        mUserPool.remove(user);
-        notifyListeners(DatabaseEvent.REMOVED, user);
-    }
-
     /** Include user in the matching process */
     public void pushUser(User user) {
-        DbUserHandler.INSTANCE.addUserToPool(user);
+        DatabaseHandler.manipulatePool().push(user);
     }
 
     /** Remove user from the matching process */
     public void removeUser(User user) {
-        DbUserHandler.INSTANCE.removeUserFromPool(user);
-    }
-
-    public boolean hasUserInPool(User user) {
-        return mUserPool.contains(user);
-    }
-
-    public User getFirstInPool() {
-        if(mUserPool.size() > 0) {
-            return mUserPool.get(0);
-        }
-        return null;
-    }
-
-    public void addPoolClient(DatabaseEvent event, Client<User> client) {
-        clients.get(event).add(client);
-    }
-
-    public void removePoolClient(DatabaseEvent event, Client<User> callback) {
-        clients.get(event).remove(callback);
-    }
-
-    private void notifyListeners(DatabaseEvent event, User user) {
-        List<Client<User>> clients = this.clients.get(event);
-        for (Client<User> client : clients) {
-            Log.d(TAG, "Supplying listener with a user");
-            client.supply(user);
-        }
+        DatabaseHandler.manipulatePool().remove(user);
     }
 
     public void match(Client<Chat> client) {
-        Log.d(TAG, "Users in pool: " + mUserPool.size());
-            if (mUserPool.size() > 1) {
+        Log.d(TAG, "Users in pool: " + mUsersInPool.size());
+            if (mUsersInPool.size() > 1) {
                 // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
-                List<User> matchedUsers = Lists.getFirstElements(mUserPool, 2);
+                List<User> matchedUsers = Lists.getFirstElements(mUsersInPool, 2);
 
-                Lists.forEach(matchedUsers, DbUserHandler.INSTANCE::removeUserFromPool);
+                Lists.forEach(matchedUsers, DatabaseHandler.manipulatePool()::remove);
 
                 Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
                 client.supply(chat);
                 Log.d("CHATMATCHER: NAME: ", chat.getName() + "");
-                DbChatHandler.INSTANCE.pushChat(chat);
+                DatabaseHandler.manipulate(chat).push();
             }
     }
 
     private List<String> getUserIdList(){
         List<String> userNameList = new ArrayList<>();
-        for(int i=0;i<mUserPool.size();i++){
-            userNameList.add(mUserPool.get(i).getUid());
+        for(int i=0;i<mUsersInPool.size();i++){
+            userNameList.add(mUsersInPool.get(i).getUid());
         }
         return userNameList;
     }
 
     public void clear() {
-        mUserPool.clear();
+        mUsersInPool.clear();
     }
 }

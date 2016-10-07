@@ -3,7 +3,9 @@ package com.zweigbergk.speedswede.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Lists {
     public static <E> void forEach(Iterable<E> collection, Client<E> client) {
@@ -18,6 +20,20 @@ public class Lists {
                     result.add(e);
                 }
         });
+
+        return result;
+    }
+
+    public static <E> Set<E> union(Collection<E> first, Collection<E> second) {
+        Set<E> result = new HashSet<>();
+
+        if (first != null) {
+            result.addAll(first);
+        }
+
+        if (second != null) {
+            result.addAll(second);
+        }
 
         return result;
     }

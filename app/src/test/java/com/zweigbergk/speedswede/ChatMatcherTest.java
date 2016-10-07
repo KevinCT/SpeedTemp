@@ -27,29 +27,4 @@ public class ChatMatcherTest {
 
         ChatMatcher.INSTANCE.clear();
     }
-
-    @Test
-    public void addUser() {
-        matcher.pushUser(sir);
-
-        assertTrue(matcher.hasUserInPool(sir));
-    }
-
-    @Test
-    public void hasUserInPool() {
-        assertFalse(matcher.hasUserInPool(sir));
-
-        matcher.pushUser(sir);
-
-        assertTrue(matcher.hasUserInPool(sir));
-    }
-
-    @Test
-    public void removeUser() {
-        matcher.pushUser(sir);
-
-        matcher.removeUser(sir);
-
-        assertFalse(matcher.hasUserInPool(sir));
-    }
 }

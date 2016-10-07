@@ -1,5 +1,7 @@
 package com.zweigbergk.speedswede.fragment;
 
+import android.app.ListActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,11 +15,8 @@ import android.widget.ListView;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.adapter.ChatListAdapter;
-import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
-import com.zweigbergk.speedswede.database.DbChatHandler;
-import com.zweigbergk.speedswede.database.DbChatHandler.Node;
-import com.zweigbergk.speedswede.database.DbUserHandler;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 
 public class ChatListFragment extends Fragment {
 
@@ -60,7 +59,7 @@ public class ChatListFragment extends Fragment {
         mAdapter = new ChatListAdapter();
         chatListView.setAdapter(mAdapter);
 
-        DbChatHandler.INSTANCE.onChatChanged().call(mAdapter::notifyChange);
+        DatabaseHandler.getInstance().bindToChatEvents(mAdapter::notifyChange);
 
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
 
@@ -71,7 +70,7 @@ public class ChatListFragment extends Fragment {
     }
 
     public void addUser(View view) {
-        ChatMatcher.INSTANCE.pushUser(DbUserHandler.INSTANCE.getLoggedInUser());
+        ChatMatcher.INSTANCE.pushUser(DatabaseHandler.getInstance().getActiveUser());
     }
 
     public void startSettings() {

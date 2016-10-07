@@ -14,6 +14,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.core.Banner;
+import com.zweigbergk.speedswede.core.Chat;
+import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
+import com.zweigbergk.speedswede.util.Client;
 
 public enum DatabaseHandler {
     INSTANCE;
@@ -32,6 +36,67 @@ public enum DatabaseHandler {
         return mFirebaseConnectionStatus;
     }
 
+    public static DatabaseHandler getInstance() {
+        return INSTANCE;
+    }
+
+    public void onStartup() {
+        DbChatHandler.INSTANCE.initialize();
+        DbUserHandler.INSTANCE.initialize();
+    }
+
+
+    public void registerListener(DatabaseNode node) {
+        switch (node) {
+            case CHATS:
+                DbChatHandler.INSTANCE.registerChatsListener();
+        }
+    }
+
+    public static ChatManipulator manipulate(Chat chat) {
+        return ChatManipulator.create(chat);
+    }
+
+    public static UsersManipulator users() {
+        return UsersManipulator.getInstance();
+    }
+
+    public void setLoggedInUser(User user) {
+        DbUserHandler.getInstance().setLoggedInUser(user);
+    }
+
+    public void logout() {
+        DbUserHandler.getInstance().logout();
+    }
+
+    public User convertToUser(DataSnapshot snapshot) {
+        return DbUserHandler.getInstance().convertToUser(snapshot);
+    }
+
+    public static PoolManipulator manipulatePool() {
+        return PoolManipulator.getInstance();
+    }
+
+    public void bindToChatEvents(Client<DataChange<Chat>> client) {
+        DbChatHandler.INSTANCE.getChatListener().addClient(client);
+    }
+
+    public ChatExistanceCheck getChatById(String chatId) {
+        return ChatExistanceCheck.ifExists(chatId);
+    }
+
+    public void unbindFromChatEvents(Client<DataChange<Chat>> client) {
+        DbChatHandler.INSTANCE.getChatListener().removeClient(client);
+    }
+
+    public void pushTestUser() {
+        DbUserHandler.getInstance().pushTestUser();
+    }
+
+    public UserPoolListener getPool() {
+        return DbUserHandler.getInstance().getPoolListener();
+    }
+
     private String getFirebaseAuthUid() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
@@ -44,6 +109,14 @@ public enum DatabaseHandler {
         }
 
         return null;
+    }
+
+    public User getActiveUser() {
+        return DbUserHandler.INSTANCE.getActiveUser();
+    }
+
+    public String getActiveUserId() {
+        return DbUserHandler.INSTANCE.getActiveUserId();
     }
 
     public boolean hasFirebaseConnection() {
@@ -64,12 +137,12 @@ public enum DatabaseHandler {
 
     public void sendObject(String child, Object object ){
         /*getChatWithId(chatId, chat -> {
-            Banner banner = getBans(getLoggedInUserId());
-            banner.addBan(getLoggedInUserId(), chat.getFirstUser().getUid(), chat.getSecondUser().getUid());
-            mDatabaseReference.child(BANS).child(getLoggedInUserId()).setValue(banner);
+            Banner banner = getBans(getActiveUserId());
+            banner.addBan(getActiveUserId(), chat.getFirstUser().getUid(), chat.getSecondUser().getUid());
+            mDatabaseReference.child(BANS).child(getActiveUserId()).setValue(banner);
             //mDatabaseReference.child("Global"+BANS).push().setValue(strangerID);
         });*/
-        mDatabaseReference.child(BANS).child(DbUserHandler.INSTANCE.getLoggedInUserId()).setValue(object);
+        mDatabaseReference.child(BANS).child(DbUserHandler.INSTANCE.getActiveUserId()).setValue(object);
     }
 
     public Banner getBans(String uID){

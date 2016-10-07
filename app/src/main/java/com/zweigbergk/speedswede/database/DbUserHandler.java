@@ -13,27 +13,28 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import com.zweigbergk.speedswede.Constants;
-import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
 import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.util.ProductBuilder;
+import com.zweigbergk.speedswede.util.ProductLock;
 
-import java.util.List;
-
-public enum DbUserHandler {
+enum DbUserHandler {
     INSTANCE;
 
     public static final String TAG = DbUserHandler.class.getSimpleName().toUpperCase();
 
-    public static final String POOL = "pool";
-    public static final String USERS = "users";
-
     private DatabaseReference mRoot;
 
-    private UserPoolListener userPoolListener;
+    private UserPoolListener mUserPoolListener;
 
     private User mLoggedInUser;
+
+    public static DbUserHandler getInstance() {
+        return INSTANCE;
+    }
+
 
     public void initialize() {
         mRoot = FirebaseDatabase.getInstance().getReference();
@@ -48,31 +49,35 @@ public enum DbUserHandler {
     }
 
     private void initializeUserPoolListener() {
-        userPoolListener = new UserPoolListener();
+        mUserPoolListener = new UserPoolListener();
 
-        DatabaseReference ref = mRoot.child(POOL);
-        ref.addChildEventListener(userPoolListener);
+        DatabaseReference ref = mRoot.child(Constants.POOL);
+        ref.addChildEventListener(mUserPoolListener);
+        Log.d(TAG, "Connecting pool listener...");
         ref.keepSynced(true);
     }
 
-    public User convertToUser(DataSnapshot snapshot) {
+    User convertToUser(DataSnapshot snapshot) {
         return new UserProfile(snapshot.child("displayName").getValue().toString(),
                 snapshot.child("uid").getValue().toString());
     }
 
-    public void getUserById(String uid, Client<User> client) {
+    ProductBuilder<User> getUserById(String uid) {
+        ProductBuilder<User> builder = new ProductBuilder<>(items -> {
+            String name = (String) items.get(ProductLock.NAME);
+            String id = (String) items.get(ProductLock.ID);
+            return new UserProfile(name, id);
+        });
+        builder.attachLocks(ProductLock.NAME, ProductLock.ID);
 
         if(uid != null) {
-            mRoot.child(USERS).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            mRoot.child(Constants.USERS).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        User user = convertToUser(dataSnapshot);
-
-                        client.supply(user);
-                    } else {
-                        client.supply(null);
-                    }
+                    builder.addItem(ProductLock.NAME,
+                            dataSnapshot.child(Constants.DISPLAY_NAME).getValue());
+                    builder.addItem(ProductLock.ID,
+                            dataSnapshot.child(Constants.USER_ID).getValue());
                 }
 
                 @Override
@@ -80,24 +85,26 @@ public enum DbUserHandler {
                 }
             });
         }
+
+        return builder;
     }
 
-    public void addUserToPool(User user) {
-        mRoot.child(POOL).child(user.getUid()).setValue(user);
+    void addUserToPool(User user) {
+        mRoot.child(Constants.POOL).child(user.getUid()).setValue(user);
     }
 
-    public void pushUser(User user) {
-        mRoot.child(USERS).child(user.getUid()).setValue(user);
+    void pushUser(User user) {
+        mRoot.child(Constants.USERS).child(user.getUid()).setValue(user);
     }
 
 
-    public void removeUserFromPool(User user) {
-        mRoot.child(POOL).child(user.getUid()).setValue(null);
+    void removeUserFromPool(User user) {
+        mRoot.child(Constants.POOL).child(user.getUid()).setValue(null);
     }
 
-    public String getLoggedInUserId() {
-        if (getLoggedInUser() != null) {
-            return getLoggedInUser().getUid();
+    String getActiveUserId() {
+        if (getActiveUser() != null) {
+            return getActiveUser().getUid();
         }
 
         return getFirebaseAuthUid();
@@ -117,7 +124,7 @@ public enum DbUserHandler {
         return null;
     }
 
-    public User getLoggedInUser() {
+    User getActiveUser() {
         if (mLoggedInUser == null) {
             User firebaseUser = UserProfile.from(FirebaseAuth.getInstance().getCurrentUser());
 
@@ -129,24 +136,20 @@ public enum DbUserHandler {
         return mLoggedInUser;
     }
 
-    public void setLoggedInUser(User user) {
+    void setLoggedInUser(User user) {
         mLoggedInUser = user;
     }
 
-    public void pushTestUser() {
-        DbUserHandler.INSTANCE.getUserById(Constants.TEST_USER_UID, testUser -> {
-            if (testUser == null) {
+    void pushTestUser() {
+        getUserById(Constants.TEST_USER_UID).then(user -> {
+            if (user == null) {
                 UserProfile testUserProfile = new UserProfile("TestBot", Constants.TEST_USER_UID);
                 DbUserHandler.INSTANCE.pushUser(testUserProfile);
             }
         });
     }
 
-    public void addUserPoolClient(Client<DataChange<User>> client) {
-        userPoolListener.addClient(client);
-    }
-
-    public void removeUserPoolClient(Client<DataChange<User>> client) {
-        userPoolListener.removeClient(client);
+    UserPoolListener getPoolListener() {
+        return mUserPoolListener;
     }
 }

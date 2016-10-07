@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.facebook.login.widget.LoginButton;
+import com.zweigbergk.speedswede.Initializer;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.presenter.LoginPresenter;
 import com.zweigbergk.speedswede.util.ActivityAttachable;
@@ -42,6 +43,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @Override
     public void startChatActivity() {
         startActivity(new Intent(this, ChatActivity.class));
+        Initializer.onLogin();
         finish();
     }
 

@@ -4,6 +4,7 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 
 import org.junit.Test;
 
@@ -24,7 +25,7 @@ public class MatchTest {
     private User user5 = new UserProfile("Kompis5", "Kompis5");
 
 
-    @Test
+    /*@Test
     public void addUserToPool() {
         ChatMatcher.INSTANCE.clear();
         ChatMatcher.INSTANCE.pushUser(user1);

@@ -14,6 +14,8 @@ public class ProductBuilder<Product> {
 
     private List<Client<Product>> mClients;
 
+    private List<Executable> mExecutables;
+
     private TreasureChest mTreasureChest;
 
     private Product mCompletedProduct;
@@ -24,6 +26,7 @@ public class ProductBuilder<Product> {
         mBlueprint = blueprint;
 
         mClients = new ArrayList<>();
+        mExecutables = new ArrayList<>();
 
         mTreasureChest = new TreasureChest();
         Lists.forEach(Arrays.asList(locks), mTreasureChest::addLock);
@@ -40,6 +43,11 @@ public class ProductBuilder<Product> {
         Lists.forEach(mClients, client -> {
             client.supply(mCompletedProduct);
             mClients.remove(client);
+        });
+
+        Lists.forEach(mExecutables, executable -> {
+            executable.run();
+            mExecutables.remove(executable);
         });
 
         Log.d(TAG, "Completing!");
@@ -67,30 +75,55 @@ public class ProductBuilder<Product> {
         }
     }
 
-    public void thenNotify(Client<Product> client) {
-        mClients.add(client);
-        if (hasProduct()) {
+    public void addClient(Client<Product> client) {
+        if (!hasProduct()) {
+            mClients.add(client);
+        } else {
             client.supply(mCompletedProduct);
         }
     }
 
-    public void thenPassTo(Client<Product> client) {
-        thenNotify(client);
+    public void addExecutable(Executable executable) {
+        if (!hasProduct()) {
+            mExecutables.add(executable);
+        } else {
+            executable.run();
+        }
     }
 
-    public void then(Client<Product> client) {
-        thenNotify(client);
+    public boolean isFinished() {
+        return mTreasureChest.isOpened();
     }
 
     private boolean hasProduct() {
         return mCompletedProduct != null;
     }
 
-    public void removeClient(Client<Product> client) {
-        mClients.remove(client);
-    }
-
     public interface Blueprint<Product> {
         Product makeFromItems(Map<ProductLock, Object> map);
+    }
+
+    public void thenNotify(Client<Product> client) {
+        addClient(client);
+    }
+
+    public void thenPassTo(Client<Product> client) {
+        addClient(client);
+    }
+
+    public void then(Client<Product> client) {
+        addClient(client);
+    }
+
+    public void thenNotify(Executable executable) {
+        addExecutable(executable);
+    }
+
+    public void thenPassTo(Executable executable) {
+        addExecutable(executable);
+    }
+
+    public void then(Executable executable) {
+        addExecutable(executable);
     }
 }

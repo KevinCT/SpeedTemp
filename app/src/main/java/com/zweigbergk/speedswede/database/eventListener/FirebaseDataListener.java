@@ -22,11 +22,11 @@ public abstract class FirebaseDataListener<T> {
         mClients = new HashSet<>(clients);
     }
 
-    public void addClient(Client<DataChange<T>> client) {
+    public void bind(Client<DataChange<T>> client) {
         mClients.add(client);
     }
 
-    public void removeClient(Client<DataChange<T>> client) {
+    public void unbind(Client<DataChange<T>> client) {
         mClients.remove(client);
     }
 
@@ -50,19 +50,19 @@ public abstract class FirebaseDataListener<T> {
         Lists.forEach(mClients, client -> client.supply(dataChange));
     }
 
-    protected void notifyAdded(T item) {
+    void notifyAdded(T item) {
         notifyClients(DatabaseEvent.ADDED, item);
     }
 
-    protected void notifyRemoved(T item) {
+    void notifyRemoved(T item) {
         notifyClients(DatabaseEvent.REMOVED, item);
     }
 
-    protected void notifyChanged(T item) {
+    void notifyChanged(T item) {
         notifyClients(DatabaseEvent.CHANGED, item);
     }
 
-    protected void notifyInterrupted() {
+    void notifyInterrupted() {
         notifyClients(DatabaseEvent.INTERRUPTED, null);
     }
 

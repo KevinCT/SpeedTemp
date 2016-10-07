@@ -1,16 +1,23 @@
 package com.zweigbergk.speedswede;
 
+import com.zweigbergk.speedswede.core.ChatMatcher;
+import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.DatabaseNode;
-import com.zweigbergk.speedswede.database.DbChatHandler;
-import com.zweigbergk.speedswede.database.DbUserHandler;
 
 public class Initializer {
 
     public static void onLogin() {
-        DbChatHandler.INSTANCE.initialize();
-        DbUserHandler.INSTANCE.initialize();
+        DatabaseHandler.getInstance().onStartup();
+
+        addUserToDatabase();
 
         DatabaseHandler.getInstance().registerListener(DatabaseNode.CHATS);
+        DatabaseHandler.getInstance().getPool().bind(ChatMatcher.INSTANCE::handleUser);
+    }
+
+    private static void addUserToDatabase() {
+        User activeUser = DatabaseHandler.getInstance().getActiveUser();
+        DatabaseHandler.users().push(activeUser);
     }
 }

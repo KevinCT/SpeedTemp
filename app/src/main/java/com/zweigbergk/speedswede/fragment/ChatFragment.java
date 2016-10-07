@@ -20,10 +20,10 @@ import com.zweigbergk.speedswede.adapter.ChatListAdapter;
 import com.zweigbergk.speedswede.adapter.MessageAdapter;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
+import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
-import com.zweigbergk.speedswede.database.DbChatHandler;
-import com.zweigbergk.speedswede.database.DbUserHandler;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.interactor.BanInteractor;
 import com.zweigbergk.speedswede.util.Client;
 
@@ -57,7 +57,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.blockUser:
-                banInteractor.addBan(DbUserHandler.INSTANCE.getLoggedInUserId(),mChat.getFirstUser().getUid(),mChat.getSecondUser().getUid());
+                banInteractor.addBan(DatabaseHandler.getInstance().getActiveUserId(),mChat.getFirstUser().getUid(),mChat.getSecondUser().getUid());
                 return true;
             case R.id.changeLangauge:
                 FragmentManager manager = getFragmentManager();
@@ -67,7 +67,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
                 transaction.commit();
                 return true;
             case R.id.exitChat:
-                terminateChat(mChat);
+                terminateChat();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -85,9 +85,11 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
         return view;
     }
 
-    public void terminateChat(Chat chat) {
-        DbChatHandler.INSTANCE.removeActiveUserFromChat(chat);
-        chatListAdapter.removeChat(chat);
+    public void terminateChat() {
+        User activeUser = DatabaseHandler.getInstance().getActiveUser();
+
+        DatabaseHandler.manipulate(mChat).removeUser(activeUser);
+        chatListAdapter.removeChat(mChat);
     }
 
     public void setChat(Chat newChat) {
@@ -99,11 +101,11 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
 
         //We no longer want updates from the old chat. Remove us as a client from the old chat.
         if (oldChat != null) {
-            DbChatHandler.INSTANCE.removeMessageClient(oldChat, this);
+            DatabaseHandler.manipulate(oldChat).unbindMessageClient(this);
         }
 
         //We DO want updates from the new chat! Add us as a client to that one :)
-        DbChatHandler.INSTANCE.addMesageClient(newChat, this);
+        DatabaseHandler.manipulate(newChat).bindMessageClient(this);
 
         mChat = newChat;
     }
@@ -117,8 +119,8 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
     }
 
     private void postMessage(String text) {
-        Message message = new Message(DbUserHandler.INSTANCE.getLoggedInUserId(), text, getCurrentTime());
-        DbChatHandler.INSTANCE.postMessageToChat(mChat, message);
+        Message message = new Message(DatabaseHandler.getInstance().getActiveUserId(), text, getCurrentTime());
+        DatabaseHandler.manipulate(mChat).sendMessage(message);
 
         MessageAdapter adapter = getMessageAdapter();
         adapter.onListChanged(DataChange.added(message));
@@ -160,7 +162,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
 
         // Only scroll to the bottom if the new message was posted by us,
         //   OR if you are at the relative bottom of the chat.
-        if ((message.getId() != null && message.getId().equals(DbUserHandler.INSTANCE.getLoggedInUserId()))
+        if ((message.getId() != null && message.getId().equals(DatabaseHandler.getInstance().getActiveUserId()))
                 || (scrollHeight - scrollOffset < chatRecyclerView.getHeight())) {
             chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount() - 1);
         }

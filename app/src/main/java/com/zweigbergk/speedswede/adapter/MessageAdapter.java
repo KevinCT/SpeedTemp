@@ -13,8 +13,7 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DataChange;
-import com.zweigbergk.speedswede.database.DbChatHandler;
-import com.zweigbergk.speedswede.database.DbUserHandler;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.Client;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
     public MessageAdapter(List<Message> messages) {
-        mUser = DbUserHandler.INSTANCE.getLoggedInUser();
+        mUser = DatabaseHandler.getInstance().getActiveUser();
         eventCallbacks = new HashMap<>();
         mMessages = messages;
 

@@ -1,6 +1,5 @@
 package com.zweigbergk.speedswede.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,9 +14,7 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
-import com.zweigbergk.speedswede.fragment.SettingsFragment;
 import com.zweigbergk.speedswede.presenter.ChatPresenter;
-import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.view.ChatView;
 
 import java.util.Arrays;
@@ -48,11 +45,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         mAdapter = new ChatAdapter(getSupportFragmentManager(), Arrays.asList(mChatListFragment, mChatFragment));
         mPager = (ViewPager) findViewById(R.id.chat_viewpager);
         mPager.setAdapter(mAdapter);
-    }
-
-    @Override
-    public void useContextTo(Client<Context> client) {
-        client.supply(this.getBaseContext());
     }
 
     @Override

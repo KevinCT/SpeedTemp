@@ -16,7 +16,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.database.DbUserHandler;
 import com.zweigbergk.speedswede.presenter.MainPresenter;
 import com.zweigbergk.speedswede.view.MainView;
 
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
         // TODO Remove once we have logout functionality.
         if (LOGOUT_ON_STARTUP) {
-            DbUserHandler.INSTANCE.logout();
+            DatabaseHandler.getInstance().logout();
         }
 
         startLoginActivity();

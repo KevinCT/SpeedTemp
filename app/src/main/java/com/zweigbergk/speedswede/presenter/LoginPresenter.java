@@ -4,17 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 
-import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.database.DbUserHandler;
+import com.google.firebase.auth.FirebaseAuth;
+
+import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.util.ActivityAttachable;
 import com.zweigbergk.speedswede.activity.LoginActivity;
 import com.zweigbergk.speedswede.interactor.LoginInteractor;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.database.LocalStorage;
 
 public class LoginPresenter implements ActivityAttachable {
 
@@ -57,7 +56,7 @@ public class LoginPresenter implements ActivityAttachable {
     }
 
     private void loginInOfflineMode() {
-        User user = LocalStorage.INSTANCE.getSavedUser(mActivity);
+       /* User user = LocalStorage.INSTANCE.getSavedUser(mActivity);
 
         if (user != null) {
             Log.d(TAG, "Found saved user in LocalStorage. Starting ChatActivity.");
@@ -66,7 +65,11 @@ public class LoginPresenter implements ActivityAttachable {
         } else {
             Toast.makeText(mActivity, "No previous user could be found.", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "loginInOfflineMode: No previous user could be found.");
-        }
+        }*/
+
+        UserProfile user = UserProfile.from(FirebaseAuth.getInstance().getCurrentUser());
+        DatabaseHandler.getInstance().setLoggedInUser(user);
+        mActivity.startChatActivity();
     }
 
     private boolean hasLoggedInUser() {
@@ -102,7 +105,7 @@ public class LoginPresenter implements ActivityAttachable {
                 break;
             case FAIL:
                 Log.d(TAG, "onAuthStateChanged:signed_out");
-                DbUserHandler.INSTANCE.logout();
+                DatabaseHandler.getInstance().logout();
                 setViewState(State.NORMAL);
                 break;
         }

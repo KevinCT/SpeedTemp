@@ -8,8 +8,7 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
-import com.zweigbergk.speedswede.database.DbChatHandler;
-import com.zweigbergk.speedswede.database.DbUserHandler;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +33,7 @@ public class ChatFactory {
     }
 
     public static void createChat(Collection<Client<Chat>> clients) {
-        String activeUserId = DbUserHandler.INSTANCE.getLoggedInUserId();
+        String activeUserId = DatabaseHandler.getInstance().getActiveUserId();
 
         ProductBuilder<Chat> builder = new ProductBuilder<>(newChatBlueprint);
         builder.attachLocks(ProductLock.FIRST_USER,
@@ -43,10 +42,10 @@ public class ChatFactory {
         Lists.forEach(clients, builder::thenNotify);
 
         //Append active user
-        DbUserHandler.INSTANCE.getUserById(activeUserId, user -> builder.addItem(ProductLock.FIRST_USER, user));
+        DatabaseHandler.users().pull(activeUserId).then(user -> builder.addItem(ProductLock.FIRST_USER, user));
 
         //Append test user
-        DbUserHandler.INSTANCE.getUserById(Constants.TEST_USER_UID, user -> builder.addItem(ProductLock.SECOND_USER, user));
+        DatabaseHandler.users().pull(Constants.TEST_USER_UID).then(user -> builder.addItem(ProductLock.SECOND_USER, user));
     }
 
     /** Supplies a Client with a Chat created from a DataSnapshot. Returns null if the snapshot
@@ -70,22 +69,23 @@ public class ChatFactory {
                 ProductLock.FIRST_USER, ProductLock.SECOND_USER);
 
         String chatId = snapshot.getKey();
-        String name = (String) snapshot.child(DbChatHandler.NAME).getValue();
+        String name = (String) snapshot.child(Constants.NAME).getValue();
 
-        long chatTimestamp = (long) snapshot.child(DbChatHandler.TIMESTAMP).getValue();
+        long chatTimestamp = (long) snapshot.child(Constants.TIMESTAMP).getValue();
 
-        Iterable<DataSnapshot> messageSnapshots = snapshot.child(DbChatHandler.MESSAGES).getChildren();
+        Iterable<DataSnapshot> messageSnapshots = snapshot.child(Constants.MESSAGES).getChildren();
         List<Message> messageList = asMessageList(messageSnapshots);
 
-        String firstUserId = ChatFactory.getUserId(snapshot.child(DbChatHandler.FIRST_USER));
-        String secondUserId = ChatFactory.getUserId(snapshot.child(DbChatHandler.SECOND_USER));
+        String firstUserId = ChatFactory.getUserId(snapshot.child(Constants.FIRST_USER));
+        String secondUserId = ChatFactory.getUserId(snapshot.child(Constants.SECOND_USER));
 
         chatBuilder.addItem(ProductLock.ID, chatId);
         chatBuilder.addItem(ProductLock.NAME, name);
         chatBuilder.addItem(ProductLock.TIMESTAMP, chatTimestamp);
         chatBuilder.addItem(ProductLock.MESSAGE_LIST, messageList);
-        DbUserHandler.INSTANCE.getUserById(firstUserId, user -> chatBuilder.addItem(ProductLock.FIRST_USER, user));
-        DbUserHandler.INSTANCE.getUserById(secondUserId, user -> chatBuilder.addItem(ProductLock.SECOND_USER, user));
+
+        DatabaseHandler.users().pull(firstUserId).then(user -> chatBuilder.addItem(ProductLock.FIRST_USER, user));
+        DatabaseHandler.users().pull(secondUserId).then(user -> chatBuilder.addItem(ProductLock.SECOND_USER, user));
 
         return chatBuilder;
     }
