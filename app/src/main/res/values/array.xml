@@ -2,10 +2,12 @@
 <resources>
     <string-array name="settings_pref_app_lang_entries">
         <item>English</item>
-        <item>Swedish</item>
+        <item>Svenska</item>
+        <item>العربية</item>
     </string-array>
     <string-array name="settings_pref_app_lang_values">
-        <item>E</item>
-        <item>S</item>
+        <item>en</item>
+        <item>sv</item>
+        <item>ar</item>
     </string-array>
 </resources>

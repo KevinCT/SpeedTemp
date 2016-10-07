@@ -3,7 +3,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <com.zweigbergk.speedswede.util.CustomPreferenceCategory
-        android:title="Language skills"
+        android:title="@string/language_skills"
         android:key="pref_cat_skills" >
 
         <CheckBoxPreference
@@ -19,10 +19,11 @@
     </com.zweigbergk.speedswede.util.CustomPreferenceCategory>
 
     <com.zweigbergk.speedswede.util.CustomPreferenceCategory
-        android:title="Languages"
+        android:title="@string/languages"
         android:key="pref_cat_language" >
 
         <ListPreference
+            android:summary="%s"
             android:dependency="pref_app_language"
             android:key="pref_app_language"
             android:title="@string/settings_pref_app_lang"
@@ -33,7 +34,7 @@
     </com.zweigbergk.speedswede.util.CustomPreferenceCategory>
 
     <com.zweigbergk.speedswede.util.CustomPreferenceCategory
-        android:title="Other"
+        android:title="@string/other"
         android:key="pref_cat_other" >
 
         <CheckBoxPreference

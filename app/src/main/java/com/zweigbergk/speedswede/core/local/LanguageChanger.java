@@ -10,6 +10,7 @@ import com.zweigbergk.speedswede.database.LocalStorage;
 import java.util.Locale;
 
 public class LanguageChanger {
+    private static boolean mChanged = false;
 
     public static void onCreate(Context context){
         String language = LocalStorage.INSTANCE.getLanguage(context, Locale.getDefault().getLanguage());
@@ -26,6 +27,13 @@ public class LanguageChanger {
             case "sv":
                 config.locale = new Locale("sv");
                 break;
+            case "ar":
+                Log.d("LANGAUGE", language);
+                config.locale = new Locale("ar");
+                break;
+            case "tr":
+                config.locale = new Locale("tr");
+                break;
             default:
                 config.locale = Locale.ENGLISH;
                 break;
@@ -36,6 +44,14 @@ public class LanguageChanger {
 
     private static void saveLanguage(Context context, String language){
         LocalStorage.INSTANCE.saveSettings(context, language);
+    }
+
+    public static void languageChanged(Boolean changed){
+        mChanged = changed;
+    }
+
+    public static boolean isChanged(){
+        return mChanged;
     }
 
 }

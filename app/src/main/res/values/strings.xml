@@ -26,4 +26,8 @@
     <string name="settings_pref_app_lang">App Language</string>
     <string name="settings_pref_app_lang_default">English</string>
     <string name="exit_chat">Leave chat</string>
+    <string name="language_skills">Language skills</string>
+    <string name="languages">Languages</string>
+    <string name="other">Other</string>
+    <string name="activity_settings_title">Settings</string>
 </resources>
