@@ -5,8 +5,11 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.Log;
 
+import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.database.LocalStorage;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 public class LanguageChanger {
@@ -23,21 +26,9 @@ public class LanguageChanger {
         Configuration config;
         config = resources.getConfiguration();
 
-        switch(language){
-            case "sv":
-                config.locale = new Locale("sv");
-                break;
-            case "ar":
-                Log.d("LANGAUGE", language);
-                config.locale = new Locale("ar");
-                break;
-            case "tr":
-                config.locale = new Locale("tr");
-                break;
-            default:
-                config.locale = Locale.ENGLISH;
-                break;
-        }
+        List<String> languages = Arrays.asList(Constants.LANGUAGES);
+        language = languages.contains(language) ? language : Constants.ENGLISH;
+
         resources.updateConfiguration(config, resources.getDisplayMetrics());
         saveLanguage(context,language);
     }
