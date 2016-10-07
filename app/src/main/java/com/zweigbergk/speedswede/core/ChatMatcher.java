@@ -7,7 +7,6 @@ import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.Lists;
-import com.zweigbergk.speedswede.util.ProductBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,12 +70,12 @@ public enum ChatMatcher {
 
     /** Include user in the matching process */
     public void pushUser(User user) {
-        DatabaseHandler.manipulatePool().push(user);
+        DatabaseHandler.getPool().push(user);
     }
 
     /** Remove user from the matching process */
     public void removeUser(User user) {
-        DatabaseHandler.manipulatePool().remove(user);
+        DatabaseHandler.getPool().remove(user);
     }
 
     public void match(Client<Chat> client) {
@@ -85,12 +84,12 @@ public enum ChatMatcher {
                 // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
                 List<User> matchedUsers = Lists.getFirstElements(mUsersInPool, 2);
 
-                Lists.forEach(matchedUsers, DatabaseHandler.manipulatePool()::remove);
+                Lists.forEach(matchedUsers, DatabaseHandler.getPool()::remove);
 
                 Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
                 client.supply(chat);
                 Log.d("CHATMATCHER: NAME: ", chat.getName() + "");
-                DatabaseHandler.manipulate(chat).push();
+                DatabaseHandler.get(chat).push();
             }
     }
 

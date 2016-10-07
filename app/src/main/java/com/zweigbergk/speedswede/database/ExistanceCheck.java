@@ -7,6 +7,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
+import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.Executable;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 import com.zweigbergk.speedswede.util.ProductLock;
@@ -32,6 +33,13 @@ public class ExistanceCheck {
     static  ExistanceCheck ifExists(Chat chat) {
         DatabaseReference ref = FirebaseDatabase.getInstance().
                 getReference().child(Constants.CHATS).child(chat.getId());
+
+        return new ExistanceCheck(ref);
+    }
+
+    static  ExistanceCheck ifExists(User user) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().
+                getReference().child(Constants.USERS).child(user.getUid());
 
         return new ExistanceCheck(ref);
     }

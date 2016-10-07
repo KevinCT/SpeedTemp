@@ -88,7 +88,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
     public void terminateChat() {
         User activeUser = DatabaseHandler.getInstance().getActiveUser();
 
-        DatabaseHandler.manipulate(mChat).removeUser(activeUser);
+        DatabaseHandler.get(mChat).removeUser(activeUser);
         chatListAdapter.removeChat(mChat);
     }
 
@@ -101,11 +101,11 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
 
         //We no longer want updates from the old chat. Remove us as a client from the old chat.
         if (oldChat != null) {
-            DatabaseHandler.manipulate(oldChat).unbindMessageClient(this);
+            DatabaseHandler.get(oldChat).unbindMessageClient(this);
         }
 
         //We DO want updates from the new chat! Add us as a client to that one :)
-        DatabaseHandler.manipulate(newChat).bindMessageClient(this);
+        DatabaseHandler.get(newChat).bindMessageClient(this);
 
         mChat = newChat;
     }
@@ -120,7 +120,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
 
     private void postMessage(String text) {
         Message message = new Message(DatabaseHandler.getInstance().getActiveUserId(), text, getCurrentTime());
-        DatabaseHandler.manipulate(mChat).sendMessage(message);
+        DatabaseHandler.get(mChat).sendMessage(message);
 
         MessageAdapter adapter = getMessageAdapter();
         adapter.onListChanged(DataChange.added(message));

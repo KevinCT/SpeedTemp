@@ -24,7 +24,9 @@ public class Constants {
     public static final String UNDEFINED = "undefined";
     public static final String PREFERENCES = "preferences";
     public static final String NOTIFICATIONS = "notifications";
-    public static final String LANGUAGE = "notifications";
+    public static final String LANGUAGE = "language";
+    public static final String SWEDISH_SKILL = "swedish_skill";
+    public static final String STRANGER_SWEDISH_SKILL = "stranger_swedish_skill";
 
     //Languages
     public static final String ENGLISH = "en";
@@ -53,5 +55,9 @@ public class Constants {
         builder.deleteCharAt(builder.length() - 1);
 
         return builder.toString();
+    }
+
+    public static String preference(String preference) {
+        return makePath(PREFERENCES, preference);
     }
 }

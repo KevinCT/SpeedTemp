@@ -24,21 +24,20 @@ public class UserPoolListener extends FirebaseDataListener<User> implements Chil
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        User user = DatabaseHandler.getInstance().convertToUser(dataSnapshot);
-        Log.d(TAG, String.format("User with name %s has been added to UserPoolListener.onChildAdded()", user.getDisplayName()));
-        notifyAdded(user);
+        String userId = dataSnapshot.getKey();
+        DatabaseHandler.users().pull(userId).then(this::notifyAdded);
     }
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        User user = DatabaseHandler.getInstance().convertToUser(dataSnapshot);
-        notifyChanged(user);
+        String userId = dataSnapshot.getKey();
+        DatabaseHandler.users().pull(userId).then(this::notifyChanged);
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
-        User user = DatabaseHandler.getInstance().convertToUser(dataSnapshot);
-        notifyRemoved(user);
+        String userId = dataSnapshot.getKey();
+        DatabaseHandler.users().pull(userId).then(this::notifyRemoved);
     }
 
     @Override

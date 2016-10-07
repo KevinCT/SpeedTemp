@@ -53,7 +53,7 @@ public class ChatPresenter {
 
         // These are the methods that want to use the Chat once it's built
         List<Client<Chat>> clientList = Arrays.asList(
-                chat -> DatabaseHandler.manipulate(chat).push(),
+                chat -> DatabaseHandler.get(chat).push(),
                 mView::setChatForChatFragment);
 
         DatabaseHandler.getInstance().getChatById(chatId).then(chat -> {

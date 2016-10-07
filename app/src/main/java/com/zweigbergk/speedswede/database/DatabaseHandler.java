@@ -16,7 +16,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
 import com.zweigbergk.speedswede.util.Client;
 
 public enum DatabaseHandler {
@@ -49,12 +48,19 @@ public enum DatabaseHandler {
     public void registerListener(DatabaseNode node) {
         switch (node) {
             case CHATS:
-                DbChatHandler.INSTANCE.registerChatsListener();
+                DbChatHandler.getInstance().registerChatsListener();
+                break;
+            case USERS:
+                DbUserHandler.getInstance().registerUsersListener();
         }
     }
 
-    public static ChatManipulator manipulate(Chat chat) {
+    public static ChatManipulator get(Chat chat) {
         return ChatManipulator.create(chat);
+    }
+
+    public static UserManipulator get(User user) {
+        return UserManipulator.create(user);
     }
 
     public static UsersManipulator users() {
@@ -69,11 +75,7 @@ public enum DatabaseHandler {
         DbUserHandler.getInstance().logout();
     }
 
-    public User convertToUser(DataSnapshot snapshot) {
-        return DbUserHandler.getInstance().convertToUser(snapshot);
-    }
-
-    public static PoolManipulator manipulatePool() {
+    public static PoolManipulator getPool() {
         return PoolManipulator.getInstance();
     }
 
@@ -91,10 +93,6 @@ public enum DatabaseHandler {
 
     public void pushTestUser() {
         DbUserHandler.getInstance().pushTestUser();
-    }
-
-    public UserPoolListener getPool() {
-        return DbUserHandler.getInstance().getPoolListener();
     }
 
     private String getFirebaseAuthUid() {

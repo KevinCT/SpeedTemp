@@ -13,7 +13,8 @@ public class Initializer {
         addUserToDatabase();
 
         DatabaseHandler.getInstance().registerListener(DatabaseNode.CHATS);
-        DatabaseHandler.getInstance().getPool().bind(ChatMatcher.INSTANCE::handleUser);
+        DatabaseHandler.getInstance().registerListener(DatabaseNode.USERS);
+        DatabaseHandler.getPool().bind(ChatMatcher.INSTANCE::handleUser);
     }
 
     private static void addUserToDatabase() {

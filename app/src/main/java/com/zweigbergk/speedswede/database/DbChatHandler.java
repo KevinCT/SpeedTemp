@@ -24,6 +24,7 @@ import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 
 import static com.zweigbergk.speedswede.Constants.CHATS;
+import static com.zweigbergk.speedswede.Constants.USERS;
 
 enum DbChatHandler {
     INSTANCE;
@@ -72,7 +73,7 @@ enum DbChatHandler {
 
     void removeActiveUserFromChat(Chat chat) {
         User activeUser = DbUserHandler.INSTANCE.getActiveUser();
-        DatabaseHandler.manipulate(chat).removeUser(activeUser);
+        DatabaseHandler.get(chat).removeUser(activeUser);
     }
 
     /**

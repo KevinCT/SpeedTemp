@@ -129,7 +129,7 @@ public class ProductBuilder<Product> {
     public void then(Executable executable) {
         addExecutable(executable);
     }
-    
+
     public static class ItemMap {
 
         private Map<ProductLock, Object> items;
@@ -150,12 +150,14 @@ public class ProductBuilder<Product> {
             return (int) items.get(lock);
         }
 
-        public long getLong(ProductLock lock) {
-            return (long) items.get(lock);
+        public Long getLong(ProductLock lock) {
+            Object item = items.get(lock);
+            return item != null ? (long) item : null;
         }
 
-        public boolean getBoolean(ProductLock lock) {
-            return (boolean) items.get(lock);
+        public Boolean getBoolean(ProductLock lock) {
+            Object item = items.get(lock);
+            return item != null ? (boolean) item : null;
         }
 
         public User getUser(ProductLock lock) {

@@ -9,12 +9,12 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.util.ProductBuilder.ItemMap;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ChatFactory {
 
@@ -101,19 +101,19 @@ public class ChatFactory {
     }
 
     private static ProductBuilder.Blueprint<Chat> newChatBlueprint = items -> {
-        User user1 = (User) items.get(ProductLock.FIRST_USER);
-        User user2 = (User) items.get(ProductLock.SECOND_USER);
+        User user1 = items.getUser(ProductLock.FIRST_USER);
+        User user2 = items.getUser(ProductLock.SECOND_USER);
 
         return new Chat(user1, user2);
     };
 
-    private static Chat getReconstructionBlueprint(Map<ProductLock, Object> items) {
-        User user1 = (User) items.get(ProductLock.FIRST_USER);
-        User user2 = (User) items.get(ProductLock.SECOND_USER);
+    private static Chat getReconstructionBlueprint(ItemMap items) {
+        User user1 = items.getUser(ProductLock.FIRST_USER);
+        User user2 = items.getUser(ProductLock.SECOND_USER);
 
-        long timestamp = (long) items.get(ProductLock.TIMESTAMP);
-        String id = (String) items.get(ProductLock.ID);
-        String name = (String) items.get(ProductLock.NAME);
+        long timestamp = items.getLong(ProductLock.TIMESTAMP);
+        String id = items.getString(ProductLock.ID);
+        String name = items.getString(ProductLock.NAME);
 
         List<Message> messages = new ArrayList<>();
         List list = (List) items.get(ProductLock.MESSAGE_LIST);

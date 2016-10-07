@@ -7,13 +7,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.zweigbergk.speedswede.util.ProductBuilder.ItemMap;
+
 /** Holds an unfinished object. Only releases it once it is completed,
  * i.e. all requirements are met. */
 public class TreasureChest {
 
     public static final String TAG = TreasureChest.class.getSimpleName().toUpperCase();
 
-    private Map<ProductLock, Object> mItems;
+    private ItemMap mItems;
 
     private Set<ProductLock> mLocks;
 
@@ -22,7 +24,7 @@ public class TreasureChest {
     private Map<ProductLock, StateRequirement> stateRequirements;
 
     public TreasureChest() {
-        mItems = new HashMap<>();
+        mItems = new ItemMap();
 
         mLocks = new HashSet<>();
         mOpenedLocks = new HashSet<>();
@@ -75,7 +77,7 @@ public class TreasureChest {
         return mLocks.equals(mOpenedLocks);
     }
 
-    Map<ProductLock, Object> getItems() {
+    ItemMap getItems() {
         return isOpened() ? mItems : null;
     }
 }
