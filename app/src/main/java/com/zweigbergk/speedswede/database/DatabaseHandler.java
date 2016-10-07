@@ -21,6 +21,10 @@ import com.zweigbergk.speedswede.util.Client;
 public enum DatabaseHandler {
     INSTANCE;
 
+    public enum DatabaseNode {
+        CHATS, USERS
+    }
+
     public static final String TAG = DatabaseHandler.class.getSimpleName().toUpperCase();
 
     public static final String BANS = "bans";
@@ -55,16 +59,16 @@ public enum DatabaseHandler {
         }
     }
 
-    public static ChatManipulator get(Chat chat) {
-        return ChatManipulator.create(chat);
+    public static ChatReference get(Chat chat) {
+        return ChatReference.create(chat);
     }
 
-    public static UserManipulator get(User user) {
-        return UserManipulator.create(user);
+    public static UserReference get(User user) {
+        return UserReference.create(user);
     }
 
-    public static UsersManipulator users() {
-        return UsersManipulator.getInstance();
+    public static UserListReference users() {
+        return UserListReference.getInstance();
     }
 
     public void setLoggedInUser(User user) {
@@ -75,8 +79,8 @@ public enum DatabaseHandler {
         DbUserHandler.getInstance().logout();
     }
 
-    public static PoolManipulator getPool() {
-        return PoolManipulator.getInstance();
+    public static PoolReference getPool() {
+        return PoolReference.getInstance();
     }
 
     public void bindToChatEvents(Client<DataChange<Chat>> client) {

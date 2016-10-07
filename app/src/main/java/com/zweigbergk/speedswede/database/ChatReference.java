@@ -8,8 +8,8 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.Client;
 
-public class ChatManipulator {
-    public static final String TAG = ChatManipulator.class.getSimpleName().toUpperCase();
+public class ChatReference {
+    public static final String TAG = ChatReference.class.getSimpleName().toUpperCase();
 
     enum ChatAttribute {
         FIRST_USER, SECOND_USER;
@@ -28,12 +28,12 @@ public class ChatManipulator {
 
     private final Chat mChat;
 
-    private ChatManipulator(Chat chat) {
+    private ChatReference(Chat chat) {
         mChat = chat;
     }
 
-    static ChatManipulator create(Chat chat) {
-        return new ChatManipulator(chat);
+    static ChatReference create(Chat chat) {
+        return new ChatReference(chat);
     }
 
     public void removeUser(User user) {

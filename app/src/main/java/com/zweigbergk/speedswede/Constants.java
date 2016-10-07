@@ -10,7 +10,6 @@ public class Constants {
 
     public static final String CHATS = "chats";
     public static final String USERS = "users";
-    public static final String USER_TO_CHAT = "user_chat";
     public static final String MESSAGES = "messages";
     public static final String TIMESTAMP = "timeStamp";
     public static final String FIRST_USER = "firstUser";
@@ -20,10 +19,10 @@ public class Constants {
     public static final String DISPLAY_NAME = "displayName";
     public static final String UNDEFINED = "undefined";
     public static final String PREFERENCES = "preferences";
-    public static final String NOTIFICATIONS = "notifications";
+    public static final String NOTIFICATIONS = "receiveNotifications";
     public static final String LANGUAGE = "language";
-    public static final String SWEDISH_SKILL = "swedish_skill";
-    public static final String STRANGER_SWEDISH_SKILL = "stranger_swedish_skill";
+    public static final String SWEDISH_SKILL = "swedishSkill";
+    public static final String STRANGER_SWEDISH_SKILL = "strangerSwedishSkill";
 
     //Languages
     public static final String ENGLISH = "en";

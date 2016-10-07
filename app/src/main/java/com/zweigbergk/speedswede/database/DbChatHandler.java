@@ -16,12 +16,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
-import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.WellBehavedChatListener;
 import com.zweigbergk.speedswede.util.ChatFactory;
 import com.zweigbergk.speedswede.util.Client;
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 
 import static com.zweigbergk.speedswede.Constants.CHATS;
@@ -65,14 +63,14 @@ enum DbChatHandler {
         return mChatListener;
     }
 
-    void setChatAttribute(Chat chat, ChatManipulator.ChatAttribute attribute, Object value) {
+    void setChatAttribute(Chat chat, ChatReference.ChatAttribute attribute, Object value) {
         String key = attribute.getDbKey();
 
         mRoot.child(CHATS).child(chat.getId()).child(key).setValue(value);
     }
 
     /**
-     * Should <u>not</u> be used explicitly. Use a {@link ChatManipulator} instead.
+     * Should <u>not</u> be used explicitly. Use a {@link ChatReference} instead.
      * */
     void postMessageToChat(Chat chat, Message message) {
         mRoot.child(CHATS).child(chat.getId()).child(Constants.MESSAGES).push().setValue(message);
@@ -91,28 +89,6 @@ enum DbChatHandler {
 
     void delete(DatabaseReference ref) {
         ref.removeValue();
-    }
-
-    void convertToChatById(String id, Client<Chat> client) {
-        DatabaseReference ref = mRoot.child(CHATS).child(id).getRef();
-        Log.d(TAG, String.format("convertToChatById for ID: [%s]\nref: %s", id, ref.toString()));
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    Log.d(TAG, "Inside ValueEventListener, onDataChange. Snapshot: " + dataSnapshot.getValue());
-                    createChatFrom(dataSnapshot).thenPassTo(client);
-                } else {
-                    DatabaseReference invalidRef = mRoot.child(Constants.USER_TO_CHAT).child(id);
-                    delete(invalidRef);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     void addMesageClient(Chat chat, Client<DataChange<Message>> client) {

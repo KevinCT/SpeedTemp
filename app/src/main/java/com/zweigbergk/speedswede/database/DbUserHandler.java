@@ -90,7 +90,7 @@ enum DbUserHandler {
         mRoot.child(Constants.POOL).child(user.getUid()).setValue(null);
     }
 
-    void setUserAttribute(User user, UserManipulator.UserAttribute attribute, Object value) {
+    void setUserAttribute(User user, UserReference.UserAttribute attribute, Object value) {
         String key = attribute.getDbKey();
 
         mRoot.child(USERS).child(user.getUid()).child(key).setValue(value);

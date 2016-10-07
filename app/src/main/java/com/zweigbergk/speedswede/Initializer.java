@@ -3,9 +3,10 @@ package com.zweigbergk.speedswede;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.database.DatabaseNode;
 import com.zweigbergk.speedswede.core.User.Preference;
-import com.zweigbergk.speedswede.database.UserManipulator;
+import com.zweigbergk.speedswede.database.UserReference;
+
+import com.zweigbergk.speedswede.database.DatabaseHandler.DatabaseNode;
 
 public class Initializer {
 
@@ -23,7 +24,7 @@ public class Initializer {
         User activeUser = DatabaseHandler.getInstance().getActiveUser();
         DatabaseHandler.users().push(activeUser);
 
-        UserManipulator userRef = DatabaseHandler.get(activeUser);
+        UserReference userRef = DatabaseHandler.get(activeUser);
 
         userRef.setPreference(Preference.LANGUAGE, Constants.ENGLISH);
         userRef.setPreference(Preference.NOTIFICATIONS, true);
