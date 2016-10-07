@@ -2,8 +2,11 @@ package com.zweigbergk.speedswede.util;
 
 import android.util.Log;
 
+import com.zweigbergk.speedswede.core.User;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -100,7 +103,7 @@ public class ProductBuilder<Product> {
     }
 
     public interface Blueprint<Product> {
-        Product makeFromItems(Map<ProductLock, Object> map);
+        Product makeFromItems(ItemMap map);
     }
 
     public void thenNotify(Client<Product> client) {
@@ -125,5 +128,46 @@ public class ProductBuilder<Product> {
 
     public void then(Executable executable) {
         addExecutable(executable);
+    }
+    
+    public static class ItemMap {
+
+        private Map<ProductLock, Object> items;
+
+        public ItemMap() {
+            items = new HashMap<>();
+        }
+
+        public Object get(ProductLock lock) {
+            return items.get(lock);
+        }
+
+        public String getString(ProductLock lock) {
+            return (String) items.get(lock);
+        }
+
+        public int getInt(ProductLock lock) {
+            return (int) items.get(lock);
+        }
+
+        public long getLong(ProductLock lock) {
+            return (long) items.get(lock);
+        }
+
+        public boolean getBoolean(ProductLock lock) {
+            return (boolean) items.get(lock);
+        }
+
+        public User getUser(ProductLock lock) {
+            return (User) items.get(lock);
+        }
+
+        public List getList(ProductLock lock) {
+            return (List) items.get(lock);
+        }
+
+        public void put(ProductLock key, Object value) {
+            items.put(key, value);
+        }
     }
 }
