@@ -8,6 +8,10 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.Statement;
+import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.ProductBuilder;
+
+import java.util.List;
 
 public class ChatReference {
     public static final String TAG = ChatReference.class.getSimpleName().toUpperCase();
@@ -54,6 +58,10 @@ public class ChatReference {
 
     }
 
+    public ProductBuilder<List<Message>> pullMessages() {
+        return DbChatHandler.getInstance().pullMessages(mChat);
+    }
+
     public void push() {
         DbChatHandler.getInstance().pushChat(mChat);
     }
@@ -84,6 +92,11 @@ public class ChatReference {
 
     public void bindMessageClient(Client<DataChange<Message>> client) {
         DbChatHandler.INSTANCE.getChatListener().addMessageClient(mChat, client);
+        pullMessages().then(messages -> {
+            Lists.forEach(messages, message -> {
+                client.supply(DataChange.added(message));
+            });
+        });
     }
 
     public void unbindMessageClient(Client<DataChange<Message>> client) {

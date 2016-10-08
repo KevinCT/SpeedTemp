@@ -2,15 +2,21 @@ package com.zweigbergk.speedswede.database;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
@@ -20,8 +26,11 @@ import com.zweigbergk.speedswede.util.ChatFactory;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 import com.zweigbergk.speedswede.util.Statement;
+import com.zweigbergk.speedswede.util.ProductLock;
+import com.zweigbergk.speedswede.util.StateRequirement;
 
 import static com.zweigbergk.speedswede.Constants.CHATS;
+import static com.zweigbergk.speedswede.Constants.MESSAGES;
 
 enum DbChatHandler {
     INSTANCE;
@@ -104,6 +113,46 @@ enum DbChatHandler {
         }
 
         messageListeners.get(chat.getId()).bind(client);
+    }
+
+    ProductBuilder<List<Message>> pullMessages(Chat chat) {
+        ProductBuilder<List<Message>> builder = new ProductBuilder<List<Message>>(items -> items.getList(ProductLock.MESSAGE_LIST));
+        builder.attachLocks(ProductLock.MESSAGE_LIST);
+
+        mRoot.child(CHATS).child(chat.getId()).child(MESSAGES).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long messageCount = dataSnapshot.getChildrenCount();
+                StateRequirement<List> hasAllMessages = list -> list.size() == messageCount;
+
+                List<Message> messages = new ArrayList<>();
+                builder.requireState(ProductLock.MESSAGE_LIST, hasAllMessages);
+                builder.addItem(ProductLock.MESSAGE_LIST, messages);
+
+                MessageListener listener = new MessageListener(Arrays.asList(change -> {
+                    Message message = change.getItem();
+                    messages.add(message);
+                    builder.updateState();
+                    Log.d(TAG, "Adding message: " + message.getText());
+                }));
+
+                mRoot.child(CHATS).child(chat.getId()).child(MESSAGES).addChildEventListener(
+                        listener);
+
+                builder.addExecutable(() -> {
+                    mRoot.child(CHATS).child(chat.getId())
+                        .child(MESSAGES).removeEventListener(listener);
+                    Log.d(TAG, "MessageBuilder finished.");
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        return builder;
     }
 
     boolean hasMessageListenerForChat(Chat chat) {

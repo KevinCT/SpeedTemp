@@ -77,6 +77,7 @@ public class Message {
         return new Message(id, text, timeStamp);
     }
 
+    @Exclude
     public boolean isFromToday() {
         Date now = new Date();
 

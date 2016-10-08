@@ -11,6 +11,7 @@ import android.util.Log;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
 import com.zweigbergk.speedswede.presenter.ChatPresenter;
@@ -22,22 +23,40 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     public static final String TAG = ChatActivity.class.getSimpleName().toUpperCase();
 
-    private final ChatFragment mChatFragment = new ChatFragment();
-    private final Fragment mChatListFragment = new ChatListFragment();
+    private static final String CHAT_FRAGMENT_NAME = ChatFragment.class.getSimpleName();
+    private static final String CHAT_LIST_FRAGMENT_NAME = ChatListFragment.class.getSimpleName();
+
+    private ChatFragment mChatFragment;
+    private ChatListFragment mChatListFragment;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            mChatFragment = new ChatFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.activity_chat_root, mChatFragment, CHAT_FRAGMENT_NAME)
+                    .commit();
+
+            mChatListFragment = new ChatListFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.activity_chat_root, mChatListFragment, CHAT_LIST_FRAGMENT_NAME)
+                    .commit();
+        } else {
+            mChatFragment = (ChatFragment) getSupportFragmentManager().findFragmentByTag(CHAT_FRAGMENT_NAME);
+            mChatListFragment = (ChatListFragment) getSupportFragmentManager().findFragmentByTag(CHAT_LIST_FRAGMENT_NAME);
+        }
+
+        gotoChatListFragment();
+
+
         setContentView(R.layout.activity_chat);
 
-        setUpContent();
-
         new ChatPresenter(this);
-    }
-
-    private void setUpContent() {
-        changeFragment(mChatListFragment, true, false);
     }
 
     @Override
@@ -45,11 +64,31 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         if (chat != null) {
             Log.d(TAG, "Displaying chat with ID: " + chat.getId());
             mChatFragment.setChat(chat);
-            changeFragment(mChatFragment, false, false);
+            gotoChatFragment();
+
         } else {
             Log.e(TAG, "WARNING! Tried to display a null chat. ");
             new Exception().printStackTrace();
         }
+    }
+
+    private void gotoChatFragment() {
+        hide(mChatListFragment);
+        show(mChatFragment);
+
+    }
+
+    private void gotoChatListFragment() {
+        hide(mChatFragment);
+        show(mChatListFragment);
+    }
+
+    private void hide(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().hide(fragment).commit();
+    }
+
+    private void show(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().show(fragment).commit();
     }
 
     @Override
@@ -64,82 +103,21 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     @Override
     public void onBackPressed() {
         Log.d(TAG, "Back pressed.");
-        if (!isActive(mChatListFragment)) {
+        if (!isInChatList()) {
             Log.d(TAG, "Changing fragment...");
-            changeFragment(mChatListFragment, true, false);
+            gotoChatListFragment();
         } else {
             Log.d(TAG, "Super takes charge...");
             super.onBackPressed();
         }
     }
 
-    private boolean isActive(Fragment fragment) {
-        FragmentManager manager = getSupportFragmentManager();
-        return fragment != null && !manager.findFragmentByTag(getFragmentName(fragment)).isDetached();
+    private boolean isInChatList() {
+        return getSupportFragmentManager().findFragmentByTag(CHAT_LIST_FRAGMENT_NAME).isVisible();
     }
 
     public void startSettings() {
         Intent intent = new Intent(ChatActivity.this, SettingsActivity.class);
         startActivity(intent);
-    }
-
-    /**
-     * From: https://gist.github.com/HugoGresse/c74adef25d76efada4d9
-     * Date: 08/10/206
-     *
-     * Change the current displayed fragment by a new one.
-     * - if the fragment is in backstack, it will pop it
-     * - if the fragment is already displayed (trying to change the fragment with the same), it will not do anything
-     *
-     * @param fragment            the new fragment to display
-     * @param saveInBackstack if we want the fragment to be in backstack
-     * @param animate         if we want an animation
-     */
-    private void changeFragment(Fragment fragment, boolean saveInBackstack, boolean animate) {
-        String backStateName = getFragmentName(fragment);
-        Log.d(TAG, "1");
-        try {
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
-
-            if (manager.getFragments() != null) {
-                Lists.forEach(manager.getFragments(), frag -> {
-                    if (!getFragmentName(frag).equals(backStateName)) {
-                        Log.d(TAG, "Detaching " + getFragmentName(frag));
-                        transaction.detach(frag);
-                    }
-                });
-            }
-
-            if (!fragmentPopped && manager.findFragmentByTag(backStateName) == null) {
-
-                if (animate) {
-                    Log.d(TAG, "Change Fragment: animate");
-                    transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-                }
-
-                transaction.add(R.id.activity_chat_root, fragment, backStateName);
-
-                if (saveInBackstack) {
-                    Log.d(TAG, "Change Fragment: addToBackTack " + backStateName);
-                    transaction.addToBackStack(backStateName);
-                } else {
-                    Log.d(TAG, "Change Fragment: NO addToBackTack");
-                }
-
-                transaction.commit();
-            } else {
-                Fragment existingFragment = manager.findFragmentByTag(backStateName);
-                transaction.attach(existingFragment);
-                transaction.commit();
-            }
-        } catch (IllegalStateException exception) {
-            Log.w(TAG, "Unable to commit fragment, activity might have been killed in background. " + exception.toString());
-        }
-    }
-
-    private String getFragmentName(Fragment fragment) {
-        return ((Object) fragment).getClass().getName();
     }
 }

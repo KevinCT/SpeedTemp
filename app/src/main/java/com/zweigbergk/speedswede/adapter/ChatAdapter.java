@@ -66,6 +66,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                 if (!chat.includesUser(activeUser)) {
                     removeChat(chat);
                 }
+
+                updateChat(chat);
                 break;
             case REMOVED:
                 removeChat(chat);
