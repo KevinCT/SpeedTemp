@@ -91,7 +91,7 @@ public class Chat {
         }
         return conversationClone;
     }
-    
+
     public String getId() {
         return id;
     }
@@ -111,8 +111,8 @@ public class Chat {
                 timeStamp;
     }
 
-    public String getLatestMessage() {
-        return this.conversation.get(this.conversation.size() - 1).getText();
+    public Message getLatestMessage() {
+        return conversation.size() > 0 ? conversation.get(conversation.size() - 1) : null;
     }
 
     public void postMessage(User user, Message message) throws IllegalArgumentException {
