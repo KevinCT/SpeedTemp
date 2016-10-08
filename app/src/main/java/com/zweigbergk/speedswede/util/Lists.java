@@ -1,10 +1,12 @@
 package com.zweigbergk.speedswede.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public class Lists {
@@ -36,6 +38,19 @@ public class Lists {
         }
 
         return result;
+    }
+
+    public static <E> E randomPick(E[] array) {
+        return randomPick(Arrays.asList(array));
+    }
+
+    public static <E> E randomPick(List<E> list) {
+        Random random = new Random();
+        random.nextInt();
+        random.nextInt();
+
+        int i = random.nextInt(list.size());
+        return list.get(i);
     }
 
     /**Adds all elements from one collection to another.

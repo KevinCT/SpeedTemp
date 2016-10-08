@@ -24,6 +24,8 @@ public class Constants {
     public static final String SWEDISH_SKILL = "swedishSkill";
     public static final String STRANGER_SWEDISH_SKILL = "strangerSwedishSkill";
 
+    public static final String[] CHAT_NAMES = {"Bench", "Learning", "Rung", "Witness", "Social", "Shop", "Pro"};
+
     //Languages
     public static final String ENGLISH = "en";
     public static final String SWEDISH = "sv";

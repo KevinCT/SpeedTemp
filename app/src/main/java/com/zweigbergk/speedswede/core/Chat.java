@@ -3,7 +3,9 @@ package com.zweigbergk.speedswede.core;
 import android.util.Log;
 
 import com.google.firebase.database.Exclude;
+import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.interactor.ChatInteractor;
+import com.zweigbergk.speedswede.util.Lists;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,20 +22,15 @@ public class Chat {
     private long lastMessageTimeStamp;
 
     private String name;
-
-    private ChatInteractor chatInteractor = new ChatInteractor();
     private boolean inactive;
 
     public Chat(User firstUser, User secondUser) {
-        chatInteractor = new ChatInteractor();
         this.firstUser = firstUser;
         this.secondUser = secondUser;
 
+        this.name = Lists.randomPick(Constants.CHAT_NAMES);
 
-        Log.d("CHAT:", "SETTING CHATNAME IN CONSTRUCTOR");
-        this.name = chatInteractor.getRandomChatName();
-
-        conversation = new ArrayList<>();
+        this.conversation = new ArrayList<>();
         timeStamp = (new Date()).getTime();
 
         id = firstUser.getUid() + "-" + secondUser.getUid();
