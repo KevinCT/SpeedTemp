@@ -25,19 +25,22 @@ import java.util.Map;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
+    public enum Event { CHAT_VIEW_CLICKED, CHAT_REMOVED, CHAT_ADDED }
+
+
     public static final String TAG = ChatAdapter.class.getSimpleName().toUpperCase();
     private static final int NORMAL_VIEW = 1;
 
     private List<Chat> mChats;
-    private Map<DatabaseEvent, List<Client<Chat>>> eventCallbacks;
+    private Map<Event, List<Client<Chat>>> eventClients;
 
 
     public ChatAdapter(List<Chat> chats) {
-        eventCallbacks = new HashMap<>();
+        eventClients = new HashMap<>();
         mChats = chats;
 
-        for (DatabaseEvent event : DatabaseEvent.values()) {
-            eventCallbacks.put(event, new ArrayList<>());
+        for (Event event : Event.values()) {
+            eventClients.put(event, new ArrayList<>());
         }
     }
 
@@ -72,34 +75,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         }
     }
 
-    public void onListChanged(DataChange<Chat> change) {
-        Chat chat = change.getItem();
-        DatabaseEvent event = change.getEvent();
-
-        switch (event) {
-            case ADDED:
-                addChat(chat);
-                break;
-            case CHANGED:
-                updateChat(chat);
-                break;
-            case REMOVED:
-                removeChat(chat);
-                break;
-            case INTERRUPTED:
-                // TODO
-                //Handle failure to respond to a change in the database by creating a listener
-                // for connection and call onListChanged() once connection is reestablished
-                break;
-        }
+    public void addEventClient(Event event, Client<Chat> client) {
+        eventClients.get(event).add(client);
     }
 
-    public void addEventCallback(DatabaseEvent event, Client<Chat> callback) {
-        eventCallbacks.get(event).add(callback);
-    }
-
-    public void removeEventCallback(DatabaseEvent event, Client<Chat> callback) {
-        eventCallbacks.get(event).remove(callback);
+    public void removeEventClient(Event event, Client<Chat> client) {
+        eventClients.get(event).remove(client);
     }
 
     private void updateChat(@NonNull Chat chat) {
@@ -116,7 +97,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             notifyItemInserted(getItemCount() - 1);
         }
 
-        executeCallbacks(DatabaseEvent.ADDED, chat);
+        broadcastEvent(Event.CHAT_ADDED, chat);
     }
 
     private void removeChat(Chat chat) {
@@ -127,15 +108,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         mChats.remove(chat);
         notifyItemRemoved(position);
 
-        executeCallbacks(DatabaseEvent.REMOVED, chat);
+        broadcastEvent(Event.CHAT_REMOVED, chat);
     }
 
     private boolean isSameChat(@NonNull Chat chat1, Chat chat2) {
         return chat1.equals(chat2);
     }
 
-    private void executeCallbacks(DatabaseEvent event, Chat chat) {
-        List<Client<Chat>> clients = eventCallbacks.get(event);
+    private void broadcastEvent(Event event, Chat chat) {
+        List<Client<Chat>> clients = eventClients.get(event);
         for (Client<Chat> client : clients) {
             client.supply(chat);
         }
@@ -158,6 +139,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         holder.mName.setText(chat.getName());
         holder.mLatestMessage.setText(messageText);
         holder.mTimestamp.setText(formattedTime);
+
+        holder.mView.setOnClickListener(chatView -> broadcastEvent(Event.CHAT_VIEW_CLICKED, chat));
     }
 
     @Override
@@ -175,10 +158,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         TextView mName;
         TextView mLatestMessage;
         TextView mTimestamp;
+        View mView;
 
         ViewHolder(View view) {
             super(view);
 
+            mView = view;
             mName = (TextView) view.findViewById(R.id.row_chat_list_item_name);
             mLatestMessage = (TextView) view.findViewById(R.id.row_chat_list_item_latest_message);
             mTimestamp = (TextView) view.findViewById(R.id.row_chat_list_item_timestamp);
