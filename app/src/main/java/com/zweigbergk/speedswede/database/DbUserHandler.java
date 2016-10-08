@@ -16,8 +16,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
+import com.zweigbergk.speedswede.database.eventListener.UserListener;
 import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
-import com.zweigbergk.speedswede.database.eventListener.WellBehavedUserListener;
 import com.zweigbergk.speedswede.util.Statement;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 import com.zweigbergk.speedswede.util.UserFactory;
@@ -32,7 +32,7 @@ enum DbUserHandler {
 
     private DatabaseReference mRoot;
 
-    private WellBehavedUserListener mUsersListener;
+    private UserListener mUsersListener;
     private UserPoolListener mUserPoolListener;
 
     private User mLoggedInUser;
@@ -57,7 +57,7 @@ enum DbUserHandler {
     // NOTE: Listening to all Users all the time is invert optimal.
     // It's whatever if it doesn't cause issues.
     void registerUsersListener() {
-        mUsersListener = new WellBehavedUserListener();
+        mUsersListener = new UserListener();
 
         Query userRef = mRoot.child(USERS);
         userRef.keepSynced(true);
@@ -73,7 +73,7 @@ enum DbUserHandler {
         ref.keepSynced(true);
     }
 
-    WellBehavedUserListener getUserListener() {
+    UserListener getUserListener() {
         return mUsersListener;
     }
 

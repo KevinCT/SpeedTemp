@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.zweigbergk.speedswede.R;
-import com.zweigbergk.speedswede.adapter.ChatListAdapter;
 import com.zweigbergk.speedswede.adapter.MessageAdapter;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
@@ -34,7 +33,6 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
     public static final String TAG = ChatFragment.class.getSimpleName().toUpperCase();
 
     private RecyclerView chatRecyclerView;
-    private ChatListAdapter chatListAdapter;
     private Chat mChat;
     //TODO presenter between interactor and fragment
     private ChatFragmentPresenter mPresenter;
@@ -90,7 +88,6 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
         User activeUser = DatabaseHandler.getActiveUser();
 
         DatabaseHandler.get(mChat).removeUser(activeUser);
-        chatListAdapter.removeChat(mChat);
     }
 
     public void setChat(Chat newChat) {

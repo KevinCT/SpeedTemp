@@ -1,20 +1,19 @@
 package com.zweigbergk.speedswede.fragment;
 
-import android.app.ListActivity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
-import com.zweigbergk.speedswede.adapter.ChatListAdapter;
+import com.zweigbergk.speedswede.adapter.YetAnotherChatAdapter;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 
@@ -22,8 +21,8 @@ public class ChatListFragment extends Fragment {
 
     public static final String TAG = ChatListFragment.class.getSimpleName().toUpperCase();
 
-    ListView chatListView;
-    ChatListAdapter mAdapter;
+    RecyclerView chatListView;
+    YetAnotherChatAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +42,6 @@ public class ChatListFragment extends Fragment {
             case R.id.menu_chat_list_settings_button:
                 startSettings();
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -54,11 +52,11 @@ public class ChatListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
-        chatListView = (ListView) view.findViewById(R.id.chat_listView);
+        chatListView = (RecyclerView) view.findViewById(R.id.fragment_chat_list_view);
 
-        mAdapter = new ChatListAdapter();
+        mAdapter = new YetAnotherChatAdapter();
+        chatListView.setLayoutManager(new LinearLayoutManager(getContext()));
         chatListView.setAdapter(mAdapter);
-
         DatabaseHandler.bindToChatEvents(mAdapter::notifyChange);
 
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);

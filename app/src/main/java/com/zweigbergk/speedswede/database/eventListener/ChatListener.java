@@ -19,8 +19,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class WellBehavedChatListener implements ChildEventListener {
-    public static final String TAG = WellBehavedChatListener.class.getSimpleName().toUpperCase();
+public class ChatListener implements ChildEventListener {
+    public static final String TAG = ChatListener.class.getSimpleName().toUpperCase();
 
     private static final String CLIENT_FOR_ALL_CHATS = "key_to_listen_to_every_chat";
 
@@ -28,7 +28,7 @@ public class WellBehavedChatListener implements ChildEventListener {
     private Map<String, Set<Client<DataChange<Message>>>> messageClients;
 
 
-    public WellBehavedChatListener() {
+    public ChatListener() {
         super();
 
         chatClients = new HashMap<>();

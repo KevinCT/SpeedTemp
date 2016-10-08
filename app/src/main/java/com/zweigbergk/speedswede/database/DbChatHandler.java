@@ -7,17 +7,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
-import com.zweigbergk.speedswede.database.eventListener.WellBehavedChatListener;
+import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.util.ChatFactory;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.ProductBuilder;
@@ -34,7 +32,7 @@ enum DbChatHandler {
 
     private Map<String, MessageListener> messageListeners;
 
-    private WellBehavedChatListener mChatListener;
+    private ChatListener mChatListener;
 
     public static DbChatHandler getInstance() {
         return INSTANCE;
@@ -55,7 +53,7 @@ enum DbChatHandler {
     }
 
     void registerChatsListener() {
-        mChatListener = new WellBehavedChatListener();
+        mChatListener = new ChatListener();
 
         String uid = DbUserHandler.INSTANCE.getActiveUserId();
 
@@ -68,7 +66,7 @@ enum DbChatHandler {
         secondUserRef.addChildEventListener(mChatListener);
     }
 
-    WellBehavedChatListener getChatListener() {
+    ChatListener getChatListener() {
         return mChatListener;
     }
 

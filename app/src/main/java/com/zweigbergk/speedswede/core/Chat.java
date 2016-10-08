@@ -111,6 +111,10 @@ public class Chat {
                 timeStamp;
     }
 
+    public String getLatestMessage() {
+        return this.conversation.get(this.conversation.size() - 1).getText();
+    }
+
     public void postMessage(User user, Message message) throws IllegalArgumentException {
         if (!includesUser(user)) {
             throw new IllegalArgumentException(String.format("User provided [%s] is invert a member of this chat.", user.getUid()));
@@ -133,10 +137,7 @@ public class Chat {
         }
         Chat otherChat = (Chat) other;
 
-        return this.getTimeStamp() == otherChat.getTimeStamp() &&
-                this.getFirstUser().equals(otherChat.getFirstUser()) &&
-                this.getSecondUser().equals(otherChat.getSecondUser()) &&
-                this.getConversation().equals(otherChat.getConversation());
+        return otherChat.getId().equals(this.getId());
     }
 
     @Override

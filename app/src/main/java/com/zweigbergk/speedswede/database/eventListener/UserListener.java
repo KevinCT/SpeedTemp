@@ -19,15 +19,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class WellBehavedUserListener implements ChildEventListener {
-    public static final String TAG = WellBehavedUserListener.class.getSimpleName().toUpperCase();
+public class UserListener implements ChildEventListener {
+    public static final String TAG = UserListener.class.getSimpleName().toUpperCase();
 
     private static final String CLIENT_FOR_ALL_USERS = "key_to_listen_to_every_user";
 
     private Map<String, Set<Client<DataChange<User>>>> userClients;
 
 
-    public WellBehavedUserListener() {
+    public UserListener() {
         super();
 
         userClients = new HashMap<>();
