@@ -1,6 +1,7 @@
 package com.zweigbergk.speedswede.core;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -67,6 +68,18 @@ public class Message {
 
     public Message clone() {
         return new Message(id, text, timeStamp);
+    }
+
+    public boolean isFromToday() {
+        Date now = new Date();
+
+        Calendar calendar1 = Calendar.getInstance();
+        Calendar calendar2 = Calendar.getInstance();
+        calendar1.setTime(now);
+        calendar2.setTime(new Date(timeStamp));
+        return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
+                calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH) &&
+                calendar1.get(Calendar.DAY_OF_YEAR) == calendar2.get(Calendar.DAY_OF_YEAR);
     }
 
     @Override
