@@ -1,5 +1,7 @@
 package com.zweigbergk.speedswede.core;
 
+import com.google.firebase.database.Exclude;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,6 +22,11 @@ public class Message {
         this.id = id;
         this.text = text;
         this.timeStamp = timeStamp;
+    }
+
+    @Exclude
+    public Date getDateSent() {
+        return new Date(timeStamp);
     }
 
     public Message(String id, String text) {
