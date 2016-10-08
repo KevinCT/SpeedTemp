@@ -12,6 +12,10 @@ import com.zweigbergk.speedswede.util.Statement;
 
 import static com.zweigbergk.speedswede.util.Statement.not;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.Date;
+
 public class Initializer {
 
     public static final String TAG = Initializer.class.getSimpleName().toUpperCase();
@@ -24,6 +28,9 @@ public class Initializer {
         DatabaseHandler.registerListener(DatabaseNode.CHATS);
         DatabaseHandler.registerListener(DatabaseNode.USERS);
         DatabaseHandler.getPool().bind(ChatMatcher.INSTANCE::handleUser);
+
+        SimpleDateFormat f = new SimpleDateFormat("EE MMM dd", Locale.getDefault());
+        Log.e("DATE", f.format(new Date()));
     }
 
     private static void addUserToDatabase() {
