@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
-import com.zweigbergk.speedswede.adapter.YetAnotherChatAdapter;
+import com.zweigbergk.speedswede.adapter.ChatAdapter;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 
@@ -22,7 +22,7 @@ public class ChatListFragment extends Fragment {
     public static final String TAG = ChatListFragment.class.getSimpleName().toUpperCase();
 
     RecyclerView chatListView;
-    YetAnotherChatAdapter mAdapter;
+    ChatAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,12 @@ public class ChatListFragment extends Fragment {
 
         chatListView = (RecyclerView) view.findViewById(R.id.fragment_chat_list_view);
 
-        mAdapter = new YetAnotherChatAdapter();
+        mAdapter = new ChatAdapter();
+
+        //Make us switch to the chat if we click its view.
+        mAdapter.addEventClient(ChatAdapter.Event.CHAT_VIEW_CLICKED,
+                ((ChatActivity) getActivity())::displayChat);
+
         chatListView.setLayoutManager(new LinearLayoutManager(getContext()));
         chatListView.setAdapter(mAdapter);
         DatabaseHandler.bindToChatEvents(mAdapter::notifyChange);

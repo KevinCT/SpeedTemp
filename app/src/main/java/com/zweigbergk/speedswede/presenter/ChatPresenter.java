@@ -14,4 +14,6 @@ public class ChatPresenter {
         mView = view;
         mInteractor = new ChatInteractor();
     }
+
 }
+

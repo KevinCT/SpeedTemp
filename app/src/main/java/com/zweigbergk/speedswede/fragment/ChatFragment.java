@@ -27,6 +27,7 @@ import com.zweigbergk.speedswede.interactor.BanInteractor;
 import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
 import com.zweigbergk.speedswede.util.Client;
 
+import java.util.Collections;
 import java.util.Date;
 
 public class ChatFragment extends Fragment implements Client<DataChange<Message>> {
@@ -92,10 +93,6 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
 
     public void setChat(Chat newChat) {
         Chat oldChat = mChat;
-
-        chatRecyclerView.setRecycledViewPool(null);
-        //Remove the messages from the old chat
-        getMessageAdapter().clear();
 
         //We no longer want updates from the old chat. Remove us as a client from the old chat.
         if (oldChat != null) {
