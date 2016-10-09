@@ -7,7 +7,6 @@
 
     <TextView
         android:id="@+id/row_chat_list_item_name"
-        android:text="Apelsin"
         android:textSize="@dimen/font_large"
         android:layout_marginBottom="@dimen/spacing_tiny"
         android:textStyle="bold"
@@ -22,7 +21,6 @@
 
         <TextView
             android:id="@+id/row_chat_list_item_latest_message"
-            android:text="Jag tycker om apelsiner..."
             android:textSize="@dimen/font_normal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -31,7 +29,7 @@
 
         <TextView
             android:id="@+id/row_chat_list_item_timestamp"
-            android:text="23:42"
+            android:alpha="0.7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end" />
