@@ -16,8 +16,8 @@ public class BanInteractor  {
         }
     }
 
-    public void addBan(String uID, String firstUser, String secondUser){
-        mBanner.addBan(uID,firstUser,secondUser);
+    public void addBan(String firstUser, String secondUser){
+        mBanner.addBan(DatabaseHandler.getActiveUserId(),firstUser,secondUser);
         DatabaseHandler.sendObject("bans",mBanner);
 
     }

@@ -28,7 +28,7 @@ public class LanguageChanger {
 
         List<String> languages = Arrays.asList(Constants.LANGUAGES);
         language = languages.contains(language) ? language : Constants.ENGLISH;
-
+        config.locale = new Locale(language);
         resources.updateConfiguration(config, resources.getDisplayMetrics());
         saveLanguage(context,language);
     }

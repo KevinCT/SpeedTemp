@@ -10,9 +10,11 @@ import android.util.Log;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
+import com.zweigbergk.speedswede.presenter.SettingsFragmentPresenter;
 
 public class SettingsFragment extends PreferenceFragment {
     private SharedPreferences.OnSharedPreferenceChangeListener mListener;
+    private SettingsFragmentPresenter mPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,7 @@ public class SettingsFragment extends PreferenceFragment {
         initListener();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPreferences.registerOnSharedPreferenceChangeListener(mListener);
+        mPresenter = new SettingsFragmentPresenter();
     }
 
     @Override
@@ -38,22 +41,8 @@ public class SettingsFragment extends PreferenceFragment {
             //Make sure it only checks when listpreference is open
             if (preference instanceof ListPreference) {
                 String language = ((ListPreference) preference).getValue().toString();
+                mPresenter.onListPreferenceSelected(language, getActivity().getBaseContext());
 
-                switch (language) {
-                    case "sv":
-                        LanguageChanger.changeLanguage("sv", getActivity().getBaseContext());
-                        break;
-                    case "en":
-                        LanguageChanger.changeLanguage("en", getActivity().getBaseContext());
-                        break;
-                    case "ar":
-                        LanguageChanger.changeLanguage("ar", getActivity().getBaseContext());
-                        break;
-                    default:
-                        LanguageChanger.changeLanguage("default",getActivity().getBaseContext());
-                        break;
-
-                }
                 LanguageChanger.languageChanged(true);
                 getActivity().recreate();
             }
