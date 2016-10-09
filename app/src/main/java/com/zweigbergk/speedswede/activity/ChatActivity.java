@@ -3,20 +3,20 @@ package com.zweigbergk.speedswede.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
-import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.fragment.ChangeLanguageFragment;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
 import com.zweigbergk.speedswede.presenter.ChatPresenter;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.view.ChatView;
+
+import java.util.List;
 
 
 public class ChatActivity extends AppCompatActivity implements ChatView {
@@ -25,9 +25,11 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     private static final String CHAT_FRAGMENT_NAME = ChatFragment.class.getSimpleName();
     private static final String CHAT_LIST_FRAGMENT_NAME = ChatListFragment.class.getSimpleName();
+    private static final String LANGUAGE_SETTINGS_FRAGMENT_NAME = ChatListFragment.class.getSimpleName();
 
     private ChatFragment mChatFragment;
-    private ChatListFragment mChatListFragment;
+    private Fragment mChatListFragment;
+    private Fragment mLanguageFragment;
 
 
     @Override
@@ -36,22 +38,22 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         if (savedInstanceState == null) {
             mChatFragment = new ChatFragment();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.activity_chat_root, mChatFragment, CHAT_FRAGMENT_NAME)
-                    .commit();
+            addFragment(mChatFragment);
 
             mChatListFragment = new ChatListFragment();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.activity_chat_root, mChatListFragment, CHAT_LIST_FRAGMENT_NAME)
-                    .commit();
+            addFragment(mChatListFragment);
+
+            mLanguageFragment = new ChangeLanguageFragment();
+            addFragment(mLanguageFragment);
+
+
         } else {
             mChatFragment = (ChatFragment) getSupportFragmentManager().findFragmentByTag(CHAT_FRAGMENT_NAME);
-            mChatListFragment = (ChatListFragment) getSupportFragmentManager().findFragmentByTag(CHAT_LIST_FRAGMENT_NAME);
+            mChatListFragment = getSupportFragmentManager().findFragmentByTag(CHAT_LIST_FRAGMENT_NAME);
+            mLanguageFragment = getSupportFragmentManager().findFragmentByTag(LANGUAGE_SETTINGS_FRAGMENT_NAME);
         }
 
-        gotoChatListFragment();
+        showFragment(mChatListFragment);
 
 
         setContentView(R.layout.activity_chat);
@@ -59,28 +61,50 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         new ChatPresenter(this);
     }
 
+    private void addFragment(Fragment fragment) {
+        String name = getFragmentName(fragment);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.activity_chat_root, fragment, name)
+                .commit();
+    }
+
+    private String getFragmentName(Fragment fragment) {
+        return fragment.getClass().getSimpleName();
+    }
+
+    private void showFragment(Fragment fragment) {
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+
+        //Get all fragments except the argument fragment, and hide them.
+        Lists.forEach(Lists.reject(fragments,
+                currentFragment -> hasSameTag(currentFragment, fragment)),
+                this::hide);
+
+        //Show the argument fragment
+        show(fragment);
+    }
+
+    public void showLanguageFragment() {
+
+    }
+
+    private boolean hasSameTag(Fragment first, Fragment second) {
+        return first.getTag().equals(second.getTag());
+    }
+
     @Override
     public void displayChat(Chat chat) {
         if (chat != null) {
             Log.d(TAG, "Displaying chat with ID: " + chat.getId());
             mChatFragment.setChat(chat);
-            gotoChatFragment();
+            showFragment(mChatFragment);
 
         } else {
             Log.e(TAG, "WARNING! Tried to display a null chat. ");
             new Exception().printStackTrace();
         }
-    }
-
-    private void gotoChatFragment() {
-        hide(mChatListFragment);
-        show(mChatFragment);
-
-    }
-
-    private void gotoChatListFragment() {
-        hide(mChatFragment);
-        show(mChatListFragment);
     }
 
     private void hide(Fragment fragment) {
@@ -103,17 +127,17 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     @Override
     public void onBackPressed() {
         Log.d(TAG, "Back pressed.");
-        if (!isInChatList()) {
+        if (!isInFragment(mChatListFragment)) {
             Log.d(TAG, "Changing fragment...");
-            gotoChatListFragment();
+            showFragment(mChatListFragment);
         } else {
             Log.d(TAG, "Super takes charge...");
             super.onBackPressed();
         }
     }
 
-    private boolean isInChatList() {
-        return getSupportFragmentManager().findFragmentByTag(CHAT_LIST_FRAGMENT_NAME).isVisible();
+    private boolean isInFragment(Fragment fragment) {
+        return getSupportFragmentManager().findFragmentByTag(getFragmentName(fragment)).isVisible();
     }
 
     public void startSettings() {
