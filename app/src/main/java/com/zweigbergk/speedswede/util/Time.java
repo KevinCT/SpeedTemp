@@ -22,4 +22,8 @@ public class Time {
                 getTimeFromDate(message.getDateSent()) :
                 getDayAndMonthFromDate(message.getDateSent());
     }
+
+    public static long getCurrentTime() {
+        return new Date().getTime();
+    }
 }
