@@ -45,7 +45,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d("DEBUG", "Local preferences changed: "+key+", "+sharedPreferences.getAll().get(key));
 
-        UserReference user = DatabaseHandler.get(DatabaseHandler.getInstance().getActiveUser());
+        UserReference user = DatabaseHandler.get(DatabaseHandler.getActiveUser());
         switch(key) {
             // TODO: change these two skill preferences to sliders and not booleans -->
             case "pref_my_skill":

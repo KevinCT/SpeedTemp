@@ -49,7 +49,7 @@ public enum ChatMatcher {
         mUsersInPool.add(user);
         Log.d(TAG, "Added user. Poolsize: " + mUsersInPool.size());
 
-        User activeUser = DatabaseHandler.getInstance().getActiveUser();
+        User activeUser = DatabaseHandler.getActiveUser();
         DatabaseHandler.getPool().contains(activeUser).onTrue(this::match);
     }
 
@@ -59,11 +59,11 @@ public enum ChatMatcher {
     }
 
     private boolean isBlocked(User user) {
-        String activeUserId = DatabaseHandler.getInstance().getActiveUserId();
-        Banner banner = DatabaseHandler.INSTANCE.getBans(activeUserId);
+        String activeUserId = DatabaseHandler.getActiveUserId();
+        Banner banner = DatabaseHandler.getBans(activeUserId);
 
         if (banner != null) {
-            List<String> bannedIds = DatabaseHandler.INSTANCE.getBans(activeUserId).getBanList();
+            List<String> bannedIds = DatabaseHandler.getBans(activeUserId).getBanList();
 
             return bannedIds.contains(user.getUid());
         } else {

@@ -77,7 +77,7 @@ public class ChatListAdapter extends BaseAdapter {
                 addChat(chat);
                 break;
             case CHANGED:
-                User activeUser = DatabaseHandler.getInstance().getActiveUser();
+                User activeUser = DatabaseHandler.getActiveUser();
                 if (!chat.includesUser(activeUser)) {
                     removeChat(chat);
                 }

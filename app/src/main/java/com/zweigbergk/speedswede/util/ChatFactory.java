@@ -33,7 +33,7 @@ public class ChatFactory {
     }
 
     public static void createChat(Collection<Client<Chat>> clients) {
-        String activeUserId = DatabaseHandler.getInstance().getActiveUserId();
+        String activeUserId = DatabaseHandler.getActiveUserId();
 
         ProductBuilder<Chat> builder = new ProductBuilder<>(newChatBlueprint);
         builder.attachLocks(ProductLock.FIRST_USER,

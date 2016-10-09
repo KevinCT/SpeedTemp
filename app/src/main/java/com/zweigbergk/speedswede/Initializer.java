@@ -17,7 +17,7 @@ public class Initializer {
     public static final String TAG = Initializer.class.getSimpleName().toUpperCase();
 
     public static void onLogin() {
-        DatabaseHandler.getInstance().onStartup();
+        DatabaseHandler.onStartup();
 
         addUserToDatabase();
 

@@ -57,7 +57,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.blockUser:
-                banInteractor.addBan(DatabaseHandler.getInstance().getActiveUserId(),mChat.getFirstUser().getUid(),mChat.getSecondUser().getUid());
+                banInteractor.addBan(DatabaseHandler.getActiveUserId(),mChat.getFirstUser().getUid(),mChat.getSecondUser().getUid());
                 return true;
             case R.id.changeLangauge:
                 FragmentManager manager = getFragmentManager();
@@ -86,7 +86,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
     }
 
     public void terminateChat() {
-        User activeUser = DatabaseHandler.getInstance().getActiveUser();
+        User activeUser = DatabaseHandler.getActiveUser();
 
         DatabaseHandler.get(mChat).removeUser(activeUser);
         chatListAdapter.removeChat(mChat);
@@ -119,7 +119,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
     }
 
     private void postMessage(String text) {
-        Message message = new Message(DatabaseHandler.getInstance().getActiveUserId(), text, getCurrentTime());
+        Message message = new Message(DatabaseHandler.getActiveUserId(), text, getCurrentTime());
         DatabaseHandler.get(mChat).sendMessage(message);
 
         MessageAdapter adapter = getMessageAdapter();
@@ -162,7 +162,7 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
 
         // Only scroll to the bottom if the new message was posted by us,
         //   OR if you are at the relative bottom of the chat.
-        if ((message.getId() != null && message.getId().equals(DatabaseHandler.getInstance().getActiveUserId()))
+        if ((message.getId() != null && message.getId().equals(DatabaseHandler.getActiveUserId()))
                 || (scrollHeight - scrollOffset < chatRecyclerView.getHeight())) {
             chatRecyclerView.smoothScrollToPosition(chatRecyclerView.getAdapter().getItemCount() - 1);
         }

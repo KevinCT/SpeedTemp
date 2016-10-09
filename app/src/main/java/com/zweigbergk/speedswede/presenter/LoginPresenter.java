@@ -36,7 +36,7 @@ public class LoginPresenter implements ActivityAttachable {
     }
 
     private void handleAutomaticLogin(Context context) {
-        boolean connected = DatabaseHandler.INSTANCE.isNetworkAvailable(context);
+        boolean connected = DatabaseHandler.isNetworkAvailable(context);
         if (connected) {
             Log.d(TAG, "Network is available.");
             if (hasLoggedInUser()) {
@@ -68,7 +68,7 @@ public class LoginPresenter implements ActivityAttachable {
         }*/
 
         UserProfile user = UserProfile.from(FirebaseAuth.getInstance().getCurrentUser());
-        DatabaseHandler.getInstance().setLoggedInUser(user);
+        DatabaseHandler.setLoggedInUser(user);
         mActivity.startChatActivity();
     }
 
@@ -105,7 +105,7 @@ public class LoginPresenter implements ActivityAttachable {
                 break;
             case FAIL:
                 Log.d(TAG, "onAuthStateChanged:signed_out");
-                DatabaseHandler.getInstance().logout();
+                DatabaseHandler.logout();
                 setViewState(State.NORMAL);
                 break;
         }

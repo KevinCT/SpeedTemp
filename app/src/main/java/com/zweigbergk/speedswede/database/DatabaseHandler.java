@@ -16,6 +16,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.util.ChatFactory;
+import com.zweigbergk.speedswede.util.ProductBuilder;
 import com.zweigbergk.speedswede.util.Statement;
 import com.zweigbergk.speedswede.util.Client;
 
@@ -48,7 +50,7 @@ public enum DatabaseHandler {
         return INSTANCE;
     }
 
-    public void onStartup() {
+    public static void onStartup() {
         DbChatHandler.INSTANCE.initialize();
         DbUserHandler.INSTANCE.initialize();
     }
@@ -92,16 +94,8 @@ public enum DatabaseHandler {
         DbChatHandler.INSTANCE.getChatListener().addClient(client);
     }
 
-    public static Statement getChatById(String chatId) {
-        return DbChatHandler.getInstance().exists(chatId);
-    }
-
     public static void unbindFromChatEvents(Client<DataChange<Chat>> client) {
         DbChatHandler.INSTANCE.getChatListener().removeClient(client);
-    }
-
-    public static void pushTestUser() {
-        DbUserHandler.getInstance().pushTestUser();
     }
 
     private static String getFirebaseAuthUid() {
@@ -150,7 +144,7 @@ public enum DatabaseHandler {
         return root.push().getKey();
     }
 
-    public void sendObject(String child, Object object ){
+    public static void sendObject(String child, Object object ){
         /*getChatWithId(chatId, chat -> {
             Banner banner = getBans(getActiveUserId());
             banner.addBan(getActiveUserId(), chat.getFirstUser().getUid(), chat.getSecondUser().getUid());

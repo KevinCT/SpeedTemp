@@ -59,7 +59,7 @@ public class ChatListFragment extends Fragment {
         mAdapter = new ChatListAdapter();
         chatListView.setAdapter(mAdapter);
 
-        DatabaseHandler.getInstance().bindToChatEvents(mAdapter::notifyChange);
+        DatabaseHandler.bindToChatEvents(mAdapter::notifyChange);
 
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
 
@@ -70,7 +70,7 @@ public class ChatListFragment extends Fragment {
     }
 
     public void addUser(View view) {
-        ChatMatcher.INSTANCE.pushUser(DatabaseHandler.getInstance().getActiveUser());
+        ChatMatcher.INSTANCE.pushUser(DatabaseHandler.getActiveUser());
     }
 
     public void startSettings() {

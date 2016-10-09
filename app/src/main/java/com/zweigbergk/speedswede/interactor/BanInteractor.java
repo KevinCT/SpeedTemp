@@ -7,9 +7,9 @@ public class BanInteractor  {
     private Banner mBanner;
 
     public BanInteractor(){
-        String userId = DatabaseHandler.getInstance().getActiveUserId();
-        if(DatabaseHandler.INSTANCE.getBans(userId)!=null) {
-            mBanner = DatabaseHandler.INSTANCE.getBans(userId);
+        String userId = DatabaseHandler.getActiveUserId();
+        if(DatabaseHandler.getBans(userId)!=null) {
+            mBanner = DatabaseHandler.getBans(userId);
         }
         else {
             mBanner = new Banner();
@@ -18,13 +18,13 @@ public class BanInteractor  {
 
     public void addBan(String uID, String firstUser, String secondUser){
         mBanner.addBan(uID,firstUser,secondUser);
-        DatabaseHandler.INSTANCE.sendObject("bans",mBanner);
+        DatabaseHandler.sendObject("bans",mBanner);
 
     }
 
     public void removeBan(String strangerID){
         mBanner.removeBan(strangerID);
-        DatabaseHandler.INSTANCE.sendObject("bans",mBanner);
+        DatabaseHandler.sendObject("bans",mBanner);
 
     }
 

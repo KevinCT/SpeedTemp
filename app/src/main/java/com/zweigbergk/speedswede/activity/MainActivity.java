@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
         if (!calledAlready) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-            DatabaseHandler.INSTANCE.registerConnectionHandling();
+            DatabaseHandler.registerConnectionHandling();
             calledAlready = true;
         }
 
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
         // TODO Remove once we have logout functionality.
         if (LOGOUT_ON_STARTUP) {
-            DatabaseHandler.getInstance().logout();
+            DatabaseHandler.logout();
         }
 
         startLoginActivity();
