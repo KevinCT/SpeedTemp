@@ -95,9 +95,11 @@ public class ChatFragment extends Fragment implements Client<DataChange<Message>
     public void setChat(Chat newChat) {
         Chat oldChat = mChat;
 
-        /*if (oldChat != null && oldChat.equals(newChat)) {
+        if (oldChat != null && oldChat.equals(newChat)) {
             return;
-        }*/
+        }
+
+        getMessageAdapter().clear();
 
         //We no longer want updates from the old chat. Remove us as a client from the old chat.
         if (oldChat != null) {

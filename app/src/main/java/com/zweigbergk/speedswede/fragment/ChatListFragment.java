@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
@@ -28,6 +29,14 @@ public class ChatListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        mAdapter = new ChatAdapter();
+
+        //Make us switch to the chat if we click its view.
+        mAdapter.addEventClient(ChatAdapter.Event.CHAT_VIEW_CLICKED,
+                ((ChatActivity) getActivity())::displayChat);
+
+        DatabaseHandler.bindToChatEvents(mAdapter::notifyChange);
     }
 
     @Override
@@ -54,20 +63,12 @@ public class ChatListFragment extends Fragment {
 
         chatListView = (RecyclerView) view.findViewById(R.id.fragment_chat_list_view);
 
-        mAdapter = new ChatAdapter();
-
-        //Make us switch to the chat if we click its view.
-        mAdapter.addEventClient(ChatAdapter.Event.CHAT_VIEW_CLICKED,
-                ((ChatActivity) getActivity())::displayChat);
-
-        chatListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        chatListView.setLayoutManager(manager);
         chatListView.setAdapter(mAdapter);
-        DatabaseHandler.bindToChatEvents(mAdapter::notifyChange);
 
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
-
-        //this.updateDebugArea((TextView) view.findViewById(R.id.fragment_chat_list_debug_area));
-//        ((Button) view.findViewById(R.id.addDummyMessage)).setText("Random: "+ (Math.random() * 1000));
 
         return view;
     }

@@ -11,13 +11,28 @@ import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.util.Client;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class MessageListener extends FirebaseDataListener<Message> implements ChildEventListener {
     public static final String TAG = MessageListener.class.getSimpleName().toUpperCase();
 
+    private String mIdentifier = "";
+
     public MessageListener(Collection<Client<DataChange<Message>>> clients) {
         super(clients);
+    }
+
+    public MessageListener(Client<DataChange<Message>> client) {
+        bind(client);
+    }
+
+    public MessageListener() {
+    }
+
+    public void setIdentifier(String identifier) {
+        mIdentifier = identifier;
     }
 
     // NOTE: onChildAdded() runs once for every existing child at the time of attaching.
@@ -52,7 +67,12 @@ public class MessageListener extends FirebaseDataListener<Message> implements Ch
     }
 
     @Override
-    public boolean equals(Object other) {
-        return other != null && this.getClass() == other.getClass() && hashCode() == other.hashCode();
+    public boolean equals(Object object) {
+        if (object == null || this.getClass() != object.getClass())
+            return false;
+
+        MessageListener other = (MessageListener) object;
+        Log.d(TAG, String.format("IDENTIFIERS: %s ::: %s", mIdentifier, other.mIdentifier));
+        return this.mIdentifier.equals(other.mIdentifier);
     }
 }

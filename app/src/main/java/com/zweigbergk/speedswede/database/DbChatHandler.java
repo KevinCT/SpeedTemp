@@ -116,8 +116,23 @@ enum DbChatHandler {
     }
 
     ProductBuilder<List<Message>> pullMessages(Chat chat) {
-        ProductBuilder<List<Message>> builder = new ProductBuilder<List<Message>>(items -> items.getList(ProductLock.MESSAGE_LIST));
+        final ProductBuilder<List<Message>> builder = ProductBuilder.shell();
         builder.attachLocks(ProductLock.MESSAGE_LIST);
+
+        List<Message> messages = new ArrayList<>();
+
+        final MessageListener listener = new MessageListener();
+        Client<DataChange<Message>> client = change -> {
+            Message message = change.getItem();
+            messages.add(message);
+            builder.updateState();
+            Log.d(TAG, "Adding message: " + message.getText());
+        };
+
+        listener.setIdentifier("pullMessageListener");
+
+
+        listener.bind(client);
 
         mRoot.child(CHATS).child(chat.getId()).child(MESSAGES).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -125,16 +140,13 @@ enum DbChatHandler {
                 long messageCount = dataSnapshot.getChildrenCount();
                 StateRequirement<List> hasAllMessages = list -> list.size() == messageCount;
 
-                List<Message> messages = new ArrayList<>();
+                builder.setBlueprint(items -> items.getList(ProductLock.MESSAGE_LIST));
+
+
                 builder.requireState(ProductLock.MESSAGE_LIST, hasAllMessages);
                 builder.addItem(ProductLock.MESSAGE_LIST, messages);
 
-                MessageListener listener = new MessageListener(Arrays.asList(change -> {
-                    Message message = change.getItem();
-                    messages.add(message);
-                    builder.updateState();
-                    Log.d(TAG, "Adding message: " + message.getText());
-                }));
+
 
                 mRoot.child(CHATS).child(chat.getId()).child(MESSAGES).addChildEventListener(
                         listener);

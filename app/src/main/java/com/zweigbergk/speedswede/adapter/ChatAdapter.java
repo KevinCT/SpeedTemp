@@ -65,9 +65,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                 User activeUser = DatabaseHandler.getInstance().getActiveUser();
                 if (!chat.includesUser(activeUser)) {
                     removeChat(chat);
+                } else {
+                    updateChat(chat);
                 }
-
-                updateChat(chat);
                 break;
             case REMOVED:
                 removeChat(chat);
@@ -95,11 +95,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         Log.d(TAG, "In addChat");
 
         if (!mChats.contains(chat)) {
+            Log.d(TAG, "Did not contain our chat.");
             mChats.add(chat);
             notifyItemInserted(getItemCount() - 1);
+            broadcastEvent(Event.CHAT_ADDED, chat);
+        } else {
+            Log.d(TAG, "Contained our chat.");
+            mChats.set(mChats.indexOf(chat), chat);
+            notifyItemChanged(getItemCount() - 1);
         }
 
-        broadcastEvent(Event.CHAT_ADDED, chat);
+        Log.d(TAG, mChats.size() + "");
     }
 
     private void removeChat(Chat chat) {
@@ -111,10 +117,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         notifyItemRemoved(position);
 
         broadcastEvent(Event.CHAT_REMOVED, chat);
-    }
-
-    private boolean isSameChat(@NonNull Chat chat1, Chat chat2) {
-        return chat1.equals(chat2);
     }
 
     private void broadcastEvent(Event event, Chat chat) {
@@ -148,11 +150,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return mChats.size();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-            return NORMAL_VIEW;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

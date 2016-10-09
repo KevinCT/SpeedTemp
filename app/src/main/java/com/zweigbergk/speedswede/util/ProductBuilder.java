@@ -60,7 +60,6 @@ public class ProductBuilder<Product> {
 
     private void complete() {
         mCompletedProduct = mBlueprint.makeFromItems(mTreasureChest.getItems());
-        Log.d(TAG, mCompletedProduct.toString());
 
         notifyListeners();
 
