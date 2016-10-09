@@ -28,7 +28,7 @@ public class UserReference {
                 case SWEDISH_SKILL:
                     return Constants.makePath(Constants.PREFERENCES, Constants.SWEDISH_SKILL);
                 case STRANGER_SWEDISH_SKILL:
-                    Constants.makePath(Constants.PREFERENCES, Constants.STRANGER_SWEDISH_SKILL);
+                    return Constants.makePath(Constants.PREFERENCES, Constants.STRANGER_SWEDISH_SKILL);
                 default:
                     return Constants.UNDEFINED;
             }
@@ -112,9 +112,7 @@ public class UserReference {
 
     private void setStrangerSwedishSkill(long value) {
         ifStillValid().then(() ->
-                DbUserHandler.INSTANCE.setUserAttribute(mUser,
-                        UserAttribute.STRANGER_SWEDISH_SKILL,
-                        value));
+                DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.STRANGER_SWEDISH_SKILL, value));
     }
 
     private void setLanguage(String language) {
