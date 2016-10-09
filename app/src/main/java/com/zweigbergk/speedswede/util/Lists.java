@@ -26,6 +26,18 @@ public class Lists {
         return result;
     }
 
+    public static <E> List<E> reject(Iterable<E> collection, Query<E> query) {
+        List<E> result = new ArrayList<>();
+        forEach(collection, e -> {
+            if (!query.matches(e)) {
+                result.add(e);
+            }
+        });
+
+        return result;
+    }
+
+
     public static <E> Set<E> union(Collection<E> first, Collection<E> second) {
         Set<E> result = new HashSet<>();
 
