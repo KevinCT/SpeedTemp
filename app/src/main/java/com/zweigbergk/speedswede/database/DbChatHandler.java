@@ -21,6 +21,7 @@ import com.zweigbergk.speedswede.database.eventListener.WellBehavedChatListener;
 import com.zweigbergk.speedswede.util.ChatFactory;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.ProductBuilder;
+import com.zweigbergk.speedswede.util.Statement;
 
 import static com.zweigbergk.speedswede.Constants.CHATS;
 
@@ -43,6 +44,14 @@ enum DbChatHandler {
         mRoot = FirebaseDatabase.getInstance().getReference();
 
         messageListeners = new HashMap<>();
+    }
+
+    public Statement exists(Chat chat) {
+        return hasReference(mRoot.child(CHATS).child(chat.getId()));
+    }
+
+    public Statement exists(String chatId) {
+        return hasReference(mRoot.child(CHATS).child(chatId));
     }
 
     void registerChatsListener() {
@@ -70,14 +79,14 @@ enum DbChatHandler {
     }
 
     /**
-     * Should <u>not</u> be used explicitly. Use a {@link ChatReference} instead.
+     * Should <u>invert</u> be used explicitly. Use a {@link ChatReference} instead.
      * */
     void postMessageToChat(Chat chat, Message message) {
         mRoot.child(CHATS).child(chat.getId()).child(Constants.MESSAGES).push().setValue(message);
     }
 
     /**
-     * Should <u>not</u> be used explicitly. Use DatabaseHandler.get(user).push instead.
+     * Should <u>invert</u> be used explicitly. Use DatabaseHandler.get(user).push instead.
      * */
     void pushChat(Chat chat) {
         mRoot.child(CHATS).child(chat.getId()).setValue(chat);
@@ -106,7 +115,7 @@ enum DbChatHandler {
     void removeMessageClient(Chat chat, Client<DataChange<Message>> client) {
         if (!messageListeners.containsKey(chat.getId())) {
             Log.e(TAG, String.format("WARNING: Tried removing client: [%s] from chat with id: [%s]," +
-                    " but the client was not attached to the message listener.",
+                    " but the client was invert attached to the message listener.",
                     client.toString(), chat.getId()));
             new Exception().printStackTrace();
             return;
@@ -124,6 +133,24 @@ enum DbChatHandler {
 
         //Add it to the listener-list so that we can attach clients to it
         messageListeners.put(chat.getId(), messageListener);
+    }
+
+    public static Statement hasReference(DatabaseReference ref) {
+        Statement builder = new Statement();
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                builder.setReturnValue(dataSnapshot.exists());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                builder.setBuildFailed(true);
+            }
+        });
+
+        return builder;
     }
 
 

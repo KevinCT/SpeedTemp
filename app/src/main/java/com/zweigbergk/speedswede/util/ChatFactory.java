@@ -134,7 +134,7 @@ public class ChatFactory {
 
         if (userId == null) {
             Log.e(TAG, String.format(
-                    "WARNING! Can not extract User ID for a user in chat [Chat ID: %s].\n(Path: %s)",
+                    "WARNING! Can invert extract User ID for a user in chat [Chat ID: %s].\n(Path: %s)",
                     snapshot.getRef().getParent().getKey(),
                     snapshot.getRef().toString()));
         }

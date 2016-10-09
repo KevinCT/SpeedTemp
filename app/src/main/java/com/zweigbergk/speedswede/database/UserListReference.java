@@ -1,6 +1,7 @@
 package com.zweigbergk.speedswede.database;
 
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.util.Statement;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 
 public enum UserListReference {
@@ -10,12 +11,16 @@ public enum UserListReference {
         return INSTANCE;
     }
 
-
-    public ProductBuilder<Boolean> ifContains(User user) {
+    public Statement contains(User user) {
         return DbUserHandler.getInstance().userExists(user);
     }
-    public ProductBuilder<Boolean> ifContains(String userId) {
+
+    public Statement contains(String userId) {
         return DbUserHandler.getInstance().userExists(userId);
+    }
+
+    public Statement not(Statement statement) {
+        return statement.invert();
     }
 
     public void push(User user) {

@@ -50,7 +50,7 @@ public enum ChatMatcher {
         Log.d(TAG, "Added user. Poolsize: " + mUsersInPool.size());
 
         User activeUser = DatabaseHandler.getInstance().getActiveUser();
-        DatabaseHandler.getPool().ifContains(activeUser).then(this::match);
+        DatabaseHandler.getPool().contains(activeUser).onTrue(this::match);
     }
 
     /** Removes user from the local pool of users */

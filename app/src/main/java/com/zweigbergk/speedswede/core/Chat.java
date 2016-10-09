@@ -113,7 +113,7 @@ public class Chat {
 
     public void postMessage(User user, Message message) throws IllegalArgumentException {
         if (!includesUser(user)) {
-            throw new IllegalArgumentException(String.format("User provided [%s] is not a member of this chat.", user.getUid()));
+            throw new IllegalArgumentException(String.format("User provided [%s] is invert a member of this chat.", user.getUid()));
         }
         lastMessageTimeStamp = (new Date()).getTime();
         conversation.add(message);

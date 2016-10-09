@@ -17,6 +17,8 @@ public class ProductBuilder<Product> {
 
     private List<Client<Product>> mClients;
 
+    private Map<Executable, Executable.Interest<Product>> mInterestExecutables;
+
     private List<Executable> mExecutables;
 
     private TreasureChest mTreasureChest;
@@ -38,6 +40,7 @@ public class ProductBuilder<Product> {
 
         mClients = new ArrayList<>();
         mExecutables = new ArrayList<>();
+        mInterestExecutables = new HashMap<>();
 
         mTreasureChest = new TreasureChest();
         Lists.forEach(Arrays.asList(locks), mTreasureChest::addLock);
@@ -74,6 +77,17 @@ public class ProductBuilder<Product> {
             executable.run();
             mExecutables.remove(executable);
         });
+
+        for (Map.Entry<Executable, Executable.Interest<Product>> entry :
+                mInterestExecutables.entrySet()) {
+            Executable.Interest<Product> interest = entry.getValue();
+            Executable executable = entry.getKey();
+            if (interest.caresFor(mCompletedProduct)) {
+                executable.run();
+            }
+
+            mInterestExecutables.remove(executable);
+        }
     }
 
     public void requireState(ProductLock key, StateRequirement requirement) {
@@ -98,7 +112,7 @@ public class ProductBuilder<Product> {
         }
     }
 
-    public void addClient(Client<Product> client) {
+    public void addExecutable(Client<Product> client) {
         if (!hasProduct()) {
             mClients.add(client);
         } else {
@@ -106,6 +120,18 @@ public class ProductBuilder<Product> {
                 client.supply(mCompletedProduct);
             } else {
                 client.supply(null);
+            }
+        }
+    }
+
+    public void addExecutable(Executable executable, Executable.Interest<Product> interest) {
+        if (!hasProduct()) {
+            mInterestExecutables.put(executable, interest);
+        } else {
+            if (!mBuildFailed) {
+                if (interest.caresFor(mCompletedProduct)) {
+                    executable.run();
+                }
             }
         }
     }
@@ -142,15 +168,15 @@ public class ProductBuilder<Product> {
     }
 
     public void thenNotify(Client<Product> client) {
-        addClient(client);
+        addExecutable(client);
     }
 
     public void thenPassTo(Client<Product> client) {
-        addClient(client);
+        addExecutable(client);
     }
 
     public void then(Client<Product> client) {
-        addClient(client);
+        addExecutable(client);
     }
 
     public void thenNotify(Executable executable) {

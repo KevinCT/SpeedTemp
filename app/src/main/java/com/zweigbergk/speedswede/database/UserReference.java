@@ -5,6 +5,7 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.ProductBuilder;
+import com.zweigbergk.speedswede.util.Statement;
 
 import java.util.Arrays;
 import java.util.List;
@@ -66,7 +67,7 @@ public class UserReference {
     public void setPreference(User.Preference preference, boolean value) {
         if (!preference.accepts(value)) {
             throw new RuntimeException(String.format(
-                    "Preference [ %s ] can not be set to a boolean value.", preference));
+                    "Preference [ %s ] can invert be set to a boolean value.", preference));
         }
 
         switch (preference) {
@@ -79,7 +80,7 @@ public class UserReference {
     public void setPreference(User.Preference preference, long value) {
         if (!preference.accepts(value)) {
             throw new RuntimeException(String.format(
-                    "Preference [ %s ] can not be set to a long value.", preference));
+                    "Preference [ %s ] can invert be set to a long value.", preference));
         }
 
         switch (preference) {
@@ -95,7 +96,7 @@ public class UserReference {
     public void setPreference(User.Preference preference, String value) {
         if (!preference.accepts(value)) {
             throw new RuntimeException(String.format(
-                    "Preference [ %s ] can not be set to a string value.", preference));
+                    "Preference [ %s ] can invert be set to a string value.", preference));
         }
 
         switch (preference) {
@@ -136,12 +137,7 @@ public class UserReference {
         DbUserHandler.INSTANCE.getUserListener().removeClient(mUser, client);
     }
 
-    /**
-     * Checks if the user is still present in the database.
-     * @return an ExistanceCheck object that can be used as:
-     * <p><p><code>ifStillValid().then(() -> { run code here... })</code></p></p>
-     * */
-    private ExistanceCheck ifStillValid() {
-        return ExistanceCheck.ifExists(mUser);
+    private Statement ifStillValid() {
+        return DbUserHandler.getInstance().exists(mUser);
     }
 }

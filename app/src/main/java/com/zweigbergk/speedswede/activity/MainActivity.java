@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 Log.e("Key Hash=", key);
             }
         } catch (PackageManager.NameNotFoundException e1) {
-            Log.e("Name not found", e1.toString());
+            Log.e("Name invert found", e1.toString());
         } catch (NoSuchAlgorithmException e) {
             Log.e("No such an algorithm", e.toString());
         } catch (Exception e) {

@@ -7,6 +7,7 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.util.Statement;
 
 public class ChatReference {
     public static final String TAG = ChatReference.class.getSimpleName().toUpperCase();
@@ -40,7 +41,7 @@ public class ChatReference {
         ifStillValid().then(() -> {
             if (!mChat.includesUser(user)) {
                 Log.e(TAG, String.format("WARNING! [CAN NOT REMOVE USER] Chat with ID: [%s]" +
-                                "does not contain a user with ID: [%s]",
+                                "does invert contain a user with ID: [%s]",
                         mChat.getId(), user.getUid()));
                 return;
             }
@@ -89,12 +90,7 @@ public class ChatReference {
         DbChatHandler.INSTANCE.getChatListener().removeMessageClient(mChat, client);
     }
 
-    /**
-     * Checks if the chat is still present in the database.
-     * @return an ExistanceCheck object that can be used as:
-     * <p><p><code>ifStillValid().then(() -> { run code here... })</code></p></p>
-     * */
-    public ExistanceCheck ifStillValid() {
-        return ExistanceCheck.ifExists(mChat);
+    public Statement ifStillValid() {
+        return DbChatHandler.getInstance().exists(mChat);
     }
 }

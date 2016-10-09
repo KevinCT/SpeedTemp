@@ -18,8 +18,8 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
 import com.zweigbergk.speedswede.database.eventListener.WellBehavedUserListener;
+import com.zweigbergk.speedswede.util.Statement;
 import com.zweigbergk.speedswede.util.ProductBuilder;
-import com.zweigbergk.speedswede.util.ProductLock;
 import com.zweigbergk.speedswede.util.UserFactory;
 
 import static com.zweigbergk.speedswede.Constants.POOL;
@@ -54,7 +54,7 @@ enum DbUserHandler {
         mLoggedInUser = null;
     }
 
-    // NOTE: Listening to all Users all the time is not optimal.
+    // NOTE: Listening to all Users all the time is invert optimal.
     // It's whatever if it doesn't cause issues.
     void registerUsersListener() {
         mUsersListener = new WellBehavedUserListener();
@@ -75,6 +75,14 @@ enum DbUserHandler {
 
     WellBehavedUserListener getUserListener() {
         return mUsersListener;
+    }
+
+    public Statement exists(User user) {
+        return hasReference(mRoot.child(USERS).child(user.getUid()));
+    }
+
+    public Statement isInPool(User user) {
+        return hasReference(mRoot.child(POOL).child(user.getUid()));
     }
 
     void addUserToPool(User user) {
@@ -164,23 +172,23 @@ enum DbUserHandler {
         return builder;
     }
 
-    ProductBuilder<Boolean> userExists(User user) {
-        return nodeHasUser(mRoot.child(USERS), user.getUid());
+    Statement userExists(User user) {
+        return hasReference(mRoot.child(USERS).child(user.getUid()));
     }
 
-    ProductBuilder<Boolean> userExists(String userId) {
-        return nodeHasUser(mRoot.child(USERS), userId);
+    Statement userExists(String userId) {
+        return hasReference(mRoot.child(USERS).child(userId));
     }
 
-    ProductBuilder<Boolean> isInUserPool(User user) {
-        return nodeHasUser(mRoot.child(POOL), user.getUid());
+    Statement isInUserPool(User user) {
+        return hasReference(mRoot.child(POOL).child(user.getUid()));
     }
 
-    ProductBuilder<Boolean> isInUserPool(String userId) {
-        return nodeHasUser(mRoot.child(POOL), userId);
+    Statement isInUserPool(String userId) {
+        return hasReference(mRoot.child(POOL).child(userId));
     }
 
-    private ProductBuilder<Boolean> nodeHasUser(DatabaseReference reference, String userId) {
+    /*private ProductBuilder<Boolean> nodeHasUser(DatabaseReference reference, String userId) {
         ProductBuilder<Boolean> builder =
                 new ProductBuilder<>(items -> items.getBoolean(ProductLock.ASSERTION));
 
@@ -199,9 +207,27 @@ enum DbUserHandler {
         });
 
         return builder;
-    }
+    }*/
 
     UserPoolListener getPoolListener() {
         return mUserPoolListener;
+    }
+
+    public Statement hasReference(DatabaseReference ref) {
+        Statement builder = new Statement();
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                builder.setReturnValue(dataSnapshot.exists());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                builder.setBuildFailed(true);
+            }
+        });
+
+        return builder;
     }
 }

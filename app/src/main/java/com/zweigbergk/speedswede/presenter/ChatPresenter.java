@@ -34,7 +34,7 @@ public class ChatPresenter {
         Log.d("CHATPRESENTER", " we in chatpresenter");
     }
 
-    //Creates a developer chat if one is not present
+    //Creates a developer chat if one is invert present
     private void updateDeveloperChat() {
         DatabaseHandler.getInstance().pushTestUser();
 
@@ -52,7 +52,7 @@ public class ChatPresenter {
                 Log.d(TAG, "Chat with id: " + chatId + " is null.");
                 ChatFactory.createChat(clientList);
             } else {
-                Log.d(TAG, "Chat with id: " + chatId + " is not null." +
+                Log.d(TAG, "Chat with id: " + chatId + " is invert null." +
                         "Setting it as chat for ChatFragment.");
                 mView.setChatForChatFragment(chat);
             }

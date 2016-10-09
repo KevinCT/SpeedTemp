@@ -16,7 +16,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.util.Statement;
 import com.zweigbergk.speedswede.util.Client;
+
+import static com.zweigbergk.speedswede.Constants.CHATS;
+import static com.zweigbergk.speedswede.Constants.POOL;
+import static com.zweigbergk.speedswede.Constants.USERS;
 
 public enum DatabaseHandler {
     INSTANCE;
@@ -29,13 +34,13 @@ public enum DatabaseHandler {
 
     public static final String BANS = "bans";
 
-    private boolean mFirebaseConnectionStatus = false;
+    private static boolean mFirebaseConnectionStatus = false;
 
-    private Banner mBanner = new Banner();
+    private static Banner mBanner = new Banner();
 
-    private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+    private static DatabaseReference root = FirebaseDatabase.getInstance().getReference();
 
-    public boolean hasConnection() {
+    public static boolean hasConnection() {
         return mFirebaseConnectionStatus;
     }
 
@@ -49,7 +54,7 @@ public enum DatabaseHandler {
     }
 
 
-    public void registerListener(DatabaseNode node) {
+    public static void registerListener(DatabaseNode node) {
         switch (node) {
             case CHATS:
                 DbChatHandler.getInstance().registerChatsListener();
@@ -71,11 +76,11 @@ public enum DatabaseHandler {
         return UserListReference.getInstance();
     }
 
-    public void setLoggedInUser(User user) {
+    public static void setLoggedInUser(User user) {
         DbUserHandler.getInstance().setLoggedInUser(user);
     }
 
-    public void logout() {
+    public static void logout() {
         DbUserHandler.getInstance().logout();
     }
 
@@ -83,23 +88,23 @@ public enum DatabaseHandler {
         return PoolReference.getInstance();
     }
 
-    public void bindToChatEvents(Client<DataChange<Chat>> client) {
+    public static void bindToChatEvents(Client<DataChange<Chat>> client) {
         DbChatHandler.INSTANCE.getChatListener().addClient(client);
     }
 
-    public ChatExistanceCheck getChatById(String chatId) {
-        return ChatExistanceCheck.ifExists(chatId);
+    public static Statement getChatById(String chatId) {
+        return DbChatHandler.getInstance().exists(chatId);
     }
 
-    public void unbindFromChatEvents(Client<DataChange<Chat>> client) {
+    public static void unbindFromChatEvents(Client<DataChange<Chat>> client) {
         DbChatHandler.INSTANCE.getChatListener().removeClient(client);
     }
 
-    public void pushTestUser() {
+    public static void pushTestUser() {
         DbUserHandler.getInstance().pushTestUser();
     }
 
-    private String getFirebaseAuthUid() {
+    private static String getFirebaseAuthUid() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
@@ -113,19 +118,19 @@ public enum DatabaseHandler {
         return null;
     }
 
-    public User getActiveUser() {
+    public static User getActiveUser() {
         return DbUserHandler.INSTANCE.getActiveUser();
     }
 
-    public String getActiveUserId() {
+    public static String getActiveUserId() {
         return DbUserHandler.INSTANCE.getActiveUserId();
     }
 
-    public boolean hasFirebaseConnection() {
+    public static boolean hasFirebaseConnection() {
         return mFirebaseConnectionStatus;
     }
 
-    public boolean isNetworkAvailable(Context context) {
+    public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
@@ -133,22 +138,30 @@ public enum DatabaseHandler {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public String generateId() {
-        return mDatabaseReference.push().getKey();
+    public static Statement hasUser(User user) {
+        return DbUserHandler.getInstance().userExists(user);
+    }
+
+    public static Statement hasUser(String userId) {
+        return DbUserHandler.getInstance().userExists(userId);
+    }
+
+    public static String generateId() {
+        return root.push().getKey();
     }
 
     public void sendObject(String child, Object object ){
         /*getChatWithId(chatId, chat -> {
             Banner banner = getBans(getActiveUserId());
             banner.addBan(getActiveUserId(), chat.getFirstUser().getUid(), chat.getSecondUser().getUid());
-            mDatabaseReference.child(BANS).child(getActiveUserId()).setValue(banner);
-            //mDatabaseReference.child("Global"+BANS).push().setValue(strangerID);
+            root.child(BANS).child(getActiveUserId()).setReturnValue(banner);
+            //root.child("Global"+BANS).push().setReturnValue(strangerID);
         });*/
-        mDatabaseReference.child(BANS).child(DbUserHandler.INSTANCE.getActiveUserId()).setValue(object);
+        root.child(BANS).child(DbUserHandler.INSTANCE.getActiveUserId()).setValue(object);
     }
 
-    public Banner getBans(String uID){
-        mDatabaseReference.child(BANS).child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
+    public static Banner getBans(String uID){
+        root.child(BANS).child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mBanner = dataSnapshot.getValue(Banner.class);
@@ -165,14 +178,14 @@ public enum DatabaseHandler {
 
     }
 
-    public void removeBan(String uID, String strangerID){
+    public static void removeBan(String uID, String strangerID){
         Banner banner = getBans(uID);
         banner.removeBan(strangerID);
 
-        mDatabaseReference.child(BANS).child(uID).setValue(banner);
+        root.child(BANS).child(uID).setValue(banner);
     }
 
-    public void registerConnectionHandling() {
+    public static void registerConnectionHandling() {
         DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
