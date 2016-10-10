@@ -3,11 +3,8 @@ package com.zweigbergk.speedswede.database;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-import com.zweigbergk.speedswede.activity.LoginActivity;
-import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.core.UserProfile;
+import java.util.Locale;
 
 public enum LocalStorage {
     INSTANCE;
@@ -23,10 +20,9 @@ public enum LocalStorage {
         editor.apply();
     }
 
-    public String getLanguage(Context context, String deviceLanguage){
+    public String getLanguage(Context context){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String language = preferences.getString(LANGUAGE, deviceLanguage);
-        return language;
+        return preferences.getString(LANGUAGE, Locale.getDefault().getLanguage());
     }
 
 }

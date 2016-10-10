@@ -17,6 +17,7 @@ import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.presenter.MainPresenter;
+import com.zweigbergk.speedswede.util.PreferenceValue;
 import com.zweigbergk.speedswede.view.MainView;
 
 import java.security.MessageDigest;

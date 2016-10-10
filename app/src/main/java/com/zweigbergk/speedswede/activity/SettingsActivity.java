@@ -11,6 +11,7 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.UserReference;
 import com.zweigbergk.speedswede.fragment.SettingsFragment;
+import static com.zweigbergk.speedswede.core.User.Preference;
 
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -53,21 +54,21 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
                 if (sharedPreferences.getBoolean(key, false)) {
                     mySkill = 100;
                 }
-                user.setPreference(User.Preference.SWEDISH_SKILL, mySkill);
+                user.setPreference(Preference.SWEDISH_SKILL, mySkill);
                 break;
             case "pref_match_skill":
                 long matchSkill = 0;
                 if (sharedPreferences.getBoolean(key, false)) {
                     matchSkill = 100;
                 }
-                user.setPreference(User.Preference.STRANGER_SWEDISH_SKILL, matchSkill);
+                user.setPreference(Preference.STRANGER_SWEDISH_SKILL, matchSkill);
                 break;
             // TODO: <--
             case "pref_app_language":
-                user.setPreference(User.Preference.LANGUAGE, sharedPreferences.getString(key, "en"));
+                user.setPreference(Preference.LANGUAGE, sharedPreferences.getString(key, "en"));
                 break;
             case "pref_notifications":
-                user.setPreference(User.Preference.NOTIFICATIONS, sharedPreferences.getBoolean(key, true));
+                user.setPreference(Preference.NOTIFICATIONS, sharedPreferences.getBoolean(key, true));
                 break;
             default:
         }

@@ -3,6 +3,8 @@ package com.zweigbergk.speedswede.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -13,106 +15,79 @@ import com.zweigbergk.speedswede.fragment.ChangeLanguageFragment;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
 import com.zweigbergk.speedswede.presenter.ChatPresenter;
-import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.BooleanPref;
+import com.zweigbergk.speedswede.util.PreferenceValue;
 import com.zweigbergk.speedswede.view.ChatView;
-
-import java.util.List;
 
 
 public class ChatActivity extends AppCompatActivity implements ChatView {
 
     public static final String TAG = ChatActivity.class.getSimpleName().toUpperCase();
 
-    private static final String CHAT_FRAGMENT_NAME = ChatFragment.class.getSimpleName();
-    private static final String CHAT_LIST_FRAGMENT_NAME = ChatListFragment.class.getSimpleName();
-    private static final String LANGUAGE_SETTINGS_FRAGMENT_NAME = ChatListFragment.class.getSimpleName();
-
-    private ChatFragment mChatFragment;
-    private Fragment mChatListFragment;
-    private Fragment mLanguageFragment;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chat);
 
         if (savedInstanceState == null) {
-            mChatFragment = new ChatFragment();
-            addFragment(mChatFragment);
-
-            mChatListFragment = new ChatListFragment();
-            addFragment(mChatListFragment);
-
-            mLanguageFragment = new ChangeLanguageFragment();
-            addFragment(mLanguageFragment);
-
-
-        } else {
-            mChatFragment = (ChatFragment) getSupportFragmentManager().findFragmentByTag(CHAT_FRAGMENT_NAME);
-            mChatListFragment = getSupportFragmentManager().findFragmentByTag(CHAT_LIST_FRAGMENT_NAME);
-            mLanguageFragment = getSupportFragmentManager().findFragmentByTag(LANGUAGE_SETTINGS_FRAGMENT_NAME);
+            createActivity();
         }
-
-        showFragment(mChatListFragment);
-
-
-        setContentView(R.layout.activity_chat);
 
         new ChatPresenter(this);
     }
 
-    private void addFragment(Fragment fragment) {
+    private void createActivity() {
+        addFragment(new ChatListFragment(), false);
+    }
+
+    private void addFragment(Fragment fragment, boolean addToBackstack) {
         String name = getFragmentName(fragment);
 
-        getSupportFragmentManager()
+        FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.activity_chat_root, fragment, name)
-                .commit();
+                .add(R.id.activity_chat_root, fragment, name);
+
+        if (addToBackstack) {
+            transaction.addToBackStack(name);
+        }
+
+        transaction.commit();
+    }
+
+    public void switchToFragment(Fragment fragment, boolean addToBackstack) {
+        String name = getFragmentName(fragment);
+
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.activity_chat_root, fragment, name);
+
+        if (addToBackstack) {
+            transaction.addToBackStack(name);
+        }
+
+        transaction.commit();
     }
 
     private String getFragmentName(Fragment fragment) {
         return fragment.getClass().getSimpleName();
     }
 
-    private void showFragment(Fragment fragment) {
-        List<Fragment> fragments = getSupportFragmentManager().getFragments();
-
-        //Get all fragments except the argument fragment, and hide them.
-        Lists.forEach(Lists.reject(fragments,
-                currentFragment -> hasSameTag(currentFragment, fragment)),
-                this::hide);
-
-        //Show the argument fragment
-        show(fragment);
-    }
-
-    public void showLanguageFragment() {
-
-    }
-
-    private boolean hasSameTag(Fragment first, Fragment second) {
-        return first.getTag().equals(second.getTag());
-    }
-
     @Override
     public void displayChat(Chat chat) {
         if (chat != null) {
             Log.d(TAG, "Displaying chat with ID: " + chat.getId());
-            mChatFragment.setChat(chat);
-            showFragment(mChatFragment);
-
+            ChatFragment chatFragment = new ChatFragment();
+            chatFragment.setChat(chat);
+            switchToFragment(chatFragment, true);
         } else {
             Log.e(TAG, "WARNING! Tried to display a null chat. ");
             new Exception().printStackTrace();
         }
     }
 
-    private void hide(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().hide(fragment).commit();
-    }
-
-    private void show(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().show(fragment).commit();
+    @Override
+    public void popBackStack() {
+        getSupportFragmentManager().popBackStack();
     }
 
     @Override
@@ -124,20 +99,21 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        Log.d(TAG, "Back pressed.");
-        if (!isInFragment(mChatListFragment)) {
-            Log.d(TAG, "Changing fragment...");
-            showFragment(mChatListFragment);
-        } else {
-            Log.d(TAG, "Super takes charge...");
-            super.onBackPressed();
-        }
+    public void openLanguageFragment() {
+        ChangeLanguageFragment fragment = new ChangeLanguageFragment();
+        switchToFragment(fragment, true);
     }
 
-    private boolean isInFragment(Fragment fragment) {
-        return getSupportFragmentManager().findFragmentByTag(getFragmentName(fragment)).isVisible();
+    @Override
+    public void onBackPressed() {
+        FragmentManager manager = getSupportFragmentManager();
+
+        //Pop the latest fragment off the stack. If there is no fragment on the stack,
+        // let default behavior take over
+        boolean isStackEmpty = !manager.popBackStackImmediate();
+        if (isStackEmpty) {
+            super.onBackPressed();
+        }
     }
 
     public void startSettings() {

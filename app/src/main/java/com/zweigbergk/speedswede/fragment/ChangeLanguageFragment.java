@@ -1,21 +1,25 @@
 package com.zweigbergk.speedswede.fragment;
 
 
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+import android.content.res.Configuration;
+import java.util.Locale;
+
+import static com.zweigbergk.speedswede.Constants.SWEDISH;
+import static com.zweigbergk.speedswede.Constants.ENGLISH;
+
 public class ChangeLanguageFragment extends Fragment {
 
 
@@ -36,18 +40,33 @@ public class ChangeLanguageFragment extends Fragment {
 
         buttonSwedish.setBackground(flagSweden);
 
-        view.findViewById(R.id.changeSwedishBtn).setOnClickListener(view1 -> {
-            LanguageChanger.changeLanguage("sv", getContext());
-            getActivity().recreate();;
-            getFragmentManager().popBackStack();
-        });
+        view.findViewById(R.id.changeSwedishBtn).setOnClickListener(v -> pro(SWEDISH));
+        view.findViewById(R.id.changeEnglishBtn).setOnClickListener(v -> pro(ENGLISH));
 
-        view.findViewById(R.id.changeEnglishBtn).setOnClickListener(view1 -> {
-            LanguageChanger.changeLanguage("en", getContext());
-            getActivity().recreate();
-            getFragmentManager().popBackStack();
-        });
         return view;
+    }
+
+    private void changeToLanguage(String language) {
+        LanguageChanger.changeLanguage(language, getContext());
+        getActivity().recreate();
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    private void pro(String languageCode) {
+        LanguageChanger.changeLanguage(languageCode, getContext());
+        Resources resources = getContext().getResources();
+
+        // Change locale settings in the app.
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        Configuration config = resources.getConfiguration();
+        config.locale = new Locale(languageCode.toLowerCase());
+        resources.updateConfiguration(config, metrics);
+
+        finish();
+    }
+
+    private void finish() {
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
 }

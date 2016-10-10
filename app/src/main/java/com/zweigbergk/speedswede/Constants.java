@@ -8,6 +8,7 @@ public class Constants {
     public static final String ERROR = "ERROR";
     public static final String DEBUG = "DEBUG";
 
+
     public static final String CHATS = "chats";
     public static final String USERS = "users";
     public static final String MESSAGES = "messages";
@@ -31,6 +32,12 @@ public class Constants {
     public static final String SWEDISH = "sv";
     public static final String ARABIC = "ar";
     public static final String TURKISH = "tr";
+
+    //Fragments
+    public static final boolean SAVE_TO_STACK = true;
+
+    //For saving instance state
+    public static final String CHAT_PARCEL = "chatParcel";
 
     public static final String[] LANGUAGES = { ENGLISH, SWEDISH, ARABIC, TURKISH };
 
