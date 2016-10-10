@@ -106,6 +106,7 @@ enum DbChatHandler {
      * */
     void pushChat(Chat chat) {
         Log.d(TAG, chat.getName());
+
         DatabaseReference ref = mRoot.child(CHATS).child(chat.getId());
 
         ValueEventListener listener = new ValueEventListener() {
@@ -129,13 +130,33 @@ enum DbChatHandler {
     }
 
     /**
+     * Remove user preferences in a chat so that it can be pushed.
+     * @return the stripped preferences. Index 0 holds first user preferences,
+     * index 1 holds second user preferences.
+     */
+    private Pair<Map<Preference, PreferenceValue>> stripPreferences(Chat chat) {
+        UserProfile firstUser = (UserProfile) chat.getFirstUser();
+        UserProfile secondUser = (UserProfile) chat.getSecondUser();
+        Map<Preference, PreferenceValue> firstMap = firstUser.getPreferences();
+        Map<Preference, PreferenceValue> secondMap = secondUser.getPreferences();
+
+        chat.setFirstUser(firstUser.withPreferences(null));
+
+        return new Pair<>(firstMap, secondMap);
+    }
+
+    /**
      * Push the preferences of the chat's users into the chat
      */
     private void pushPreferences(Chat chat) {
+        String firstUid = chat.getFirstUser().getUid();
+        String secondUid = chat.getSecondUser().getUid();
+
         Map<Preference, PreferenceValue> firstUserPrefs = chat.getFirstUser().getPreferences();
         Map<Preference, PreferenceValue> secondUserPrefs = chat.getSecondUser().getPreferences();
 
         Map<String, String> pojoMap = Lists.map(firstUserPrefs, createPojoEntry);
+
         mRoot.child(CHATS).child(chat.getId()).child(FIRST_USER).child(Constants.PREFERENCES).setValue(pojoMap);
 
         pojoMap = Lists.map(secondUserPrefs, createPojoEntry);
