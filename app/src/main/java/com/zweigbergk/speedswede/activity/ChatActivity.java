@@ -25,14 +25,10 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     public static final String TAG = ChatActivity.class.getSimpleName().toUpperCase();
 
-//    private Fragment mChatListFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
-//        mChatListFragment = new ChatListFragment();
 
         if (savedInstanceState == null) {
             createActivity();
@@ -42,7 +38,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     }
 
     private void createActivity() {
-//        addFragment(mChatListFragment, false);
         addFragment(new ChatListFragment(), false);
     }
 
@@ -50,9 +45,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-//                switchToFragment(mChatListFragment, false);
                 onBackPressed();
-                Log.d("DEBUG", "Back?");
                 return true;
 
             default:
