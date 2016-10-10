@@ -14,4 +14,5 @@ public interface ChatFragmentView {
     void useActivity(CallerMethod<ChatActivity> method);
     void clearInputField();
     String getInputText();
+    void openLanguageFragment();
 }

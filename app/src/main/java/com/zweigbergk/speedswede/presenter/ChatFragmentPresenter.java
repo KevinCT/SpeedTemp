@@ -1,10 +1,10 @@
 package com.zweigbergk.speedswede.presenter;
 
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.adapter.MessageAdapter;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
@@ -17,6 +17,9 @@ import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.Time;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
 
+import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
+
+
 public class ChatFragmentPresenter {
     public static final String TAG = ChatFragmentPresenter.class.getSimpleName().toUpperCase();
 
@@ -26,10 +29,21 @@ public class ChatFragmentPresenter {
 
     private Chat mChat;
 
-    public ChatFragmentPresenter(){
+    public ChatFragmentPresenter(ChatFragmentView view){
+        mView = view;
         mBanInteractor = new BanInteractor();
+    }
 
-        initializeRecyclerView();
+    public void setChat(Chat chat) {
+        if (mChat != null) {
+            //We no longer want updates from the old chat. Remove us as a client from the old chat.
+            DatabaseHandler.get(mChat).unbindMessageClient(handleChatEvent);
+
+            mChat = chat;
+            invalidate();
+        } else {
+            mChat = chat;
+        }
     }
 
     private void initializeRecyclerView() {
@@ -48,7 +62,11 @@ public class ChatFragmentPresenter {
     private void smoothScrollToBottomOfList(Message message) {
         RecyclerView recyclerView = mView.getRecyclerView();
         int scrollOffset = recyclerView.computeVerticalScrollOffset();
-        int scrollHeight = recyclerView.computeVerticalScrollRange() - recyclerView.computeVerticalScrollExtent();
+
+        int verticalRange = recyclerView.computeVerticalScrollRange();
+        int verticalExtent = recyclerView.computeVerticalScrollExtent();
+
+        int scrollHeight = verticalRange - verticalExtent;
 
         if (recyclerView.getAdapter().getItemCount() <= 0) {
             return;
@@ -62,24 +80,20 @@ public class ChatFragmentPresenter {
         }
     }
 
-    public void onChatChanged(Chat newChat) {
-        Chat oldChat = mChat;
-
-        if (oldChat != null && oldChat.equals(newChat)) {
-            return;
-        }
+    /**
+     * Tells the presenter to update the state of the view
+     */
+    public void invalidate() {
+        initializeRecyclerView();
 
         getMessageAdapter().clear();
 
-        //We no longer want updates from the old chat. Remove us as a client from the old chat.
-        if (oldChat != null) {
-            DatabaseHandler.get(oldChat).unbindMessageClient(handleChatEvent);
-        }
+        //We want updates from the new chat! Add us as a client to that one :)
+        DatabaseHandler.get(mChat).bindMessageClient(handleChatEvent);
+    }
 
-        //We DO want updates from the new chat! Add us as a client to that one :)
-        DatabaseHandler.get(newChat).bindMessageClient(handleChatEvent);
-
-        mChat = newChat;
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(CHAT_PARCEL, mChat);
     }
 
     public void onClickSend() {
@@ -119,7 +133,7 @@ public class ChatFragmentPresenter {
     }
 
     public void onChangeLanguageClicked() {
-        mView.useActivity(ChatActivity::showLanguageFragment);
+        mView.openLanguageFragment();
     }
 
     private MessageAdapter getMessageAdapter() {
