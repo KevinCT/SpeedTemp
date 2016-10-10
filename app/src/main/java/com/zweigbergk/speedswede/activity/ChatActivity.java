@@ -91,6 +91,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             Log.d(TAG, "Displaying chat with ID: " + chat.getId());
             ChatFragment chatFragment = new ChatFragment();
             chatFragment.setChat(chat);
+            setTitle(chat.getName());
             switchToFragment(chatFragment, true);
         } else {
             Log.e(TAG, "WARNING! Tried to display a null chat. ");
@@ -119,6 +120,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     @Override
     public void onBackPressed() {
+        setTitle(R.string.app_name);
+
         FragmentManager manager = getSupportFragmentManager();
 
         //Pop the latest fragment off the stack. If there is no fragment on the stack,
