@@ -52,6 +52,9 @@ public class UserFactory {
         preferences.put(User.Preference.SWEDISH_SKILL, new LongPref(items.getLong(ProductLock.SWEDISH_SKILL)));
         preferences.put(User.Preference.STRANGER_SWEDISH_SKILL, new LongPref(items.getLong(ProductLock.STRANGER_SWEDISH_SKILL)));
 
-        return new UserProfile(name, id).withPreferences(preferences);
+        EntryAssertion<User.Preference, PreferenceValue> isNull = e -> e.getValue() == null;
+        Map<User.Preference, PreferenceValue> nonNullPrefs = Lists.reject(preferences, isNull);
+
+        return new UserProfile(name, id).withPreferences(nonNullPrefs);
     };
 }

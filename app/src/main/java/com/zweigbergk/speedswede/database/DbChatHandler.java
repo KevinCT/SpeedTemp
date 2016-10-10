@@ -3,13 +3,11 @@ package com.zweigbergk.speedswede.database;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,17 +18,27 @@ import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
+import com.zweigbergk.speedswede.core.Pair;
+import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.util.ChatFactory;
 import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.util.KeyValuePair;
+import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.PreferenceValue;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 import com.zweigbergk.speedswede.util.Statement;
 import com.zweigbergk.speedswede.util.ProductLock;
 import com.zweigbergk.speedswede.util.StateRequirement;
 
 import static com.zweigbergk.speedswede.Constants.CHATS;
+import static com.zweigbergk.speedswede.Constants.FIRST_USER;
 import static com.zweigbergk.speedswede.Constants.MESSAGES;
+import static com.zweigbergk.speedswede.Constants.SECOND_USER;
+import static com.zweigbergk.speedswede.core.User.Preference;
+import static com.zweigbergk.speedswede.util.Lists.EntryMapping;
+
 
 enum DbChatHandler {
     INSTANCE;
@@ -96,8 +104,61 @@ enum DbChatHandler {
      * Should <u>invert</u> be used explicitly. Use DatabaseHandler.get(user).push instead.
      * */
     void pushChat(Chat chat) {
+        Log.d(TAG, chat.getName());
+
         mRoot.child(CHATS).child(chat.getId()).setValue(chat);
+        pushPreferences(chat);
     }
+
+    /**
+     * Remove user preferences in a chat so that it can be pushed.
+     * @return the stripped preferences. Index 0 holds first user preferences,
+     * index 1 holds second user preferences.
+     */
+    private Pair<Map<Preference, PreferenceValue>> stripPreferences(Chat chat) {
+        UserProfile firstUser = (UserProfile) chat.getFirstUser();
+        UserProfile secondUser = (UserProfile) chat.getSecondUser();
+        Map<Preference, PreferenceValue> firstMap = firstUser.getPreferences();
+        Map<Preference, PreferenceValue> secondMap = secondUser.getPreferences();
+
+        chat.setFirstUser(firstUser.withPreferences(null));
+
+        return new Pair<>(firstMap, secondMap);
+    }
+
+    /**
+     * Push the preferences of the chat's users into the chat
+     */
+    private void pushPreferences(Chat chat) {
+        String firstUid = chat.getFirstUser().getUid();
+        String secondUid = chat.getSecondUser().getUid();
+
+        Map<Preference, PreferenceValue> firstUserPrefs = chat.getFirstUser().getPreferences();
+        Map<Preference, PreferenceValue> secondUserPrefs = chat.getSecondUser().getPreferences();
+
+        Map<String, String> pojoMap = Lists.map(firstUserPrefs, createPojoEntry);
+        Lists.forEach(pojoMap, entry -> pushUserPref(chat.getId(), FIRST_USER, KeyValuePair.from(entry)));
+
+        pojoMap = Lists.map(secondUserPrefs, createPojoEntry);
+        Lists.forEach(pojoMap, entry -> pushUserPref(chat.getId(), SECOND_USER, KeyValuePair.from(entry)));
+    }
+
+    private void pushUserPref(String chatId, String userNumber, KeyValuePair<String, String> entry) {
+        if (!entry.getKey().equals("") && !entry.getValue().equals("")) {
+            mRoot.child(CHATS).child(chatId).child(userNumber).child(Constants.PREFERENCES)
+                    .child(entry.getKey()).setValue(entry.getValue());
+        }
+    }
+
+    private static final EntryMapping<String, String> createPojoEntry = e -> {
+        String key = e.getKey() != null ? e.getKey().toString() : "";
+
+        PreferenceValue prefValue = (PreferenceValue) e.getValue();
+        String value = prefValue != null && prefValue.getValue() != null ?
+                ((PreferenceValue) e.getValue()).getValue().getClass().getSimpleName() : "";
+
+        return new KeyValuePair<>(key, value);
+    };
 
     ProductBuilder<Chat> createChatFrom(DataSnapshot snapshot) {
         return ChatFactory.serializeChat(snapshot);

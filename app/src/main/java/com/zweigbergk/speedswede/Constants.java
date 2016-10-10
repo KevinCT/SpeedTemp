@@ -25,6 +25,12 @@ public class Constants {
     public static final String SWEDISH_SKILL = "swedishSkill";
     public static final String STRANGER_SWEDISH_SKILL = "strangerSwedishSkill";
 
+
+    //For PreferenceValue pushing
+    public static final String STRING = String.valueOf("").getClass().getSimpleName();
+    public static final String LONG = Long.valueOf(1).getClass().getSimpleName();
+    public static final String BOOLEAN = Boolean.valueOf(true).getClass().getSimpleName();
+
     public static final String[] CHAT_NAMES = {"Bench", "Learning", "Rung", "Witness", "Social", "Shop", "Pro"};
 
     //Languages
@@ -52,7 +58,7 @@ public class Constants {
             return "";
 
         StringBuilder builder = new StringBuilder();
-        Lists.forEach(Arrays.asList(constants),c -> {
+        Lists.forEach(Arrays.asList(constants), c -> {
             builder.append(c);
             builder.append('/');
         });
