@@ -1,16 +1,31 @@
 package com.zweigbergk.speedswede.core;
 
-import java.util.Arrays;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public interface User {
+import com.zweigbergk.speedswede.util.PreferenceValue;
+
+import static android.os.Parcelable.Creator;
+
+import java.util.Arrays;
+import java.util.Map;
+
+public interface User extends Parcelable {
     String getUid();
     String getDisplayName();
     Object getPreference(Preference preference);
+    Map<Preference, PreferenceValue> getPreferences();
 
+    //For parcelable
+    Creator<User> getCreator();
 
-    enum Preference {
+    enum Preference implements Parcelable {
         NOTIFICATIONS, LANGUAGE, SWEDISH_SKILL, STRANGER_SWEDISH_SKILL;
 
+
+        private final int mValue;
+
+        public static Preference[] values = Preference.values();
 
         private static final Preference[] booleans = new Preference[] { NOTIFICATIONS };
         private static final Preference[] strings = new Preference[] { LANGUAGE };
@@ -27,5 +42,39 @@ public interface User {
         public boolean accepts(long value) {
             return Arrays.asList(longs).contains(this);
         }
+
+        Preference(int value) {
+            mValue = value;
+        }
+
+        Preference() {
+            mValue = ordinal();
+        }
+
+        public static Preference fromInt(int i) {
+            return Preference.values[i];
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.mValue);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<Preference> CREATOR = new Creator<Preference>() {
+            @Override
+            public Preference createFromParcel(Parcel in) {
+                return Preference.fromInt(in.readInt());
+            }
+
+            @Override
+            public Preference[] newArray(int size) {
+                return new Preference[size];
+            }
+        };
     }
 }

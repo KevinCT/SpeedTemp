@@ -16,21 +16,22 @@ public class LanguageChanger {
     private static boolean mChanged = false;
 
     public static void onCreate(Context context){
-        String language = LocalStorage.INSTANCE.getLanguage(context, Locale.getDefault().getLanguage());
+        String language = LocalStorage.INSTANCE.getLanguage(context);
         saveLanguage(context, language);
         changeLanguage(language, context);
 
     }
-    public static void changeLanguage(String language, Context context){
-        Resources resources = context.getResources();
+    public static void changeLanguage(String languageCode, Context context){
+        /*Resources resources = context.getResources();
         Configuration config;
         config = resources.getConfiguration();
 
         List<String> languages = Arrays.asList(Constants.LANGUAGES);
         language = languages.contains(language) ? language : Constants.ENGLISH;
         config.locale = new Locale(language);
-        resources.updateConfiguration(config, resources.getDisplayMetrics());
-        saveLanguage(context,language);
+        resources.updateConfiguration(config, resources.getDisplayMetrics());*/
+        languageCode = languageCode.contains(languageCode) ? languageCode : Constants.ENGLISH;
+        saveLanguage(context,languageCode);
     }
 
     private static void saveLanguage(Context context, String language){
@@ -39,6 +40,10 @@ public class LanguageChanger {
 
     public static void languageChanged(Boolean changed){
         mChanged = changed;
+    }
+
+    public static String getCurrentLanguage(Context context) {
+        return LocalStorage.INSTANCE.getLanguage(context);
     }
 
     public static boolean isChanged(){

@@ -1,22 +1,25 @@
 package com.zweigbergk.speedswede.core;
 
-import android.util.Log;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.firebase.database.Exclude;
 import com.zweigbergk.speedswede.Constants;
-import com.zweigbergk.speedswede.interactor.ChatInteractor;
 import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.ParcelHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+public class Chat implements Parcelable {
 
-public class Chat {
+    private User firstUser;
 
-    private User firstUser, secondUser;
-    private List<Message> conversation;
+    private User secondUser;
+
+    private List<Message> messages;
     private String id;
     private long timeStamp;
     private long lastMessageTimeStamp;
@@ -24,16 +27,21 @@ public class Chat {
     private String name;
     private boolean inactive;
 
+    public Chat() {
+    }
+
     public Chat(User firstUser, User secondUser) {
         this.firstUser = firstUser;
         this.secondUser = secondUser;
 
         this.name = Lists.randomPick(Constants.CHAT_NAMES);
 
-        this.conversation = new ArrayList<>();
+        this.messages = new ArrayList<>();
         timeStamp = (new Date()).getTime();
 
         id = firstUser.getUid() + "-" + secondUser.getUid();
+
+        inactive = false;
     }
 
     public Chat(String id, String name, long timeStamp, List<Message> messages, User firstUser, User secondUser) {
@@ -43,7 +51,9 @@ public class Chat {
         this.id = id;
         this.name = name;
         this.timeStamp = timeStamp;
-        this.conversation = messages;
+        this.messages = messages;
+
+        inactive = false;
     }
 
     public boolean includesUser(User user) {
@@ -81,12 +91,11 @@ public class Chat {
     }
 
 
-    public List<Message> getConversation() {
-        List<Message> conversationClone = new ArrayList<>();
-        for (Message m : conversation) {
-            conversationClone.add(m.clone());
-        }
-        return conversationClone;
+    public List<Message> getMessages() {
+        List<Message> messageListClone = new ArrayList<>();
+        Lists.forEach(messages, m -> messageListClone.add(m.clone()));
+
+        return messageListClone;
     }
 
     public String getId() {
@@ -109,7 +118,7 @@ public class Chat {
     }
 
     public Message getLatestMessage() {
-        return conversation.size() > 0 ? conversation.get(conversation.size() - 1) : null;
+        return messages.size() > 0 ? messages.get(messages.size() - 1) : null;
     }
 
     public void postMessage(User user, Message message) throws IllegalArgumentException {
@@ -117,7 +126,7 @@ public class Chat {
             throw new IllegalArgumentException(String.format("User provided [%s] is invert a member of this chat.", user.getUid()));
         }
         lastMessageTimeStamp = (new Date()).getTime();
-        conversation.add(message);
+        messages.add(message);
     }
 
     public String getReadableTime() {
@@ -142,6 +151,59 @@ public class Chat {
         if (getFirstUser() == null || getSecondUser() == null) {
             return "[Chat toString] Null user";
         }
-        return "[Chat toString] First user: " + getFirstUser().getDisplayName() + "\nSecond user: " + getSecondUser().getDisplayName();
+        return String.format(Locale.ENGLISH,
+                "Chat {id: %s,%sname: %s,%sfirstUser: %s,%secondUser: %s,%smessageCount: %d,\n},",
+                id, NEWLINE,
+                name, NEWLINE,
+                firstUser.toString(), NEWLINE,
+                secondUser.toString(), NEWLINE,
+                messages.size()
+                );
+    }
+
+    private static final String NEWLINE = "\n\t\t";
+
+
+    /**
+     * PARCELABLE METHODS BELOW; IGNORE
+     */
+
+    public static final Parcelable.Creator CREATOR
+            = new Parcelable.Creator() {
+        public Chat createFromParcel(Parcel in) {
+            return new Chat(in);
+        }
+
+        public Chat[] newArray(int size) {
+            return new Chat[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(firstUser, 0);
+        dest.writeParcelable(secondUser, 0);
+        ParcelHelper.writeParcelableList(dest, 0, messages);
+        dest.writeString(id);
+        dest.writeLong(timeStamp);
+        dest.writeLong(lastMessageTimeStamp);
+        dest.writeString(name);
+        dest.writeInt(inactive ? 1 : 0);
+    }
+
+    public Chat(Parcel in) {
+        firstUser = in.readParcelable(UserProfile.class.getClassLoader());
+        secondUser = in.readParcelable(UserProfile.class.getClassLoader());
+        messages = ParcelHelper.readParcelableList(in, Message.class);
+        id = in.readString();
+        timeStamp = in.readLong();
+        lastMessageTimeStamp = in.readLong();
+        name = in.readString();
+        inactive = in.readInt() != 0;
     }
 }

@@ -1,20 +1,22 @@
 package com.zweigbergk.speedswede.core;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.database.Exclude;
 
-import java.text.SimpleDateFormat;
+
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
-public class Message {
+public class Message implements Parcelable {
 
     private String id;
     private String text;
     private final long timeStamp;
 
     //For JSON de-serialization
-    private Message() {
+    public Message() {
         timeStamp = 0;
     }
 
@@ -92,7 +94,35 @@ public class Message {
 
     @Override
     public String toString() {
-        return String.format("Message { id = [%s], text = [%s], timestamp = [%s] }", id, text, timeStamp + "");
+        return String.format("Message { id = %s, text = %s, timestamp = %s }", id, text, timeStamp + "");
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(text);
+        dest.writeLong(timeStamp);
+    }
+
+    public static final Parcelable.Creator CREATOR
+            = new Parcelable.Creator() {
+        public Message createFromParcel(Parcel in) {
+            return new Message(in);
+        }
+
+        public Message[] newArray(int size) {
+            return new Message[size];
+        }
+    };
+
+    public Message(Parcel in) {
+        id = in.readString();
+        text = in.readString();
+        timeStamp = in.readLong();
+    }
 }

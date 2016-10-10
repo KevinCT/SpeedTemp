@@ -31,7 +31,7 @@ public class ChatTest {
 
     @Test
     public void stableState() {
-        assertTrue(chat.getConversation() != null);
+        assertTrue(chat.getMessages() != null);
     }
 
     @Test
@@ -60,14 +60,14 @@ public class ChatTest {
 
     @Test
     public void gettingMessages() {
-        List<Message> conversation = chat.getConversation();
+        List<Message> conversation = chat.getMessages();
         assertTrue(conversation != null);
 
         String messageText = "TestMessage: gettingMessages";
         chat.postMessage(sir, new Message("uid_sir", messageText));
 
         boolean foundMessage = false;
-        conversation = chat.getConversation();
+        conversation = chat.getMessages();
         for (Message m : conversation) {
             if (m.getText().equals(messageText)) {
                 foundMessage = true;
