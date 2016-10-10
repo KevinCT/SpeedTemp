@@ -194,6 +194,24 @@ enum DbChatHandler {
         messageListeners.put(chat.getId(), messageListener);
     }
 
+    /*public ProductBuilder<Chat> pullChat(String chatId) {
+        ProductBuilder<ProductBuilder<Chat>> builder = ProductBuilder.shell();
+
+        mRoot.child(CHATS).child(chatId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ChatFactory.serializeChat(dataSnapshot).thenPassTo(chat -> {
+                    builder.addItem(ProductLock.CHAT, chat);
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }*/
+
     public static Statement hasReference(DatabaseReference ref) {
         Statement builder = new Statement();
 
