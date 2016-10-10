@@ -51,7 +51,6 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
             setChat(chat);
             Log.d(TAG, chat.toString());
         }
-        getActivity().setTitle(LocalStorage.INSTANCE.getString(getActivity().getBaseContext(),mPresenter.getChat().getId(),mPresenter.getChat().getName()));
 
     }
 
