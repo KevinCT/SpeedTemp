@@ -1,15 +1,14 @@
 package com.zweigbergk.speedswede.database;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,17 +19,27 @@ import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
+import com.zweigbergk.speedswede.core.Pair;
+import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.util.ChatFactory;
 import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.util.KeyValuePair;
+import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.PreferenceValue;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 import com.zweigbergk.speedswede.util.Statement;
 import com.zweigbergk.speedswede.util.ProductLock;
 import com.zweigbergk.speedswede.util.StateRequirement;
 
 import static com.zweigbergk.speedswede.Constants.CHATS;
+import static com.zweigbergk.speedswede.Constants.FIRST_USER;
 import static com.zweigbergk.speedswede.Constants.MESSAGES;
+import static com.zweigbergk.speedswede.Constants.SECOND_USER;
+import static com.zweigbergk.speedswede.core.User.Preference;
+import static com.zweigbergk.speedswede.util.Lists.EntryMapping;
+
 
 enum DbChatHandler {
     INSTANCE;
@@ -86,17 +95,90 @@ enum DbChatHandler {
     }
 
     /**
-     * Should <u>invert</u> be used explicitly. Use a {@link ChatReference} instead.
+     * Should <u>not</u> be used explicitly. Use a {@link ChatReference} instead.
      * */
     void postMessageToChat(Chat chat, Message message) {
         mRoot.child(CHATS).child(chat.getId()).child(Constants.MESSAGES).push().setValue(message);
     }
 
     /**
-     * Should <u>invert</u> be used explicitly. Use DatabaseHandler.get(user).push instead.
+     * Should <u>not</u> be used explicitly. Use DatabaseHandler.get(user).push instead.
      * */
     void pushChat(Chat chat) {
+        Log.d(TAG, chat.getName());
+        DatabaseReference ref = mRoot.child(CHATS).child(chat.getId());
+
+        ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    pushPreferences(chat);
+                    Log.d(TAG, "In listener where pushPreferences is called");
+                    ref.removeEventListener(this);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        mRoot.child(CHATS).child(chat.getId()).addValueEventListener(listener);
         mRoot.child(CHATS).child(chat.getId()).setValue(chat);
+    }
+
+    /**
+     * Push the preferences of the chat's users into the chat
+     */
+    private void pushPreferences(Chat chat) {
+        Map<Preference, PreferenceValue> firstUserPrefs = chat.getFirstUser().getPreferences();
+        Map<Preference, PreferenceValue> secondUserPrefs = chat.getSecondUser().getPreferences();
+
+        Map<String, String> pojoMap = Lists.map(firstUserPrefs, createPojoEntry);
+        mRoot.child(CHATS).child(chat.getId()).child(FIRST_USER).child(Constants.PREFERENCES).setValue(pojoMap);
+
+        pojoMap = Lists.map(secondUserPrefs, createPojoEntry);
+        mRoot.child(CHATS).child(chat.getId()).child(SECOND_USER).child(Constants.PREFERENCES).setValue(pojoMap);
+    }
+
+    private static final EntryMapping<String, String> createPojoEntry = mapEntry -> {
+        String prefAsString = parseToReadable((Preference) mapEntry.getKey());
+
+        PreferenceValue prefValue = (PreferenceValue) mapEntry.getValue();
+        String prefValueAsString = parseToReadable(prefValue);
+
+        return new KeyValuePair<>(prefAsString, prefValueAsString);
+    };
+
+    private static String parseToReadable(PreferenceValue prefValue) {
+        if (prefValue == null || prefValue.getValue() == null) {
+            return null;
+        }
+
+        String value = prefValue.getValue().toString();
+
+        return value;
+    }
+
+    private static String parseToReadable(Preference preference) {
+        if (preference == null) {
+            return "";
+        }
+
+        String name = preference.toString().toLowerCase();
+        StringBuilder prettyName = new StringBuilder();
+
+        for (int i = 0; i < name.length(); ++i) {
+            if (name.charAt(i) == '_') {
+                prettyName.append(Character.toUpperCase(name.charAt(++i)));
+                continue;
+            }
+
+            prettyName.append(name.charAt(i));
+        }
+
+        return prettyName.toString();
     }
 
     ProductBuilder<Chat> createChatFrom(DataSnapshot snapshot) {

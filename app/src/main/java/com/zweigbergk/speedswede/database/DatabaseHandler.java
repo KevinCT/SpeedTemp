@@ -16,14 +16,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.util.ChatFactory;
-import com.zweigbergk.speedswede.util.ProductBuilder;
+
 import com.zweigbergk.speedswede.util.Statement;
 import com.zweigbergk.speedswede.util.Client;
-
-import static com.zweigbergk.speedswede.Constants.CHATS;
-import static com.zweigbergk.speedswede.Constants.POOL;
-import static com.zweigbergk.speedswede.Constants.USERS;
 
 public enum DatabaseHandler {
     INSTANCE;

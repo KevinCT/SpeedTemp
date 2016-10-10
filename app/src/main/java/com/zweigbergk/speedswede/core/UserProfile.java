@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.Exclude;
 import com.zweigbergk.speedswede.util.ParcelHelper;
 import com.zweigbergk.speedswede.util.PreferenceValue;
 
@@ -13,6 +14,7 @@ public class UserProfile implements User {
 
     private String mName, mUid;
 
+    @Exclude
     private Map<Preference, PreferenceValue> mPreferences;
 
     public UserProfile(String name, String uid) {
@@ -36,18 +38,15 @@ public class UserProfile implements User {
     }
 
     @Override
+    @Exclude
     public Object getPreference(Preference preference) {
         return mPreferences.get(preference).getValue();
     }
 
     @Override
+    @Exclude
     public Map<Preference, PreferenceValue> getPreferences() {
         return mPreferences;
-    }
-
-    @Override
-    public Parcelable.Creator<User> getCreator() {
-        return null;
     }
 
     public static UserProfile from(FirebaseUser user) {
@@ -103,7 +102,7 @@ public class UserProfile implements User {
         ParcelHelper.writeParcelableMap(dest, 0, mPreferences);
     }
 
-    public UserProfile(Parcel in) {
+    private UserProfile(Parcel in) {
         mName = in.readString();
         mUid = in.readString();
         mPreferences = ParcelHelper.readParcelableMap(in, Preference.class, PreferenceValue.class);

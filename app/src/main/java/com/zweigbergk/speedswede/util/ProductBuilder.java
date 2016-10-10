@@ -212,12 +212,45 @@ public class ProductBuilder<Product> {
 
         public Long getLong(ProductLock lock) {
             Object item = items.get(lock);
-            return item != null ? (long) item : null;
+            Long value = -1L;
+
+            if (item == null) {
+                return null;
+            }
+
+            if (item.getClass() == Long.class) {
+                value = (Long) item;
+            } else {
+                try {
+                    value = Long.parseLong(item.toString());
+                } catch (NumberFormatException e) {
+                    Log.e(TAG, "In getLong(): Tried to format " + item.toString() + " as long but was unsuccessful. Returning -1.");
+                }
+            }
+
+            return value;
         }
 
         public Boolean getBoolean(ProductLock lock) {
             Object item = items.get(lock);
-            return item != null ? (boolean) item : null;
+
+            if (item == null) {
+                return null;
+            }
+
+            Boolean value = false;
+
+            if (item.getClass() == Boolean.class) {
+                value = (Boolean) item;
+            } else {
+                try {
+                    value = Boolean.parseBoolean(item.toString());
+                } catch (NumberFormatException e) {
+                    Log.e(TAG, "In getBoolean(): Tried to format " + item.toString() + " as boolean but was unsuccessful. Returning false.");
+                }
+            }
+
+            return value;
         }
 
         public User getUser(ProductLock lock) {

@@ -16,9 +16,6 @@ public interface User extends Parcelable {
     Object getPreference(Preference preference);
     Map<Preference, PreferenceValue> getPreferences();
 
-    //For parcelable
-    Creator<User> getCreator();
-
     enum Preference implements Parcelable {
         NOTIFICATIONS, LANGUAGE, SWEDISH_SKILL, STRANGER_SWEDISH_SKILL;
 

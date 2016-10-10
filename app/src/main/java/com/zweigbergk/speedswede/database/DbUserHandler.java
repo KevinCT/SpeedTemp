@@ -101,6 +101,8 @@ enum DbUserHandler {
     void setUserAttribute(User user, UserReference.UserAttribute attribute, Object value) {
         String key = attribute.getDbKey();
 
+        Log.d(TAG, "Setting user attribute LUL REKT");
+
         mRoot.child(USERS).child(user.getUid()).child(key).setValue(value);
     }
 

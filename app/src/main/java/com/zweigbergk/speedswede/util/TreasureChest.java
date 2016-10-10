@@ -46,7 +46,6 @@ public class TreasureChest {
                 mOpenedLocks.add(key);
             }
         } else {
-            Log.d(TAG, "There were no state reqs...");
             mOpenedLocks.add(key);
         }
     }
@@ -61,7 +60,6 @@ public class TreasureChest {
     }
 
     private boolean hasStateRequirement(ProductLock key) {
-        Log.d(TAG, "Requirement for key " + key.toString() + " is " + stateRequirements.get(key));
         return stateRequirements.get(key) != null;
     }
 

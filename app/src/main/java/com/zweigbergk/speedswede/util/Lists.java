@@ -1,7 +1,5 @@
 package com.zweigbergk.speedswede.util;
 
-import com.zweigbergk.speedswede.database.KeyValuePair;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -19,9 +17,9 @@ public class Lists {
         }
     }
 
-    public static <K, V> void forEach(Map<K, V> map, Client<KeyValuePair<K, V>> client) {
+    public static <K, V> void forEach(Map<K, V> map, Client<Map.Entry<K, V>> client) {
         for (Map.Entry<K, V> entry : map.entrySet()) {
-            client.supply(KeyValuePair.from(entry));
+            client.supply(entry);
         }
     }
 
@@ -58,10 +56,22 @@ public class Lists {
     public static <K, V> Map<K, V> map(Map<?, ?> source, EntryMapping<K, V> tool) {
         Map<K, V> result = new HashMap<>();
 
-        for (Map.Entry entry : source.entrySet()) {
+        forEach(source, entry -> {
             Map.Entry<K, V> mapping = tool.map(entry);
             result.put(mapping.getKey(), mapping.getValue());
-        }
+        });
+
+        return result;
+    }
+
+    public static <K, V> Map<K, V> reject(Map<K, V> source, EntryAssertion<K, V> assertion) {
+        Map<K, V> result = new HashMap<>();
+
+        forEach(source, entry -> {
+            if (!assertion.accepts(entry)) {
+                result.put(entry.getKey(), entry.getValue());
+            }
+        });
 
         return result;
     }
