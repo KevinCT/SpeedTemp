@@ -22,15 +22,14 @@ public class LanguageChanger {
 
     }
     public static void changeLanguage(String languageCode, Context context){
-        /*Resources resources = context.getResources();
+        Resources resources = context.getResources();
         Configuration config;
         config = resources.getConfiguration();
 
-        List<String> languages = Arrays.asList(Constants.LANGUAGES);
-        language = languages.contains(language) ? language : Constants.ENGLISH;
-        config.locale = new Locale(language);
-        resources.updateConfiguration(config, resources.getDisplayMetrics());*/
         languageCode = languageCode.contains(languageCode) ? languageCode : Constants.ENGLISH;
+        config.locale = new Locale(languageCode);
+
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
         saveLanguage(context,languageCode);
     }
 
