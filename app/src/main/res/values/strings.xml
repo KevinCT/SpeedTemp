@@ -30,4 +30,5 @@
     <string name="languages">Languages</string>
     <string name="other">Other</string>
     <string name="activity_settings_title">Settings</string>
+    <string name="change_chat_name">Change chat name</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.zweigbergk.speedswede.presenter;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.interactor.BanInteractor;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.Time;
@@ -146,4 +148,13 @@ public class ChatFragmentPresenter {
 
         ((MessageAdapter) mView.getRecyclerView().getAdapter()).onListChanged(dataChange);
     };
+
+    public void onChangeNameClicked(String chatName, Context context){
+        LocalStorage.INSTANCE.saveSettings(context, mChat.getName(), chatName);
+        mChat.setName(chatName);
+    }
+
+    public String getLocalChatName(Context context){
+        return LocalStorage.INSTANCE.getString(context, mChat.getName());
+    }
 }

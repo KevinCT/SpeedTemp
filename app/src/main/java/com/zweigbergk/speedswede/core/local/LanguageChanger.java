@@ -34,7 +34,7 @@ public class LanguageChanger {
     }
 
     private static void saveLanguage(Context context, String language){
-        LocalStorage.INSTANCE.saveSettings(context, language);
+        LocalStorage.INSTANCE.saveSettings(context, Constants.LANGUAGE, language);
     }
 
     public static void languageChanged(Boolean changed){

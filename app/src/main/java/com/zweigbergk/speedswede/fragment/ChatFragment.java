@@ -48,6 +48,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView {
             setChat(chat);
             Log.d(TAG, chat.toString());
         }
+        getActivity().setTitle(mPresenter.getLocalChatName(getActivity().getBaseContext()));
     }
 
     @Override
@@ -112,6 +113,11 @@ public class ChatFragment extends Fragment implements ChatFragmentView {
                 return true;
             case R.id.exitChat:
                 mPresenter.terminateChat();
+            case R.id.changeChatName:
+                getActivity().setTitle("hej");
+                mPresenter.onChangeNameClicked("hej", getActivity().getBaseContext());
+
+
             default:
                 return super.onOptionsItemSelected(item);
         }
