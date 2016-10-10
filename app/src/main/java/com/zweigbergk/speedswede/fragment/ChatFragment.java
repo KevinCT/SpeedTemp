@@ -3,6 +3,7 @@ package com.zweigbergk.speedswede.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,6 +40,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setHasOptionsMenu(true);
 
         if (savedInstanceState != null) {
@@ -46,6 +48,12 @@ public class ChatFragment extends Fragment implements ChatFragmentView {
             setChat(chat);
             Log.d(TAG, chat.toString());
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

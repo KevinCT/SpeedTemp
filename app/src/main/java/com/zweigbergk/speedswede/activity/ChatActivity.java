@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Chat;
@@ -24,10 +25,14 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     public static final String TAG = ChatActivity.class.getSimpleName().toUpperCase();
 
+//    private Fragment mChatListFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+//        mChatListFragment = new ChatListFragment();
 
         if (savedInstanceState == null) {
             createActivity();
@@ -37,7 +42,22 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     }
 
     private void createActivity() {
+//        addFragment(mChatListFragment, false);
         addFragment(new ChatListFragment(), false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+//                switchToFragment(mChatListFragment, false);
+                onBackPressed();
+                Log.d("DEBUG", "Back?");
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void addFragment(Fragment fragment, boolean addToBackstack) {
