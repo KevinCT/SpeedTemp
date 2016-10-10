@@ -46,11 +46,11 @@ public class UserFactory {
         String name = items.getString(ProductLock.NAME);
         String id = items.getString(ProductLock.ID);
 
-        Map<User.Preference, Object> preferences = new HashMap<>();
-        preferences.put(User.Preference.NOTIFICATIONS, items.getBoolean(ProductLock.NOTIFICATIONS));
-        preferences.put(User.Preference.LANGUAGE, items.getString(ProductLock.LANGUAGE));
-        preferences.put(User.Preference.SWEDISH_SKILL, items.getLong(ProductLock.SWEDISH_SKILL));
-        preferences.put(User.Preference.STRANGER_SWEDISH_SKILL, items.getLong(ProductLock.STRANGER_SWEDISH_SKILL));
+        Map<User.Preference, PreferenceValue> preferences = new HashMap<>();
+        preferences.put(User.Preference.NOTIFICATIONS, new BooleanPref(items.getBoolean(ProductLock.NOTIFICATIONS)));
+        preferences.put(User.Preference.LANGUAGE, new StringPref(items.getString(ProductLock.LANGUAGE)));
+        preferences.put(User.Preference.SWEDISH_SKILL, new LongPref(items.getLong(ProductLock.SWEDISH_SKILL)));
+        preferences.put(User.Preference.STRANGER_SWEDISH_SKILL, new LongPref(items.getLong(ProductLock.STRANGER_SWEDISH_SKILL)));
 
         return new UserProfile(name, id).withPreferences(preferences);
     };
