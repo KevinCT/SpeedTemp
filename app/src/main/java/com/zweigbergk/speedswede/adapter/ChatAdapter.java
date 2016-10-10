@@ -139,7 +139,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Chat chat = mChats.get(position);
-        chat.setName(LocalStorage.INSTANCE.getString(mContext,chat.getName()));
+        chat.setName(LocalStorage.INSTANCE.getString(mContext,chat.getId(),chat.getName()));
+
         Message latestMessage = chat.getLatestMessage();
 
         String messageText = latestMessage != null ? latestMessage.getText() : "";

@@ -35,6 +35,9 @@ public class ChatFragmentPresenter {
         mView = view;
         mBanInteractor = new BanInteractor();
     }
+    public Chat getChat(){
+        return mChat;
+    }
 
     public void setChat(Chat chat) {
         if (mChat != null) {
@@ -149,12 +152,7 @@ public class ChatFragmentPresenter {
         ((MessageAdapter) mView.getRecyclerView().getAdapter()).onListChanged(dataChange);
     };
 
-    public void onChangeNameClicked(String chatName, Context context){
-        LocalStorage.INSTANCE.saveSettings(context, mChat.getName(), chatName);
-        mChat.setName(chatName);
-    }
-
-    public String getLocalChatName(Context context){
-        return LocalStorage.INSTANCE.getString(context, mChat.getName());
+    public void onChangeNameClicked(Context context, String chatName){
+        LocalStorage.INSTANCE.saveSettings(context, mChat.getId(), chatName);
     }
 }

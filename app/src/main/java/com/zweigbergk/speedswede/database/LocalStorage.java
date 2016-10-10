@@ -3,6 +3,7 @@ package com.zweigbergk.speedswede.database;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.zweigbergk.speedswede.Constants;
 
@@ -16,8 +17,9 @@ public enum LocalStorage {
     public void saveSettings(Context context, String key, String value){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(key, value);
-        editor.apply();
+        editor.putString(key, value).apply();
+
+
     }
 
     public String getLanguage(Context context){
@@ -25,9 +27,9 @@ public enum LocalStorage {
         return preferences.getString(Constants.LANGUAGE, Locale.getDefault().getLanguage());
     }
 
-    public String getString(Context context, String key){
+    public String getString(Context context, String key, String defaultValue){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(key, key);
+        return preferences.getString(key,defaultValue);
     }
 
     public void removeSettings(Context context){

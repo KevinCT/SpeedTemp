@@ -51,7 +51,8 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
             setChat(chat);
             Log.d(TAG, chat.toString());
         }
-        getActivity().setTitle(mPresenter.getLocalChatName(getActivity().getBaseContext()));
+        getActivity().setTitle(LocalStorage.INSTANCE.getString(getActivity().getBaseContext(),mPresenter.getChat().getId(),mPresenter.getChat().getName()));
+
     }
 
     @Override
@@ -117,8 +118,6 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
             case R.id.exitChat:
                 mPresenter.terminateChat();
             case R.id.changeChatName:
-               /* getActivity().setTitle("hej");
-                mPresenter.onChangeNameClicked("hej", getActivity().getBaseContext());*/
                 FragmentManager fragmentManager = getChildFragmentManager();
                 DialogFragment dialogFragment = new DialogFragment ();
                 dialogFragment.show(fragmentManager, "Sample Fragment");
@@ -158,7 +157,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
     @Override
     public void onDataPass(String data) {
         getActivity().setTitle(data);
-        mPresenter.onChangeNameClicked(data, getActivity().getBaseContext());
+        mPresenter.onChangeNameClicked(getActivity().getBaseContext(), data);
 
     }
 }
