@@ -1,8 +1,10 @@
 package com.zweigbergk.speedswede.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.widget.EditText;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.core.Chat;
+import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
 import com.zweigbergk.speedswede.util.CallerMethod;
 import com.zweigbergk.speedswede.util.ProviderMethod;
@@ -24,7 +27,7 @@ import com.zweigbergk.speedswede.view.ChatFragmentView;
 
 import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
 
-public class ChatFragment extends Fragment implements ChatFragmentView {
+public class ChatFragment extends Fragment implements ChatFragmentView, DialogFragment.OnDataPass {
     public static final String TAG = ChatFragment.class.getSimpleName().toUpperCase();
 
     private RecyclerView chatRecyclerView;
@@ -114,10 +117,13 @@ public class ChatFragment extends Fragment implements ChatFragmentView {
             case R.id.exitChat:
                 mPresenter.terminateChat();
             case R.id.changeChatName:
-                getActivity().setTitle("hej");
-                mPresenter.onChangeNameClicked("hej", getActivity().getBaseContext());
-
-
+               /* getActivity().setTitle("hej");
+                mPresenter.onChangeNameClicked("hej", getActivity().getBaseContext());*/
+                FragmentManager fragmentManager = getChildFragmentManager();
+                DialogFragment dialogFragment = new DialogFragment ();
+                dialogFragment.show(fragmentManager, "Sample Fragment");
+            case R.id.removeSettings:
+                LocalStorage.INSTANCE.removeSettings(getActivity().getBaseContext());
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -147,5 +153,12 @@ public class ChatFragment extends Fragment implements ChatFragmentView {
     @Override
     public void useActivity(CallerMethod<ChatActivity> method) {
         method.call((ChatActivity) getActivity());
+    }
+
+    @Override
+    public void onDataPass(String data) {
+        getActivity().setTitle(data);
+        mPresenter.onChangeNameClicked(data, getActivity().getBaseContext());
+
     }
 }

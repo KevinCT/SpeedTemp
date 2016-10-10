@@ -30,4 +30,9 @@ public enum LocalStorage {
         return preferences.getString(key, key);
     }
 
+    public void removeSettings(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferences.edit().clear().commit();
+    }
+
 }
