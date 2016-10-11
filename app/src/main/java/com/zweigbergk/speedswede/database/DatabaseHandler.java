@@ -131,6 +131,11 @@ public enum DatabaseHandler {
         return DbUserHandler.getInstance().userExists(user);
     }
 
+    public static Statement hasUsers(Chat chat) {
+        Log.d("Terminate chat testing", " we are in dbhandler");
+        return DbChatHandler.getInstance().hasUsers(chat);
+    }
+
     public static Statement hasUser(String userId) {
         return DbUserHandler.getInstance().userExists(userId);
     }

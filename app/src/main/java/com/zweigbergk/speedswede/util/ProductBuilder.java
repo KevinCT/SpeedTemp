@@ -111,7 +111,7 @@ public class ProductBuilder<Product> {
         }
     }
 
-    public void addExecutable(Client<Product> client) {
+    public void addClient(Client<Product> client) {
         if (!hasProduct()) {
             mClients.add(client);
         } else {
@@ -167,15 +167,15 @@ public class ProductBuilder<Product> {
     }
 
     public void thenNotify(Client<Product> client) {
-        addExecutable(client);
+        addClient(client);
     }
 
     public void thenPassTo(Client<Product> client) {
-        addExecutable(client);
+        addClient(client);
     }
 
     public void then(Client<Product> client) {
-        addExecutable(client);
+        addClient(client);
     }
 
     public void thenNotify(Executable executable) {

@@ -106,4 +106,8 @@ public class ChatReference {
     public Statement ifStillValid() {
         return DbChatHandler.getInstance().exists(mChat);
     }
+
+    public void remove() {
+        DbChatHandler.getInstance().deleteChat(mChat);
+    }
 }

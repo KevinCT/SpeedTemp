@@ -127,12 +127,15 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
                 return true;
             case R.id.exitChat:
                 mPresenter.terminateChat();
+                return true;
             case R.id.changeChatName:
                 FragmentManager fragmentManager = getChildFragmentManager();
                 DialogFragment dialogFragment = new DialogFragment ();
                 dialogFragment.show(fragmentManager, "Sample Fragment");
+                return true;
             case R.id.removeSettings:
                 LocalStorage.INSTANCE.removeSettings(getActivity().getBaseContext());
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -112,6 +112,13 @@ public class ChatFragmentPresenter {
     public void terminateChat() {
         User activeUser = DatabaseHandler.getActiveUser();
         DatabaseHandler.get(mChat).removeUser(activeUser);
+        DatabaseHandler.hasUsers(mChat).then(
+                result -> {
+                    if(!result) {
+                        DatabaseHandler.get(mChat).remove();
+                    }
+                }
+        );
     }
 
     private void postMessage(String messageText) {
