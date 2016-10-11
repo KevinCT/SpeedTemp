@@ -18,6 +18,7 @@
         android:layout_alignStart="@+id/chatNameText" />
 
     <EditText
+        android:hint="@string/enter_chatname"
         android:gravity="center"
         android:textAlignment="center"
         android:background="#FFFFFF"

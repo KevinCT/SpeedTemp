@@ -13,19 +13,27 @@
     <string name="leta_kompis">Matcha med en användare</string>
     <string name="change_language">Ändra språk</string>
     <string name="settings">Inställningar</string>
-    <string name="exit_chat">Lämna chat</string>
+    <string name="exit_chat">Lämna konversationen</string>
     <string name="settings_pref_app_lang">Applikationens språk</string>
-    <string name="settings_pref_app_lang_default"></string>
+    <string name="settings_pref_app_lang_default">English</string>
     <string name="settings_pref_matchskill">Matcha genom språkförmåga</string>
     <string name="settings_pref_myskill">Min svenska språkförmåga</string>
     <string name="settings_pref_notifications">Notifikationer</string>
     <string name="settings_summary_matchskill">Föredragen språkförmåga vid matchning</string>
-    <string name="settings_summary_myskill">Är du erfaren med det svenska språket</string>
+    <string name="settings_summary_myskill">Är du erfaren med det svenska språket?</string>
     <string name="settings_summary_notifications">Välj om du vill få notifikationer vid meddelanden och nya chattar</string>
     <string name="settings_title_skills">Språkförmåga</string>
     <string name="language_skills">Språkförmåga</string>
     <string name="languages">Språk</string>
     <string name="other">Andra inställningar</string>
     <string name="activity_settings_title">Inställningar</string>
+    <string name="cancel">Avbryt</string>
+    <string name="change_chat_name">Ändra konversationens namn</string>
+    <string name="change_name">Ändra namn</string>
+    <string name="chat_name_1"></string>
+    <string name="chatname_here"></string>
+    <string name="remove_settings"></string>
+    <string name="enter_chatname">Ange namn för konversationen</string>
+    <string name="chat_name_error">Namnet kan inte vara tomt!</string>
 
 </resources>

@@ -19,6 +19,7 @@ import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.database.LocalStorage;
+import com.zweigbergk.speedswede.methodwrapper.Client;
 import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
 import com.zweigbergk.speedswede.methodwrapper.CallerMethod;
 import com.zweigbergk.speedswede.methodwrapper.ProviderMethod;
@@ -26,7 +27,7 @@ import com.zweigbergk.speedswede.view.ChatFragmentView;
 
 import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
 
-public class ChatFragment extends Fragment implements ChatFragmentView, DialogFragment.OnDataPass {
+public class ChatFragment extends Fragment implements ChatFragmentView, Client<String> {
     public static final String TAG = ChatFragment.class.getSimpleName().toUpperCase();
 
     private RecyclerView chatRecyclerView;
@@ -167,9 +168,8 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
     }
 
     @Override
-    public void onDataPass(String data) {
-        getActivity().setTitle(data);
-        mPresenter.onChangeNameClicked(getActivity().getBaseContext(), data);
-
+    public void supply(String s) {
+        getActivity().setTitle(s);
+        mPresenter.onChangeNameClicked(getActivity().getBaseContext(), s);
     }
 }

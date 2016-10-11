@@ -34,5 +34,7 @@
     <string name="remove_settings">remove settings</string>
     <string name="change_name">Change name</string>
     <string name="cancel">Cancel</string>
-    <string name="chatname_here">Chatname here</string>
+    <string name="chatname_here">Chat name here</string>
+    <string name="chat_name_error">Empty name not allowed!</string>
+    <string name="enter_chatname">Enter chat name</string>
 </resources>
