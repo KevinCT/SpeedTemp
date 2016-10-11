@@ -1,38 +1,64 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.zweigbergk.speedswede.fragment.ChangeLanguageFragment">
 
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageButton
-            android:id="@+id/button_swedish"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/lay">
 
-        <Button
-            android:text="Change to swedish"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:id="@+id/changeSwedishBtn"
-            android:layout_alignParentEnd="true" />
+            <ImageButton
+                android:layout_width="300px"
+                app:srcCompat="@drawable/ic_turkey_circle"
+                android:id="@+id/fragment_change_language_turkish"
+                android:elevation="0dp"
+                android:layout_height="300px"
+                android:layout_row="1"
+                android:layout_column="0" />
 
-        <Button
-            android:text="Change to English"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/changeSwedishBtn"
-            android:layout_alignParentStart="true"
-            android:id="@+id/changeEnglishBtn"
-            android:layout_alignParentEnd="true" />
-    </RelativeLayout>
+            <ImageButton
+                android:layout_width="300px"
+                app:srcCompat="@drawable/ic_sweden_circle"
+                android:id="@+id/fragment_change_language_swedish"
+                android:elevation="0dp"
+                android:layout_height="300px"
+               android:layout_row="0"
+                android:layout_column="0" />
+
+            <ImageButton
+                android:layout_width="300px"
+                app:srcCompat="@drawable/ic_afghanistan_circle"
+                android:id="@+id/fragment_change_language_dari"
+                android:elevation="0dp"
+                android:layout_height="300px"
+                android:layout_row="0"
+                android:layout_column="1" />
+
+            <ImageButton
+                android:layout_width="300px"
+                app:srcCompat="@drawable/ic_syria_circle"
+                android:id="@+id/fragment_change_language_arabic"
+                android:elevation="0dp"
+                android:layout_height="300px"
+                android:layout_row="1"
+                android:layout_column="1" />
+
+            <ImageButton
+                android:layout_width="300px"
+                app:srcCompat="@drawable/ic_usa_circle"
+                android:id="@+id/fragment_change_language_english"
+                android:elevation="0dp"
+                android:layout_height="300px"
+                android:layout_row="2"
+                android:layout_column="0" />
+        </GridLayout>
+    </LinearLayout>
 
 </FrameLayout>

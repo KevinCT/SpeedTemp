@@ -17,8 +17,11 @@ import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import android.content.res.Configuration;
 import java.util.Locale;
 
+import static com.zweigbergk.speedswede.Constants.ARABIC;
+import static com.zweigbergk.speedswede.Constants.DARI;
 import static com.zweigbergk.speedswede.Constants.SWEDISH;
 import static com.zweigbergk.speedswede.Constants.ENGLISH;
+import static com.zweigbergk.speedswede.Constants.TURKISH;
 
 public class ChangeLanguageFragment extends Fragment {
 
@@ -34,14 +37,11 @@ public class ChangeLanguageFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_change_language, container, false);
 
-        final ImageButton buttonSwedish = (ImageButton) view.findViewById(R.id.button_swedish);
-
-        Drawable flagSweden = Drawable.createFromPath("@drawable/sweden.png");
-
-        buttonSwedish.setBackground(flagSweden);
-
-        view.findViewById(R.id.changeSwedishBtn).setOnClickListener(v -> pro(SWEDISH));
-        view.findViewById(R.id.changeEnglishBtn).setOnClickListener(v -> pro(ENGLISH));
+        view.findViewById(R.id.fragment_change_language_swedish).setOnClickListener(v -> pro(SWEDISH));
+        view.findViewById(R.id.fragment_change_language_english).setOnClickListener(v -> pro(ENGLISH));
+        view.findViewById(R.id.fragment_change_language_turkish).setOnClickListener(v -> pro(TURKISH));
+        view.findViewById(R.id.fragment_change_language_dari).setOnClickListener(v -> pro(DARI));
+        view.findViewById(R.id.fragment_change_language_arabic).setOnClickListener(v -> pro(ARABIC));
 
         return view;
     }

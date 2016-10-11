@@ -38,6 +38,7 @@ public class Constants {
     public static final String SWEDISH = "sv";
     public static final String ARABIC = "ar";
     public static final String TURKISH = "tr";
+    public static final String DARI = "da";
 
     //Fragments
     public static final boolean SAVE_TO_STACK = true;
@@ -45,7 +46,7 @@ public class Constants {
     //For saving instance state
     public static final String CHAT_PARCEL = "chatParcel";
 
-    public static final String[] LANGUAGES = { ENGLISH, SWEDISH, ARABIC, TURKISH };
+    public static final String[] LANGUAGES = { ENGLISH, SWEDISH, ARABIC, TURKISH, DARI };
 
 
     public static final String USER_ID = "uid";

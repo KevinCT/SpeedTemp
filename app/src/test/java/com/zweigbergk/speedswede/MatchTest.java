@@ -1,20 +1,7 @@
 package com.zweigbergk.speedswede;
 
-import com.zweigbergk.speedswede.core.Chat;
-import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
-import com.zweigbergk.speedswede.database.DatabaseHandler;
-
-import org.junit.Test;
-
-/**
- * Created by FEngelbrektsson on 27/09/16.
- */
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
 
 public class MatchTest {
 

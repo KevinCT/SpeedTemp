@@ -97,6 +97,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Log.d(TAG, "In addMessage");
 
         if (!mMessages.contains(message)) {
+            message.setText(message.getText());
             mMessages.add(message);
             notifyItemInserted(getItemCount() - 1);
         }
@@ -129,12 +130,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public MessageAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        if(viewType==1) {
+        if(viewType == 1) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_message_user, parent, false);
             return new ViewHolder(view);
 
-        }
-        else {
+        }  else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_message_stranger, parent, false);
             return new ViewHolder(view);
         }
@@ -158,9 +158,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         else {
             return 2;
-
         }
-
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
