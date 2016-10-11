@@ -1,10 +1,12 @@
 package com.zweigbergk.speedswede.fragment;
 
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,12 +18,21 @@ import android.widget.LinearLayout;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.adapter.ChatAdapter;
+import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
+import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.ParcelHelper;
+
+import java.util.List;
+
+import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
 
 public class ChatListFragment extends Fragment {
 
     public static final String TAG = ChatListFragment.class.getSimpleName().toUpperCase();
+    public static final String TAG_CHATLIST = "ChatList";
 
     RecyclerView chatListView;
     ChatAdapter mAdapter;
@@ -61,7 +72,29 @@ public class ChatListFragment extends Fragment {
 
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
 
+        Log.d(TAG, "onCreateView");
+
         return view;
+    }
+
+    private void checkSavedState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            List<Chat> list = ParcelHelper.retrieveParcableList(savedInstanceState, TAG_CHATLIST);
+            Lists.forEach(list, chat ->  mAdapter.notifyChange(DataChange.added(chat)));
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        List<Chat> list = mAdapter.getChats();
+        ParcelHelper.saveParcableList(outState, list, TAG_CHATLIST);
+    }
+
+    @Override
+    public void onActivityCreated (Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        checkSavedState(savedInstanceState);
+        Log.d(TAG, "ChatListFragment.onActivityCreated()");
     }
 
     @Override

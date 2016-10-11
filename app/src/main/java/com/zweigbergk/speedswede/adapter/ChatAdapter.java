@@ -175,4 +175,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         }
     }
 
+    public List<Chat> getChats() {
+        return mChats;
+    }
 }

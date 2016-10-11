@@ -46,12 +46,25 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
 
         setHasOptionsMenu(true);
 
+//        checkSavedState(savedInstanceState);
+        Log.d(TAG, "ChatFragment.onCreate()");
+    }
+
+    private void checkSavedState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             Chat chat = savedInstanceState.getParcelable(CHAT_PARCEL);
             setChat(chat);
             Log.d(TAG, chat.toString());
         }
+    }
 
+    @Override
+    public void onActivityCreated (Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        checkSavedState(savedInstanceState);
+        Log.d(TAG, "ChatFragment.onActivityCreated()");
+
+        mPresenter.invalidate();
     }
 
     @Override
@@ -70,8 +83,6 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
 
         chatRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_chat_recycler_view);
         mInputBox = (EditText) view.findViewById(R.id.fragment_chat_message_text);
-
-        mPresenter.invalidate();
 
         return view;
     }
