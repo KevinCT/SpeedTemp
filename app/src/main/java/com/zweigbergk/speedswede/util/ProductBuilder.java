@@ -51,7 +51,8 @@ public class ProductBuilder<Product> {
 
     public void setBlueprint(Blueprint<Product> blueprint) {
         if (mBlueprint != null) {
-            Log.e(TAG, "WARNING! Replacing an existing blueprint. At: " + Thread.currentThread().getStackTrace().toString());
+            Log.w(TAG, "WARNING! Replacing an existing blueprint. At: ");
+            new Exception().printStackTrace();
         }
 
         mBlueprint = blueprint;
@@ -61,7 +62,7 @@ public class ProductBuilder<Product> {
         Lists.forEach(Arrays.asList(locks), mTreasureChest::addLock);
     }
 
-    private void complete() {
+    private synchronized void complete() {
         mCompletedProduct = mBlueprint.makeFromItems(mTreasureChest.getItems());
 
         notifyListeners();
@@ -70,12 +71,12 @@ public class ProductBuilder<Product> {
     }
 
     private void notifyListeners() {
-        Lists.forEach(mClients, client -> {
+        Lists.forEach(mClients.iterator(), client -> {
             client.supply(mCompletedProduct);
             mClients.remove(client);
         });
 
-        Lists.forEach(mExecutables, executable -> {
+        Lists.forEach(mExecutables.iterator(), executable -> {
             executable.run();
             mExecutables.remove(executable);
         });

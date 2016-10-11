@@ -3,7 +3,9 @@ package com.zweigbergk.speedswede.util;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONArray;
+import com.zweigbergk.speedswede.activity.Language;
+import com.zweigbergk.speedswede.methodwrapper.Client;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,68 +14,88 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 
 public class Translation {
     public static final String TAG = Translation.class.getSimpleName().toUpperCase();
 
-    private final ProductBuilder<String> mBuilder;
+    private static final String BASE_URL = "https://www.googleapis.com/language/translate/v2?key=";
+    private static final String TANSLATE_API_KEY = "AIzaSyCjL04iIPrLYwqCVyCrIvRWwMA60yeMSvE";
 
-    public Translation(String url) {
-        mBuilder = new ProductBuilder<>(translationBlueprint);
-        mBuilder.attachLocks(ProductLock.TRANSLATION);
-        new JsonReadTask(url, mBuilder);
+    private Client<String> mClient;
+
+    private Translation(String url) {
+        new TranslationTask(url).execute();
     }
 
-    public static Translation
+    private Translation() {
+
+    }
+
+    public static Translation translate(String text, Language from, Language to) {
+        try {
+        text = URLEncoder.encode(text, "UTF-8");
+        String url = Stringify.curlyFormat("{baseUrl}{key}&q={text}&source={source}&target={target}",
+                BASE_URL, TANSLATE_API_KEY, text, from.getLanguageCode(), to.getLanguageCode());
+
+        Log.d(TAG, "Formatted URL: " + url);
+        return new Translation(url);
+        } catch (UnsupportedEncodingException e) {
+            Log.w(TAG, "Warning: UnsupportedEncodingException. Stacktrace: ");
+            e.printStackTrace();
+            // TODO Signify in the return that there was an error
+            return new Translation();
+        }
+    }
 
     public void then(Client<String> client) {
-        mBuilder.addClient(client);
+        mClient = client;
     }
 
-    private static final ProductBuilder.Blueprint<String> translationBlueprint = items ->
-            items.getString(ProductLock.TRANSLATION);
-
-    private static class JsonReadTask extends AsyncTask<Void, Void, JSONArray> {
+    private class TranslationTask extends AsyncTask<Void, Void, String> {
 
         private final String mUrl;
-        private final ProductBuilder<String> mBuilder;
 
-        private JsonReadTask(String url, ProductBuilder<String> builder) {
+        private TranslationTask(String url) {
             mUrl = url;
-            mBuilder = builder;
+            Log.d(TAG, "In constructor");
         }
 
         @Override
-        protected JSONArray doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
             Log.d(TAG, "doInBackground!");
-            return fetchJson(mUrl);
+            return fetchJson();
         }
 
-        protected void onPostExecute(JSONArray object) {
-            System.out.println("We got this stuff: " + object);
-            try {
-                JSONObject jsonObject = new JSONObject(mUrl);
-
-                //Get the translation string
-                String translation = jsonObject.getJSONObject("data").getJSONArray("translations").getString(0);
-
-                mBuilder.addItem(ProductLock.TRANSLATION, translation);
-            } catch (JSONException e) {
-                Log.d(TAG, "RIP.");
-            }
+        @Override
+        protected void onPostExecute(String translation) {
+            mClient.supply(translation);
         }
 
-        private JSONArray fetchJson(String url) {
+        private String fetchJson() {
             try {
-                InputStream inputStream = new URL(url).openStream();
+                InputStream inputStream = new URL(mUrl).openStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
                 String jsonText = readAll(reader);
                 Log.d(TAG, "Before JSONArray: " + jsonText);
-                JSONArray json = new JSONArray(jsonText);
+                JSONObject jsonObject = new JSONObject(jsonText);
                 inputStream.close();
-                return json;
+
+                //Get the translation key & value and extract the value
+                String translation = jsonObject.getJSONObject("data")
+                        .getJSONArray("translations")
+                        .getString(0)
+                        .split(":")[1];
+
+                translation = Stringify.removeCurlyBraces(translation);
+
+                Log.d(TAG, "Translation: " + translation);
+
+                return translation;
+
             } catch (IOException|JSONException e) {
                 e.printStackTrace();
             }

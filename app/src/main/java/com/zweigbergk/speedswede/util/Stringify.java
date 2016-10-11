@@ -48,4 +48,8 @@ public class Stringify {
 
         return builder.toString();
     }
+
+    public static String removeCurlyBraces(String s) {
+        return s.replace("{", "").replace("}", "");
+    }
 }

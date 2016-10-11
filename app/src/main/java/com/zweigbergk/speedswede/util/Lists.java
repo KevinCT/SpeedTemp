@@ -9,15 +9,24 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
 public class Lists {
+    public static final String TAG = Lists.class.getSimpleName().toUpperCase();
+
     public static <E> void forEach(Iterable<E> collection, Client<E> client) {
         for (E element : collection) {
             client.supply(element);
+        }
+    }
+
+    public static <E> void forEach(Iterator<E> iterator, Client<E> client) {
+        while (iterator.hasNext()) {
+            client.supply(iterator.next());
         }
     }
 
@@ -25,6 +34,10 @@ public class Lists {
         for (Map.Entry<K, V> entry : map.entrySet()) {
             client.supply(entry);
         }
+    }
+
+    public static <E> void forEach(E[] array, Client<E> client) {
+        forEach(Arrays.asList(array), client);
     }
 
     public static <E> List<E> filter(Iterable<E> collection, Query<E> query) {

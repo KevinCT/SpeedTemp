@@ -6,6 +6,9 @@
 *.apk
 *.ap_
 
+#Custom by the Zweigbergk TEAM HEYY
+java_pid8660.hprof
+
 # Files for the ART/Dalvik VM
 *.dex
 

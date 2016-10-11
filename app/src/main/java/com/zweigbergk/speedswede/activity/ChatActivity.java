@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
+
+
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
@@ -16,8 +18,6 @@ import com.zweigbergk.speedswede.fragment.ChangeLanguageFragment;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
 import com.zweigbergk.speedswede.presenter.ChatPresenter;
-import com.zweigbergk.speedswede.util.BooleanPref;
-import com.zweigbergk.speedswede.util.PreferenceValue;
 import com.zweigbergk.speedswede.view.ChatView;
 
 
