@@ -1,5 +1,6 @@
 package com.zweigbergk.speedswede.adapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.Time;
 
@@ -33,6 +35,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     private List<Chat> mChats;
     private Map<Event, List<Client<Chat>>> eventClients;
+    private Context mContext;
 
 
     public ChatAdapter(List<Chat> chats) {
@@ -128,6 +131,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public ChatAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        mContext =parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_chat_list_item, parent, false);
         return new ViewHolder(view);
     }
@@ -135,6 +139,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Chat chat = mChats.get(position);
+        chat.setName(LocalStorage.INSTANCE.getString(mContext,chat.getId(),chat.getName()));
+
         Message latestMessage = chat.getLatestMessage();
 
         String messageText = latestMessage != null ? latestMessage.getText() : "";
@@ -169,4 +175,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         }
     }
 
+    public List<Chat> getChats() {
+        return mChats;
+    }
 }

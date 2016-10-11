@@ -60,4 +60,8 @@ public class Statement {
     private boolean onFalse(boolean value) {
         return determineInterest(!value);
     }
+
+    public void then(Client<Boolean> client) {
+        builder.addClient(client);
+    }
 }

@@ -1,8 +1,11 @@
 package com.zweigbergk.speedswede.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import android.widget.EditText;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.core.Chat;
+import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
 import com.zweigbergk.speedswede.util.CallerMethod;
 import com.zweigbergk.speedswede.util.ProviderMethod;
@@ -23,7 +27,7 @@ import com.zweigbergk.speedswede.view.ChatFragmentView;
 
 import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
 
-public class ChatFragment extends Fragment implements ChatFragmentView {
+public class ChatFragment extends Fragment implements ChatFragmentView, DialogFragment.OnDataPass {
     public static final String TAG = ChatFragment.class.getSimpleName().toUpperCase();
 
     private RecyclerView chatRecyclerView;
@@ -39,13 +43,34 @@ public class ChatFragment extends Fragment implements ChatFragmentView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setHasOptionsMenu(true);
 
+//        checkSavedState(savedInstanceState);
+        Log.d(TAG, "ChatFragment.onCreate()");
+    }
+
+    private void checkSavedState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             Chat chat = savedInstanceState.getParcelable(CHAT_PARCEL);
             setChat(chat);
             Log.d(TAG, chat.toString());
         }
+    }
+
+    @Override
+    public void onActivityCreated (Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        checkSavedState(savedInstanceState);
+        Log.d(TAG, "ChatFragment.onActivityCreated()");
+
+        mPresenter.invalidate();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -58,8 +83,6 @@ public class ChatFragment extends Fragment implements ChatFragmentView {
 
         chatRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_chat_recycler_view);
         mInputBox = (EditText) view.findViewById(R.id.fragment_chat_message_text);
-
-        mPresenter.invalidate();
 
         return view;
     }
@@ -104,6 +127,15 @@ public class ChatFragment extends Fragment implements ChatFragmentView {
                 return true;
             case R.id.exitChat:
                 mPresenter.terminateChat();
+                return true;
+            case R.id.changeChatName:
+                FragmentManager fragmentManager = getChildFragmentManager();
+                DialogFragment dialogFragment = new DialogFragment ();
+                dialogFragment.show(fragmentManager, "Sample Fragment");
+                return true;
+            case R.id.removeSettings:
+                LocalStorage.INSTANCE.removeSettings(getActivity().getBaseContext());
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -133,5 +165,12 @@ public class ChatFragment extends Fragment implements ChatFragmentView {
     @Override
     public void useActivity(CallerMethod<ChatActivity> method) {
         method.call((ChatActivity) getActivity());
+    }
+
+    @Override
+    public void onDataPass(String data) {
+        getActivity().setTitle(data);
+        mPresenter.onChangeNameClicked(getActivity().getBaseContext(), data);
+
     }
 }

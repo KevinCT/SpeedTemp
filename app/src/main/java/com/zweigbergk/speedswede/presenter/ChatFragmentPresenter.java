@@ -1,5 +1,6 @@
 package com.zweigbergk.speedswede.presenter;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.interactor.BanInteractor;
 import com.zweigbergk.speedswede.util.Client;
 import com.zweigbergk.speedswede.util.Time;
@@ -32,6 +34,9 @@ public class ChatFragmentPresenter {
     public ChatFragmentPresenter(ChatFragmentView view){
         mView = view;
         mBanInteractor = new BanInteractor();
+    }
+    public Chat getChat(){
+        return mChat;
     }
 
     public void setChat(Chat chat) {
@@ -107,6 +112,13 @@ public class ChatFragmentPresenter {
     public void terminateChat() {
         User activeUser = DatabaseHandler.getActiveUser();
         DatabaseHandler.get(mChat).removeUser(activeUser);
+        DatabaseHandler.hasUsers(mChat).then(
+                result -> {
+                    if(!result) {
+                        DatabaseHandler.get(mChat).remove();
+                    }
+                }
+        );
     }
 
     private void postMessage(String messageText) {
@@ -146,4 +158,8 @@ public class ChatFragmentPresenter {
 
         ((MessageAdapter) mView.getRecyclerView().getAdapter()).onListChanged(dataChange);
     };
+
+    public void onChangeNameClicked(Context context, String chatName){
+        LocalStorage.INSTANCE.saveSettings(context, mChat.getId(), chatName);
+    }
 }

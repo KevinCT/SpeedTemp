@@ -20,6 +20,7 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.Pair;
+import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
@@ -37,6 +38,7 @@ import static com.zweigbergk.speedswede.Constants.CHATS;
 import static com.zweigbergk.speedswede.Constants.FIRST_USER;
 import static com.zweigbergk.speedswede.Constants.MESSAGES;
 import static com.zweigbergk.speedswede.Constants.SECOND_USER;
+import static com.zweigbergk.speedswede.Constants.USERS;
 import static com.zweigbergk.speedswede.core.User.Preference;
 import static com.zweigbergk.speedswede.util.Lists.EntryMapping;
 
@@ -315,6 +317,20 @@ enum DbChatHandler {
         });
     }*/
 
+    Statement hasUsers(Chat chat) {
+        Statement statement = new Statement();
+          hasReference(mRoot.child(CHATS).child(chat.getId()).child(FIRST_USER)).then(
+                    firstExists -> {
+                        hasReference(mRoot.child(CHATS).child(chat.getId()).child(SECOND_USER)).then(
+                                secondExists -> {
+                                    statement.setReturnValue(firstExists && secondExists);
+                                }
+                        );
+                 }
+         );
+        return statement;
+    }
+
     public static Statement hasReference(DatabaseReference ref) {
         Statement builder = new Statement();
 
@@ -333,5 +349,8 @@ enum DbChatHandler {
         return builder;
     }
 
+    public void deleteChat(Chat chat) {
+        delete(mRoot.child(CHATS).child(chat.getId()));
+    }
 
 }

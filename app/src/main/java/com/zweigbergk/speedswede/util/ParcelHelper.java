@@ -1,7 +1,9 @@
 package com.zweigbergk.speedswede.util;
 
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +12,8 @@ import java.util.Map;
 
 
 public class ParcelHelper {
+
+    public static final String TAG = ParcelHelper.class.getSimpleName().toUpperCase();
 
     public static <E extends Parcelable> void writeParcelableList(Parcel parcel, int flags, List<E> list) {
         parcel.writeInt(list.size());
@@ -54,5 +58,25 @@ public class ParcelHelper {
                     vClass.cast(parcel.readParcelable(vClass.getClassLoader())));
         }
         return map;
+    }
+
+    public static <E extends Parcelable> void saveParcableList(Bundle bundle, List<E> list, String tag) {
+        bundle.putInt(tag, list.size());
+        for (int i = 0; i < list.size(); i++) {
+            if (bundle.getParcelable(tag + i) != null) {
+                Log.w(TAG, String.format("Overwriting data in bundle %s at tag %s with index %d",
+                        bundle.toString(), tag, i));
+            }
+            bundle.putParcelable(tag + i, list.get(i));
+        }
+    }
+
+    public static <E extends Parcelable> List<E> retrieveParcableList(Bundle bundle, String tag) {
+        List<E> list = new ArrayList<>();
+        int size = bundle.getInt(tag);
+        for (int i = 0; i < size; i++) {
+            list.add(bundle.getParcelable(tag + i));
+        }
+        return list;
     }
 }

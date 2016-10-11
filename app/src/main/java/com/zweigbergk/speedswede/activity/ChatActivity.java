@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Chat;
@@ -38,6 +39,18 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     private void createActivity() {
         addFragment(new ChatListFragment(), false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void addFragment(Fragment fragment, boolean addToBackstack) {
@@ -78,6 +91,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             Log.d(TAG, "Displaying chat with ID: " + chat.getId());
             ChatFragment chatFragment = new ChatFragment();
             chatFragment.setChat(chat);
+            setTitle(chat.getName());
             switchToFragment(chatFragment, true);
         } else {
             Log.e(TAG, "WARNING! Tried to display a null chat. ");
@@ -106,6 +120,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     @Override
     public void onBackPressed() {
+        setTitle(R.string.app_name);
+
         FragmentManager manager = getSupportFragmentManager();
 
         //Pop the latest fragment off the stack. If there is no fragment on the stack,

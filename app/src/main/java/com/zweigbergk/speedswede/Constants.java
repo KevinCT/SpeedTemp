@@ -24,6 +24,7 @@ public class Constants {
     public static final String LANGUAGE = "language";
     public static final String SWEDISH_SKILL = "swedishSkill";
     public static final String STRANGER_SWEDISH_SKILL = "strangerSwedishSkill";
+    public static final String CHAT_STATE = "chatState";
 
 
     //For PreferenceValue pushing

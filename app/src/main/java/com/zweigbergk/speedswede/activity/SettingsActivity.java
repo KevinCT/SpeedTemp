@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.UserReference;
@@ -27,6 +28,12 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        setTitle(R.string.settings);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -36,10 +43,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    public void backButton() {
-        this.finish();
     }
 
     @Override
@@ -72,5 +75,9 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
                 break;
             default:
         }
+    }
+
+    public void backButton() {
+        this.finish();
     }
 }
