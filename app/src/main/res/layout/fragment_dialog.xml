@@ -4,33 +4,39 @@
     android:layout_width="300dp"
     android:layout_height="200dp"
     android:orientation="vertical"
+    android:background="@color/colorPrimary"
     tools:context="com.zweigbergk.speedswede.fragment.DialogFragment">
 
     <Button
-        android:layout_width="wrap_content"
+        android:background="#FFFFFF"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="Change name"
+        android:text="@string/change_name"
         android:id="@+id/changeNameBtn"
         android:layout_below="@+id/chatNameText"
         android:layout_alignLeft="@+id/chatNameText"
         android:layout_alignStart="@+id/chatNameText" />
 
     <EditText
-        android:layout_width="200dp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:background="#FFFFFF"
+        android:layout_width="300dp"
         android:layout_height="100dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Chatname here"
+        android:text="@string/chatname_here"
         android:id="@+id/chatNameText"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:background="#FFFFFF"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="Cancel"
+        android:text="@string/cancel"
         android:id="@+id/cancelBtn"
         android:layout_below="@+id/chatNameText"
-        android:layout_toEndOf="@+id/changeNameBtn" />
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
 

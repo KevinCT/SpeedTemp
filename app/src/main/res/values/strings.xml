@@ -32,4 +32,7 @@
     <string name="activity_settings_title">Settings</string>
     <string name="change_chat_name">Change chat name</string>
     <string name="remove_settings">remove settings</string>
+    <string name="change_name">Change name</string>
+    <string name="cancel">Cancel</string>
+    <string name="chatname_here">Chatname here</string>
 </resources>

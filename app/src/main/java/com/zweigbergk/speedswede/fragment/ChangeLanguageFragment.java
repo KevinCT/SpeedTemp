@@ -46,22 +46,8 @@ public class ChangeLanguageFragment extends Fragment {
         return view;
     }
 
-    private void changeToLanguage(String language) {
-        LanguageChanger.changeLanguage(language, getContext());
-        getActivity().recreate();
-        getActivity().getSupportFragmentManager().popBackStack();
-    }
-
     private void pro(String languageCode) {
         LanguageChanger.changeLanguage(languageCode, getContext());
-        Resources resources = getContext().getResources();
-
-        // Change locale settings in the app.
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        Configuration config = resources.getConfiguration();
-        config.locale = new Locale(languageCode.toLowerCase());
-        resources.updateConfiguration(config, metrics);
-
         finish();
     }
 

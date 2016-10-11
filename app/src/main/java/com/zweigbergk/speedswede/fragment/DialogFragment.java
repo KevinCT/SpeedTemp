@@ -17,7 +17,7 @@ import com.zweigbergk.speedswede.util.ActivityAttachable;
  */
 
 public class DialogFragment extends android.support.v4.app.DialogFragment {
-    private EditText mChatName;
+    private EditText mChatNameTxt;
     private Button mChangeNameBtn;
     private Button mCancelBtn;
     private OnDataPass onDataPass;
@@ -32,7 +32,7 @@ public class DialogFragment extends android.support.v4.app.DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dialog, container);
-        //getDialog().setTitle("Hello");
+        getDialog().setTitle("@string/change_chat_name");
         onDataPass = (OnDataPass) getParentFragment();
         initView(view);
         initListener();
@@ -41,14 +41,16 @@ public class DialogFragment extends android.support.v4.app.DialogFragment {
     }
 
     private void initView(View view){
-        mChatName = (EditText) view.findViewById(R.id.chatNameText);
+       // getDialog().setTitle("ChatName");
+        mChatNameTxt = (EditText) view.findViewById(R.id.chatNameText);
+        mChatNameTxt.setText("");
         mChangeNameBtn = (Button) view.findViewById(R.id.changeNameBtn);
         mCancelBtn = (Button) view.findViewById(R.id.cancelBtn);
     }
 
     private void initListener(){
         mChangeNameBtn.setOnClickListener(view -> {
-            onDataPass.onDataPass(mChatName.getText().toString());
+            onDataPass.onDataPass(mChatNameTxt.getText().toString());
             dismiss();
         });
         mCancelBtn.setOnClickListener(view -> dismiss());
