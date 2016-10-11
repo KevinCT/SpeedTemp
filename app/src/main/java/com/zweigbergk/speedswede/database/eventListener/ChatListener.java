@@ -11,7 +11,7 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.util.ChatFactory;
-import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Lists;
 
 import java.util.HashMap;

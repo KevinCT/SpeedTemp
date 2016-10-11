@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede.util;
+package com.zweigbergk.speedswede.methodwrapper;
 
 import java.util.Map;
 

@@ -13,7 +13,7 @@ import com.zweigbergk.speedswede.Initializer;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.presenter.LoginPresenter;
 import com.zweigbergk.speedswede.util.ActivityAttachable;
-import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.methodwrapper.Client;
 import com.zweigbergk.speedswede.view.LoginView;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {

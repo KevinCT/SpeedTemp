@@ -1,6 +1,5 @@
 package com.zweigbergk.speedswede.database;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -20,25 +19,23 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.Pair;
-import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.util.ChatFactory;
-import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.KeyValuePair;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.PreferenceValue;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 import com.zweigbergk.speedswede.util.Statement;
 import com.zweigbergk.speedswede.util.ProductLock;
-import com.zweigbergk.speedswede.util.StateRequirement;
+import com.zweigbergk.speedswede.methodwrapper.StateRequirement;
 
 import static com.zweigbergk.speedswede.Constants.CHATS;
 import static com.zweigbergk.speedswede.Constants.FIRST_USER;
 import static com.zweigbergk.speedswede.Constants.MESSAGES;
 import static com.zweigbergk.speedswede.Constants.SECOND_USER;
-import static com.zweigbergk.speedswede.Constants.USERS;
 import static com.zweigbergk.speedswede.core.User.Preference;
 import static com.zweigbergk.speedswede.util.Lists.EntryMapping;
 

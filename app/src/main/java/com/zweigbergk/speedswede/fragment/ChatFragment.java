@@ -1,7 +1,6 @@
 package com.zweigbergk.speedswede.fragment;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,8 +20,8 @@ import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
-import com.zweigbergk.speedswede.util.CallerMethod;
-import com.zweigbergk.speedswede.util.ProviderMethod;
+import com.zweigbergk.speedswede.methodwrapper.CallerMethod;
+import com.zweigbergk.speedswede.methodwrapper.ProviderMethod;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
 
 import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;

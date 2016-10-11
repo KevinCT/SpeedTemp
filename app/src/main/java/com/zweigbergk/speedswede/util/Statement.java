@@ -1,5 +1,8 @@
 package com.zweigbergk.speedswede.util;
 
+import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.methodwrapper.Executable;
+
 public class Statement {
 
     private ProductBuilder<Boolean> builder;

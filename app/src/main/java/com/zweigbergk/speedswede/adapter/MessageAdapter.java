@@ -14,7 +14,7 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.methodwrapper.Client;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -8,6 +8,8 @@ import java.util.Map;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
+import com.zweigbergk.speedswede.methodwrapper.EntryAssertion;
+
 import static com.zweigbergk.speedswede.Constants.LANGUAGE;
 import static com.zweigbergk.speedswede.Constants.NOTIFICATIONS;
 import static com.zweigbergk.speedswede.Constants.STRANGER_SWEDISH_SKILL;

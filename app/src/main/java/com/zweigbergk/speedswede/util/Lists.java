@@ -1,5 +1,9 @@
 package com.zweigbergk.speedswede.util;
 
+import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.methodwrapper.EntryAssertion;
+import com.zweigbergk.speedswede.methodwrapper.Query;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

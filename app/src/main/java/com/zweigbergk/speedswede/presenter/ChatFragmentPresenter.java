@@ -15,7 +15,7 @@ import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.interactor.BanInteractor;
-import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
 

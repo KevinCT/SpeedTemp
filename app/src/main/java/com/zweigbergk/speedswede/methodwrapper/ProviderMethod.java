@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede.util;
+package com.zweigbergk.speedswede.methodwrapper;
 
 /**
  * Returns an item when provided with an appropriate dependency.

@@ -2,7 +2,7 @@ package com.zweigbergk.speedswede.database;
 
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.Statement;
-import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.methodwrapper.Client;
 
 public enum PoolReference {
     INSTANCE;

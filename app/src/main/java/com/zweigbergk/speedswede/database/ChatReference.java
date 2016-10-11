@@ -6,7 +6,7 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.util.Client;
+import com.zweigbergk.speedswede.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Statement;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.ProductBuilder;
