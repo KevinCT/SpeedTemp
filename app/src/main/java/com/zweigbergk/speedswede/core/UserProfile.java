@@ -15,10 +15,11 @@ import java.util.TimerTask;
 public class UserProfile implements User {
 
     private String mName, mUid;
-    private Timer timer;
-    private int[] matchingInterval;
-    private int ownRating;
+//    private Timer timer;
+//    private int[] matchingInterval;
+//    private int ownRating;
     private MatchSkill matchSkill;
+    private MatchSkill ownSkill;
 
     @Exclude
     private Map<Preference, PreferenceValue> mPreferences;
@@ -26,10 +27,11 @@ public class UserProfile implements User {
     public UserProfile(String name, String uid) {
         mName = name;
         mUid = uid;
-        timer = new Timer();
-        matchingInterval = new int[2];
-        ownRating = 0;
+//        timer = new Timer();
+//        matchingInterval = new int[2];
+//        ownRating = 0;
         matchSkill = MatchSkill.BEGINNER;
+        ownSkill = MatchSkill.BEGINNER;
     }
 
     public UserProfile withPreferences(Map<Preference, PreferenceValue> preferences) {
@@ -118,56 +120,80 @@ public class UserProfile implements User {
         mPreferences = ParcelHelper.readParcelableMap(in, Preference.class, PreferenceValue.class);
     }
 
-    public int getOwnRating() {
-        return this.ownRating;
+    public MatchSkill getMatchSkill() {
+        return matchSkill;
+    }
+    public MatchSkill getOwnSkill() {
+        return ownSkill;
     }
 
-    public void setInitialMatchInterval() {
-        switch(matchSkill) {
+    public void setOwnSkill(MatchSkill skill) {
+        matchSkill = skill;
+        switch(skill) {
             case BEGINNER:
-                matchingInterval[0] = 0;
-                matchingInterval[1] = 0;
+                matchSkill = MatchSkill.SKILLED;
                 break;
             case INTERMEDIATE:
-                matchingInterval[0] = 50;
-                matchingInterval[1] = 50;
+                matchSkill = MatchSkill.INTERMEDIATE;
                 break;
             case SKILLED:
-                matchingInterval[0] = 100;
-                matchingInterval[0] = 100;
+                matchSkill = MatchSkill.BEGINNER;
                 break;
             default:
-                break;
+                matchSkill = MatchSkill.BEGINNER;
         }
     }
 
-    public void setMatchingSkill(MatchSkill skill) {
-        matchSkill = skill;
-    }
-
-    public int[] getMatchInterval() {
-        return matchingInterval;
-    }
-
-    public void incrementRating() {
-        if(matchingInterval[0] >= 10) {
-            matchingInterval[0] = matchingInterval[0] - 10;
-        }
-        if(matchingInterval[1] <= 90) {
-            matchingInterval[1] = matchingInterval[1] + 10;
-        }
-    }
-
-    public void startTime() {
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                incrementRating();
-            }
-        }, 60*1000, 60*1000);
-    }
-
-    public void stopTime() {
-        timer.cancel();
-    }
+//    public int getOwnRating() {
+//        return this.ownRating;
+//    }
+//
+//    public void setInitialMatchInterval() {
+//        switch(matchSkill) {
+//            case BEGINNER:
+//                matchingInterval[0] = 0;
+//                matchingInterval[1] = 0;
+//                break;
+//            case INTERMEDIATE:
+//                matchingInterval[0] = 50;
+//                matchingInterval[1] = 50;
+//                break;
+//            case SKILLED:
+//                matchingInterval[0] = 100;
+//                matchingInterval[0] = 100;
+//                break;
+//            default:
+//                break;
+//        }
+//    }
+//
+//    public void setMatchingSkill(MatchSkill skill) {
+//        matchSkill = skill;
+//    }
+//
+//    public int[] getMatchInterval() {
+//        return matchingInterval;
+//    }
+//
+//    public void incrementRating() {
+//        if(matchingInterval[0] >= 10) {
+//            matchingInterval[0] = matchingInterval[0] - 10;
+//        }
+//        if(matchingInterval[1] <= 90) {
+//            matchingInterval[1] = matchingInterval[1] + 10;
+//        }
+//    }
+//
+//    public void startTime() {
+//        timer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                incrementRating();
+//            }
+//        }, 60*1000, 60*1000);
+//    }
+//
+//    public void stopTime() {
+//        timer.cancel();
+//    }
 }

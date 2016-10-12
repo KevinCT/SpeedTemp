@@ -15,13 +15,16 @@ public interface User extends Parcelable {
     String getDisplayName();
     Object getPreference(Preference preference);
     Map<Preference, PreferenceValue> getPreferences();
-    int getOwnRating();
-    int[] getMatchInterval();
-    void incrementRating();
-    void startTime();
-    void stopTime();
-    void setInitialMatchInterval();
-    void setMatchingSkill(MatchSkill skill);
+    MatchSkill getMatchSkill();
+    MatchSkill getOwnSkill();
+    void setOwnSkill(MatchSkill skill);
+//    int getOwnRating();
+//    int[] getMatchInterval();
+//    void incrementRating();
+//    void startTime();
+//    void stopTime();
+//    void setInitialMatchInterval();
+//    void setMatchingSkill(MatchSkill skill);
 
     enum Preference implements Parcelable {
         NOTIFICATIONS, LANGUAGE, SWEDISH_SKILL, STRANGER_SWEDISH_SKILL;
