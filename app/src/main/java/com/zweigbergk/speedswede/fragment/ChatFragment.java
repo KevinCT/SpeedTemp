@@ -20,9 +20,9 @@ import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.database.LocalStorage;
-import com.zweigbergk.speedswede.methodwrapper.Client;
 import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
 import com.zweigbergk.speedswede.util.methodwrapper.CallerMethod;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
 
