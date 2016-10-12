@@ -51,8 +51,8 @@ public class UserFactory {
         Map<User.Preference, PreferenceValue> preferences = new HashMap<>();
         preferences.put(User.Preference.NOTIFICATIONS, new BooleanPreference(items.getBoolean(ProductLock.NOTIFICATIONS)));
         preferences.put(User.Preference.LANGUAGE, new StringPref(items.getString(ProductLock.LANGUAGE)));
-        preferences.put(User.Preference.SWEDISH_SKILL, new LongPref(items.getLong(ProductLock.SWEDISH_SKILL)));
-        preferences.put(User.Preference.STRANGER_SWEDISH_SKILL, new LongPref(items.getLong(ProductLock.STRANGER_SWEDISH_SKILL)));
+        preferences.put(User.Preference.SWEDISH_SKILL, new LongPreference(items.getLong(ProductLock.SWEDISH_SKILL)));
+        preferences.put(User.Preference.STRANGER_SWEDISH_SKILL, new LongPreference(items.getLong(ProductLock.STRANGER_SWEDISH_SKILL)));
 
         EntryAssertion<User.Preference, PreferenceValue> isNull = e -> e.getValue() == null;
         Map<User.Preference, PreferenceValue> nonNullPrefs = Lists.reject(preferences, isNull);
