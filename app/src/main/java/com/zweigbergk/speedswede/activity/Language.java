@@ -1,7 +1,11 @@
 package com.zweigbergk.speedswede.activity;
 
 public enum Language {
-    ENGLISH("en"), SWEDISH("sv");
+    ENGLISH("en"),
+    SWEDISH("sv"),
+    TURKISH("tu"),
+    ARABIC("ar"),
+    DARI("da");
 
     private final String mLanguageCode;
 

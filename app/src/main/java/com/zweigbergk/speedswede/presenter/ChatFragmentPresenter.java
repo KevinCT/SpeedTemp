@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.zweigbergk.speedswede.adapter.MessageAdapter;
 import com.zweigbergk.speedswede.core.Chat;
@@ -60,6 +61,13 @@ public class ChatFragmentPresenter {
 
         MessageAdapter adapter = new MessageAdapter();
         recyclerView.setAdapter(adapter);
+
+        recyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Clicked :D");
+            }
+        });
 
         adapter.addEventCallback(DatabaseEvent.ADDED, this::smoothScrollToBottomOfList);
     }

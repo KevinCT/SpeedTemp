@@ -1,7 +1,5 @@
 package com.zweigbergk.speedswede.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +9,6 @@ import android.widget.EditText;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.ActivityAttachable;
-
-/**
- * Created by kevin on 10/10/2016.
- */
 
 public class DialogFragment extends android.support.v4.app.DialogFragment {
     private EditText mChatNameTxt;

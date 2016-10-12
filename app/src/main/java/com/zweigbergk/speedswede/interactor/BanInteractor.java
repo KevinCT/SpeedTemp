@@ -8,10 +8,9 @@ public class BanInteractor  {
 
     public BanInteractor(){
         String userId = DatabaseHandler.getActiveUserId();
-        if(DatabaseHandler.getBans(userId)!=null) {
+        if (DatabaseHandler.getBans(userId) != null) {
             mBanner = DatabaseHandler.getBans(userId);
-        }
-        else {
+        } else {
             mBanner = new Banner();
         }
     }
@@ -27,8 +26,4 @@ public class BanInteractor  {
         DatabaseHandler.sendObject("bans",mBanner);
 
     }
-
-
-
-
 }

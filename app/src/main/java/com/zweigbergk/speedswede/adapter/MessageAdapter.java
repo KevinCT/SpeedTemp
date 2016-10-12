@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zweigbergk.speedswede.R;
+import com.zweigbergk.speedswede.activity.Language;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.Translation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,6 +82,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     private void updateMessage(@NonNull Message message) {
+
         int position = mMessages.indexOf(message);
 
         for (Message messageInList : mMessages) {
@@ -93,11 +96,31 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
     }
 
+    private class TranslationClient implements Client<String> {
+        private Message mMessage;
+
+        TranslationClient(Message message) {
+            mMessage = message;
+        }
+
+        @Override
+        public void supply(String string) {
+            mMessage.setText(mMessage.getText() + "\n\nTranslation:\n" + string);
+            notifyItemChanged(getItemCount() - 1);
+        }
+    }
+
     private void addMessage(Message message) {
         Log.d(TAG, "In addMessage");
 
         if (!mMessages.contains(message)) {
+
+            TranslationClient client = new TranslationClient(message);
+            Translation translation = Translation.translate(message.getText(), Language.SWEDISH, Language.ENGLISH);
+            translation.then(client::supply);
+
             message.setText(message.getText());
+
             mMessages.add(message);
             notifyItemInserted(getItemCount() - 1);
         }
