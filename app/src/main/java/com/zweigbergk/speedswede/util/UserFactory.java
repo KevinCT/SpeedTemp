@@ -37,12 +37,6 @@ public class UserFactory {
         builder.addItem(ProductLock.LANGUAGE,
                 dataSnapshot.child(preference(LANGUAGE)).getValue());
 
-//        builder.addItem(ProductLock.SWEDISH_SKILL,
-//                dataSnapshot.child(preference(SWEDISH_SKILL)).getValue());
-//
-//        builder.addItem(ProductLock.STRANGER_SWEDISH_SKILL,
-//                dataSnapshot.child(preference(STRANGER_SWEDISH_SKILL)).getValue());
-
         builder.addItem(ProductLock.USAGE,
                 dataSnapshot.child(preference(USAGE)).getValue());
 
@@ -57,8 +51,6 @@ public class UserFactory {
         preferences.put(User.Preference.NOTIFICATIONS, new BooleanPreference(items.getBoolean(ProductLock.NOTIFICATIONS)));
         preferences.put(User.Preference.LANGUAGE, new StringPref(items.getString(ProductLock.LANGUAGE)));
         preferences.put(User.Preference.USAGE, new StringPref(items.getString(ProductLock.USAGE)));
-//        preferences.put(User.Preference.SWEDISH_SKILL, new LongPref(items.getLong(ProductLock.SWEDISH_SKILL)));
-//        preferences.put(User.Preference.STRANGER_SWEDISH_SKILL, new LongPref(items.getLong(ProductLock.STRANGER_SWEDISH_SKILL)));
 
         EntryAssertion<User.Preference, PreferenceValue> isNull = e -> e.getValue() == null;
         Map<User.Preference, PreferenceValue> nonNullPrefs = Lists.reject(preferences, isNull);

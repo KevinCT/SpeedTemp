@@ -15,7 +15,6 @@ public class UserReference {
 
     enum UserAttribute {
         NAME, ID, NOTIFICATIONS, LANGUAGE, USAGE;
-//        SWEDISH_SKILL, STRANGER_SWEDISH_SKILL;
 
         public String getDbKey() {
             switch(this) {
@@ -29,10 +28,6 @@ public class UserReference {
                     return Constants.makePath(Constants.PREFERENCES, Constants.LANGUAGE);
                 case USAGE:
                     return Constants.makePath(Constants.PREFERENCES, Constants.USAGE);
-//                case SWEDISH_SKILL:
-//                    return Constants.makePath(Constants.PREFERENCES, Constants.SWEDISH_SKILL);
-//                case STRANGER_SWEDISH_SKILL:
-//                    return Constants.makePath(Constants.PREFERENCES, Constants.STRANGER_SWEDISH_SKILL);
                 default:
                     return Constants.UNDEFINED;
             }
@@ -80,21 +75,18 @@ public class UserReference {
         }
     }
 
-//    public void setPreference(User.Preference preference, long value) {
+    public void setPreference(User.Preference preference, long value) {
 //        if (!preference.accepts(value)) {
 //            throw new RuntimeException(String.format(
 //                    "Preference [ %s ] can invert be set to a long value.", preference));
 //        }
-//
-//        switch (preference) {
+
+        switch (preference) {
 //            case SWEDISH_SKILL:
 //                setSwedishSkill(value);
 //                break;
-//            case STRANGER_SWEDISH_SKILL:
-//                setStrangerSwedishSkill(value);
-//                break;
-//        }
-//    }
+        }
+    }
 
     public void setPreference(User.Preference preference, String value) {
         if (!preference.accepts(value)) {
@@ -111,16 +103,6 @@ public class UserReference {
                 break;
         }
     }
-
-//    private void setSwedishSkill(long value) {
-//        ifStillValid().then(() ->
-//                DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.SWEDISH_SKILL, value));
-//    }
-//
-//    private void setStrangerSwedishSkill(long value) {
-//        ifStillValid().then(() ->
-//                DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.STRANGER_SWEDISH_SKILL, value));
-//    }
 
     private void setLanguage(String language) {
         ifStillValid().then(() -> {
