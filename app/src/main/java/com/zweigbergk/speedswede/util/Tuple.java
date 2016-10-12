@@ -2,12 +2,12 @@ package com.zweigbergk.speedswede.util;
 
 import java.util.Map;
 
-public class KeyValuePair<K, V> implements Map.Entry<K, V> {
+public class Tuple<K, V> implements Map.Entry<K, V> {
 
     private K key;
     private V value;
 
-    public KeyValuePair(K key, V value) {
+    public Tuple(K key, V value) {
         this.key = key;
         this.value = value;
     }
@@ -31,7 +31,7 @@ public class KeyValuePair<K, V> implements Map.Entry<K, V> {
         return oldValue;
     }
 
-    public static <K, V> KeyValuePair from(Map.Entry<K, V> entry) {
-        return new KeyValuePair<K, V>(entry.getKey(), entry.getValue());
+    public static <K, V> Tuple from(Map.Entry<K, V> entry) {
+        return new Tuple<>(entry.getKey(), entry.getValue());
     }
 }

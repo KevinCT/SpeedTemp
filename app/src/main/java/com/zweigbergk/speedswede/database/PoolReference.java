@@ -11,7 +11,6 @@ public enum PoolReference {
         return INSTANCE;
     }
 
-
     public Statement contains(User user) {
         return DbUserHandler.getInstance().isInUserPool(user);
     }

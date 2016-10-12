@@ -24,7 +24,7 @@ import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.util.ChatFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.KeyValuePair;
+import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.PreferenceValue;
 import com.zweigbergk.speedswede.util.ProductBuilder;
@@ -168,7 +168,7 @@ public enum DbChatHandler {
         PreferenceValue prefValue = (PreferenceValue) mapEntry.getValue();
         String prefValueAsString = parseToReadable(prefValue);
 
-        return new KeyValuePair<>(prefAsString, prefValueAsString);
+        return new Tuple<>(prefAsString, prefValueAsString);
     };
 
     private static String parseToReadable(PreferenceValue prefValue) {
