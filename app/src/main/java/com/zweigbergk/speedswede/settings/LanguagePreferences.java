@@ -13,7 +13,6 @@ import com.zweigbergk.speedswede.core.local.LanguageChanger;
 
 import java.util.Locale;
 
-import static android.support.design.R.styleable.View;
 import static com.zweigbergk.speedswede.Constants.ARABIC;
 import static com.zweigbergk.speedswede.Constants.DARI;
 import static com.zweigbergk.speedswede.Constants.ENGLISH;
@@ -28,21 +27,20 @@ public class LanguagePreferences extends DialogPreference {
 
         setDialogLayoutResource(R.layout.fragment_change_language);
 
-
     }
 
     @Override
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
 
-        view.findViewById(R.id.fragment_change_language_swedish).setOnClickListener(v -> pro(SWEDISH));
-        view.findViewById(R.id.fragment_change_language_english).setOnClickListener(v -> pro(ENGLISH));
-        view.findViewById(R.id.fragment_change_language_turkish).setOnClickListener(v -> pro(TURKISH));
-        view.findViewById(R.id.fragment_change_language_dari).setOnClickListener(v -> pro(DARI));
-        view.findViewById(R.id.fragment_change_language_arabic).setOnClickListener(v -> pro(ARABIC));
+        view.findViewById(R.id.fragment_change_language_swedish).setOnClickListener(v -> changeLanguage(SWEDISH));
+        view.findViewById(R.id.fragment_change_language_english).setOnClickListener(v -> changeLanguage(ENGLISH));
+        view.findViewById(R.id.fragment_change_language_turkish).setOnClickListener(v -> changeLanguage(TURKISH));
+        view.findViewById(R.id.fragment_change_language_dari).setOnClickListener(v -> changeLanguage(DARI));
+        view.findViewById(R.id.fragment_change_language_arabic).setOnClickListener(v -> changeLanguage(ARABIC));
     }
 
-    private void pro(String languageCode) {
+    private void changeLanguage(String languageCode) {
         LanguageChanger.changeLanguage(languageCode, getContext());
         Resources resources = getContext().getResources();
 

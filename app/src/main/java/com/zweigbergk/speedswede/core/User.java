@@ -19,7 +19,6 @@ public interface User extends Parcelable {
     enum Preference implements Parcelable {
         NOTIFICATIONS, LANGUAGE, SWEDISH_SKILL, STRANGER_SWEDISH_SKILL;
 
-
         private final int mValue;
 
         public static Preference[] values = Preference.values();

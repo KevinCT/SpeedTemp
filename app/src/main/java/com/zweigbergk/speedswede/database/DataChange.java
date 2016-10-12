@@ -49,7 +49,7 @@ public class DataChange<T> {
         if (!other.getClass().equals(this.getClass())) {
             return false;
         }
-        
+
         DataChange otherDataChange = (DataChange) other;
         return otherDataChange.getItem().equals(this.getItem()) &&
                 otherDataChange.getEvent().equals(this.getEvent());

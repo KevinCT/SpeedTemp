@@ -52,5 +52,4 @@ public class DialogFragment extends android.support.v4.app.DialogFragment {
         mCancelBtn.setOnClickListener(view -> dismiss());
     }
 
-
 }
