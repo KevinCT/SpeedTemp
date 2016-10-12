@@ -30,7 +30,7 @@ public class UserProfile implements User {
 //        timer = new Timer();
 //        matchingInterval = new int[2];
 //        ownRating = 0;
-        mMatchSkill = MatchSkill.BEGINNER;
+        mMatchSkill = MatchSkill.SKILLED;
         mOwnSkill = MatchSkill.BEGINNER;
     }
 

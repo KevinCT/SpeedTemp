@@ -91,12 +91,14 @@ public enum ChatMatcher {
             // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
             //List<User> matchedUsers = Lists.getFirstElements(mUsersInPool, 2);
             List<User> matchedUsers = sofisticatedMatch();
+            if(matchedUsers != null) {
+                DatabaseHandler.getPool().removeUser(matchedUsers.get(0));
+                DatabaseHandler.getPool().removeUser(matchedUsers.get(0));
 
-            Lists.forEach(matchedUsers, DatabaseHandler.getPool()::remove);
-
-            Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
-            Log.d("CHATMATCHER: NAME: ", chat.getName() + "");
-            DatabaseHandler.get(chat).push();
+                Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
+                Log.d("CHATMATCHER: NAME: ", chat.getName() + "");
+                DatabaseHandler.get(chat).push();
+            }
         }
     }
 
