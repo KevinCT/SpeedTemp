@@ -18,8 +18,8 @@ public class UserProfile implements User {
 //    private Timer timer;
 //    private int[] matchingInterval;
 //    private int ownRating;
-    private MatchSkill matchSkill;
-    private MatchSkill ownSkill;
+    private MatchSkill mMatchSkill;
+    private MatchSkill mOwnSkill;
 
     @Exclude
     private Map<Preference, PreferenceValue> mPreferences;
@@ -30,8 +30,8 @@ public class UserProfile implements User {
 //        timer = new Timer();
 //        matchingInterval = new int[2];
 //        ownRating = 0;
-        matchSkill = MatchSkill.BEGINNER;
-        ownSkill = MatchSkill.BEGINNER;
+        mMatchSkill = MatchSkill.BEGINNER;
+        mOwnSkill = MatchSkill.BEGINNER;
     }
 
     public UserProfile withPreferences(Map<Preference, PreferenceValue> preferences) {
@@ -121,26 +121,26 @@ public class UserProfile implements User {
     }
 
     public MatchSkill getMatchSkill() {
-        return matchSkill;
+        return mMatchSkill;
     }
     public MatchSkill getOwnSkill() {
-        return ownSkill;
+        return mOwnSkill;
     }
 
     public void setOwnSkill(MatchSkill skill) {
-        matchSkill = skill;
+        mMatchSkill = skill;
         switch(skill) {
             case BEGINNER:
-                matchSkill = MatchSkill.SKILLED;
+                mMatchSkill = MatchSkill.SKILLED;
                 break;
             case INTERMEDIATE:
-                matchSkill = MatchSkill.INTERMEDIATE;
+                mMatchSkill = MatchSkill.INTERMEDIATE;
                 break;
             case SKILLED:
-                matchSkill = MatchSkill.BEGINNER;
+                mMatchSkill = MatchSkill.BEGINNER;
                 break;
             default:
-                matchSkill = MatchSkill.BEGINNER;
+                mMatchSkill = MatchSkill.BEGINNER;
         }
     }
 
