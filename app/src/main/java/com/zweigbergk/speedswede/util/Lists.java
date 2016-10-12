@@ -62,8 +62,8 @@ public class Lists {
         return result;
     }
 
-    public static <E> List<E> map(Iterable<E> collection, Mapping<E> tool) {
-        List<E> result = new ArrayList<>();
+    public static <From, To> List<To> map(Iterable<From> collection, Mapping<From, To> tool) {
+        List<To> result = new ArrayList<>();
 
         forEach(collection, e -> result.add(tool.map(e)));
 
@@ -147,8 +147,8 @@ public class Lists {
     }
 
 
-    public interface Mapping<E> {
-        E map(E object);
+    public interface Mapping<From, To> {
+        To map(From object);
     }
 
     public interface EntryMapping<K, V> {

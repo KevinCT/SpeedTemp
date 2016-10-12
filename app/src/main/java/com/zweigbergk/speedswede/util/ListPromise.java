@@ -10,8 +10,8 @@ public class ListPromise<E> extends Promise<List<E>> {
 
     private Client<E> iteratorClient;
 
-    public ListPromise(Blueprint<List<E>> blueprint, PromiseNeed... locks) {
-        super(blueprint, locks);
+    public ListPromise(Blueprint<List<E>> blueprint, PromiseNeed... needs) {
+        super(blueprint, needs);
     }
 
     public static <Product> ListPromise<Product> empty() {

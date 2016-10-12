@@ -18,17 +18,17 @@ public class PromiseState {
 
     private ItemMap mItems;
 
-    private Set<PromiseNeed> mLocks;
+    private Set<PromiseNeed> needs;
 
-    private Set<PromiseNeed> mOpenedLocks;
+    private Set<PromiseNeed> fulfilledNeeds;
 
     private Map<PromiseNeed, StateRequirement> stateRequirements;
 
     public PromiseState() {
         mItems = new ItemMap();
 
-        mLocks = new HashSet<>();
-        mOpenedLocks = new HashSet<>();
+        needs = new HashSet<>();
+        fulfilledNeeds = new HashSet<>();
 
         stateRequirements = new HashMap<>();
     }
@@ -38,45 +38,41 @@ public class PromiseState {
         Log.d(TAG, "Adding state requirement");
     }
 
-    private void updateLock(PromiseNeed key) {
-        Object object = mItems.get(key);
-        if (hasStateRequirement(key)) {
-            Log.d(TAG, "Check if lock should open");
-            if (stateRequirements.get(key).isFulfilled(object)) {
-                Log.d(TAG, "Lock is open!");
-                mOpenedLocks.add(key);
+    private void updateState(PromiseNeed need) {
+        Object object = mItems.get(need);
+        if (hasStateRequirement(need)) {
+            Log.d(TAG, "Check if need is fulfilled");
+            if (stateRequirements.get(need).isFulfilled(object)) {
+                Log.d(TAG, Stringify.curlyFormat("Need {need} is fulfilled!", need.name()));
+                fulfilledNeeds.add(need);
             }
         } else {
-            mOpenedLocks.add(key);
+            fulfilledNeeds.add(need);
         }
     }
 
     public void updateState() {
-        Lists.forEach(mLocks, this::updateLock);
+        Lists.forEach(needs, this::updateState);
     }
 
-    void put(PromiseNeed lock, Object product) {
-        mItems.put(lock, product);
-        updateLock(lock);
+    void put(PromiseNeed need, Object item) {
+        mItems.put(need, item);
+        updateState(need);
     }
 
-    private boolean hasStateRequirement(PromiseNeed key) {
-        return stateRequirements.get(key) != null;
+    private boolean hasStateRequirement(PromiseNeed need) {
+        return stateRequirements.get(need) != null;
     }
 
-    void addLock(PromiseNeed lock) {
-        mLocks.add(lock);
+    void addLock(PromiseNeed need) {
+        needs.add(need);
     }
 
-    boolean isOpened() {
-        return allLocksOpened();
-    }
-
-    private boolean allLocksOpened() {
-        return mLocks.equals(mOpenedLocks);
+    public boolean isFulfilled() {
+        return needs.equals(fulfilledNeeds);
     }
 
     ItemMap getItems() {
-        return isOpened() ? mItems : null;
+        return isFulfilled() ? mItems : null;
     }
 }

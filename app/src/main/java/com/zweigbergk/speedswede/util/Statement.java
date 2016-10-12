@@ -5,13 +5,13 @@ import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
 public class Statement {
 
-    private ProductBuilder<Boolean> builder;
+    private Promise<Boolean> builder;
 
     private boolean inverted;
 
     public Statement() {
-        builder = new ProductBuilder<>(assertionResult);
-        builder.attachLocks(ProductLock.ASSERTION);
+        builder = new Promise<>(assertionResult);
+        builder.needs(PromiseNeed.ASSERTION);
 
         inverted = false;
     }
@@ -25,7 +25,7 @@ public class Statement {
     }
 
     public void setReturnValue(boolean value) {
-        builder.addItem(ProductLock.ASSERTION, value);
+        builder.addItem(PromiseNeed.ASSERTION, value);
     }
 
     public void onTrue(Executable executable) {
@@ -46,15 +46,15 @@ public class Statement {
     }
 
     public void setBuildFailed(boolean value) {
-        builder.setBuildFailed(value);
+        builder.setPromiseFailed(value);
     }
 
     private boolean determineInterest(boolean value) {
         return (inverted || value) && !(inverted && value);
     }
 
-    private static ProductBuilder.Blueprint<Boolean> assertionResult =
-            items -> items.getBoolean(ProductLock.ASSERTION);
+    private static Promise.Blueprint<Boolean> assertionResult =
+            items -> items.getBoolean(PromiseNeed.ASSERTION);
 
     private boolean onTrue(boolean value) {
         return determineInterest(value);

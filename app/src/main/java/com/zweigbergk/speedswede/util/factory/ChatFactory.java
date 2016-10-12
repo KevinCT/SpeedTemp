@@ -39,17 +39,17 @@ public class ChatFactory {
     public static void createChat(Collection<Client<Chat>> clients) {
         String activeUserId = DatabaseHandler.getActiveUserId();
 
-        Promise<Chat> builder = new Promise<>(newChatBlueprint);
-        builder.needs(PromiseNeed.FIRST_USER,
+        Promise<Chat> promise = new Promise<>(newChatBlueprint);
+        promise.needs(PromiseNeed.FIRST_USER,
                 PromiseNeed.SECOND_USER);
 
-        Lists.forEach(clients, builder::thenNotify);
+        Lists.forEach(clients, promise::thenNotify);
 
         //Append active user
-        DatabaseHandler.users().pull(activeUserId).then(user -> builder.addItem(PromiseNeed.FIRST_USER, user));
+        DatabaseHandler.users().pull(activeUserId).then(user -> promise.addItem(PromiseNeed.FIRST_USER, user));
 
         //Append test user
-        DatabaseHandler.users().pull(Constants.TEST_USER_UID).then(user -> builder.addItem(PromiseNeed.SECOND_USER, user));
+        DatabaseHandler.users().pull(Constants.TEST_USER_UID).then(user -> promise.addItem(PromiseNeed.SECOND_USER, user));
     }
 
     /** Supplies a Client with a Chat created from a DataSnapshot. Returns null if the snapshot
@@ -67,9 +67,9 @@ public class ChatFactory {
     }
 
     public static Promise<Chat> serializeChat(DataSnapshot snapshot) {
-        Promise<Chat> chatBuilder = new Promise<>(ChatFactory::getReconstructionBlueprint);
+        Promise<Chat> promise = new Promise<>(ChatFactory::getReconstructionBlueprint);
 
-        chatBuilder.needs(PromiseNeed.ID, PromiseNeed.NAME, PromiseNeed.TIMESTAMP, PromiseNeed.MESSAGE_LIST,
+        promise.needs(PromiseNeed.ID, PromiseNeed.NAME, PromiseNeed.TIMESTAMP, PromiseNeed.MESSAGE_LIST,
                 PromiseNeed.FIRST_USER, PromiseNeed.SECOND_USER);
 
         String chatId = snapshot.getKey();
@@ -83,15 +83,15 @@ public class ChatFactory {
         String firstUserId = ChatFactory.getUserId(snapshot.child(Constants.FIRST_USER));
         String secondUserId = ChatFactory.getUserId(snapshot.child(Constants.SECOND_USER));
 
-        chatBuilder.addItem(PromiseNeed.ID, chatId);
-        chatBuilder.addItem(PromiseNeed.NAME, name);
-        chatBuilder.addItem(PromiseNeed.TIMESTAMP, chatTimestamp);
-        chatBuilder.addItem(PromiseNeed.MESSAGE_LIST, messageList);
+        promise.addItem(PromiseNeed.ID, chatId);
+        promise.addItem(PromiseNeed.NAME, name);
+        promise.addItem(PromiseNeed.TIMESTAMP, chatTimestamp);
+        promise.addItem(PromiseNeed.MESSAGE_LIST, messageList);
 
-        DatabaseHandler.users().pull(firstUserId).then(user -> chatBuilder.addItem(PromiseNeed.FIRST_USER, user));
-        DatabaseHandler.users().pull(secondUserId).then(user -> chatBuilder.addItem(PromiseNeed.SECOND_USER, user));
+        DatabaseHandler.users().pull(firstUserId).then(user -> promise.addItem(PromiseNeed.FIRST_USER, user));
+        DatabaseHandler.users().pull(secondUserId).then(user -> promise.addItem(PromiseNeed.SECOND_USER, user));
 
-        return chatBuilder;
+        return promise;
     }
 
     private static List<Message> asMessageList(Iterable<DataSnapshot> snapshot) {

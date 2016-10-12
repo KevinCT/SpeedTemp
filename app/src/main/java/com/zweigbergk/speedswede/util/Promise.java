@@ -13,30 +13,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Promise<Product> {
+public class Promise<E> {
     public static final String TAG = Promise.class.getSimpleName().toUpperCase();
 
-    private Blueprint<Product> mBlueprint;
+    private Blueprint<E> mBlueprint;
 
-    private List<Client<Product>> mClients;
+    private List<Client<E>> mClients;
 
-    private Map<Executable, Executable.Interest<Product>> mInterestExecutables;
+    private Map<Executable, Executable.Interest<E>> mInterestExecutables;
 
     private List<Executable> mExecutables;
 
-    private TreasureChest mTreasureChest;
+    private PromiseState promiseState;
 
-    protected Product mCompletedProduct;
+    protected E mCompletedProduct;
 
     //Error flag. If this is set, the builder will return null to all its listeners.
-    protected boolean mBuildFailed;
+    boolean mBuildFailed;
 
-    public static <Product> Promise<Product> shell() {
+    public static <E> Promise<E> create() {
         return new Promise<>(null);
     }
 
-    /** @param locks The locks that are required to be non-null for the builder to call complete() */
-    public Promise(Blueprint<Product> blueprint, ProductLock... locks) {
+    /** @param needs The needs that are required to be non-null for the builder to call complete() */
+    public Promise(Blueprint<E> blueprint, PromiseNeed... needs) {
 
         mBlueprint = blueprint;
         mBuildFailed = false;
@@ -45,11 +45,11 @@ public class Promise<Product> {
         mExecutables = new ArrayList<>();
         mInterestExecutables = new HashMap<>();
 
-        mTreasureChest = new TreasureChest();
-        Lists.forEach(Arrays.asList(locks), mTreasureChest::addLock);
+        promiseState = new PromiseState();
+        Lists.forEach(Arrays.asList(needs), promiseState::addLock);
     }
 
-    public void setBlueprint(Blueprint<Product> blueprint) {
+    public void setBlueprint(Blueprint<E> blueprint) {
         if (mBlueprint != null) {
             Log.w(TAG, "WARNING! Replacing an existing blueprint. At: ");
             new Exception().printStackTrace();
@@ -58,12 +58,16 @@ public class Promise<Product> {
         mBlueprint = blueprint;
     }
 
-    public void attachLocks(ProductLock... locks) {
-        Lists.forEach(Arrays.asList(locks), mTreasureChest::addLock);
+    public static Promise all(Promise... promises) {
+        return new PromiseGroup(promises);
     }
 
-    private synchronized void complete() {
-        mCompletedProduct = mBlueprint.makeFromItems(mTreasureChest.getItems());
+    public void needs(PromiseNeed... locks) {
+        Lists.forEach(Arrays.asList(locks), promiseState::addLock);
+    }
+
+    protected void complete() {
+        mCompletedProduct = mBlueprint.makeFromItems(promiseState.getItems());
 
         notifyListeners();
 
@@ -81,9 +85,9 @@ public class Promise<Product> {
             mExecutables.remove(executable);
         });
 
-        for (Map.Entry<Executable, Executable.Interest<Product>> entry :
+        for (Map.Entry<Executable, Executable.Interest<E>> entry :
                 mInterestExecutables.entrySet()) {
-            Executable.Interest<Product> interest = entry.getValue();
+            Executable.Interest<E> interest = entry.getValue();
             Executable executable = entry.getKey();
             if (interest.caresFor(mCompletedProduct)) {
                 executable.run();
@@ -93,29 +97,35 @@ public class Promise<Product> {
         }
     }
 
-    public void requireState(ProductLock key, StateRequirement requirement) {
-        mTreasureChest.requireState(key, requirement);
+    public void requireState(PromiseNeed need, StateRequirement requirement) {
+        promiseState.requireState(need, requirement);
     }
 
-    public void addItem(ProductLock lock, Object data) {
-        mTreasureChest.put(lock, data);
+    public void addItem(PromiseNeed need, Object data) {
+        promiseState.put(need, data);
 
-        if (mTreasureChest.isOpened()) {
-            Log.d(TAG, "All locks have been opened. Completing...");
+        if (isFulfilled()) {
+            Log.d(TAG, "All needs have been met. Completing...");
             complete();
         }
     }
 
-    public void updateState() {
-        mTreasureChest.updateState();
+    /**
+     * Tells the promise to update its state.
+     * This MUST be called if StateRequirements are used, since the Promise will not know
+     * that a requirement has been met unless it is explicitly asked to check.
+     * That check is done using through method.
+     */
+    public void remind() {
+        promiseState.updateState();
 
-        if (mTreasureChest.isOpened()) {
-            Log.d(TAG, "All locks have been opened. Completing...");
+        if (isFulfilled()) {
+            Log.d(TAG, "All needs have been met. Completing...");
             complete();
         }
     }
 
-    public void addClient(Client<Product> client) {
+    protected void addClient(Client<E> client) {
         if (!hasProduct()) {
             mClients.add(client);
         } else {
@@ -127,7 +137,11 @@ public class Promise<Product> {
         }
     }
 
-    public void addExecutable(Executable executable, Executable.Interest<Product> interest) {
+    protected boolean isFulfilled() {
+        return promiseState.isFulfilled();
+    }
+
+    protected void addExecutable(Executable executable, Executable.Interest<E> interest) {
         if (!hasProduct()) {
             mInterestExecutables.put(executable, interest);
         } else {
@@ -139,7 +153,7 @@ public class Promise<Product> {
         }
     }
 
-    public void addExecutable(Executable executable) {
+    protected void addExecutable(Executable executable) {
         if (!hasProduct()) {
             mExecutables.add(executable);
         } else {
@@ -151,34 +165,38 @@ public class Promise<Product> {
      * CAREFUL! Sets the interrupted error flag. This will make the builder return null to all
      * its listeners.
      * */
-    public void setBuildFailed(boolean value) {
+    public void setPromiseFailed(boolean value) {
         mBuildFailed = value;
         if (mBuildFailed) {
             notifyListeners();
         }
     }
 
-    public boolean isFinished() {
-        return mTreasureChest.isOpened();
+    /**
+     *
+     * @return The completed product, or null if the product is not completed.
+     */
+    protected E getProduct() {
+        return hasProduct() ? mCompletedProduct : null;
     }
 
     protected boolean hasProduct() {
         return mCompletedProduct != null || mBuildFailed;
     }
 
-    public interface Blueprint<Product> {
-        Product makeFromItems(ItemMap map);
+    public interface Blueprint<E> {
+        E makeFromItems(ItemMap map);
     }
 
-    public void thenNotify(Client<Product> client) {
+    public void thenNotify(Client<E> client) {
         addClient(client);
     }
 
-    public void thenPassTo(Client<Product> client) {
+    public void thenPassTo(Client<E> client) {
         addClient(client);
     }
 
-    public void then(Client<Product> client) {
+    public void then(Client<E> client) {
         addClient(client);
     }
 
@@ -186,36 +204,40 @@ public class Promise<Product> {
         addExecutable(executable);
     }
 
-    public void thenPassTo(Executable executable) {
-        addExecutable(executable);
-    }
-
-    public void then(Executable executable) {
+    public void whenFinished(Executable executable) {
         addExecutable(executable);
     }
 
     public static class ItemMap {
 
-        private Map<ProductLock, Object> items;
+        private Map<PromiseNeed, Object> items;
 
-        public ItemMap() {
+        ItemMap() {
             items = new HashMap<>();
         }
 
-        public Object get(ProductLock lock) {
+        public Object get(PromiseNeed lock) {
             return items.get(lock);
         }
 
-        public String getString(ProductLock lock) {
+        public User getUser(PromiseNeed need) {
+            return (User) items.get(need);
+        }
+
+        public List getList(PromiseNeed need) {
+            return (List) items.get(need);
+        }
+
+        public String getString(PromiseNeed lock) {
             return (String) items.get(lock);
         }
 
-        public int getInt(ProductLock lock) {
+        public int getInt(PromiseNeed lock) {
             return (int) items.get(lock);
         }
 
-        public Long getLong(ProductLock lock) {
-            Object item = items.get(lock);
+        public Long getLong(PromiseNeed need) {
+            Object item = items.get(need);
             Long value = -1L;
 
             if (item == null) {
@@ -235,8 +257,8 @@ public class Promise<Product> {
             return value;
         }
 
-        public Boolean getBoolean(ProductLock lock) {
-            Object item = items.get(lock);
+        public Boolean getBoolean(PromiseNeed need) {
+            Object item = items.get(need);
 
             if (item == null) {
                 return null;
@@ -257,16 +279,8 @@ public class Promise<Product> {
             return value;
         }
 
-        public User getUser(ProductLock lock) {
-            return (User) items.get(lock);
-        }
-
-        public List getList(ProductLock lock) {
-            return (List) items.get(lock);
-        }
-
-        public void put(ProductLock key, Object value) {
-            items.put(key, value);
+        public void put(PromiseNeed need, Object value) {
+            items.put(need, value);
         }
     }
 }
