@@ -48,14 +48,6 @@ public class LanguagePreferences extends DialogPreference {
 
     private void changeLanguage(String languageCode) {
         LanguageChanger.changeLanguage(languageCode, getContext());
-//        Resources resources = getContext().getResources();
-//
-//        // Change locale settings in the app.
-//        DisplayMetrics metrics = resources.getDisplayMetrics();
-//        Configuration config = resources.getConfiguration();
-//        config.locale = new Locale(languageCode.toLowerCase());
-//        resources.updateConfiguration(config, metrics);
-
         getDialog().dismiss();
 
     }

@@ -4,7 +4,7 @@
 
     <!-- Settings, should always be in the overflow -->
     <item android:id="@+id/menu_chat_list_settings_button"
-        android:title="@string/settings"
+        android:title="@string/activity_settings_title"
         app:showAsAction="never|always"
         android:icon="@drawable/settings_icon"
         android:visible="true" />
