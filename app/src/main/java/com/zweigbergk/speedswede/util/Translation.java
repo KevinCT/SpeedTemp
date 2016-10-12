@@ -72,7 +72,9 @@ public class Translation {
 
         @Override
         protected void onPostExecute(String translation) {
-            mClient.supply(translation);
+            if (mClient != null) {
+                mClient.supply(translation);
+            }
         }
 
         private String fetchJson() {
