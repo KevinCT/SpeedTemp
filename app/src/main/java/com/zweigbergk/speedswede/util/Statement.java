@@ -1,7 +1,7 @@
 package com.zweigbergk.speedswede.util;
 
-import com.zweigbergk.speedswede.methodwrapper.Client;
-import com.zweigbergk.speedswede.methodwrapper.Executable;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
 public class Statement {
 

@@ -18,7 +18,7 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
 
 import com.zweigbergk.speedswede.util.Statement;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public enum DatabaseHandler {
     INSTANCE;

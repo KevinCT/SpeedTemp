@@ -9,7 +9,8 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.Stringify;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 import java.util.Collection;
 
@@ -39,18 +40,25 @@ public class MessageListener extends FirebaseDataListener<Message> implements Ch
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Message message = dataSnapshot.getValue(Message.class);
         notifyAdded(message);
+        Log.d(TAG, Stringify.curlyFormat("onChildAdded in MessageListener, message text: {text}",
+                message.getText()));
     }
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
         Message message = dataSnapshot.getValue(Message.class);
         notifyChanged(message);
+        Log.d(TAG, Stringify.curlyFormat("onChildChanged in MessageListener, message text: {text}",
+                message.getText()));
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
         Message message = dataSnapshot.getValue(Message.class);
         notifyRemoved(message);
+
+        Log.d(TAG, Stringify.curlyFormat("onChildRemoved in MessageListener, message text: {text}",
+                message.getText()));
     }
 
     @Override

@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.zweigbergk.speedswede.activity.Language;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 import org.json.JSONException;
 import org.json.JSONObject;

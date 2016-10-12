@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.zweigbergk.speedswede.R;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public class DialogFragment extends android.support.v4.app.DialogFragment {
     private EditText mChatNameTxt;
