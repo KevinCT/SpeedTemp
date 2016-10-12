@@ -18,20 +18,25 @@
             android:defaultValue="false" />
     </com.zweigbergk.speedswede.util.CustomPreferenceCategory>
 
-    <com.zweigbergk.speedswede.util.CustomPreferenceCategory
+    <com.zweigbergk.speedswede.settings.LanguagePreferences
         android:title="@string/languages"
         android:key="pref_cat_language" >
+    </com.zweigbergk.speedswede.settings.LanguagePreferences>
 
-        <ListPreference
-            android:summary="%s"
-            android:dependency="pref_app_language"
-            android:key="pref_app_language"
-            android:title="@string/settings_pref_app_lang"
-            android:dialogTitle="Choose language:"
-            android:entries="@array/settings_pref_app_lang_entries"
-            android:entryValues="@array/settings_pref_app_lang_values"
-            android:defaultValue="@string/settings_pref_app_lang_default" />
-    </com.zweigbergk.speedswede.util.CustomPreferenceCategory>
+    <!--<com.zweigbergk.speedswede.util.CustomPreferenceCategory-->
+        <!--android:title="@string/languages"-->
+        <!--android:key="pref_cat_language" >-->
+
+        <!--<ListPreference-->
+            <!--android:summary="%s"-->
+            <!--android:dependency="pref_app_language"-->
+            <!--android:key="pref_app_language"-->
+            <!--android:title="@string/settings_pref_app_lang"-->
+            <!--android:dialogTitle="Choose language:"-->
+            <!--android:entries="@array/settings_pref_app_lang_entries"-->
+            <!--android:entryValues="@array/settings_pref_app_lang_values"-->
+            <!--android:defaultValue="@string/settings_pref_app_lang_default" />-->
+    <!--</com.zweigbergk.speedswede.util.CustomPreferenceCategory>-->
 
     <com.zweigbergk.speedswede.util.CustomPreferenceCategory
         android:title="@string/other"
