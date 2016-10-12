@@ -94,28 +94,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
     }
 
-    private class TranslationClient implements Client<String> {
-        private Message mMessage;
-
-        TranslationClient(Message message) {
-            mMessage = message;
-        }
-
-        @Override
-        public void supply(String string) {
-            mMessage.setText(mMessage.getText() + "\n\nTranslation:\n" + string);
-            notifyItemChanged(getItemCount() - 1);
-        }
-    }
-
     private void addMessage(Message message) {
         Log.d(TAG, "In addMessage");
 
         if (!mMessages.contains(message)) {
 
-            TranslationClient client = new TranslationClient(message);
             Translation translation = Translation.translate(message.getText(), Language.SWEDISH, Language.ENGLISH);
-            translation.then(client::supply);
+            translation.then(translatedMessage -> {
+                message.setText(message.getText() + "\n\nTranslation:\n" + translatedMessage);
+                notifyItemChanged(getItemCount() - 1);
+            });
 
             message.setText(message.getText());
 
