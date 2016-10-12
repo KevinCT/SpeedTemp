@@ -9,6 +9,8 @@ import com.zweigbergk.speedswede.util.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public enum ChatMatcher {
     INSTANCE;
@@ -50,7 +52,7 @@ public enum ChatMatcher {
         Log.d(TAG, "Added user. Poolsize: " + mUsersInPool.size());
 
         User activeUser = DatabaseHandler.getActiveUser();
-        DatabaseHandler.getPool().contains(activeUser).onTrue(this::match);
+        DatabaseHandler.getPool().contains(activeUser).onTrue(this::matchingLoop);
     }
 
     /** Removes user from the local pool of users */
@@ -85,7 +87,8 @@ public enum ChatMatcher {
         Log.d(TAG, "Users in pool: " + mUsersInPool.size());
         if (mUsersInPool.size() > 1) {
             // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
-            List<User> matchedUsers = Lists.getFirstElements(mUsersInPool, 2);
+            //List<User> matchedUsers = Lists.getFirstElements(mUsersInPool, 2);
+            List<User> matchedUsers = advancedMatch();
 
             Lists.forEach(matchedUsers, DatabaseHandler.getPool()::remove);
 
@@ -105,5 +108,47 @@ public enum ChatMatcher {
 
     public void clear() {
         mUsersInPool.clear();
+    }
+
+    public void matchingLoop() {
+        Timer timer = new Timer();
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                match();
+            }
+        }, 10*1000, 10*1000);
+    }
+
+    public List<User> checkIfMatch(User userSecond) {
+        int userSecondMin = userSecond.getMatchInterval()[0];
+        int userSecondMax = userSecond.getMatchInterval()[1];
+        int userFirstRating = DatabaseHandler.getActiveUser().getOwnRating();
+        List<User> matchedUsers = new ArrayList<>();
+
+        if(userFirstRating >= userSecondMin && userFirstRating <= userSecondMax) {
+            matchedUsers.add(DatabaseHandler.getActiveUser());
+            matchedUsers.add(userSecond);
+            Log.d("FELIXMATCH", " : we got a match brah");
+            return matchedUsers;
+        }
+        return null;
+    }
+
+    public List<User> checkIfDifferentUsers(User userSecond) {
+        if(userSecond.getUid() != DatabaseHandler.getActiveUser().getUid()) {
+            return checkIfMatch(userSecond);
+        }
+        return null;
+    }
+
+    public List<User> advancedMatch() {
+        if(mUsersInPool.size() > 1) {
+            for(User user : mUsersInPool) {
+                return checkIfDifferentUsers(user);
+            }
+        }
+        return null;
     }
 }
