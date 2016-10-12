@@ -72,8 +72,8 @@ public class UserProfile implements User {
 
     @Override
     public String toString() {
-        return String.format("UserProfile {\n\t\tname: %s,\n\t\tuid: %s,\n\t\tpreferences: %s\n}",
-                mName, mUid, mPreferences);
+        return String.format("UserProfile {\n\t\tname: %s,\n\t\tuid: %s,\n}",
+                mName, mUid);
     }
 
     @Override
