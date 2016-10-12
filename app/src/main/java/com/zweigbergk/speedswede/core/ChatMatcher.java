@@ -19,6 +19,8 @@ public enum ChatMatcher {
 
     private List<User> mUsersInPool;
 
+    private boolean loopIsActive = false;
+
     ChatMatcher() {
         mUsersInPool = new ArrayList<>();
     }
@@ -133,14 +135,17 @@ public enum ChatMatcher {
     }
 
     public void matchingLoop() {
-        Timer timer = new Timer();
+        if(!loopIsActive) {
+            loopIsActive = true;
+            Timer timer = new Timer();
 
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                match();
-            }
-        }, 10*1000, 10*1000);
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    match();
+                }
+            }, 10 * 1000, 10 * 1000);
+        }
     }
 //
 //    public List<User> checkIfMatch(User userSecond) {
