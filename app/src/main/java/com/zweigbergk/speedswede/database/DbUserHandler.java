@@ -22,8 +22,11 @@ import com.zweigbergk.speedswede.util.Statement;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 import com.zweigbergk.speedswede.util.UserFactory;
 
+
 import static com.zweigbergk.speedswede.Constants.POOL;
 import static com.zweigbergk.speedswede.Constants.USERS;
+import static com.zweigbergk.speedswede.Constants.BANS;
+import static com.zweigbergk.speedswede.Constants.BANLIST;
 
 enum DbUserHandler {
     INSTANCE;
@@ -229,5 +232,10 @@ enum DbUserHandler {
         });
 
         return builder;
+    }
+
+     Statement isActiveUserBlockedBy(User user) {
+        DatabaseReference ref = mRoot.child(BANS).child(user.getUid()).child(BANLIST).child(getActiveUserId());
+        return DbUserHandler.getInstance().hasReference(ref);
     }
 }
