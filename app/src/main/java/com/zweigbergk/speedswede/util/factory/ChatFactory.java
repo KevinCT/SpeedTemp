@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede.util;
+package com.zweigbergk.speedswede.util.factory;
 
 import android.util.Log;
 
@@ -9,8 +9,11 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.Promise;
+import com.zweigbergk.speedswede.util.PromiseNeed;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.ProductBuilder.ItemMap;
+import com.zweigbergk.speedswede.util.Promise.ItemMap;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,17 +39,17 @@ public class ChatFactory {
     public static void createChat(Collection<Client<Chat>> clients) {
         String activeUserId = DatabaseHandler.getActiveUserId();
 
-        ProductBuilder<Chat> builder = new ProductBuilder<>(newChatBlueprint);
-        builder.attachLocks(ProductLock.FIRST_USER,
-                ProductLock.SECOND_USER);
+        Promise<Chat> builder = new Promise<>(newChatBlueprint);
+        builder.needs(PromiseNeed.FIRST_USER,
+                PromiseNeed.SECOND_USER);
 
         Lists.forEach(clients, builder::thenNotify);
 
         //Append active user
-        DatabaseHandler.users().pull(activeUserId).then(user -> builder.addItem(ProductLock.FIRST_USER, user));
+        DatabaseHandler.users().pull(activeUserId).then(user -> builder.addItem(PromiseNeed.FIRST_USER, user));
 
         //Append test user
-        DatabaseHandler.users().pull(Constants.TEST_USER_UID).then(user -> builder.addItem(ProductLock.SECOND_USER, user));
+        DatabaseHandler.users().pull(Constants.TEST_USER_UID).then(user -> builder.addItem(PromiseNeed.SECOND_USER, user));
     }
 
     /** Supplies a Client with a Chat created from a DataSnapshot. Returns null if the snapshot
@@ -63,11 +66,11 @@ public class ChatFactory {
         serializeChat(snapshot).thenNotify(client);
     }
 
-    public static ProductBuilder<Chat> serializeChat(DataSnapshot snapshot) {
-        ProductBuilder<Chat> chatBuilder = new ProductBuilder<>(ChatFactory::getReconstructionBlueprint);
+    public static Promise<Chat> serializeChat(DataSnapshot snapshot) {
+        Promise<Chat> chatBuilder = new Promise<>(ChatFactory::getReconstructionBlueprint);
 
-        chatBuilder.attachLocks(ProductLock.ID, ProductLock.NAME, ProductLock.TIMESTAMP, ProductLock.MESSAGE_LIST,
-                ProductLock.FIRST_USER, ProductLock.SECOND_USER);
+        chatBuilder.needs(PromiseNeed.ID, PromiseNeed.NAME, PromiseNeed.TIMESTAMP, PromiseNeed.MESSAGE_LIST,
+                PromiseNeed.FIRST_USER, PromiseNeed.SECOND_USER);
 
         String chatId = snapshot.getKey();
         String name = (String) snapshot.child(Constants.NAME).getValue();
@@ -80,13 +83,13 @@ public class ChatFactory {
         String firstUserId = ChatFactory.getUserId(snapshot.child(Constants.FIRST_USER));
         String secondUserId = ChatFactory.getUserId(snapshot.child(Constants.SECOND_USER));
 
-        chatBuilder.addItem(ProductLock.ID, chatId);
-        chatBuilder.addItem(ProductLock.NAME, name);
-        chatBuilder.addItem(ProductLock.TIMESTAMP, chatTimestamp);
-        chatBuilder.addItem(ProductLock.MESSAGE_LIST, messageList);
+        chatBuilder.addItem(PromiseNeed.ID, chatId);
+        chatBuilder.addItem(PromiseNeed.NAME, name);
+        chatBuilder.addItem(PromiseNeed.TIMESTAMP, chatTimestamp);
+        chatBuilder.addItem(PromiseNeed.MESSAGE_LIST, messageList);
 
-        DatabaseHandler.users().pull(firstUserId).then(user -> chatBuilder.addItem(ProductLock.FIRST_USER, user));
-        DatabaseHandler.users().pull(secondUserId).then(user -> chatBuilder.addItem(ProductLock.SECOND_USER, user));
+        DatabaseHandler.users().pull(firstUserId).then(user -> chatBuilder.addItem(PromiseNeed.FIRST_USER, user));
+        DatabaseHandler.users().pull(secondUserId).then(user -> chatBuilder.addItem(PromiseNeed.SECOND_USER, user));
 
         return chatBuilder;
     }
@@ -101,23 +104,23 @@ public class ChatFactory {
         return messages;
     }
 
-    private static ProductBuilder.Blueprint<Chat> newChatBlueprint = items -> {
-        User user1 = items.getUser(ProductLock.FIRST_USER);
-        User user2 = items.getUser(ProductLock.SECOND_USER);
+    private static Promise.Blueprint<Chat> newChatBlueprint = items -> {
+        User user1 = items.getUser(PromiseNeed.FIRST_USER);
+        User user2 = items.getUser(PromiseNeed.SECOND_USER);
 
         return new Chat(user1, user2);
     };
 
     private static Chat getReconstructionBlueprint(ItemMap items) {
-        User user1 = items.getUser(ProductLock.FIRST_USER);
-        User user2 = items.getUser(ProductLock.SECOND_USER);
+        User user1 = items.getUser(PromiseNeed.FIRST_USER);
+        User user2 = items.getUser(PromiseNeed.SECOND_USER);
 
-        long timestamp = items.getLong(ProductLock.TIMESTAMP);
-        String id = items.getString(ProductLock.ID);
-        String name = items.getString(ProductLock.NAME);
+        long timestamp = items.getLong(PromiseNeed.TIMESTAMP);
+        String id = items.getString(PromiseNeed.ID);
+        String name = items.getString(PromiseNeed.NAME);
 
         List<Message> messages = new ArrayList<>();
-        List list = items.getList(ProductLock.MESSAGE_LIST);
+        List list = items.getList(PromiseNeed.MESSAGE_LIST);
         Lists.addAll(messages, list);
 
         return new Chat(id, name, timestamp, messages, user1, user2);
