@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 import com.facebook.login.widget.LoginButton;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public interface LoginView {
     LoginButton getLoginButton();

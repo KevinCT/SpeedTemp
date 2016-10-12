@@ -3,7 +3,7 @@ package com.zweigbergk.speedswede.database.eventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public class DataQuery implements ValueEventListener {
 

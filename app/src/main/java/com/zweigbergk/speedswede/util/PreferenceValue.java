@@ -3,13 +3,11 @@ package com.zweigbergk.speedswede.util;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.zweigbergk.speedswede.Constants;
-
 public abstract class PreferenceValue<T> implements Parcelable {
 
     T mValue;
 
-    public PreferenceValue(T value) {
+    PreferenceValue(T value) {
         mValue = value;
     }
 

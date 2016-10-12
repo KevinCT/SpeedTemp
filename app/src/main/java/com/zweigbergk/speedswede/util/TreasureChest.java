@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.zweigbergk.speedswede.methodwrapper.StateRequirement;
+import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 import com.zweigbergk.speedswede.util.ProductBuilder.ItemMap;
 
 /** Holds an unfinished object. Only releases it once it is completed,
