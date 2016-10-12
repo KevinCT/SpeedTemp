@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.zweigbergk.speedswede.R;
+import com.zweigbergk.speedswede.core.MatchSkill;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.UserReference;
 import com.zweigbergk.speedswede.fragment.SettingsFragment;
@@ -53,6 +54,19 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         switch(key) {
             case "pref_usage":
                 user.setPreference(Preference.USAGE, sharedPreferences.getString(key, "learn"));
+                switch(sharedPreferences.getString(key, "learn")) {
+                    case "learn":
+                        DatabaseHandler.getActiveUser().setOwnSkill(MatchSkill.BEGINNER);
+                        break;
+                    case "mentor":
+                        DatabaseHandler.getActiveUser().setOwnSkill(MatchSkill.SKILLED);
+                        break;
+                    case "chat":
+                        DatabaseHandler.getActiveUser().setOwnSkill(MatchSkill.INTERMEDIATE);
+                        break;
+                    default:
+                        break;
+                }
                 break;
             case "pref_app_language":
                 user.setPreference(Preference.LANGUAGE, sharedPreferences.getString(key, "en"));
