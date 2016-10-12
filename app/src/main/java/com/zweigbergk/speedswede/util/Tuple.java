@@ -34,4 +34,10 @@ public class Tuple<K, V> implements Map.Entry<K, V> {
     public static <K, V> Tuple from(Map.Entry<K, V> entry) {
         return new Tuple<>(entry.getKey(), entry.getValue());
     }
+
+    @Override
+    public int hashCode() {
+        return this.key.hashCode() * 3 +
+                this.value.hashCode() * 5;
+    }
 }

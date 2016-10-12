@@ -16,4 +16,8 @@ public enum Language {
     public String getLanguageCode() {
         return mLanguageCode;
     }
+
+//    public String[] getLanguageCodes() {
+//        return new String[ENGLISH,]
+//    }
 }
