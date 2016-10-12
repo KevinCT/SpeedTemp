@@ -5,10 +5,6 @@ import android.util.Log;
 
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
 
-/**
- * Created by Kevin on 2016-10-09.
- */
-
 public class SettingsFragmentInteractor {
 
     public SettingsFragmentInteractor(){

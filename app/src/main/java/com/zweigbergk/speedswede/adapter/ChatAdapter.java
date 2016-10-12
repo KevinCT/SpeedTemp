@@ -65,7 +65,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                 addChat(chat);
                 break;
             case CHANGED:
-                User activeUser = DatabaseHandler.getInstance().getActiveUser();
+                User activeUser = DatabaseHandler.getActiveUser();
                 if (!chat.includesUser(activeUser)) {
                     removeChat(chat);
                 } else {
@@ -114,7 +114,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     private void removeChat(Chat chat) {
         int position = mChats.indexOf(chat);
 
-        Log.d(TAG, "In removeChat");
+        Log.d(TAG, "In removeChat, position: " + position);
 
         mChats.remove(chat);
         notifyItemRemoved(position);

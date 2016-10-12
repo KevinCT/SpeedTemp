@@ -21,8 +21,7 @@ public class LoginInteractor implements ActivityAttachable {
 
     public static AuthCredential userCredential;
 
-    //public static final String TAG = "LoginInteractor";
-    public static final String TAG = "DEBUG";
+    public static final String TAG = "LoginInteractor";
 
     public enum AuthResult { SUCCESS, FAIL }
 
@@ -41,6 +40,7 @@ public class LoginInteractor implements ActivityAttachable {
 
             @Override
             public void onCancel() {
+                // TODO: Probably should give some feedback to the user?
                 Log.d(TAG, "facebook:onCancel");
             }
 
@@ -48,7 +48,7 @@ public class LoginInteractor implements ActivityAttachable {
             public void onError(FacebookException exception) {
                 if (isConnectionError(exception)) {
                     //mLoginListener
-                    Log.d("DEBUG", "Handle connection error~");
+                    Log.d(TAG, "Handle connection error~");
                 }
             }
         });
@@ -66,7 +66,6 @@ public class LoginInteractor implements ActivityAttachable {
         userCredential = FacebookAuthProvider.getCredential(token.getToken());
         FirebaseAuth.getInstance().signInWithCredential(userCredential)
                 .addOnCompleteListener(task -> {
-                    Log.d("DEBUG2", "WE GOT IN!!");
                     Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
                     if (task.isSuccessful()) {
                         authClient.supply(AuthResult.SUCCESS);

@@ -6,6 +6,8 @@ import com.zweigbergk.speedswede.database.DatabaseHandler;
 public class BanInteractor  {
     private Banner mBanner;
 
+    public static String BANS = "bans";
+
     public BanInteractor(){
         String userId = DatabaseHandler.getActiveUserId();
         if (DatabaseHandler.getBans(userId) != null) {
@@ -17,13 +19,13 @@ public class BanInteractor  {
 
     public void addBan(String firstUser, String secondUser){
         mBanner.addBan(DatabaseHandler.getActiveUserId(),firstUser,secondUser);
-        DatabaseHandler.sendObject("bans",mBanner);
+        DatabaseHandler.sendObject(BANS ,mBanner);
 
     }
 
     public void removeBan(String strangerID){
         mBanner.removeBan(strangerID);
-        DatabaseHandler.sendObject("bans",mBanner);
+        DatabaseHandler.sendObject(BANS, mBanner);
 
     }
 }
