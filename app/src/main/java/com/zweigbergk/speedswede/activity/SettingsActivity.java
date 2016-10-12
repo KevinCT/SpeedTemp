@@ -8,10 +8,10 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.zweigbergk.speedswede.R;
-import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.UserReference;
 import com.zweigbergk.speedswede.fragment.SettingsFragment;
+
 import static com.zweigbergk.speedswede.core.User.Preference;
 
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -30,7 +30,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     @Override
     public void onResume() {
         super.onResume();
-        setTitle(R.string.settings);
+        setTitle(R.string.activity_settings_title);
     }
 
     @Override
