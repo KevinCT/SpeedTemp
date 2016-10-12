@@ -23,14 +23,14 @@ import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.util.ChatFactory;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.KeyValuePair;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.PreferenceValue;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 import com.zweigbergk.speedswede.util.Statement;
 import com.zweigbergk.speedswede.util.ProductLock;
-import com.zweigbergk.speedswede.methodwrapper.StateRequirement;
+import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 
 import static com.zweigbergk.speedswede.Constants.CHATS;
 import static com.zweigbergk.speedswede.Constants.FIRST_USER;
@@ -40,7 +40,7 @@ import static com.zweigbergk.speedswede.core.User.Preference;
 import static com.zweigbergk.speedswede.util.Lists.EntryMapping;
 
 
-enum DbChatHandler {
+public enum DbChatHandler {
     INSTANCE;
 
     public static final String TAG = DbChatHandler.class.getSimpleName().toUpperCase();
@@ -209,13 +209,15 @@ enum DbChatHandler {
         ref.removeValue();
     }
 
-    void addMesageClient(Chat chat, Client<DataChange<Message>> client) {
+    public void addMesageClient(Chat chat, Client<DataChange<Message>> client) {
         if (!hasMessageListenerForChat(chat)) {
             createMessageListenerForChat(chat);
         }
 
         messageListeners.get(chat.getId()).bind(client);
     }
+
+
 
     ProductBuilder<List<Message>> pullMessages(Chat chat) {
         final ProductBuilder<List<Message>> builder = ProductBuilder.shell();
@@ -273,7 +275,7 @@ enum DbChatHandler {
         return messageListeners.containsKey(chat.getId());
     }
 
-    void removeMessageClient(Chat chat, Client<DataChange<Message>> client) {
+    public void removeMessageClient(Chat chat, Client<DataChange<Message>> client) {
         if (!messageListeners.containsKey(chat.getId())) {
             Log.e(TAG, String.format("WARNING: Tried removing client: [%s] from chat with id: [%s]," +
                     " but the client was invert attached to the message listener.",
@@ -295,24 +297,6 @@ enum DbChatHandler {
         //Add it to the listener-list so that we can attach clients to it
         messageListeners.put(chat.getId(), messageListener);
     }
-
-    /*public ProductBuilder<Chat> pullChat(String chatId) {
-        ProductBuilder<ProductBuilder<Chat>> builder = ProductBuilder.shell();
-
-        mRoot.child(CHATS).child(chatId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ChatFactory.serializeChat(dataSnapshot).thenPassTo(chat -> {
-                    builder.addItem(ProductLock.CHAT, chat);
-                });
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }*/
 
     Statement hasUsers(Chat chat) {
         Statement statement = new Statement();

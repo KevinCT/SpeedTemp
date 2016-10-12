@@ -6,12 +6,17 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.Stringify;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Statement;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.ProductBuilder;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ChatReference {
     public static final String TAG = ChatReference.class.getSimpleName().toUpperCase();
@@ -90,17 +95,13 @@ public class ChatReference {
         DbChatHandler.INSTANCE.getChatListener().removeClient(mChat, client);
     }
 
-    public void bindMessageClient(Client<DataChange<Message>> client) {
-        DbChatHandler.INSTANCE.getChatListener().addMessageClient(mChat, client);
-        pullMessages().then(messages -> {
-            Lists.forEach(messages, message -> {
-                client.supply(DataChange.added(message));
-            });
-        });
+    public void bindMessages(Client<DataChange<Message>> client) {
+        //Register the client with our message listener
+        DbChatHandler.getInstance().addMesageClient(mChat, client);
     }
 
-    public void unbindMessageClient(Client<DataChange<Message>> client) {
-        DbChatHandler.INSTANCE.getChatListener().removeMessageClient(mChat, client);
+    public void unbindMessages(Client<DataChange<Message>> client) {
+        DbChatHandler.getInstance().removeMessageClient(mChat, client);
     }
 
     public Statement ifStillValid() {

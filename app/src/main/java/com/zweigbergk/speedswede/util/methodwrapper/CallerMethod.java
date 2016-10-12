@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede.methodwrapper;
+package com.zweigbergk.speedswede.util.methodwrapper;
 
 /**
  * Executes a method when provided with an appropriate dependency.

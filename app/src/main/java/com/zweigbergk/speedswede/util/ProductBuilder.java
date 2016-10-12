@@ -3,9 +3,9 @@ package com.zweigbergk.speedswede.util;
 import android.util.Log;
 
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.methodwrapper.Client;
-import com.zweigbergk.speedswede.methodwrapper.Executable;
-import com.zweigbergk.speedswede.methodwrapper.StateRequirement;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.methodwrapper.Executable;
+import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -15,8 +15,8 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Translation;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,12 +28,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final String TAG = MessageAdapter.class.getSimpleName().toUpperCase();
 
     private List<Message> mMessages;
-    private User mUser;
     private Map<DatabaseEvent, List<Client<Message>>> eventCallbacks;
 
 
-    public MessageAdapter(List<Message> messages) {
-        mUser = DatabaseHandler.getActiveUser();
+    private MessageAdapter(List<Message> messages) {
         eventCallbacks = new HashMap<>();
         mMessages = messages;
 
@@ -175,7 +173,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public int getItemViewType(int position){
-        if(mMessages.get(position).getId().equals(mUser.getUid())){
+        User activeUser = DatabaseHandler.getActiveUser();
+        if(mMessages.get(position).getId().equals(activeUser.getUid())){
             return 1;
         }
         else {

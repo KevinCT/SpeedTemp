@@ -45,7 +45,7 @@ public class ChatListFragment extends Fragment {
         mAdapter.addEventClient(ChatAdapter.Event.CHAT_VIEW_CLICKED,
                 ((ChatActivity) getActivity())::displayChat);
 
-        DatabaseHandler.bindToChatEvents(mAdapter::notifyChange);
+        Log.d(TAG, "onCreate()");
     }
 
     @Override
@@ -68,9 +68,19 @@ public class ChatListFragment extends Fragment {
 
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
 
+        DatabaseHandler.bindToChatEvents(mAdapter::notifyChange);
+
         Log.d(TAG, "onCreateView");
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        DatabaseHandler.unbindFromChatEvents(mAdapter::notifyChange);
+        Log.d(TAG, "onDestroyView");
+
+        super.onDestroyView();
     }
 
     private void checkSavedState(Bundle savedInstanceState) {

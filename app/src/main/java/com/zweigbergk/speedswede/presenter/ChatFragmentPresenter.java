@@ -16,7 +16,7 @@ import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.interactor.BanInteractor;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
 
@@ -43,13 +43,26 @@ public class ChatFragmentPresenter {
     public void setChat(Chat chat) {
         if (mChat != null) {
             //We no longer want updates from the old chat. Remove us as a client from the old chat.
-            DatabaseHandler.get(mChat).unbindMessageClient(handleChatEvent);
+            DatabaseHandler.get(mChat).unbindMessages(handleChatEvent);
 
             mChat = chat;
             invalidate();
         } else {
             mChat = chat;
         }
+    }
+
+    /**
+     * Tells the presenter to update the state of the view
+     */
+    public void invalidate() {
+        Log.d(TAG, "Invalidating and binding new client...");
+        initializeRecyclerView();
+
+        getMessageAdapter().clear();
+
+        //We want updates from the new chat! Add us as a client to that one :)
+        DatabaseHandler.get(mChat).bindMessages(handleChatEvent);
     }
 
     private void initializeRecyclerView() {
@@ -91,18 +104,6 @@ public class ChatFragmentPresenter {
                 || (scrollHeight - scrollOffset < recyclerView.getHeight())) {
             recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
         }
-    }
-
-    /**
-     * Tells the presenter to update the state of the view
-     */
-    public void invalidate() {
-        initializeRecyclerView();
-
-        getMessageAdapter().clear();
-
-        //We want updates from the new chat! Add us as a client to that one :)
-        DatabaseHandler.get(mChat).bindMessageClient(handleChatEvent);
     }
 
     public void onSaveInstanceState(Bundle outState) {
@@ -150,7 +151,7 @@ public class ChatFragmentPresenter {
         String firstUserId = mChat.getFirstUser().getUid();
         String secondUserId = mChat.getSecondUser().getUid();
         mBanInteractor.addBan(firstUserId, secondUserId);
-    }
+}
 
     public void onChangeLanguageClicked() {
         mView.openLanguageFragment();
@@ -164,6 +165,8 @@ public class ChatFragmentPresenter {
         Log.d(TAG, String.format("Calling onListChanged with change: [%s] and messageText: [%s]",
                 dataChange.getEvent().toString(), dataChange.getItem().getText()));
 
+        MessageAdapter adapter = (MessageAdapter) mView.getRecyclerView().getAdapter();
+        Log.d(TAG, adapter.toString());
         ((MessageAdapter) mView.getRecyclerView().getAdapter()).onListChanged(dataChange);
     };
 
