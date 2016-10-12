@@ -32,7 +32,9 @@ public enum LocalStorage {
 
     public void removeSettings(Context context){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        preferences.edit().clear().commit();
+        
+        preferences.edit().clear().apply();
+//        preferences.edit().clear().commit();
     }
 
 }
