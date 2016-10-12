@@ -1,7 +1,6 @@
 package com.zweigbergk.speedswede.fragment;
 
 import android.os.Bundle;
-import android.os.Parcel;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
@@ -26,8 +24,6 @@ import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.ParcelHelper;
 
 import java.util.List;
-
-import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
 
 public class ChatListFragment extends Fragment {
 
