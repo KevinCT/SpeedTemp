@@ -1,5 +1,7 @@
 package com.zweigbergk.speedswede.util;
 
+import android.util.Log;
+
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 import java.util.List;
@@ -34,7 +36,7 @@ public class ListBuilder<E> extends ProductBuilder<List<E>> {
             if (!mBuildFailed) {
                 supplyIteratorClient();
             } else {
-                // TODO some kind of error handling?
+                Log.d(TAG, "Build failed");
             }
         }
     }

@@ -141,7 +141,7 @@ public class Lists {
         return result;
     }
 
-    public static <E> E getLast(List<E> collection) {
+    public static <E> E getLastElement(List<E> collection) {
         return collection.size() != 0 ?
                 collection.get(collection.size() - 1) : null;
     }

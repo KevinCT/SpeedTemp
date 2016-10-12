@@ -9,10 +9,17 @@ import com.zweigbergk.speedswede.util.ParcelHelper;
 import com.zweigbergk.speedswede.util.PreferenceValue;
 
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class UserProfile implements User {
 
     private String mName, mUid;
+//    private Timer timer;
+//    private int[] matchingInterval;
+//    private int ownRating;
+    private MatchSkill mMatchSkill;
+    private MatchSkill mOwnSkill;
 
     @Exclude
     private Map<Preference, PreferenceValue> mPreferences;
@@ -20,6 +27,11 @@ public class UserProfile implements User {
     public UserProfile(String name, String uid) {
         mName = name;
         mUid = uid;
+//        timer = new Timer();
+//        matchingInterval = new int[2];
+//        ownRating = 0;
+        mMatchSkill = MatchSkill.BEGINNER;
+        mOwnSkill = MatchSkill.BEGINNER;
     }
 
     public UserProfile withPreferences(Map<Preference, PreferenceValue> preferences) {
@@ -107,4 +119,81 @@ public class UserProfile implements User {
         mUid = in.readString();
         mPreferences = ParcelHelper.readParcelableMap(in, Preference.class, PreferenceValue.class);
     }
+
+    public MatchSkill getMatchSkill() {
+        return mMatchSkill;
+    }
+    public MatchSkill getOwnSkill() {
+        return mOwnSkill;
+    }
+
+    public void setOwnSkill(MatchSkill skill) {
+        mMatchSkill = skill;
+        switch(skill) {
+            case BEGINNER:
+                mMatchSkill = MatchSkill.SKILLED;
+                break;
+            case INTERMEDIATE:
+                mMatchSkill = MatchSkill.INTERMEDIATE;
+                break;
+            case SKILLED:
+                mMatchSkill = MatchSkill.BEGINNER;
+                break;
+            default:
+                mMatchSkill = MatchSkill.BEGINNER;
+        }
+    }
+
+//    public int getOwnRating() {
+//        return this.ownRating;
+//    }
+//
+//    public void setInitialMatchInterval() {
+//        switch(matchSkill) {
+//            case BEGINNER:
+//                matchingInterval[0] = 0;
+//                matchingInterval[1] = 0;
+//                break;
+//            case INTERMEDIATE:
+//                matchingInterval[0] = 50;
+//                matchingInterval[1] = 50;
+//                break;
+//            case SKILLED:
+//                matchingInterval[0] = 100;
+//                matchingInterval[0] = 100;
+//                break;
+//            default:
+//                break;
+//        }
+//    }
+//
+//    public void setMatchingSkill(MatchSkill skill) {
+//        matchSkill = skill;
+//    }
+//
+//    public int[] getMatchInterval() {
+//        return matchingInterval;
+//    }
+//
+//    public void incrementRating() {
+//        if(matchingInterval[0] >= 10) {
+//            matchingInterval[0] = matchingInterval[0] - 10;
+//        }
+//        if(matchingInterval[1] <= 90) {
+//            matchingInterval[1] = matchingInterval[1] + 10;
+//        }
+//    }
+//
+//    public void startTime() {
+//        timer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                incrementRating();
+//            }
+//        }, 60*1000, 60*1000);
+//    }
+//
+//    public void stopTime() {
+//        timer.cancel();
+//    }
 }

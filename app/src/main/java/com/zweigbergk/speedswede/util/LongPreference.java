@@ -29,4 +29,19 @@ public class LongPreference extends PreferenceValue<Long> {
     private LongPreference(Parcel in) {
         super(in.readLong());
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) {
+            return false;
+        }
+
+        if (!other.getClass().equals(this.getClass())) {
+            return false;
+        }
+
+        LongPreference otherLongPreference = (LongPreference) other;
+
+        return otherLongPreference.getValue() == this.getValue();
+    }
 }

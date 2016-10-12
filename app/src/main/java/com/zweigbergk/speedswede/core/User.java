@@ -15,18 +15,27 @@ public interface User extends Parcelable {
     String getDisplayName();
     Object getPreference(Preference preference);
     Map<Preference, PreferenceValue> getPreferences();
+    MatchSkill getMatchSkill();
+    MatchSkill getOwnSkill();
+    void setOwnSkill(MatchSkill skill);
+//    int getOwnRating();
+//    int[] getMatchInterval();
+//    void incrementRating();
+//    void startTime();
+//    void stopTime();
+//    void setInitialMatchInterval();
+//    void setMatchingSkill(MatchSkill skill);
 
     enum Preference implements Parcelable {
-        NOTIFICATIONS, LANGUAGE, SWEDISH_SKILL, STRANGER_SWEDISH_SKILL;
-
+        NOTIFICATIONS, LANGUAGE, USAGE;
 
         private final int mValue;
 
         public static Preference[] values = Preference.values();
 
         private static final Preference[] booleans = new Preference[] { NOTIFICATIONS };
-        private static final Preference[] strings = new Preference[] { LANGUAGE };
-        private static final Preference[] longs = new Preference[] { SWEDISH_SKILL, STRANGER_SWEDISH_SKILL };
+        private static final Preference[] strings = new Preference[] { LANGUAGE, USAGE };
+//        private static final Preference[] longs = new Preference[] { SWEDISH_SKILL, STRANGER_SWEDISH_SKILL };
 
         public boolean accepts(boolean value) {
             return Arrays.asList(booleans).contains(this);
@@ -36,9 +45,9 @@ public interface User extends Parcelable {
             return Arrays.asList(strings).contains(this);
         }
 
-        public boolean accepts(long value) {
-            return Arrays.asList(longs).contains(this);
-        }
+//        public boolean accepts(long value) {
+//            return Arrays.asList(longs).contains(this);
+//        }
 
         Preference(int value) {
             mValue = value;

@@ -4,10 +4,6 @@ import android.content.Context;
 
 import com.zweigbergk.speedswede.interactor.SettingsFragmentInteractor;
 
-/**
- * Created by Kevin on 2016-10-09.
- */
-
 public class SettingsFragmentPresenter {
     private SettingsFragmentInteractor mInteractor;
 
