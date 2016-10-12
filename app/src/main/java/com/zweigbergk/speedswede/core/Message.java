@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.firebase.database.Exclude;
 
+import com.zweigbergk.speedswede.util.Translation.TranslationCache;
+
 
 import java.util.Calendar;
 import java.util.Date;
@@ -13,6 +15,7 @@ public class Message implements Parcelable {
 
     private String id;
     private String text;
+    private TranslationCache cache;
     private final long timeStamp;
 
     //For JSON de-serialization
@@ -73,6 +76,23 @@ public class Message implements Parcelable {
 
         return otherMessage.getId().equals(this.getId())
                 && otherMessage.getTimeStamp() == this.getTimeStamp();
+    }
+
+    @Exclude
+    public void setTranslationCache(TranslationCache cache) {
+        //Only update cache if the locale has changed
+        if (this.cache == null || !this.cache.getLocale().equals(cache.getLocale())) {
+            this.cache = cache;
+        }
+    }
+
+    public TranslationCache getCache() {
+        return cache;
+    }
+
+    @Exclude
+    public boolean hasCache() {
+        return cache != null;
     }
 
     public Message clone() {

@@ -3,6 +3,7 @@ package com.zweigbergk.speedswede.util;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.firebase.database.Exclude;
 import com.zweigbergk.speedswede.activity.Language;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
@@ -18,9 +19,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.Locale;
 
 public class Translation {
     public static final String TAG = Translation.class.getSimpleName().toUpperCase();
+
+    private static final boolean DISABLED = false;
 
     private static final String BASE_URL = "https://www.googleapis.com/language/translate/v2?key=";
     private static final String TANSLATE_API_KEY = "AIzaSyCjL04iIPrLYwqCVyCrIvRWwMA60yeMSvE";
@@ -28,7 +32,9 @@ public class Translation {
     private Client<String> mClient;
 
     private Translation(String url) {
-        new TranslationTask(url).execute();
+        if (!DISABLED) {
+            new TranslationTask(url).execute();
+        }
     }
 
     private Translation() {
@@ -52,7 +58,11 @@ public class Translation {
     }
 
     public void then(Client<String> client) {
-        mClient = client;
+        if (!DISABLED) {
+            mClient = client;
+        } else {
+            client.supply("Not translating right now.");
+        }
     }
 
     private class TranslationTask extends AsyncTask<Void, Void, String> {
@@ -66,7 +76,7 @@ public class Translation {
 
         @Override
         protected String doInBackground(Void... params) {
-            Log.d(TAG, "doInBackground!");
+            Log.d(TAG, "Performing a Translation.");
             return fetchJson();
         }
 
@@ -115,5 +125,35 @@ public class Translation {
         }
     }
 
+    public static class TranslationCache {
 
+        private String translatedText;
+        private String locale;
+
+        private TranslationCache() {
+
+        }
+
+        private TranslationCache(String locale, String translatedText) {
+            this.translatedText = translatedText;
+            this.locale = locale;
+        }
+
+        public static TranslationCache cache(String locale, String translatedText) {
+            return new TranslationCache(locale, translatedText);
+        }
+
+        public String getLocale() {
+            return locale;
+        }
+
+        public String getTranslatedText() {
+            return translatedText;
+        }
+
+        @Exclude
+        public boolean isFromLocale(Locale locale) {
+            return this.locale.equals(locale.getLanguage());
+        }
+    }
 }

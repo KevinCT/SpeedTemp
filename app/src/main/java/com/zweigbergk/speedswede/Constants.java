@@ -32,7 +32,7 @@ public class Constants {
     public static final String LONG = Long.valueOf(1).getClass().getSimpleName();
     public static final String BOOLEAN = Boolean.valueOf(true).getClass().getSimpleName();
 
-    public static final String[] CHAT_NAMES = {"Bench", "Learning", "Rung", "Witness", "Social", "Shop", "Pro"};
+    public static final String[] CHAT_NAMES = {"Bench", "Learning", "Rainbow", "Happy", "Social", "Shop", "Sunshine"};
 
     //Languages
     public static final String ENGLISH = "en";

@@ -6,6 +6,7 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.util.ListBuilder;
 import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Statement;
@@ -63,7 +64,7 @@ public class ChatReference {
 
     }
 
-    public ProductBuilder<List<Message>> pullMessages() {
+    public ListBuilder<Message> pullMessages() {
         return DbChatHandler.getInstance().pullMessages(mChat);
     }
 

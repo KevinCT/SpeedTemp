@@ -26,10 +26,10 @@ public class ProductBuilder<Product> {
 
     private TreasureChest mTreasureChest;
 
-    private Product mCompletedProduct;
+    protected Product mCompletedProduct;
 
     //Error flag. If this is set, the builder will return null to all its listeners.
-    private boolean mBuildFailed;
+    protected boolean mBuildFailed;
 
     public static <Product> ProductBuilder<Product> shell() {
         return new ProductBuilder<>(null);
@@ -70,7 +70,7 @@ public class ProductBuilder<Product> {
         Log.d(TAG, "Completing!");
     }
 
-    private void notifyListeners() {
+    protected void notifyListeners() {
         Lists.forEach(mClients.iterator(), client -> {
             client.supply(mCompletedProduct);
             mClients.remove(client);
@@ -162,7 +162,7 @@ public class ProductBuilder<Product> {
         return mTreasureChest.isOpened();
     }
 
-    private boolean hasProduct() {
+    protected boolean hasProduct() {
         return mCompletedProduct != null || mBuildFailed;
     }
 

@@ -37,6 +37,10 @@ public class LanguageChanger {
         LocalStorage.INSTANCE.saveSettings(context, Constants.LANGUAGE, language);
     }
 
+    public static Locale getCurrentLocale(Context context) {
+        return context.getResources().getConfiguration().locale;
+    }
+
     public static void languageChanged(Boolean changed){
         mChanged = changed;
     }

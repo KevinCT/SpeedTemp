@@ -38,6 +38,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
     private ChatFragmentPresenter mPresenter;
 
     public ChatFragment() {
+        Log.d(TAG, "Creating a ChatFragment :)");
         mPresenter = new ChatFragmentPresenter(this);
     }
 
@@ -47,7 +48,6 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
 
         setHasOptionsMenu(true);
 
-//        checkSavedState(savedInstanceState);
         Log.d(TAG, "ChatFragment.onCreate()");
     }
 
@@ -55,6 +55,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         if (savedInstanceState != null) {
             Chat chat = savedInstanceState.getParcelable(CHAT_PARCEL);
 
+            Log.d(TAG, "Found old chat. Setting it.");
             setChat(chat);
             if (chat != null) {
                 Log.d(TAG, chat.toString());
@@ -153,6 +154,15 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mPresenter.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy()");
+
+        mPresenter.onDestroy();
+
+        super.onDestroy();
     }
 
     @Override

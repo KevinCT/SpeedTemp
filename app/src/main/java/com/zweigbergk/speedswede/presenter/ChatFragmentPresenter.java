@@ -11,14 +11,18 @@ import com.zweigbergk.speedswede.adapter.MessageAdapter;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.interactor.BanInteractor;
+import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
+
+import java.util.Locale;
 
 import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
 
@@ -29,6 +33,7 @@ public class ChatFragmentPresenter {
     private BanInteractor mBanInteractor;
 
     private ChatFragmentView mView;
+    private Client<DataChange<Message>> chatEventHandler;
 
     private Chat mChat;
 
@@ -41,28 +46,25 @@ public class ChatFragmentPresenter {
     }
 
     public void setChat(Chat chat) {
-        if (mChat != null) {
-            //We no longer want updates from the old chat. Remove us as a client from the old chat.
-            DatabaseHandler.get(mChat).unbindMessages(handleChatEvent);
+        Log.d(TAG, "setChat()");
 
-            mChat = chat;
-            invalidate();
-        } else {
-            mChat = chat;
-        }
+        mChat = chat;
     }
 
     /**
      * Tells the presenter to update the state of the view
      */
     public void invalidate() {
-        Log.d(TAG, "Invalidating and binding new client...");
+        Log.d(TAG, "Invalidate()");
         initializeRecyclerView();
 
         getMessageAdapter().clear();
 
         //We want updates from the new chat! Add us as a client to that one :)
-        DatabaseHandler.get(mChat).bindMessages(handleChatEvent);
+        MessageAdapter adapter = (MessageAdapter) mView.getRecyclerView().getAdapter();
+        chatEventHandler = createChatEventHandler(adapter);
+        Log.d(TAG, "Creating new chatEventHandler, toString(): " + chatEventHandler);
+        DatabaseHandler.get(mChat).bindMessages(chatEventHandler);
     }
 
     private void initializeRecyclerView() {
@@ -72,15 +74,13 @@ public class ChatFragmentPresenter {
         recyclerView.setLayoutManager(layoutManager);
         layoutManager.setStackFromEnd(true);
 
-        MessageAdapter adapter = new MessageAdapter();
+        //Get locale from view
+        Locale currentLocale = mView.contextualize(LanguageChanger::getCurrentLocale);
+
+        MessageAdapter adapter = new MessageAdapter(currentLocale);
         recyclerView.setAdapter(adapter);
 
-        recyclerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Clicked :D");
-            }
-        });
+        recyclerView.setOnClickListener(v -> Log.d(TAG, "Clicked :D"));
 
         adapter.addEventCallback(DatabaseEvent.ADDED, this::smoothScrollToBottomOfList);
     }
@@ -111,6 +111,7 @@ public class ChatFragmentPresenter {
     }
 
     public void onClickSend() {
+        Log.d(TAG, "onClickSend()");
         String messageText = mView.getInputText();
 
         if (messageText.trim().length() > 0) {
@@ -161,14 +162,23 @@ public class ChatFragmentPresenter {
         return (MessageAdapter) mView.getRecyclerView().getAdapter();
     }
 
-    private final Client<DataChange<Message>> handleChatEvent = dataChange -> {
-        Log.d(TAG, String.format("Calling onListChanged with change: [%s] and messageText: [%s]",
-                dataChange.getEvent().toString(), dataChange.getItem().getText()));
+    private Client<DataChange<Message>> createChatEventHandler(MessageAdapter adapter) {
+        return dataChange -> {
+            Log.d(TAG, String.format("Calling onListChanged with change: [%s] and messageText: [%s]",
+                    dataChange.getEvent().toString(), dataChange.getItem().getText()));
 
-        MessageAdapter adapter = (MessageAdapter) mView.getRecyclerView().getAdapter();
-        Log.d(TAG, adapter.toString());
-        ((MessageAdapter) mView.getRecyclerView().getAdapter()).onListChanged(dataChange);
-    };
+            adapter.onListChanged(dataChange);
+        };
+    }
+
+    public void onDestroy() {
+        //We no longer want updates from the old chat. Remove us as a client from the old chat.
+        if (chatEventHandler != null) {
+            Log.d(TAG, "Removing old chatEventHandler, toString(): " + chatEventHandler);
+            DatabaseHandler.get(mChat).unbindMessages(chatEventHandler);
+            chatEventHandler = null;
+        }
+    }
 
     public void onChangeNameClicked(Context context, String chatName){
         LocalStorage.INSTANCE.saveSettings(context, mChat.getId(), chatName);
