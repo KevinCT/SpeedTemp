@@ -22,15 +22,15 @@ import com.zweigbergk.speedswede.core.Pair;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
-import com.zweigbergk.speedswede.util.ChatFactory;
-import com.zweigbergk.speedswede.util.ListBuilder;
+import com.zweigbergk.speedswede.util.factory.ChatFactory;
+import com.zweigbergk.speedswede.util.ListPromise;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.PreferenceValue;
-import com.zweigbergk.speedswede.util.ProductBuilder;
+import com.zweigbergk.speedswede.util.Promise;
 import com.zweigbergk.speedswede.util.Statement;
-import com.zweigbergk.speedswede.util.ProductLock;
+import com.zweigbergk.speedswede.util.PromiseNeed;
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 
 import static com.zweigbergk.speedswede.Constants.CHATS;
@@ -41,10 +41,10 @@ import static com.zweigbergk.speedswede.core.User.Preference;
 import static com.zweigbergk.speedswede.util.Lists.EntryMapping;
 
 
-public enum DbChatHandler {
-    INSTANCE;
+class DbChatHandler extends DbHandler {
+    private static DbChatHandler INSTANCE;
 
-    public static final String TAG = DbChatHandler.class.getSimpleName().toUpperCase();
+    private static final String TAG = DbChatHandler.class.getSimpleName().toUpperCase();
 
     private DatabaseReference mRoot;
 
@@ -52,7 +52,15 @@ public enum DbChatHandler {
 
     private ChatListener mChatListener;
 
+    private DbChatHandler() {
+
+    }
+
     public static DbChatHandler getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new DbChatHandler();
+        }
+
         return INSTANCE;
     }
 
@@ -73,7 +81,7 @@ public enum DbChatHandler {
     void registerChatsListener() {
         mChatListener = new ChatListener();
 
-        String uid = DbUserHandler.INSTANCE.getActiveUserId();
+        String uid = DbUserHandler.getInstance().getActiveUserId();
 
         Query firstUserRef = mRoot.child(CHATS).orderByChild("firstUser/uid").equalTo(uid);
         firstUserRef.keepSynced(true);
@@ -202,7 +210,7 @@ public enum DbChatHandler {
         return prettyName.toString();
     }
 
-    ProductBuilder<Chat> createChatFrom(DataSnapshot snapshot) {
+    Promise<Chat> createChatFrom(DataSnapshot snapshot) {
         return ChatFactory.serializeChat(snapshot);
     }
 
@@ -223,24 +231,24 @@ public enum DbChatHandler {
         messageListeners.get(chat.getId()).bind(client);
     }
 
-    ListBuilder<Message> pullMessages(Chat chat) {
-        final ListBuilder<Message> builder = ListBuilder.empty();
+    ListPromise<Message> pullMessages(Chat chat) {
+        final ListPromise<Message> listPromise = ListPromise.empty();
+        listPromise.setBlueprint(items -> items.getList(PromiseNeed.LIST));
 
         List<Message> messages = new ArrayList<>();
 
         final MessageListener listener = new MessageListener();
 
-        Client<DataChange<Message>> client = change -> {
+        Client<DataChange<Message>> updateList = change -> {
             Message message = change.getItem();
             messages.add(message);
-            builder.updateState();
+            listPromise.remind();
             Log.d(TAG, "Adding message: " + message.getText());
         };
 
         listener.setIdentifier("pullMessageListener");
 
-
-        listener.bind(client);
+        listener.bind(updateList);
 
         mRoot.child(CHATS).child(chat.getId()).child(MESSAGES).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -248,21 +256,16 @@ public enum DbChatHandler {
                 long messageCount = dataSnapshot.getChildrenCount();
                 StateRequirement<List> hasAllMessages = list -> list.size() == messageCount;
 
-                builder.setBlueprint(items -> items.getList(ProductLock.LIST));
 
+                listPromise.requireState(PromiseNeed.LIST, hasAllMessages);
+                listPromise.addItem(PromiseNeed.LIST, messages);
 
-                builder.requireState(ProductLock.LIST, hasAllMessages);
-                builder.addItem(ProductLock.LIST, messages);
+                mRoot.child(CHATS).child(chat.getId()).child(MESSAGES).addChildEventListener(listener);
 
-
-
-                mRoot.child(CHATS).child(chat.getId()).child(MESSAGES).addChildEventListener(
-                        listener);
-
-                builder.addExecutable(() -> {
+                listPromise.whenFinished(() -> {
                     mRoot.child(CHATS).child(chat.getId())
                             .child(MESSAGES).removeEventListener(listener);
-                    Log.d(TAG, "pullMessages(Chat chat): ListBuilder<Message> finished.");
+                    Log.d(TAG, "pullMessages(Chat chat): ListPromise<Message> finished.");
                 });
             }
 
@@ -272,60 +275,8 @@ public enum DbChatHandler {
             }
         });
 
-        return builder;
+        return listPromise;
     }
-
-    /*ProductBuilder<List<Message>> pullMessages(Chat chat) {
-        final ProductBuilder<List<Message>> builder = ProductBuilder.shell();
-        builder.attachLocks(ProductLock.MESSAGE_LIST);
-
-        List<Message> messages = new ArrayList<>();
-
-        final MessageListener listener = new MessageListener();
-        Client<DataChange<Message>> client = change -> {
-            Message message = change.getItem();
-            messages.add(message);
-            builder.updateState();
-            Log.d(TAG, "Adding message: " + message.getText());
-        };
-
-        listener.setIdentifier("pullMessageListener");
-
-
-        listener.bind(client);
-
-        mRoot.child(CHATS).child(chat.getId()).child(MESSAGES).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                long messageCount = dataSnapshot.getChildrenCount();
-                StateRequirement<List> hasAllMessages = list -> list.size() == messageCount;
-
-                builder.setBlueprint(items -> items.getList(ProductLock.MESSAGE_LIST));
-
-
-                builder.requireState(ProductLock.MESSAGE_LIST, hasAllMessages);
-                builder.addItem(ProductLock.MESSAGE_LIST, messages);
-
-
-
-                mRoot.child(CHATS).child(chat.getId()).child(MESSAGES).addChildEventListener(
-                        listener);
-
-                builder.addExecutable(() -> {
-                    mRoot.child(CHATS).child(chat.getId())
-                        .child(MESSAGES).removeEventListener(listener);
-                    Log.d(TAG, "MessageBuilder finished.");
-                });
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        return builder;
-    }*/
 
     boolean hasMessageListenerForChat(Chat chat) {
         return messageListeners.containsKey(chat.getId());
@@ -366,24 +317,6 @@ public enum DbChatHandler {
                  }
          );
         return statement;
-    }
-
-    public static Statement hasReference(DatabaseReference ref) {
-        Statement builder = new Statement();
-
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                builder.setReturnValue(dataSnapshot.exists());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                builder.setBuildFailed(true);
-            }
-        });
-
-        return builder;
     }
 
     public void deleteChat(Chat chat) {
