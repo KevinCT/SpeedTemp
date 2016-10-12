@@ -8,23 +8,23 @@ import java.util.Map;
 import java.util.Set;
 
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
-import com.zweigbergk.speedswede.util.ProductBuilder.ItemMap;
+import com.zweigbergk.speedswede.util.Promise.ItemMap;
 
 /** Holds an unfinished object. Only releases it once it is completed,
  * i.e. all requirements are met. */
-public class TreasureChest {
+public class PromiseState {
 
-    public static final String TAG = TreasureChest.class.getSimpleName().toUpperCase();
+    public static final String TAG = PromiseState.class.getSimpleName().toUpperCase();
 
     private ItemMap mItems;
 
-    private Set<ProductLock> mLocks;
+    private Set<PromiseNeed> mLocks;
 
-    private Set<ProductLock> mOpenedLocks;
+    private Set<PromiseNeed> mOpenedLocks;
 
-    private Map<ProductLock, StateRequirement> stateRequirements;
+    private Map<PromiseNeed, StateRequirement> stateRequirements;
 
-    public TreasureChest() {
+    public PromiseState() {
         mItems = new ItemMap();
 
         mLocks = new HashSet<>();
@@ -33,12 +33,12 @@ public class TreasureChest {
         stateRequirements = new HashMap<>();
     }
 
-    public void requireState(ProductLock key, StateRequirement requirement) {
+    public void requireState(PromiseNeed key, StateRequirement requirement) {
         stateRequirements.put(key, requirement);
         Log.d(TAG, "Adding state requirement");
     }
 
-    private void updateLock(ProductLock key) {
+    private void updateLock(PromiseNeed key) {
         Object object = mItems.get(key);
         if (hasStateRequirement(key)) {
             Log.d(TAG, "Check if lock should open");
@@ -55,16 +55,16 @@ public class TreasureChest {
         Lists.forEach(mLocks, this::updateLock);
     }
 
-    void put(ProductLock lock, Object product) {
+    void put(PromiseNeed lock, Object product) {
         mItems.put(lock, product);
         updateLock(lock);
     }
 
-    private boolean hasStateRequirement(ProductLock key) {
+    private boolean hasStateRequirement(PromiseNeed key) {
         return stateRequirements.get(key) != null;
     }
 
-    void addLock(ProductLock lock) {
+    void addLock(PromiseNeed lock) {
         mLocks.add(lock);
     }
 

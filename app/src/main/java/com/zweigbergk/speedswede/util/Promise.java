@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProductBuilder<Product> {
-    public static final String TAG = ProductBuilder.class.getSimpleName().toUpperCase();
+public class Promise<Product> {
+    public static final String TAG = Promise.class.getSimpleName().toUpperCase();
 
     private Blueprint<Product> mBlueprint;
 
@@ -31,12 +31,12 @@ public class ProductBuilder<Product> {
     //Error flag. If this is set, the builder will return null to all its listeners.
     protected boolean mBuildFailed;
 
-    public static <Product> ProductBuilder<Product> shell() {
-        return new ProductBuilder<>(null);
+    public static <Product> Promise<Product> shell() {
+        return new Promise<>(null);
     }
 
     /** @param locks The locks that are required to be non-null for the builder to call complete() */
-    public ProductBuilder(Blueprint<Product> blueprint, ProductLock... locks) {
+    public Promise(Blueprint<Product> blueprint, ProductLock... locks) {
 
         mBlueprint = blueprint;
         mBuildFailed = false;

@@ -6,16 +6,16 @@ import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 import java.util.List;
 
-public class ListBuilder<E> extends ProductBuilder<List<E>> {
+public class ListPromise<E> extends Promise<List<E>> {
 
     private Client<E> iteratorClient;
 
-    public ListBuilder(Blueprint<List<E>> blueprint, ProductLock... locks) {
+    public ListPromise(Blueprint<List<E>> blueprint, PromiseNeed... locks) {
         super(blueprint, locks);
     }
 
-    public static <Product> ListBuilder<Product> empty() {
-        return new ListBuilder<>(null, ProductLock.LIST);
+    public static <Product> ListPromise<Product> empty() {
+        return new ListPromise<>(null, PromiseNeed.LIST);
     }
 
     @Override
