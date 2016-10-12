@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,8 +22,8 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.methodwrapper.Client;
 import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
-import com.zweigbergk.speedswede.methodwrapper.CallerMethod;
-import com.zweigbergk.speedswede.methodwrapper.ProviderMethod;
+import com.zweigbergk.speedswede.util.methodwrapper.CallerMethod;
+import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
 
 import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
@@ -53,8 +54,11 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
     private void checkSavedState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             Chat chat = savedInstanceState.getParcelable(CHAT_PARCEL);
+
             setChat(chat);
-            Log.d(TAG, chat.toString());
+            if (chat != null) {
+                Log.d(TAG, chat.toString());
+            }
         }
     }
 
@@ -70,7 +74,11 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
     @Override
     public void onResume() {
         super.onResume();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar parentToolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+
+        if (parentToolbar != null) {
+            parentToolbar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override

@@ -17,7 +17,7 @@ import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void notifyChange(DataChange<Chat> change) {
+    public final void notifyChange(DataChange<Chat> change) {
         Chat chat = change.getItem();
         DatabaseEvent event = change.getEvent();
 
