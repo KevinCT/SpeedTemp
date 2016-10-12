@@ -13,12 +13,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
 
+import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Statement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
+
+import java.util.HashMap;
+
+import static com.zweigbergk.speedswede.Constants.BANLIST;
+import static com.zweigbergk.speedswede.Constants.BANS;
 
 public enum DatabaseHandler {
     INSTANCE;
@@ -28,8 +35,6 @@ public enum DatabaseHandler {
     }
 
     public static final String TAG = DatabaseHandler.class.getSimpleName().toUpperCase();
-
-    public static final String BANS = "bans";
 
     private static boolean mFirebaseConnectionStatus = false;
 
@@ -131,6 +136,10 @@ public enum DatabaseHandler {
         return DbUserHandler.getInstance().userExists(user);
     }
 
+    public static Statement isActiveUserBlockedBy(User user) {
+        return DbUserHandler.getInstance().isActiveUserBlockedBy(user);
+    }
+
     public static Statement hasUsers(Chat chat) {
         Log.d("Terminate chat testing", " we are in dbhandler");
         return DbChatHandler.getInstance().hasUsers(chat);
@@ -144,14 +153,10 @@ public enum DatabaseHandler {
         return root.push().getKey();
     }
 
-    public static void sendObject(String child, Object object ){
-        /*getChatWithId(chatId, chat -> {
-            Banner banner = getBans(getActiveUserId());
-            banner.addBan(getActiveUserId(), chat.getFirstUser().getUid(), chat.getSecondUser().getUid());
-            root.child(BANS).child(getActiveUserId()).setReturnValue(banner);
-            //root.child("Global"+BANS).push().setReturnValue(strangerID);
-        });*/
-        root.child(BANS).child(DbUserHandler.INSTANCE.getActiveUserId()).setValue(object);
+    public static void sendObject(String child, Banner banner ){
+        HashMap<String, Boolean> map = new HashMap<>();
+        Lists.forEach(banner.getBanList(), uid -> map.put(uid, true));
+        root.child(BANS).child(DbUserHandler.INSTANCE.getActiveUserId()).child(BANLIST).setValue(map);
     }
 
     public static Banner getBans(String uID){

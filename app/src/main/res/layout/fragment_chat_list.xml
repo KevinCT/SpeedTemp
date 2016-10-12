@@ -8,8 +8,11 @@
 
     <Button
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorWhite"
         android:text="@string/leta_kompis"
+        android:textSize="18dp"
         android:id="@+id/match_button"
         android:layout_alignParentBottom="true" />
 

@@ -24,6 +24,8 @@ public class Constants {
     public static final String LANGUAGE = "language";
     public static final String USAGE = "usage";
     public static final String CHAT_STATE = "chatState";
+    public static final String BANS = "bans";
+    public static final String BANLIST = "banList";
 
 
     //For PreferenceValue pushing
