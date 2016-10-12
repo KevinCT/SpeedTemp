@@ -13,14 +13,10 @@
 
     <string name="change_language">تغيير اللغة</string>
 
-    <string name="activity_settings_title">إعدادات</string>
-
     <string name="settings_pref_notifications">الإشعارات</string>
     <string name="settings_summary_notifications">Choose whether you want to be notified when new chat messages or matches appear.</string>
     <string name="settings_pref_app_lang">لغة التطبيق</string>
     <string name="settings_pref_app_lang_default">English</string>
-    <string name="exit_chat">Leave chat</string>
-    <string name="change_chat_name">Change chat name</string>
     <string name="remove_settings">remove settings</string>
     <string name="settings_pref_usage">How do you want to use this app?</string>
     <string name="settings_pref_usage_default">learn</string>

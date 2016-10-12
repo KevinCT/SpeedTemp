@@ -19,7 +19,6 @@
     <string name="change_name">Ändra namn</string>
     <string name="chat_name_1"></string>
     <string name="chatname_here"></string>
-    <string name="remove_settings"></string>
     <string name="enter_chatname">Ange namn för konversationen</string>
     <string name="chat_name_error">Namnet kan inte vara tomt!</string>
 
@@ -28,7 +27,6 @@
     <string name="settings_pref_app_lang">Appens språk</string>
     <string name="settings_pref_app_lang_default">English</string>
     <string name="exit_chat">Lämna chat</string>
-    <string name="change_chat_name">Ändra chat-namn</string>
     <string name="remove_settings">remove settings</string>
     <string name="settings_pref_usage">Hur vill du använda denna app?</string>
     <string name="settings_pref_usage_default">learn</string>
