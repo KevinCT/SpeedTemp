@@ -22,8 +22,9 @@ public class Constants {
     public static final String PREFERENCES = "preferences";
     public static final String NOTIFICATIONS = "receiveNotifications";
     public static final String LANGUAGE = "language";
-    public static final String SWEDISH_SKILL = "swedishSkill";
-    public static final String STRANGER_SWEDISH_SKILL = "strangerSwedishSkill";
+    public static final String USAGE = "usage";
+//    public static final String SWEDISH_SKILL = "swedishSkill";
+//    public static final String STRANGER_SWEDISH_SKILL = "strangerSwedishSkill";
     public static final String CHAT_STATE = "chatState";
 
 

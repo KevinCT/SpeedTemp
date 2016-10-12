@@ -51,22 +51,9 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 
         UserReference user = DatabaseHandler.get(DatabaseHandler.getActiveUser());
         switch(key) {
-            // TODO: change these two skill preferences to sliders and not booleans -->
-            case "pref_my_skill":
-                long mySkill = 0;
-                if (sharedPreferences.getBoolean(key, false)) {
-                    mySkill = 100;
-                }
-                user.setPreference(Preference.SWEDISH_SKILL, mySkill);
+            case "pref_usage":
+                user.setPreference(Preference.USAGE, sharedPreferences.getString(key, "learn"));
                 break;
-            case "pref_match_skill":
-                long matchSkill = 0;
-                if (sharedPreferences.getBoolean(key, false)) {
-                    matchSkill = 100;
-                }
-                user.setPreference(Preference.STRANGER_SWEDISH_SKILL, matchSkill);
-                break;
-            // TODO: <--
             case "pref_app_language":
                 user.setPreference(Preference.LANGUAGE, sharedPreferences.getString(key, "en"));
                 break;

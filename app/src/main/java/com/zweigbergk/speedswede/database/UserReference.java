@@ -14,7 +14,8 @@ public class UserReference {
     public static final String TAG = UserReference.class.getSimpleName().toUpperCase();
 
     enum UserAttribute {
-        NAME, ID, NOTIFICATIONS, LANGUAGE, SWEDISH_SKILL, STRANGER_SWEDISH_SKILL;
+        NAME, ID, NOTIFICATIONS, LANGUAGE, USAGE;
+//        SWEDISH_SKILL, STRANGER_SWEDISH_SKILL;
 
         public String getDbKey() {
             switch(this) {
@@ -26,10 +27,12 @@ public class UserReference {
                     return Constants.makePath(Constants.PREFERENCES, Constants.NOTIFICATIONS);
                 case LANGUAGE:
                     return Constants.makePath(Constants.PREFERENCES, Constants.LANGUAGE);
-                case SWEDISH_SKILL:
-                    return Constants.makePath(Constants.PREFERENCES, Constants.SWEDISH_SKILL);
-                case STRANGER_SWEDISH_SKILL:
-                    return Constants.makePath(Constants.PREFERENCES, Constants.STRANGER_SWEDISH_SKILL);
+                case USAGE:
+                    return Constants.makePath(Constants.PREFERENCES, Constants.USAGE);
+//                case SWEDISH_SKILL:
+//                    return Constants.makePath(Constants.PREFERENCES, Constants.SWEDISH_SKILL);
+//                case STRANGER_SWEDISH_SKILL:
+//                    return Constants.makePath(Constants.PREFERENCES, Constants.STRANGER_SWEDISH_SKILL);
                 default:
                     return Constants.UNDEFINED;
             }
@@ -77,21 +80,21 @@ public class UserReference {
         }
     }
 
-    public void setPreference(User.Preference preference, long value) {
-        if (!preference.accepts(value)) {
-            throw new RuntimeException(String.format(
-                    "Preference [ %s ] can invert be set to a long value.", preference));
-        }
-
-        switch (preference) {
-            case SWEDISH_SKILL:
-                setSwedishSkill(value);
-                break;
-            case STRANGER_SWEDISH_SKILL:
-                setStrangerSwedishSkill(value);
-                break;
-        }
-    }
+//    public void setPreference(User.Preference preference, long value) {
+//        if (!preference.accepts(value)) {
+//            throw new RuntimeException(String.format(
+//                    "Preference [ %s ] can invert be set to a long value.", preference));
+//        }
+//
+//        switch (preference) {
+//            case SWEDISH_SKILL:
+//                setSwedishSkill(value);
+//                break;
+//            case STRANGER_SWEDISH_SKILL:
+//                setStrangerSwedishSkill(value);
+//                break;
+//        }
+//    }
 
     public void setPreference(User.Preference preference, String value) {
         if (!preference.accepts(value)) {
@@ -103,18 +106,21 @@ public class UserReference {
             case LANGUAGE:
                 setLanguage(value);
                 break;
+            case USAGE:
+                setUsage(value);
+                break;
         }
     }
 
-    private void setSwedishSkill(long value) {
-        ifStillValid().then(() ->
-                DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.SWEDISH_SKILL, value));
-    }
-
-    private void setStrangerSwedishSkill(long value) {
-        ifStillValid().then(() ->
-                DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.STRANGER_SWEDISH_SKILL, value));
-    }
+//    private void setSwedishSkill(long value) {
+//        ifStillValid().then(() ->
+//                DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.SWEDISH_SKILL, value));
+//    }
+//
+//    private void setStrangerSwedishSkill(long value) {
+//        ifStillValid().then(() ->
+//                DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.STRANGER_SWEDISH_SKILL, value));
+//    }
 
     private void setLanguage(String language) {
         ifStillValid().then(() -> {
@@ -122,7 +128,15 @@ public class UserReference {
             String newLanguage = languages.contains(language) ? language : Constants.ENGLISH;
             DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.LANGUAGE, newLanguage);
         });
-}
+    }
+
+    private void setUsage(String usage) {
+        ifStillValid().then(() -> {
+            List<String> languages = Arrays.asList(Constants.USAGE);
+            String newLanguage = languages.contains(usage) ? usage : Constants.ENGLISH;
+            DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.LANGUAGE, newLanguage);
+        });
+    }
 
     public void setId(String id) {
         ifStillValid().then(() ->
