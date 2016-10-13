@@ -135,11 +135,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public MessageAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         if(viewType == 1) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_message_user, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_user, parent, false);
             return new ViewHolder(view);
 
         }  else {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_message_stranger, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_stranger, parent, false);
             return new ViewHolder(view);
         }
     }

@@ -2,7 +2,6 @@ package com.zweigbergk.speedswede.core;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.Exclude;
@@ -10,26 +9,25 @@ import com.zweigbergk.speedswede.util.ParcelHelper;
 import com.zweigbergk.speedswede.util.PreferenceValue;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class UserProfile implements User {
 
-    private String mName, mUid;
+    private String displayName, uid;
 //    private Timer timer;
 //    private int[] matchingInterval;
 
-    @Exclude
-    private MatchSkill mOwnSkill;
     private long timeInQueue;
 
     @Exclude
     private Map<Preference, PreferenceValue> mPreferences;
 
     public UserProfile(String name, String uid) {
-        mName = name;
-        mUid = uid;
+        this.displayName = name;
+        this.uid = uid;
 
-        mOwnSkill = MatchSkill.LEARNER;
+        mPreferences = new HashMap<>();
     }
 
     public UserProfile withPreferences(Map<Preference, PreferenceValue> preferences) {
@@ -37,20 +35,26 @@ public class UserProfile implements User {
         return this;
     }
 
+    @Exclude
+    @Override
+    public SkillCategory getSkillCategory() {
+        return SkillCategory.fromString((String) getPreference(Preference.SKILL_CATEGORY).getValue());
+}
+
     @Override
     public String getUid() {
-        return mUid;
+        return uid;
     }
 
     @Override
     public String getDisplayName() {
-        return mName;
+        return displayName;
     }
 
     @Override
     @Exclude
-    public Object getPreference(Preference preference) {
-        return mPreferences.get(preference).getValue();
+    public PreferenceValue getPreference(Preference preference) {
+        return mPreferences.get(preference);
     }
 
     @Override
@@ -68,13 +72,13 @@ public class UserProfile implements User {
 
     @Override
     public int hashCode() {
-        return mUid.hashCode();
+        return uid.hashCode();
     }
 
     @Override
     public String toString() {
-        return String.format("UserProfile {\n\t\tname: %s,\n\t\tuid: %s\n}",
-                mName, mUid);
+        return String.format("UserProfile {\n\t\tdisplayName: %s,\n\t\tuid: %s\n}",
+                displayName, uid);
     }
 
     @Override
@@ -110,27 +114,17 @@ public class UserProfile implements User {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mName);
-        dest.writeString(mUid);
+        dest.writeString(displayName);
+        dest.writeString(uid);
         ParcelHelper.writeParcelableMap(dest, 0, mPreferences);
     }
 
     private UserProfile(Parcel in) {
         if (in.readString() != null) {
-            mName = in.readString();
-            mUid = in.readString();
+            displayName = in.readString();
+            uid = in.readString();
             mPreferences = ParcelHelper.readParcelableMap(in, Preference.class, PreferenceValue.class);
         }
-    }
-
-    @Exclude
-    public MatchSkill getOwnSkill() {
-        return mOwnSkill;
-    }
-
-    @Exclude
-    public void setOwnSkill(MatchSkill skill) {
-        mOwnSkill = skill;
     }
 
     public void startTime() {
@@ -148,11 +142,11 @@ public class UserProfile implements User {
 //
 //    public void setInitialMatchInterval() {
 //        switch(matchSkill) {
-//            case LEARNER:
+//            case PUPIL:
 //                matchingInterval[0] = 0;
 //                matchingInterval[1] = 0;
 //                break;
-//            case CHATTER:
+//            case UNSPECIFIED:
 //                matchingInterval[0] = 50;
 //                matchingInterval[1] = 50;
 //                break;

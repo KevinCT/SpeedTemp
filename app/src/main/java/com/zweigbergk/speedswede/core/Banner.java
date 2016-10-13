@@ -10,6 +10,10 @@ public class Banner {
         banList = new ArrayList<>();
     }
 
+    public Banner(List<String> banList) {
+        this.banList = banList;
+    }
+
     public void addBan(String uID, String firstUser, String secondUser){
         banList.add(getStrangerID(uID,firstUser,secondUser));
 

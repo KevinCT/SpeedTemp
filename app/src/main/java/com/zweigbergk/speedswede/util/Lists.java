@@ -43,12 +43,16 @@ public class Lists {
     public static <E> List<E> filter(Iterable<E> collection, Query<E> query) {
         List<E> result = new ArrayList<>();
         forEach(collection, e -> {
-                if (query.matches(e)) {
-                    result.add(e);
-                }
+            if (query.matches(e)) {
+                result.add(e);
+            }
         });
 
         return result;
+    }
+
+    public static <E> List<E> filter(E[] collection, Query<E> query) {
+        return filter(Arrays.asList(collection), query);
     }
 
     public static <E> List<E> reject(Iterable<E> collection, Query<E> query) {

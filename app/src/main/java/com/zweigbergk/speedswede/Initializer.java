@@ -2,19 +2,22 @@ package com.zweigbergk.speedswede;
 
 import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.core.User.Preference;
-import com.zweigbergk.speedswede.database.UserReference;
 import com.zweigbergk.speedswede.database.DatabaseHandler.DatabaseNode;
-import com.zweigbergk.speedswede.util.async.GoodStatement;
-
-import static com.zweigbergk.speedswede.util.async.GoodStatement.not;
+import com.zweigbergk.speedswede.util.async.Statement;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Date;
+
+import static com.zweigbergk.speedswede.Constants.USERS;
 
 public class Initializer {
 
@@ -35,16 +38,14 @@ public class Initializer {
 
     private static void addUserToDatabase() {
         User activeUser = DatabaseHandler.getActiveUser();
-        GoodStatement containsUser = DatabaseHandler.hasUser(activeUser);
+        Statement containsUser = DatabaseHandler.hasUser(activeUser);
 
-        not(containsUser).then(() -> {
+        DatabaseHandler.users().push(activeUser);
+
+        /*containsUser.onFalse(() -> {
+            Log.d(TAG, "Pushing " + activeUser.getUid());
             DatabaseHandler.users().push(activeUser);
-
-            UserReference userRef = DatabaseHandler.get(activeUser);
-
-            userRef.setPreference(Preference.LANGUAGE, Constants.ENGLISH);
-            userRef.setPreference(Preference.NOTIFICATIONS, true);
-            userRef.setPreference(Preference.OWN_SKILL, "learn");
         });
+        containsUser.onTrue(() -> Log.d(TAG, "We have you...?"));*/
     }
 }

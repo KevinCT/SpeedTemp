@@ -5,8 +5,9 @@ import android.util.Log;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.async.Commitment;
-import com.zweigbergk.speedswede.util.async.GoodStatement;
+import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
@@ -59,8 +60,8 @@ public enum ChatMatcher {
     private void handleUserAdded(User user) {
         User activeUser = DatabaseHandler.getActiveUser();
 
-        GoodStatement activeUserBlockedPromised = DatabaseHandler.get(user).hasBlocked(activeUser);
-        GoodStatement strangerBlockedPromised = DatabaseHandler.get(activeUser).hasBlocked(user);
+        Statement activeUserBlockedPromised = DatabaseHandler.get(user).hasBlocked(activeUser);
+        Statement strangerBlockedPromised = DatabaseHandler.get(activeUser).hasBlocked(user);
 
         Promise.Result<Boolean> blockCheckResult = items -> {
             boolean activeUserBlocked = items.getBoolean(FIRST_ASSERTION);
@@ -79,7 +80,7 @@ public enum ChatMatcher {
                     //Handle adding of user here
                     if (!hasBlock) {
                         mUsersInPool.add(user);
-                        matchingLoop();
+                        match();
                     }
                 });
     }
@@ -99,22 +100,20 @@ public enum ChatMatcher {
         DatabaseHandler.getPool().remove(user);
     }
 
-//    public void match() {
-//        Log.d(TAG, "Users in pool: " + mUsersInPool.size());
-//        if (mUsersInPool.size() > 1) {
-//            // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
-//            //List<User> matchedUsers = Lists.getFirstElements(mUsersInPool, 2);
-//            List<User> matchedUsers = sofisticatedMatch();
-//            if(matchedUsers != null) {
-//                DatabaseHandler.getPool().removeUser(matchedUsers.get(0));
-//                DatabaseHandler.getPool().removeUser(matchedUsers.get(0));
-//
-//                Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
-//                Log.d("CHATMATCHER: NAME: ", chat.getName() + "");
-//                DatabaseHandler.get(chat).push();
-//            }
-//        }
-//    }
+    public void match() {
+        Log.d(TAG, "Users in pool: " + mUsersInPool.size());
+        if (mUsersInPool.size() > 1) {
+            // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
+            List<User> matchedUsers = Lists.getFirstElements(mUsersInPool, 2);
+
+            DatabaseHandler.getPool().removeUser(matchedUsers.get(0));
+            DatabaseHandler.getPool().removeUser(matchedUsers.get(1));
+
+            Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
+            Log.d(TAG, chat.getName());
+            DatabaseHandler.get(chat).push();
+        }
+    }
 
     private List<String> getUserIdList(){
         List<String> userNameList = new ArrayList<>();
@@ -156,11 +155,11 @@ public enum ChatMatcher {
         Map<String, List<User>> listMap = new HashMap<>();
 
         for(User user : mUsersInPool) {
-            switch(user.getOwnSkill()) {
-                case LEARNER:
+            switch(user.getSkillCategory()) {
+                case PUPIL:
                     learners.add(user);
                     break;
-                case CHATTER:
+                case UNSPECIFIED:
                     chatters.add(user);
                     break;
                 case MENTOR:

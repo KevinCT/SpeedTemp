@@ -56,17 +56,6 @@ public class LoginPresenter implements ActivityAttachable {
     }
 
     private void loginInOfflineMode() {
-       /* User user = LocalStorage.INSTANCE.getSavedUser(mActivity);
-
-        if (user != null) {
-            Log.d(TAG, "Found saved user in LocalStorage. Starting ChatActivity.");
-            DbUserHandler.INSTANCE.setLoggedInUser(user);
-            mActivity.startChatActivity();
-        } else {
-            Toast.makeText(mActivity, "No previous user could be found.", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "loginInOfflineMode: No previous user could be found.");
-        }*/
-
         UserProfile user = UserProfile.from(FirebaseAuth.getInstance().getCurrentUser());
         DatabaseHandler.setLoggedInUser(user);
         mActivity.startChatActivity();

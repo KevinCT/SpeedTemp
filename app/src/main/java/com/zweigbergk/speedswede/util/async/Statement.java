@@ -2,10 +2,10 @@ package com.zweigbergk.speedswede.util.async;
 
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
-public class GoodStatement extends Promise<Boolean> {
+public class Statement extends Promise<Boolean> {
     private boolean inverted;
 
-    public GoodStatement() {
+    public Statement() {
         super(null);
 
         requires(PromiseNeed.ASSERTION);
@@ -13,11 +13,15 @@ public class GoodStatement extends Promise<Boolean> {
         inverted = false;
     }
 
+    /**
+     * Only runs if the Statement returns true.
+     * @param executable
+     */
     public void then(Executable executable) {
         onTrue(executable);
     }
 
-    public static GoodStatement invert(GoodStatement builder) {
+    public static Statement invert(Statement builder) {
         return builder.invert();
     }
 
@@ -38,13 +42,9 @@ public class GoodStatement extends Promise<Boolean> {
         addExecutable(executable, this::onFalse);
     }
 
-    public GoodStatement invert() {
+    public Statement invert() {
         inverted = true;
         return this;
-    }
-
-    public static GoodStatement not(GoodStatement statement) {
-        return statement.invert();
     }
 
     private boolean determineInterest(boolean value) {

@@ -1,7 +1,7 @@
 package com.zweigbergk.speedswede.database;
 
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.util.async.GoodStatement;
+import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.async.Promise;
 
 public enum UserListReference {
@@ -11,15 +11,15 @@ public enum UserListReference {
         return INSTANCE;
     }
 
-    public GoodStatement contains(User user) {
+    public Statement contains(User user) {
         return DbUserHandler.getInstance().userExists(user);
     }
 
-    public GoodStatement contains(String userId) {
+    public Statement contains(String userId) {
         return DbUserHandler.getInstance().userExists(userId);
     }
 
-    public GoodStatement not(GoodStatement statement) {
+    public Statement not(Statement statement) {
         return statement.invert();
     }
 
@@ -28,6 +28,6 @@ public enum UserListReference {
     }
 
     public Promise<User> pull(String userId) {
-        return DbUserHandler.getInstance().getUser(userId);
+        return DbUserHandler.getInstance().pullUser(userId);
     }
 }

@@ -1,7 +1,7 @@
 package com.zweigbergk.speedswede.database;
 
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.util.async.GoodStatement;
+import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public enum PoolReference {
@@ -11,11 +11,11 @@ public enum PoolReference {
         return INSTANCE;
     }
 
-    public GoodStatement contains(User user) {
+    public Statement contains(User user) {
         return DbUserHandler.getInstance().isInUserPool(user);
     }
 
-    public GoodStatement not(GoodStatement statement) {
+    public Statement not(Statement statement) {
         return statement.invert();
     }
 

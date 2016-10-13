@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.zweigbergk.speedswede.R;
-import com.zweigbergk.speedswede.core.MatchSkill;
+import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.UserReference;
@@ -57,16 +57,16 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
             case "pref_usage":
                 switch(sharedPreferences.getString(key, "learn")) {
                     case "learn":
-                        user.setOwnSkill(MatchSkill.LEARNER);
-                        DatabaseHandler.get(activeUser).setOwnSkill(MatchSkill.LEARNER);
+                        user.setSkillCategory(SkillCategory.PUPIL);
+                        DatabaseHandler.get(activeUser).setSkillCategory(SkillCategory.PUPIL);
                         break;
                     case "mentor":
-                        DatabaseHandler.get(activeUser).setOwnSkill(MatchSkill.MENTOR);
-                        user.setOwnSkill(MatchSkill.MENTOR);
+                        DatabaseHandler.get(activeUser).setSkillCategory(SkillCategory.MENTOR);
+                        user.setSkillCategory(SkillCategory.MENTOR);
                         break;
                     case "chat":
-                        DatabaseHandler.get(activeUser).setOwnSkill(MatchSkill.CHATTER);
-                        user.setOwnSkill(MatchSkill.CHATTER);
+                        DatabaseHandler.get(activeUser).setSkillCategory(SkillCategory.UNSPECIFIED);
+                        user.setSkillCategory(SkillCategory.UNSPECIFIED);
                         break;
                     default:
                         break;

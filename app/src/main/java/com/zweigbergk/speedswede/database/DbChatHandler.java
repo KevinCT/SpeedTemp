@@ -18,11 +18,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
-import com.zweigbergk.speedswede.core.Pair;
-import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
-import com.zweigbergk.speedswede.util.async.GoodStatement;
+import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.async.ListPromise;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Tuple;
@@ -68,11 +66,11 @@ class DbChatHandler extends DbHandler {
         messageListeners = new HashMap<>();
     }
 
-    public GoodStatement exists(Chat chat) {
+    public Statement exists(Chat chat) {
         return hasReference(mRoot.child(CHATS).child(chat.getId()));
     }
 
-    public GoodStatement exists(String chatId) {
+    public Statement exists(String chatId) {
         return hasReference(mRoot.child(CHATS).child(chatId));
     }
 
@@ -133,22 +131,6 @@ class DbChatHandler extends DbHandler {
 
         mRoot.child(CHATS).child(chat.getId()).addValueEventListener(listener);
         mRoot.child(CHATS).child(chat.getId()).setValue(chat);
-    }
-
-    /**
-     * Remove user preferences in a chat so that it can be pushed.
-     * @return the stripped preferences. Index 0 holds first user preferences,
-     * index 1 holds second user preferences.
-     */
-    private Pair<Map<Preference, PreferenceValue>> stripPreferences(Chat chat) {
-        UserProfile firstUser = (UserProfile) chat.getFirstUser();
-        UserProfile secondUser = (UserProfile) chat.getSecondUser();
-        Map<Preference, PreferenceValue> firstMap = firstUser.getPreferences();
-        Map<Preference, PreferenceValue> secondMap = secondUser.getPreferences();
-
-        chat.setFirstUser(firstUser.withPreferences(null));
-
-        return new Pair<>(firstMap, secondMap);
     }
 
     /**
@@ -299,8 +281,8 @@ class DbChatHandler extends DbHandler {
         messageListeners.put(chat.getId(), messageListener);
     }
 
-    GoodStatement hasUsers(Chat chat) {
-        GoodStatement statement = new GoodStatement();
+    Statement hasUsers(Chat chat) {
+        Statement statement = new Statement();
           hasReference(mRoot.child(CHATS).child(chat.getId()).child(FIRST_USER)).then(
                     firstExists -> {
                         hasReference(mRoot.child(CHATS).child(chat.getId()).child(SECOND_USER)).then(

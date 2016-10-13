@@ -2,6 +2,7 @@ package com.zweigbergk.speedswede.util.async;
 
 import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
@@ -41,7 +42,7 @@ public class Promise<E> extends Commitment<E> {
         chainedPromises = new HashMap<>();
 
         promiseState = new PromiseState();
-        Lists.forEach(Arrays.asList(needs), promiseState::addNeed);
+        Lists.forEach(needs, promiseState::addNeed);
     }
 
     public Promise<E> setResultForm(Result<E> result) {
@@ -243,6 +244,10 @@ public class Promise<E> extends Commitment<E> {
 
         public Object get(PromiseNeed need) {
             return items.get(need);
+        }
+
+        public DataSnapshot getSnapshot(PromiseNeed need) {
+            return (DataSnapshot) items.get(need);
         }
 
         public List getList(PromiseNeed need) {

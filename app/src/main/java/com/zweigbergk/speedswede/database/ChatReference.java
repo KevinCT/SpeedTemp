@@ -6,7 +6,7 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.util.async.GoodStatement;
+import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.async.ListPromise;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
@@ -96,7 +96,7 @@ public class ChatReference {
         DbChatHandler.getInstance().removeMessageClient(mChat, client);
     }
 
-    public GoodStatement ifStillValid() {
+    public Statement ifStillValid() {
         return DbChatHandler.getInstance().exists(mChat);
     }
 

@@ -15,12 +15,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Banner;
-import com.zweigbergk.speedswede.core.MatchSkill;
+import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.UserListener;
 import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
-import com.zweigbergk.speedswede.util.async.GoodStatement;
+import com.zweigbergk.speedswede.util.async.FirebasePromise;
+import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.factory.UserFactory;
@@ -31,11 +32,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.zweigbergk.speedswede.Constants.POOL;
-import static com.zweigbergk.speedswede.Constants.SKILL;
+import static com.zweigbergk.speedswede.Constants.SKILL_CATEGORY;
 import static com.zweigbergk.speedswede.Constants.USERS;
 import static com.zweigbergk.speedswede.Constants.BANS;
 import static com.zweigbergk.speedswede.Constants.BANLIST;
-import static com.zweigbergk.speedswede.util.async.PromiseNeed.USER_ID_LIST;
+import static com.zweigbergk.speedswede.util.async.PromiseNeed.SNAPSHOT;
 
 class DbUserHandler extends DbHandler {
     private static DbUserHandler INSTANCE;
@@ -98,11 +99,32 @@ class DbUserHandler extends DbHandler {
         return mUsersListener;
     }
 
-    public GoodStatement exists(User user) {
+    public Promise<User> pullUser(String uid) {
+        final Promise<User> promise = Promise.create();
+
+        if(uid != null) {
+            mRoot.child(Constants.USERS).child(uid).addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            UserFactory.serializeUser(promise, dataSnapshot);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            promise.setPromiseFailed(true);
+                        }
+                    });
+        }
+
+        return promise;
+    }
+
+    public Statement exists(User user) {
         return hasReference(mRoot.child(USERS).child(user.getUid()));
     }
 
-    public GoodStatement isInPool(User user) {
+    public Statement isInPool(User user) {
         return hasReference(mRoot.child(POOL).child(user.getUid()));
     }
 
@@ -112,17 +134,14 @@ class DbUserHandler extends DbHandler {
 
     void pushUser(User user) {
         mRoot.child(Constants.USERS).child(user.getUid()).setValue(user);
-        DatabaseReference weirdRef = mRoot.child(Constants.USERS).child(user.getUid()).child(Constants.SKILL);
-        Log.d(TAG, "pushUser: " + weirdRef.toString());
-        weirdRef.setValue(user.getOwnSkill().getValue());
     }
 
     void removeUserFromPool(User user) {
         mRoot.child(Constants.POOL).child(user.getUid()).setValue(null);
     }
 
-    void setUserSkill(User user, MatchSkill value) {
-        mRoot.child(USERS).child(user.getUid()).child(SKILL).setValue(value);
+    void setUserSkill(User user, SkillCategory value) {
+        mRoot.child(USERS).child(user.getUid()).child(SKILL_CATEGORY).setValue(value);
     }
 
     void setUserAttribute(User user, UserReference.UserAttribute attribute, Object value) {
@@ -169,37 +188,15 @@ class DbUserHandler extends DbHandler {
         mLoggedInUser = user;
     }
 
-
-    public Promise<User> getUser(String uid) {
-        final Promise<User> promise = Promise.create();
-
-        if(uid != null) {
-            mRoot.child(Constants.USERS).child(uid).addListenerForSingleValueEvent(
-                    new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            UserFactory.buildUser(promise, dataSnapshot);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            promise.setPromiseFailed(true);
-                        }
-                    });
-        }
-
-        return promise;
+    Statement userExists(User user) {
+        return hasReferenceDebug(mRoot.child(USERS).child(user.getUid()));
     }
 
-    GoodStatement userExists(User user) {
-        return hasReference(mRoot.child(USERS).child(user.getUid()));
-    }
-
-    GoodStatement userExists(String userId) {
+    Statement userExists(String userId) {
         return hasReference(mRoot.child(USERS).child(userId));
     }
 
-    GoodStatement isInUserPool(User user) {
+    Statement isInUserPool(User user) {
         return hasReference(mRoot.child(POOL).child(user.getUid()));
     }
 
@@ -213,42 +210,23 @@ class DbUserHandler extends DbHandler {
         delete(ref);
     }
 
-    public Promise<Banner> getBans(String uid){
-        Promise<Banner> promise = Promise.create();
-        promise.requires(USER_ID_LIST);
+    Promise<Banner> getBans(String uid){
+        Promise.Result<Banner> bannerResult = items -> {
+            DataSnapshot snapshot = items.getSnapshot(SNAPSHOT);
+            return new Banner(Lists.map(snapshot.getChildren(), DataSnapshot::getKey));
+        };
 
-        mRoot.child(BANS).child(uid).child(BANLIST).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> blockedList = new ArrayList<>();
+        Promise<Banner> bannerPromise = new Promise<>(bannerResult, SNAPSHOT);
 
-                StateRequirement hasAllIds = list -> ((List<String>)list).size() == dataSnapshot.getChildrenCount();
-                promise.requireState(USER_ID_LIST, hasAllIds);
-                promise.addItem(USER_ID_LIST, blockedList);
-
-                Lists.forEach(dataSnapshot.getChildren(), userEntry -> {
-                    String userId = userEntry.getKey();
-                    blockedList.add(userId);
-                });
-
-                promise.remind();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-        });
-
-        return promise;
+        FirebasePromise snapshotPromise = new FirebasePromise(databasePath(BANS, uid, BANLIST));
+        return snapshotPromise.thenPromise(SNAPSHOT, bannerPromise);
     }
 
     void blockUser(User subject, User target) {
         mRoot.child(BANS).child(subject.getUid()).child(BANLIST).child(target.getUid()).setValue(true);
     }
 
-    GoodStatement hasBlockedUser(User subject, User target) {
+    Statement hasBlockedUser(User subject, User target) {
         DatabaseReference ref = mRoot.child(BANS).child(subject.getUid()).child(BANLIST).child(target.getUid());
         return DbUserHandler.getInstance().hasReference(ref);
     }

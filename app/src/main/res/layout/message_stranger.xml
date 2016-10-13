@@ -19,7 +19,7 @@
             android:layout_weight="6"
             android:background="@drawable/rounded_corner_user"
             android:padding="16dp"
-            android:text="Android Studio är ett idiot program som kompilerar skitlångsamt, och är iövrigt fett segt. Jg menar det laggar till och med när jag skriver en text."
+            android:text=""
             android:textColor="#000" />
 
     </LinearLayout>
