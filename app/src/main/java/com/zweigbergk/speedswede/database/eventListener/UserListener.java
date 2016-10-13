@@ -11,7 +11,7 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Lists;
 
 import java.util.HashMap;
@@ -157,8 +157,13 @@ public class UserListener implements ChildEventListener {
     }
 
     private User convertToUser(DataSnapshot snapshot) {
-        return new UserProfile(snapshot.child(Constants.DISPLAY_NAME).getValue().toString(),
-                snapshot.child(Constants.USER_ID).getValue().toString());
+        Log.d(TAG, "convertToUser: snapshot: " + snapshot.toString());
+        if (snapshot.child(Constants.DISPLAY_NAME).getValue() != null &&
+                snapshot.child(Constants.USER_ID).getValue() != null) {
+            return new UserProfile(snapshot.child(Constants.DISPLAY_NAME).getValue().toString(),
+                    snapshot.child(Constants.USER_ID).getValue().toString());
+        }
+        return null;
     }
 
     @Override

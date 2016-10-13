@@ -14,19 +14,32 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import com.zweigbergk.speedswede.Constants;
+import com.zweigbergk.speedswede.core.Banner;
+import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.UserListener;
 import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
-import com.zweigbergk.speedswede.util.Statement;
-import com.zweigbergk.speedswede.util.ProductBuilder;
-import com.zweigbergk.speedswede.util.UserFactory;
+import com.zweigbergk.speedswede.util.async.FirebasePromise;
+import com.zweigbergk.speedswede.util.async.Statement;
+import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.async.Promise;
+import com.zweigbergk.speedswede.util.factory.UserFactory;
+import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
+
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.zweigbergk.speedswede.Constants.POOL;
+import static com.zweigbergk.speedswede.Constants.SKILL_CATEGORY;
 import static com.zweigbergk.speedswede.Constants.USERS;
+import static com.zweigbergk.speedswede.Constants.BANS;
+import static com.zweigbergk.speedswede.Constants.BANLIST;
+import static com.zweigbergk.speedswede.util.async.PromiseNeed.SNAPSHOT;
 
-enum DbUserHandler {
-    INSTANCE;
+class DbUserHandler extends DbHandler {
+    private static DbUserHandler INSTANCE;
 
     public static final String TAG = DbUserHandler.class.getSimpleName().toUpperCase();
 
@@ -37,7 +50,15 @@ enum DbUserHandler {
 
     private User mLoggedInUser;
 
+    private DbUserHandler() {
+
+    }
+
     public static DbUserHandler getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new DbUserHandler();
+        }
+
         return INSTANCE;
     }
 
@@ -54,14 +75,15 @@ enum DbUserHandler {
         mLoggedInUser = null;
     }
 
-    // NOTE: Listening to all Users all the time is invert optimal.
+    // NOTE: Listening to all Users all the time is not optimal.
     // It's whatever if it doesn't cause issues.
     void registerUsersListener() {
         mUsersListener = new UserListener();
 
+        Log.d(TAG, "In registerUsersListener");
         Query userRef = mRoot.child(USERS);
-        userRef.keepSynced(true);
         userRef.addChildEventListener(mUsersListener);
+        userRef.keepSynced(true);
     }
 
     private void initializeUserPoolListener() {
@@ -75,6 +97,27 @@ enum DbUserHandler {
 
     UserListener getUserListener() {
         return mUsersListener;
+    }
+
+    public Promise<User> pullUser(String uid) {
+        final Promise<User> promise = Promise.create();
+
+        if(uid != null) {
+            mRoot.child(Constants.USERS).child(uid).addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            UserFactory.serializeUser(promise, dataSnapshot);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            promise.setPromiseFailed(true);
+                        }
+                    });
+        }
+
+        return promise;
     }
 
     public Statement exists(User user) {
@@ -93,9 +136,12 @@ enum DbUserHandler {
         mRoot.child(Constants.USERS).child(user.getUid()).setValue(user);
     }
 
-
     void removeUserFromPool(User user) {
         mRoot.child(Constants.POOL).child(user.getUid()).setValue(null);
+    }
+
+    void setUserSkill(User user, SkillCategory value) {
+        mRoot.child(USERS).child(user.getUid()).child(SKILL_CATEGORY).setValue(value);
     }
 
     void setUserAttribute(User user, UserReference.UserAttribute attribute, Object value) {
@@ -142,36 +188,6 @@ enum DbUserHandler {
         mLoggedInUser = user;
     }
 
-    void pushTestUser() {
-        getUser(Constants.TEST_USER_UID).then(user -> {
-            if (user == null) {
-                UserProfile testUserProfile = new UserProfile("TestBot", Constants.TEST_USER_UID);
-                DbUserHandler.INSTANCE.pushUser(testUserProfile);
-            }
-        });
-    }
-
-    public ProductBuilder<User> getUser(String uid) {
-        final ProductBuilder<User> builder = ProductBuilder.shell();
-
-        if(uid != null) {
-            mRoot.child(Constants.USERS).child(uid).addListenerForSingleValueEvent(
-                    new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            UserFactory.buildUser(builder, dataSnapshot);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            builder.setBuildFailed(true);
-                        }
-                    });
-        }
-
-        return builder;
-    }
-
     Statement userExists(User user) {
         return hasReference(mRoot.child(USERS).child(user.getUid()));
     }
@@ -184,50 +200,34 @@ enum DbUserHandler {
         return hasReference(mRoot.child(POOL).child(user.getUid()));
     }
 
-    Statement isInUserPool(String userId) {
-        return hasReference(mRoot.child(POOL).child(userId));
-    }
-
-    /*private ProductBuilder<Boolean> nodeHasUser(DatabaseReference reference, String userId) {
-        ProductBuilder<Boolean> builder =
-                new ProductBuilder<>(items -> items.getBoolean(ProductLock.ASSERTION));
-
-        builder.attachLocks(ProductLock.ASSERTION);
-
-        reference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                builder.addItem(ProductLock.ASSERTION, dataSnapshot.exists());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                builder.setBuildFailed(true);
-            }
-        });
-
-        return builder;
-    }*/
-
     UserPoolListener getPoolListener() {
         return mUserPoolListener;
     }
 
-    public Statement hasReference(DatabaseReference ref) {
-        Statement builder = new Statement();
+    public void liftBlock(String strangerUid) {
+        String uid = getActiveUserId();
+        DatabaseReference ref = mRoot.child(BANS).child(uid).child(BANLIST).child(strangerUid);
+        delete(ref);
+    }
 
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                builder.setReturnValue(dataSnapshot.exists());
-            }
+    Promise<Banner> getBans(String uid){
+        Promise.Result<Banner> bannerResult = items -> {
+            DataSnapshot snapshot = items.getSnapshot(SNAPSHOT);
+            return new Banner(Lists.map(snapshot.getChildren(), DataSnapshot::getKey));
+        };
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                builder.setBuildFailed(true);
-            }
-        });
+        Promise<Banner> bannerPromise = new Promise<>(bannerResult, SNAPSHOT);
 
-        return builder;
+        FirebasePromise snapshotPromise = new FirebasePromise(databasePath(BANS, uid, BANLIST));
+        return snapshotPromise.thenPromise(SNAPSHOT, bannerPromise);
+    }
+
+    void blockUser(User subject, User target) {
+        mRoot.child(BANS).child(subject.getUid()).child(BANLIST).child(target.getUid()).setValue(true);
+    }
+
+    Statement hasBlockedUser(User subject, User target) {
+        DatabaseReference ref = mRoot.child(BANS).child(subject.getUid()).child(BANLIST).child(target.getUid());
+        return DbUserHandler.getInstance().hasReference(ref);
     }
 }

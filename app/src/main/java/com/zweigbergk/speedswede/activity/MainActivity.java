@@ -17,17 +17,17 @@ import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.presenter.MainPresenter;
-import com.zweigbergk.speedswede.util.PreferenceValue;
 import com.zweigbergk.speedswede.view.MainView;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity implements MainView {
+    public static final String TAG = MainActivity.class.getSimpleName().toUpperCase();
 
     private static final boolean LOGOUT_ON_STARTUP = false;
     private static boolean calledAlready = false;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +41,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
             DatabaseHandler.registerConnectionHandling();
             calledAlready = true;
         }
-
-        printKeyHash(this);
 
         new MainPresenter(this);
         setUpContent();

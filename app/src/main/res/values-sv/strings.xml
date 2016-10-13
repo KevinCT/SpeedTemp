@@ -1,31 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SpeedSwede</string>
-    <string name="helloM8s">Hallå kompisar</string>
     <string name="title_activity_login">LoginActivity</string>
 
     <string name="facebook_app_id">616859141821100</string>
     <string name="fb_login_protocol_scheme">fb616859141821100</string>
 
     <string name="hint_message_input_field">Skriv ett meddelande...</string>
-    <string name="message_dummy_text">Vi rockar en testningschatt, till världens bästa festningsapp.</string>
 
-    <string name="block_user">Blockera användare</string>
-    <string name="leta_kompis">Matcha med en användare</string>
+    <string name="leta_kompis">Matcha med en främling</string>
+    <string name="block_user">Blocka användare</string>
+
     <string name="change_language">Ändra språk</string>
-    <string name="settings">Inställningar</string>
-    <string name="exit_chat">Lämna chat</string>
-    <string name="settings_pref_app_lang">Applikationens språk</string>
-    <string name="settings_pref_app_lang_default"></string>
-    <string name="settings_pref_matchskill">Matcha genom språkförmåga</string>
-    <string name="settings_pref_myskill">Min svenska språkförmåga</string>
-    <string name="settings_pref_notifications">Notifikationer</string>
-    <string name="settings_summary_matchskill">Föredragen språkförmåga vid matchning</string>
-    <string name="settings_summary_myskill">Är du erfaren med det svenska språket</string>
-    <string name="settings_summary_notifications">Välj om du vill få notifikationer vid meddelanden och nya chattar</string>
-    <string name="settings_title_skills">Språkförmåga</string>
-    <string name="language_skills">Språkförmåga</string>
-    <string name="languages">Språk</string>
-    <string name="other">Andra inställningar</string>
+
     <string name="activity_settings_title">Inställningar</string>
+    <string name="cancel">Avbryt</string>
+    <string name="change_chat_name">Ändra konversationens namn</string>
+    <string name="change_name">Ändra namn</string>
+    <string name="chat_name_1"></string>
+    <string name="chatname_here"></string>
+    <string name="enter_chatname">Ange namn för konversationen</string>
+    <string name="chat_name_error">Namnet kan inte vara tomt!</string>
+
+    <string name="settings_pref_notifications">Notifikationer</string>
+    <string name="settings_summary_notifications">Ange ifall du vill bli notifierad när en nya meddelanden eller matchningar dyker upp.</string>
+    <string name="settings_pref_app_lang">Appens språk</string>
+    <string name="settings_pref_app_lang_default">English</string>
+    <string name="exit_chat">Lämna chat</string>
+    <string name="remove_settings">remove settings</string>
+    <string name="settings_pref_usage">Hur vill du använda denna app?</string>
+    <string name="settings_pref_usage_default">learn</string>
+
+    <string name="settings_pref_usage_entry_learn">Jag vill lära mig</string>
+    <string name="settings_pref_usage_entry_mentor">Jag vill vara mentor</string>
+    <string name="settings_pref_usage_entry_chat">Jag vill bara chatta</string>
+    <string name="activity_login_text">Logga in via Facebook för att komma igång!</string>
 
 </resources>

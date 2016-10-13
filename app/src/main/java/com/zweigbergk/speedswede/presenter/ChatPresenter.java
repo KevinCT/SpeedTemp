@@ -6,7 +6,6 @@ public class ChatPresenter {
 
     public static final String TAG = ChatPresenter.class.getSimpleName().toUpperCase();
 
-
     private ChatView mView;
     private ChatInteractor mInteractor;
 

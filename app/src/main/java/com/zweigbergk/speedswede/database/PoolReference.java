@@ -1,8 +1,8 @@
 package com.zweigbergk.speedswede.database;
 
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.util.Statement;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.async.Statement;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public enum PoolReference {
     INSTANCE;
@@ -10,7 +10,6 @@ public enum PoolReference {
     static PoolReference getInstance() {
         return INSTANCE;
     }
-
 
     public Statement contains(User user) {
         return DbUserHandler.getInstance().isInUserPool(user);

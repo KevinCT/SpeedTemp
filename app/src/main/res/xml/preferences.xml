@@ -2,45 +2,25 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.zweigbergk.speedswede.util.CustomPreferenceCategory
-        android:title="@string/language_skills"
-        android:key="pref_cat_skills" >
-
-        <CheckBoxPreference
-            android:key="pref_my_skill"
-            android:title="@string/settings_pref_myskill"
-            android:summary="@string/settings_summary_myskill"
-            android:defaultValue="false" />
-        <CheckBoxPreference
-            android:key="pref_match_skill"
-            android:title="@string/settings_pref_matchskill"
-            android:summary="@string/settings_summary_matchskill"
-            android:defaultValue="false" />
-    </com.zweigbergk.speedswede.util.CustomPreferenceCategory>
-
-    <com.zweigbergk.speedswede.util.CustomPreferenceCategory
-        android:title="@string/languages"
-        android:key="pref_cat_language" >
-
         <ListPreference
             android:summary="%s"
-            android:dependency="pref_app_language"
-            android:key="pref_app_language"
-            android:title="@string/settings_pref_app_lang"
-            android:dialogTitle="Choose language:"
-            android:entries="@array/settings_pref_app_lang_entries"
-            android:entryValues="@array/settings_pref_app_lang_values"
-            android:defaultValue="@string/settings_pref_app_lang_default" />
-    </com.zweigbergk.speedswede.util.CustomPreferenceCategory>
+            android:dependency="pref_usage"
+            android:key="pref_usage"
+            android:title="@string/settings_pref_usage"
+            android:dialogTitle="@string/settings_pref_usage"
+            android:entries="@array/settings_pref_usage_entries"
+            android:entryValues="@array/settings_pref_usage_values"
+            android:defaultValue="@string/settings_pref_usage_default" />
 
-    <com.zweigbergk.speedswede.util.CustomPreferenceCategory
-        android:title="@string/other"
-        android:key="pref_cat_other" >
+        <com.zweigbergk.speedswede.settings.LanguagePreferences
+	        android:title="@string/settings_pref_app_lang"
+	        android:key="pref_app_language" >
+    	</com.zweigbergk.speedswede.settings.LanguagePreferences>
 
         <CheckBoxPreference
             android:key="pref_notifications"
             android:title="@string/settings_pref_notifications"
             android:summary="@string/settings_summary_notifications"
             android:defaultValue="true" />
-    </com.zweigbergk.speedswede.util.CustomPreferenceCategory>
+
 </PreferenceScreen>

@@ -9,39 +9,42 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zweigbergk.speedswede.R;
+import com.zweigbergk.speedswede.activity.Language;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.Stringify;
+import com.zweigbergk.speedswede.util.Translation;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+
+import com.zweigbergk.speedswede.util.Translation.TranslationCache;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
     public static final String TAG = MessageAdapter.class.getSimpleName().toUpperCase();
 
     private List<Message> mMessages;
-    private User mUser;
     private Map<DatabaseEvent, List<Client<Message>>> eventCallbacks;
 
+    private final Locale mLocale;
 
-    public MessageAdapter(List<Message> messages) {
-        mUser = DatabaseHandler.getActiveUser();
+
+    public MessageAdapter(Locale currentLocale) {
         eventCallbacks = new HashMap<>();
-        mMessages = messages;
+        mMessages = new ArrayList<>();
+        mLocale = currentLocale;
 
         for (DatabaseEvent event : DatabaseEvent.values()) {
             eventCallbacks.put(event, new ArrayList<>());
         }
-    }
-
-    public MessageAdapter() {
-        this(new ArrayList<>());
     }
 
     public void clear() {
@@ -80,6 +83,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     private void updateMessage(@NonNull Message message) {
+
         int position = mMessages.indexOf(message);
 
         for (Message messageInList : mMessages) {
@@ -94,15 +98,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     private void addMessage(Message message) {
-        Log.d(TAG, "In addMessage");
-
+        Log.d(TAG, "adMessage() text: " + message.getText());
         if (!mMessages.contains(message)) {
             message.setText(message.getText());
+
             mMessages.add(message);
             notifyItemInserted(getItemCount() - 1);
-        }
 
-        executeCallbacks(DatabaseEvent.ADDED, message);
+            executeCallbacks(DatabaseEvent.ADDED, message);
+        }
     }
 
     private void removeMessage(Message message) {
@@ -131,18 +135,41 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public MessageAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         if(viewType == 1) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_message_user, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_user, parent, false);
             return new ViewHolder(view);
 
         }  else {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_message_stranger, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_stranger, parent, false);
             return new ViewHolder(view);
         }
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mTextView.setText(mMessages.get(position).getText());
+        Message message = mMessages.get(position);
+
+        Client<String> updateViewText = translation -> {
+            String text = Stringify.curlyFormat("{current text}\n\nTranslation:{translation}",
+                    message.getText(), translation);
+            Log.d(TAG, "Setting text to:  " + text);
+            holder.mTextView.setText(text
+                    );
+        };
+
+
+        if (message.hasCache() && message.getTranslationCache().isFromLocale(mLocale)) {
+            String cachedTranslation = message.getTranslationCache().getTranslatedText();
+            updateViewText.supply(cachedTranslation);
+        } else {
+            //No up-to-date cache, must translate message
+            Translation.translate(message.getText(), Language.SWEDISH, Language.ENGLISH)
+                    .then(translatedText -> {
+                        //Update cache of the message
+                        TranslationCache cache = Translation.TranslationCache.cache(mLocale.getLanguage(), translatedText);
+                        message.setTranslationCache(cache);
+                        updateViewText.supply(translatedText);
+                    });
+        }
     }
 
     @Override
@@ -152,9 +179,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public int getItemViewType(int position){
-        if(mMessages.get(position).getId().equals(mUser.getUid())){
+        User activeUser = DatabaseHandler.getActiveUser();
+        if(mMessages.get(position).getId().equals(activeUser.getUid())){
             return 1;
-
         }
         else {
             return 2;

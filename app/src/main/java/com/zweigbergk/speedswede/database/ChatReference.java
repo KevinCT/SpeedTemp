@@ -6,12 +6,9 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.Statement;
-import com.zweigbergk.speedswede.util.Lists;
-import com.zweigbergk.speedswede.util.ProductBuilder;
-
-import java.util.List;
+import com.zweigbergk.speedswede.util.async.Statement;
+import com.zweigbergk.speedswede.util.async.ListPromise;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public class ChatReference {
     public static final String TAG = ChatReference.class.getSimpleName().toUpperCase();
@@ -57,12 +54,12 @@ public class ChatReference {
             ChatAttribute node = mChat.getFirstUser().equals(user) ?
                     ChatAttribute.FIRST_USER : ChatAttribute.SECOND_USER;
 
-            DbChatHandler.INSTANCE.setChatAttribute(mChat, node, null);
+            DbChatHandler.getInstance().setChatAttribute(mChat, node, null);
         });
 
     }
 
-    public ProductBuilder<List<Message>> pullMessages() {
+    public ListPromise<Message> pullMessages() {
         return DbChatHandler.getInstance().pullMessages(mChat);
     }
 
@@ -72,49 +69,45 @@ public class ChatReference {
 
     public void setFirstUser(User user) {
         ifStillValid().then(() ->
-                DbChatHandler.INSTANCE.setChatAttribute(mChat, ChatAttribute.FIRST_USER, user));
+                DbChatHandler.getInstance().setChatAttribute(mChat, ChatAttribute.FIRST_USER, user));
 
     }
 
     public void setSecondUser(User user) {
         ifStillValid().then(() ->
-                DbChatHandler.INSTANCE.setChatAttribute(mChat, ChatAttribute.SECOND_USER, user));
+                DbChatHandler.getInstance().setChatAttribute(mChat, ChatAttribute.SECOND_USER, user));
     }
 
     public void setLikeStatusForFirstUser(Boolean likeStatus) {
         ifStillValid().then(() ->
-                DbChatHandler.INSTANCE.setChatAttribute(mChat, ChatAttribute.LIKED_BY_FIRST_USER, likeStatus));
+                DbChatHandler.getInstance().setChatAttribute(mChat, ChatAttribute.LIKED_BY_FIRST_USER, likeStatus));
     }
 
     public void setLikeStatusForSecondUser(Boolean likeStatus) {
         ifStillValid().then(() ->
-                DbChatHandler.INSTANCE.setChatAttribute(mChat, ChatAttribute.LIKED_BY_SECOND_USER, likeStatus));
+                DbChatHandler.getInstance().setChatAttribute(mChat, ChatAttribute.LIKED_BY_SECOND_USER, likeStatus));
     }
 
     public void sendMessage(Message message) {
         ifStillValid().then(
-                () -> DbChatHandler.INSTANCE.postMessageToChat(mChat, message));
+                () -> DbChatHandler.getInstance().postMessageToChat(mChat, message));
     }
 
     public void bind(Client<DataChange<Chat>> client) {
-        DbChatHandler.INSTANCE.getChatListener().addClient(mChat, client);
+        DbChatHandler.getInstance().getChatListener().addClient(mChat, client);
     }
 
     public void unbind(Client<DataChange<Chat>> client) {
-        DbChatHandler.INSTANCE.getChatListener().removeClient(mChat, client);
+        DbChatHandler.getInstance().getChatListener().removeClient(mChat, client);
     }
 
-    public void bindMessageClient(Client<DataChange<Message>> client) {
-        DbChatHandler.INSTANCE.getChatListener().addMessageClient(mChat, client);
-        pullMessages().then(messages -> {
-            Lists.forEach(messages, message -> {
-                client.supply(DataChange.added(message));
-            });
-        });
+    public void bindMessages(Client<DataChange<Message>> client) {
+        //Register the client with our message listener
+        DbChatHandler.getInstance().addMesageClient(mChat, client);
     }
 
-    public void unbindMessageClient(Client<DataChange<Message>> client) {
-        DbChatHandler.INSTANCE.getChatListener().removeMessageClient(mChat, client);
+    public void unbindMessages(Client<DataChange<Message>> client) {
+        DbChatHandler.getInstance().removeMessageClient(mChat, client);
     }
 
     public Statement ifStillValid() {

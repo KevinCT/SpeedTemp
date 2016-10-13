@@ -5,12 +5,8 @@ import android.util.Log;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.core.User.Preference;
-import com.zweigbergk.speedswede.database.UserReference;
 import com.zweigbergk.speedswede.database.DatabaseHandler.DatabaseNode;
-import com.zweigbergk.speedswede.util.Statement;
-
-import static com.zweigbergk.speedswede.util.Statement.not;
+import com.zweigbergk.speedswede.util.async.Statement;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -37,14 +33,12 @@ public class Initializer {
         User activeUser = DatabaseHandler.getActiveUser();
         Statement containsUser = DatabaseHandler.hasUser(activeUser);
 
-        not(containsUser).then(() -> {
+        DatabaseHandler.users().push(activeUser);
+
+        /*containsUser.onFalse(() -> {
+            Log.d(TAG, "Pushing " + activeUser.getUid());
             DatabaseHandler.users().push(activeUser);
-
-            UserReference userRef = DatabaseHandler.get(activeUser);
-
-            userRef.setPreference(Preference.LANGUAGE, Constants.ENGLISH);
-            userRef.setPreference(Preference.NOTIFICATIONS, true);
-            userRef.setPreference(Preference.SWEDISH_SKILL, 9999);
         });
+        containsUser.onTrue(() -> Log.d(TAG, "We have you...?"));*/
     }
 }

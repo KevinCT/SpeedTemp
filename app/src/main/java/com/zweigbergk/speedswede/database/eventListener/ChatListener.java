@@ -7,11 +7,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
-import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
-import com.zweigbergk.speedswede.util.ChatFactory;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.factory.ChatFactory;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Lists;
 
 import java.util.HashMap;
@@ -25,20 +24,19 @@ public class ChatListener implements ChildEventListener {
     private static final String CLIENT_FOR_ALL_CHATS = "key_to_listen_to_every_chat";
 
     private Map<String, Set<Client<DataChange<Chat>>>> chatClients;
-    private Map<String, Set<Client<DataChange<Message>>>> messageClients;
 
 
     public ChatListener() {
         super();
 
         chatClients = new HashMap<>();
-        messageClients = new HashMap<>();
     }
 
     // NOTE: onChildAdded() runs once for every existing child at the time of attaching.
     // Thus there is no need for an initial SingleValueEventListener.
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        Log.d(TAG, "Snapshot onChildAdded: " + dataSnapshot.toString());
         ChatFactory.serializeChat(dataSnapshot).then(this::notifyAdded);
     }
 
@@ -155,30 +153,6 @@ public class ChatListener implements ChildEventListener {
      * */
     public void removeClient(Client<DataChange<Chat>> client) {
         removeClient(CLIENT_FOR_ALL_CHATS, client);
-    }
-
-    public void addMessageClient(String chatId, Client<DataChange<Message>> client) {
-        if (!messageClients.containsKey(chatId)) {
-            messageClients.put(chatId, new HashSet<>());
-        }
-
-        messageClients.get(chatId).add(client);
-    }
-
-    public void addMessageClient(Chat chat, Client<DataChange<Message>> client) {
-        addMessageClient(chat.getId(), client);
-    }
-
-    public void removeMessageClient(String chatId, Client<DataChange<Message>> client) {
-        if (!messageClients.containsKey(chatId)) {
-            messageClients.put(chatId, new HashSet<>());
-        }
-
-        messageClients.get(chatId).remove(client);
-    }
-
-    public void removeMessageClient(Chat chat, Client<DataChange<Message>> client) {
-        removeMessageClient(chat.getId(), client);
     }
 
     @Override

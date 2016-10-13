@@ -2,19 +2,20 @@ package com.zweigbergk.speedswede.database;
 
 
 import com.zweigbergk.speedswede.Constants;
+import com.zweigbergk.speedswede.activity.Language;
+import com.zweigbergk.speedswede.core.Banner;
+import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.ProductBuilder;
-import com.zweigbergk.speedswede.util.Statement;
-
-import java.util.Arrays;
-import java.util.List;
+import com.zweigbergk.speedswede.util.async.Statement;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.async.Promise;
+import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
 public class UserReference {
-    public static final String TAG = UserReference.class.getSimpleName().toUpperCase();
+    private static final String TAG = UserReference.class.getSimpleName().toUpperCase();
 
     enum UserAttribute {
-        NAME, ID, NOTIFICATIONS, LANGUAGE, SWEDISH_SKILL, STRANGER_SWEDISH_SKILL;
+        NAME, ID, NOTIFICATIONS, LANGUAGE, USAGE;
 
         public String getDbKey() {
             switch(this) {
@@ -26,16 +27,16 @@ public class UserReference {
                     return Constants.makePath(Constants.PREFERENCES, Constants.NOTIFICATIONS);
                 case LANGUAGE:
                     return Constants.makePath(Constants.PREFERENCES, Constants.LANGUAGE);
-                case SWEDISH_SKILL:
-                    return Constants.makePath(Constants.PREFERENCES, Constants.SWEDISH_SKILL);
-                case STRANGER_SWEDISH_SKILL:
-                    return Constants.makePath(Constants.PREFERENCES, Constants.STRANGER_SWEDISH_SKILL);
+                case USAGE:
+                    return Constants.makePath(Constants.PREFERENCES, Constants.USAGE);
                 default:
                     return Constants.UNDEFINED;
             }
         }
     }
 
+
+    private final DbUserHandler userHandler = DbUserHandler.getInstance();
     private final User mUser;
 
     private UserReference(User user) {
@@ -47,21 +48,21 @@ public class UserReference {
     }
 
     public void push() {
-        DbUserHandler.getInstance().pushUser(mUser);
+        userHandler.pushUser(mUser);
     }
 
-    public ProductBuilder<User> pull() {
-        return DbUserHandler.getInstance().getUser(mUser.getUid());
+    public Promise<User> pull() {
+        return userHandler.pullUser(mUser.getUid());
     }
 
     public void setName(String name) {
         ifStillValid().then(() ->
-                DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.NAME, name));
+                userHandler.setUserAttribute(mUser, UserAttribute.NAME, name));
     }
 
     private void setNotifications(boolean value) {
         ifStillValid().then(() ->
-                DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.NOTIFICATIONS, value));
+                userHandler.setUserAttribute(mUser, UserAttribute.NOTIFICATIONS, value));
     }
 
     public void setPreference(User.Preference preference, boolean value) {
@@ -77,68 +78,65 @@ public class UserReference {
         }
     }
 
-    public void setPreference(User.Preference preference, long value) {
-        if (!preference.accepts(value)) {
-            throw new RuntimeException(String.format(
-                    "Preference [ %s ] can invert be set to a long value.", preference));
-        }
-
-        switch (preference) {
-            case SWEDISH_SKILL:
-                setSwedishSkill(value);
-                break;
-            case STRANGER_SWEDISH_SKILL:
-                setStrangerSwedishSkill(value);
-                break;
-        }
-    }
-
     public void setPreference(User.Preference preference, String value) {
         if (!preference.accepts(value)) {
             throw new RuntimeException(String.format(
-                    "Preference [ %s ] can invert be set to a string value.", preference));
+                    "Preference [ %s ] can not be set to a string value.", preference));
         }
 
         switch (preference) {
             case LANGUAGE:
-                setLanguage(value);
+                setLanguage(Language.fromString(value));
                 break;
+            case SKILL_CATEGORY:
+                setSkillCategory(SkillCategory.fromString(value));
         }
     }
 
-    private void setSwedishSkill(long value) {
-        ifStillValid().then(() ->
-                DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.SWEDISH_SKILL, value));
+    public void setSkillCategory(SkillCategory skill) {
+        attempt(() -> userHandler.setUserSkill(mUser, skill));
     }
 
-    private void setStrangerSwedishSkill(long value) {
-        ifStillValid().then(() ->
-                DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.STRANGER_SWEDISH_SKILL, value));
+    private void setLanguage(Language language) {
+        attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.LANGUAGE, language.getLanguageCode()));
     }
 
-    private void setLanguage(String language) {
-        ifStillValid().then(() -> {
-            List<String> languages = Arrays.asList(Constants.LANGUAGES);
-            String newLanguage = languages.contains(language) ? language : Constants.ENGLISH;
-            DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.LANGUAGE, newLanguage);
-        });
-}
+    public Promise<Banner> bannerPromised() {
+        return userHandler.getBans(mUser.getUid());
+    }
+
+    public Statement hasBlocked(User user) {
+        return userHandler.hasBlockedUser(mUser, user);
+    }
+
+    public void block(User user) {
+        userHandler.blockUser(mUser, user);
+    }
+
+    public void liftBlock(String strangerUid) {
+        userHandler.liftBlock(strangerUid);
+    }
 
     public void setId(String id) {
-        ifStillValid().then(() ->
-                DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.ID, id));
+        attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.ID, id));
     }
 
 
     public void bind(Client<DataChange<User>> client) {
-        DbUserHandler.getInstance().getUserListener().addClient(mUser, client);
+        userHandler.getUserListener().addClient(mUser, client);
     }
 
     public void unbind(Client<DataChange<User>> client) {
-        DbUserHandler.INSTANCE.getUserListener().removeClient(mUser, client);
+        userHandler.getUserListener().removeClient(mUser, client);
+    }
+
+    private void attempt(Executable executable) {
+        ifStillValid().onTrue(executable);
     }
 
     private Statement ifStillValid() {
-        return DbUserHandler.getInstance().exists(mUser);
+        return userHandler.exists(mUser);
     }
+
+
 }

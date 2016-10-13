@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,13 +22,14 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
-import com.zweigbergk.speedswede.methodwrapper.CallerMethod;
-import com.zweigbergk.speedswede.methodwrapper.ProviderMethod;
+import com.zweigbergk.speedswede.util.methodwrapper.CallerMethod;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
 
 import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
 
-public class ChatFragment extends Fragment implements ChatFragmentView, DialogFragment.OnDataPass {
+public class ChatFragment extends Fragment implements ChatFragmentView, Client<String> {
     public static final String TAG = ChatFragment.class.getSimpleName().toUpperCase();
 
     private RecyclerView chatRecyclerView;
@@ -38,6 +40,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
     private ChatFragmentPresenter mPresenter;
 
     public ChatFragment() {
+        Log.d(TAG, "Creating a ChatFragment :)");
         mPresenter = new ChatFragmentPresenter(this);
     }
 
@@ -47,15 +50,18 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
 
         setHasOptionsMenu(true);
 
-//        checkSavedState(savedInstanceState);
         Log.d(TAG, "ChatFragment.onCreate()");
     }
 
     private void checkSavedState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             Chat chat = savedInstanceState.getParcelable(CHAT_PARCEL);
+
+            Log.d(TAG, "Found old chat. Setting it.");
             setChat(chat);
-            Log.d(TAG, chat.toString());
+            if (chat != null) {
+                Log.d(TAG, chat.toString());
+            }
         }
     }
 
@@ -71,7 +77,11 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
     @Override
     public void onResume() {
         super.onResume();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar parentToolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+
+        if (parentToolbar != null) {
+            parentToolbar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -122,9 +132,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
         switch (item.getItemId()) {
             case R.id.blockUser:
                 mPresenter.onBanClicked();
-                return true;
-            case R.id.changeLangauge:
-                mPresenter.onChangeLanguageClicked();
+                mPresenter.terminateChat();
                 return true;
             case R.id.exitChat:
                 mPresenter.terminateChat();
@@ -149,6 +157,15 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
     }
 
     @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy()");
+
+        mPresenter.onDestroy();
+
+        super.onDestroy();
+    }
+
+    @Override
     public RecyclerView getRecyclerView() {
         return chatRecyclerView;
     }
@@ -169,10 +186,9 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
     }
 
     @Override
-    public void onDataPass(String data) {
-        getActivity().setTitle(data);
-        mPresenter.onChangeNameClicked(getActivity().getBaseContext(), data);
-
+    public void supply(String s) {
+        getActivity().setTitle(s);
+        mPresenter.onChangeNameClicked(getActivity().getBaseContext(), s);
     }
 
     public Boolean hasLocalUserLiked() {

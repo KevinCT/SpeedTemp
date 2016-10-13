@@ -8,18 +8,26 @@ import com.google.firebase.database.Exclude;
 import com.zweigbergk.speedswede.util.ParcelHelper;
 import com.zweigbergk.speedswede.util.PreferenceValue;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class UserProfile implements User {
 
-    private String mName, mUid;
+    private String displayName, uid;
+//    private Timer timer;
+//    private int[] matchingInterval;
+
+    private long timeInQueue;
 
     @Exclude
     private Map<Preference, PreferenceValue> mPreferences;
 
     public UserProfile(String name, String uid) {
-        mName = name;
-        mUid = uid;
+        this.displayName = name;
+        this.uid = uid;
+
+        mPreferences = new HashMap<>();
     }
 
     public UserProfile withPreferences(Map<Preference, PreferenceValue> preferences) {
@@ -27,20 +35,26 @@ public class UserProfile implements User {
         return this;
     }
 
+    @Exclude
+    @Override
+    public SkillCategory getSkillCategory() {
+        return SkillCategory.fromString((String) getPreference(Preference.SKILL_CATEGORY).getValue());
+}
+
     @Override
     public String getUid() {
-        return mUid;
+        return uid;
     }
 
     @Override
     public String getDisplayName() {
-        return mName;
+        return displayName;
     }
 
     @Override
     @Exclude
-    public Object getPreference(Preference preference) {
-        return mPreferences.get(preference).getValue();
+    public PreferenceValue getPreference(Preference preference) {
+        return mPreferences.get(preference);
     }
 
     @Override
@@ -50,18 +64,21 @@ public class UserProfile implements User {
     }
 
     public static UserProfile from(FirebaseUser user) {
-        return user == null ? null : new UserProfile(user.getDisplayName(), user.getUid());
+        if (user != null) {
+            return new UserProfile(user.getDisplayName(), user.getUid());
+        }
+        return null;
     }
 
     @Override
     public int hashCode() {
-        return mUid.hashCode();
+        return uid.hashCode();
     }
 
     @Override
     public String toString() {
-        return String.format("UserProfile {\n\t\tname: %s,\n\t\tuid: %s,\n\t\tpreferences: %s\n}",
-                mName, mUid, mPreferences);
+        return String.format("UserProfile {\n\t\tdisplayName: %s,\n\t\tuid: %s\n}",
+                displayName, uid);
     }
 
     @Override
@@ -97,14 +114,78 @@ public class UserProfile implements User {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mName);
-        dest.writeString(mUid);
+        dest.writeString(displayName);
+        dest.writeString(uid);
         ParcelHelper.writeParcelableMap(dest, 0, mPreferences);
     }
 
     private UserProfile(Parcel in) {
-        mName = in.readString();
-        mUid = in.readString();
-        mPreferences = ParcelHelper.readParcelableMap(in, Preference.class, PreferenceValue.class);
+        if (in.readString() != null) {
+            displayName = in.readString();
+            uid = in.readString();
+            mPreferences = ParcelHelper.readParcelableMap(in, Preference.class, PreferenceValue.class);
+        }
     }
+
+    public void startTime() {
+        Date date = new Date();
+        timeInQueue = date.getTime();
+    }
+
+    public long getTimeInQueue() {
+        return timeInQueue;
+    }
+
+//    public int getOwnRating() {
+//        return this.ownRating;
+//    }
+//
+//    public void setInitialMatchInterval() {
+//        switch(matchSkill) {
+//            case PUPIL:
+//                matchingInterval[0] = 0;
+//                matchingInterval[1] = 0;
+//                break;
+//            case UNSPECIFIED:
+//                matchingInterval[0] = 50;
+//                matchingInterval[1] = 50;
+//                break;
+//            case MENTOR:
+//                matchingInterval[0] = 100;
+//                matchingInterval[0] = 100;
+//                break;
+//            default:
+//                break;
+//        }
+//    }
+//
+//    public void setMatchingSkill(MatchSkill skill) {
+//        matchSkill = skill;
+//    }
+//
+//    public int[] getMatchInterval() {
+//        return matchingInterval;
+//    }
+//
+//    public void incrementRating() {
+//        if(matchingInterval[0] >= 10) {
+//            matchingInterval[0] = matchingInterval[0] - 10;
+//        }
+//        if(matchingInterval[1] <= 90) {
+//            matchingInterval[1] = matchingInterval[1] + 10;
+//        }
+//    }
+//
+//    public void startTime() {
+//        timer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                incrementRating();
+//            }
+//        }, 60*1000, 60*1000);
+//    }
+//
+//    public void stopTime() {
+//        timer.cancel();
+//    }
 }

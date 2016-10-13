@@ -1,23 +1,32 @@
 package com.zweigbergk.speedswede.util;
 
-import com.zweigbergk.speedswede.methodwrapper.Client;
-import com.zweigbergk.speedswede.methodwrapper.EntryAssertion;
-import com.zweigbergk.speedswede.methodwrapper.Query;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.methodwrapper.EntryAssertion;
+import com.zweigbergk.speedswede.util.methodwrapper.Query;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
 public class Lists {
+    public static final String TAG = Lists.class.getSimpleName().toUpperCase();
+
     public static <E> void forEach(Iterable<E> collection, Client<E> client) {
         for (E element : collection) {
             client.supply(element);
+        }
+    }
+
+    public static <E> void forEach(Iterator<E> iterator, Client<E> client) {
+        while (iterator.hasNext()) {
+            client.supply(iterator.next());
         }
     }
 
@@ -27,15 +36,23 @@ public class Lists {
         }
     }
 
+    public static <E> void forEach(E[] array, Client<E> client) {
+        forEach(Arrays.asList(array), client);
+    }
+
     public static <E> List<E> filter(Iterable<E> collection, Query<E> query) {
         List<E> result = new ArrayList<>();
         forEach(collection, e -> {
-                if (query.matches(e)) {
-                    result.add(e);
-                }
+            if (query.matches(e)) {
+                result.add(e);
+            }
         });
 
         return result;
+    }
+
+    public static <E> List<E> filter(E[] collection, Query<E> query) {
+        return filter(Arrays.asList(collection), query);
     }
 
     public static <E> List<E> reject(Iterable<E> collection, Query<E> query) {
@@ -49,8 +66,8 @@ public class Lists {
         return result;
     }
 
-    public static <E> List<E> map(Iterable<E> collection, Mapping<E> tool) {
-        List<E> result = new ArrayList<>();
+    public static <From, To> List<To> map(Iterable<From> collection, Mapping<From, To> tool) {
+        List<To> result = new ArrayList<>();
 
         forEach(collection, e -> result.add(tool.map(e)));
 
@@ -128,17 +145,21 @@ public class Lists {
         return result;
     }
 
-    public static <E> E getLast(List<E> collection) {
+    public static <E> E getLastElement(List<E> collection) {
         return collection.size() != 0 ?
                 collection.get(collection.size() - 1) : null;
     }
 
 
-    public interface Mapping<E> {
-        E map(E object);
+    public interface Mapping<From, To> {
+        To map(From object);
     }
 
     public interface EntryMapping<K, V> {
         Map.Entry<K, V> map(Map.Entry entry);
+    }
+
+    public interface EntryToTuple<K, V> {
+        Tuple<K, V> map(Map.Entry<?, ?> entry);
     }
 }

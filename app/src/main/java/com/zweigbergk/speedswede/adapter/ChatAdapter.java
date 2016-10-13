@@ -2,6 +2,7 @@ package com.zweigbergk.speedswede.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +18,9 @@ import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.fragment.ChatListFragment;
+import com.zweigbergk.speedswede.util.ChildCountListener;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 
 import java.util.ArrayList;
@@ -29,14 +32,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     public enum Event { CHAT_VIEW_CLICKED, CHAT_REMOVED, CHAT_ADDED }
 
-
     public static final String TAG = ChatAdapter.class.getSimpleName().toUpperCase();
-    private static final int NORMAL_VIEW = 1;
 
     private List<Chat> mChats;
     private Map<Event, List<Client<Chat>>> eventClients;
     private Context mContext;
-
+    private ChildCountListener mChildCountListener;
 
     public ChatAdapter(List<Chat> chats) {
         eventClients = new HashMap<>();
@@ -45,6 +46,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         for (Event event : Event.values()) {
             eventClients.put(event, new ArrayList<>());
         }
+    }
+
+    public void setView(ChildCountListener childCountListener) {
+       mChildCountListener = childCountListener;
     }
 
     public ChatAdapter() {
@@ -56,16 +61,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void notifyChange(DataChange<Chat> change) {
+    public final void notifyChange(DataChange<Chat> change) {
         Chat chat = change.getItem();
         DatabaseEvent event = change.getEvent();
+
+        mChildCountListener.onUpdate();
 
         switch (event) {
             case ADDED:
                 addChat(chat);
                 break;
             case CHANGED:
-                User activeUser = DatabaseHandler.getInstance().getActiveUser();
+                User activeUser = DatabaseHandler.getActiveUser();
                 if (!chat.includesUser(activeUser)) {
                     removeChat(chat);
                 } else {
@@ -97,6 +104,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     private void addChat(Chat chat) {
         Log.d(TAG, "In addChat");
 
+        mChildCountListener.onUpdate();
+
         if (!mChats.contains(chat)) {
             Log.d(TAG, "Did not contain our chat.");
             mChats.add(chat);
@@ -114,7 +123,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     private void removeChat(Chat chat) {
         int position = mChats.indexOf(chat);
 
-        Log.d(TAG, "In removeChat");
+        Log.d(TAG, "In removeChat, position: " + position);
 
         mChats.remove(chat);
         notifyItemRemoved(position);

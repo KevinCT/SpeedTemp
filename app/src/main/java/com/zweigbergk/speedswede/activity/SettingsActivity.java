@@ -8,10 +8,12 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.zweigbergk.speedswede.R;
+import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.UserReference;
 import com.zweigbergk.speedswede.fragment.SettingsFragment;
+
 import static com.zweigbergk.speedswede.core.User.Preference;
 
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -30,7 +32,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     @Override
     public void onResume() {
         super.onResume();
-        setTitle(R.string.settings);
+        setTitle(R.string.activity_settings_title);
     }
 
     @Override
@@ -49,24 +51,27 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d("DEBUG", "Local preferences changed: "+key+", "+sharedPreferences.getAll().get(key));
 
+        User activeUser = DatabaseHandler.getActiveUser();
         UserReference user = DatabaseHandler.get(DatabaseHandler.getActiveUser());
         switch(key) {
-            // TODO: change these two skill preferences to sliders and not booleans -->
-            case "pref_my_skill":
-                long mySkill = 0;
-                if (sharedPreferences.getBoolean(key, false)) {
-                    mySkill = 100;
+            case "pref_usage":
+                switch(sharedPreferences.getString(key, "learn")) {
+                    case "learn":
+                        user.setSkillCategory(SkillCategory.PUPIL);
+                        DatabaseHandler.get(activeUser).setSkillCategory(SkillCategory.PUPIL);
+                        break;
+                    case "mentor":
+                        DatabaseHandler.get(activeUser).setSkillCategory(SkillCategory.MENTOR);
+                        user.setSkillCategory(SkillCategory.MENTOR);
+                        break;
+                    case "chat":
+                        DatabaseHandler.get(activeUser).setSkillCategory(SkillCategory.UNSPECIFIED);
+                        user.setSkillCategory(SkillCategory.UNSPECIFIED);
+                        break;
+                    default:
+                        break;
                 }
-                user.setPreference(Preference.SWEDISH_SKILL, mySkill);
                 break;
-            case "pref_match_skill":
-                long matchSkill = 0;
-                if (sharedPreferences.getBoolean(key, false)) {
-                    matchSkill = 100;
-                }
-                user.setPreference(Preference.STRANGER_SWEDISH_SKILL, matchSkill);
-                break;
-            // TODO: <--
             case "pref_app_language":
                 user.setPreference(Preference.LANGUAGE, sharedPreferences.getString(key, "en"));
                 break;

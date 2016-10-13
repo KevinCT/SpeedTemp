@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede.util;
+package com.zweigbergk.speedswede.settings;
 
 import android.content.Context;
 import android.preference.PreferenceCategory;

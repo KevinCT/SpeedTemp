@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SpeedSwede</string>
-    <string name="helloM8s">Hallå kompisar</string>
     <string name="title_activity_login">LoginActivity</string>
 
     <string name="facebook_app_id">616859141821100</string>
     <string name="fb_login_protocol_scheme">fb616859141821100</string>
 
     <string name="hint_message_input_field">اكتب رسالة...</string>
-    <string name="message_dummy_text">Vi rockar en testningschatt, till världens bästa festningsapp.</string>
 
     <string name="leta_kompis">بحث عن مستخدم</string>
-    <string name="block_user">Block user</string>
+    <string name="block_user">مستخدم محضور</string>
 
-    <string name="change_language">Change language</string>
+    <string name="change_language">تغيير اللغة</string>
 
-    <string name="settings">إعدادات</string>
-
-    <string name="settings_title_skills">Language skills</string>
-    <string name="settings_pref_myskill">My Swedish Skill</string>
-    <string name="settings_summary_myskill">Are you skilled in the swedish language?</string>
     <string name="settings_pref_notifications">الإشعارات</string>
     <string name="settings_summary_notifications">Choose whether you want to be notified when new chat messages or matches appear.</string>
-    <string name="settings_pref_matchskill">Match with skill</string>
-    <string name="settings_summary_matchskill">Preferred skill to be matched with.</string>
     <string name="settings_pref_app_lang">لغة التطبيق</string>
     <string name="settings_pref_app_lang_default">English</string>
-    <string name="exit_chat">Leave chat</string>
-    <string name="language_skills">Language skills</string>
-    <string name="languages">Languages</string>
-    <string name="other">Other</string>
+    <string name="remove_settings">remove settings</string>
+    <string name="settings_pref_usage">How do you want to use this app?</string>
+    <string name="settings_pref_usage_default">learn</string>
+
+    <string name="settings_pref_usage_entry_learn">I want to learn</string>
+    <string name="settings_pref_usage_entry_mentor">I want to mentor</string>
+    <string name="settings_pref_usage_entry_chat">I just want to chat</string>
+    
+    <string name="exit_chat">ترك محادثة</string>
+    <string name="languages">اللغات</string>
+    <string name="other">إعدادات أخرى</string>
     <string name="activity_settings_title">إعدادات</string>
+    <string name="cancel">إلغاء</string>
+    <string name="change_chat_name">تغيير اسم دردشة</string>
+    <string name="change_name">تغيير الإسم</string>
+    <string name="enter_chatname">أدخل اسم الدردشة</string>
+    <string name="language_skills">القدرة اللغوية</string>
+    <string name="activity_login_text">Log in using your Facebook account to get started!</string>
+
+    <!--<string name="activity_settings_title">إعدادات</string>-->
 </resources>

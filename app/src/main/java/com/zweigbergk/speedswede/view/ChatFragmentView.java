@@ -4,8 +4,8 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
 import com.zweigbergk.speedswede.activity.ChatActivity;
-import com.zweigbergk.speedswede.methodwrapper.CallerMethod;
-import com.zweigbergk.speedswede.methodwrapper.ProviderMethod;
+import com.zweigbergk.speedswede.util.methodwrapper.CallerMethod;
+import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
 
 public interface ChatFragmentView {
     RecyclerView getRecyclerView();

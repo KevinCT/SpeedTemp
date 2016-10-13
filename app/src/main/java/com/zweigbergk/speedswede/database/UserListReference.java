@@ -1,8 +1,8 @@
 package com.zweigbergk.speedswede.database;
 
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.util.Statement;
-import com.zweigbergk.speedswede.util.ProductBuilder;
+import com.zweigbergk.speedswede.util.async.Statement;
+import com.zweigbergk.speedswede.util.async.Promise;
 
 public enum UserListReference {
     INSTANCE;
@@ -27,7 +27,7 @@ public enum UserListReference {
         DbUserHandler.getInstance().pushUser(user);
     }
 
-    public ProductBuilder<User> pull(String userId) {
-        return DbUserHandler.getInstance().getUser(userId);
+    public Promise<User> pull(String userId) {
+        return DbUserHandler.getInstance().pullUser(userId);
     }
 }

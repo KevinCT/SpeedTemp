@@ -26,7 +26,12 @@ public class Constants {
     public static final String STRANGER_SWEDISH_SKILL = "strangerSwedishSkill";
     public static final String LIKED_BY_FIRST_USER = "likedByFirstUser";
     public static final String LIKED_BY_SECOND_USER = "likedBySecondUser";
+    public static final String USAGE = "usage";
     public static final String CHAT_STATE = "chatState";
+    public static final String BANS = "bans";
+    public static final String BANLIST = "banList";
+
+    public static final String SKILL_CATEGORY = "skill";
 
 
     //For PreferenceValue pushing
@@ -34,7 +39,7 @@ public class Constants {
     public static final String LONG = Long.valueOf(1).getClass().getSimpleName();
     public static final String BOOLEAN = Boolean.valueOf(true).getClass().getSimpleName();
 
-    public static final String[] CHAT_NAMES = {"Bench", "Learning", "Rung", "Witness", "Social", "Shop", "Pro"};
+    public static final String[] CHAT_NAMES = {"Bench", "Learning", "Rainbow", "Happy", "Social", "Shop", "Sunshine"};
 
     //Languages
     public static final String ENGLISH = "en";

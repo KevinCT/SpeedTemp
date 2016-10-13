@@ -4,14 +4,27 @@
     android:layout_height="match_parent"
     tools:context="com.zweigbergk.speedswede.fragment.ChatFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:id="@+id/fragment_chat_list_default_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <Button
+        style="@android:style/Widget.Button"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorWhite"
         android:text="@string/leta_kompis"
+        android:textSize="18sp"
         android:id="@+id/match_button"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50px" />
+
+    <!--<Space-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_alignParentBottom="true" />-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_chat_list_view"

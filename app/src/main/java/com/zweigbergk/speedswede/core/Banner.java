@@ -3,15 +3,15 @@ package com.zweigbergk.speedswede.core;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by kevin on 29/09/2016.
- */
-
 public class Banner {
     private List<String> banList;
 
     public Banner(){
         banList = new ArrayList<>();
+    }
+
+    public Banner(List<String> banList) {
+        this.banList = banList;
     }
 
     public void addBan(String uID, String firstUser, String secondUser){

@@ -170,16 +170,20 @@ public class Chat implements Parcelable {
     }
 
     @Override
+    public int hashCode() {
+        return this.firstUser.hashCode() * 3 +
+                this.secondUser.hashCode() * 5 +
+                this.id.hashCode() * 7;
+    }
+
+    @Override
     public String toString() {
-        if (getFirstUser() == null || getSecondUser() == null) {
-            return "[Chat toString] Null user";
-        }
         return String.format(Locale.ENGLISH,
                 "Chat {id: %s,%sname: %s,%sfirstUser: %s,%secondUser: %s,%smessageCount: %d,\n},",
                 id, NEWLINE,
                 name, NEWLINE,
-                firstUser.toString(), NEWLINE,
-                secondUser.toString(), NEWLINE,
+                firstUser != null ? firstUser.toString() : "null", NEWLINE,
+                secondUser != null ? secondUser.toString() : "null", NEWLINE,
                 messages.size()
                 );
     }

@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+
+
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
@@ -21,8 +23,6 @@ import com.zweigbergk.speedswede.fragment.ChangeLanguageFragment;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
 import com.zweigbergk.speedswede.presenter.ChatPresenter;
-import com.zweigbergk.speedswede.util.BooleanPref;
-import com.zweigbergk.speedswede.util.PreferenceValue;
 import com.zweigbergk.speedswede.view.ChatView;
 
 
@@ -149,9 +149,10 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     public void setUpActionBar(ChatFragment chatFragment) {
 
-        ActionBar actionBar = getActionBar();
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         ImageView imageView = new ImageView(actionBar.getThemedContext());
         imageView.setScaleType(ImageView.ScaleType.CENTER);
 

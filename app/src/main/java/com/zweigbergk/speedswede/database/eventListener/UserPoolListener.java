@@ -25,6 +25,7 @@ public class UserPoolListener extends FirebaseDataListener<User> implements Chil
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         String userId = dataSnapshot.getKey();
+        Log.d(TAG, "onChildAdded()");
         DatabaseHandler.users().pull(userId).then(this::notifyAdded);
     }
 

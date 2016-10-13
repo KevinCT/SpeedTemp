@@ -17,8 +17,14 @@ import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
 
-import com.zweigbergk.speedswede.util.Statement;
-import com.zweigbergk.speedswede.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.async.Statement;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
+
+import java.util.HashMap;
+
+import static com.zweigbergk.speedswede.Constants.BANLIST;
+import static com.zweigbergk.speedswede.Constants.BANS;
 
 public enum DatabaseHandler {
     INSTANCE;
@@ -29,11 +35,7 @@ public enum DatabaseHandler {
 
     public static final String TAG = DatabaseHandler.class.getSimpleName().toUpperCase();
 
-    public static final String BANS = "bans";
-
     private static boolean mFirebaseConnectionStatus = false;
-
-    private static Banner mBanner = new Banner();
 
     private static DatabaseReference root = FirebaseDatabase.getInstance().getReference();
 
@@ -46,8 +48,8 @@ public enum DatabaseHandler {
     }
 
     public static void onStartup() {
-        DbChatHandler.INSTANCE.initialize();
-        DbUserHandler.INSTANCE.initialize();
+        DbChatHandler.getInstance().initialize();
+        DbUserHandler.getInstance().initialize();
     }
 
 
@@ -86,11 +88,11 @@ public enum DatabaseHandler {
     }
 
     public static void bindToChatEvents(Client<DataChange<Chat>> client) {
-        DbChatHandler.INSTANCE.getChatListener().addClient(client);
+        DbChatHandler.getInstance().getChatListener().addClient(client);
     }
 
     public static void unbindFromChatEvents(Client<DataChange<Chat>> client) {
-        DbChatHandler.INSTANCE.getChatListener().removeClient(client);
+        DbChatHandler.getInstance().getChatListener().removeClient(client);
     }
 
     private static String getFirebaseAuthUid() {
@@ -108,11 +110,11 @@ public enum DatabaseHandler {
     }
 
     public static User getActiveUser() {
-        return DbUserHandler.INSTANCE.getActiveUser();
+        return DbUserHandler.getInstance().getActiveUser();
     }
 
     public static String getActiveUserId() {
-        return DbUserHandler.INSTANCE.getActiveUserId();
+        return DbUserHandler.getInstance().getActiveUserId();
     }
 
     public static boolean hasFirebaseConnection() {
@@ -144,39 +146,10 @@ public enum DatabaseHandler {
         return root.push().getKey();
     }
 
-    public static void sendObject(String child, Object object ){
-        /*getChatWithId(chatId, chat -> {
-            Banner banner = getBans(getActiveUserId());
-            banner.addBan(getActiveUserId(), chat.getFirstUser().getUid(), chat.getSecondUser().getUid());
-            root.child(BANS).child(getActiveUserId()).setReturnValue(banner);
-            //root.child("Global"+BANS).push().setReturnValue(strangerID);
-        });*/
-        root.child(BANS).child(DbUserHandler.INSTANCE.getActiveUserId()).setValue(object);
-    }
-
-    public static Banner getBans(String uID){
-        root.child(BANS).child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mBanner = dataSnapshot.getValue(Banner.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                mBanner = new Banner();
-
-            }
-
-        });
-        return mBanner;
-
-    }
-
-    public static void removeBan(String uID, String strangerID){
-        Banner banner = getBans(uID);
-        banner.removeBan(strangerID);
-
-        root.child(BANS).child(uID).setValue(banner);
+    public static void sendObject(String child, Banner banner ){
+        HashMap<String, Boolean> map = new HashMap<>();
+        Lists.forEach(banner.getBanList(), uid -> map.put(uid, true));
+        root.child(BANS).child(DbUserHandler.getInstance().getActiveUserId()).child(BANLIST).setValue(map);
     }
 
     public static void registerConnectionHandling() {
