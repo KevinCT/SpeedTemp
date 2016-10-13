@@ -350,4 +350,5 @@ enum DbChatHandler {
         delete(mRoot.child(CHATS).child(chat.getId()));
     }
 
+
 }

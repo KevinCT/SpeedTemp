@@ -19,6 +19,10 @@ public class Chat implements Parcelable {
 
     private User secondUser;
 
+
+    private boolean likedByFirstUser;
+    private boolean likedBySecondUser;
+
     private List<Message> messages;
     private String id;
     private long timeStamp;
@@ -26,6 +30,7 @@ public class Chat implements Parcelable {
 
     private String name;
     private boolean inactive;
+
 
     public Chat() {
     }
@@ -86,6 +91,16 @@ public class Chat implements Parcelable {
         return secondUser;
     }
 
+    public boolean hasLocalUserLiked() {
+
+        return likedByFirstUser;
+    }
+
+    public boolean hasSecondUserLiked() {
+
+        return likedBySecondUser;
+    }
+
     public long getTimeStamp() {
         return timeStamp;
     }
@@ -100,6 +115,14 @@ public class Chat implements Parcelable {
 
     public String getId() {
         return id;
+    }
+
+    public void setLikeStatusFirstUser(Boolean likeStatus) {
+        likedByFirstUser = likeStatus;
+    }
+
+    public void setLikeStatusSecondUser(Boolean likeStatus) {
+        likedBySecondUser = likeStatus;
     }
 
     public void setFirstUser(User user) {
@@ -206,4 +229,5 @@ public class Chat implements Parcelable {
         name = in.readString();
         inactive = in.readInt() != 0;
     }
+
 }

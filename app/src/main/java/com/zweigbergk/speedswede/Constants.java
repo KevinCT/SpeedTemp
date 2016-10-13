@@ -24,6 +24,8 @@ public class Constants {
     public static final String LANGUAGE = "language";
     public static final String SWEDISH_SKILL = "swedishSkill";
     public static final String STRANGER_SWEDISH_SKILL = "strangerSwedishSkill";
+    public static final String LIKED_BY_FIRST_USER = "likedByFirstUser";
+    public static final String LIKED_BY_SECOND_USER = "likedBySecondUser";
     public static final String CHAT_STATE = "chatState";
 
 

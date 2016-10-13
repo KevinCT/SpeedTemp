@@ -1,5 +1,6 @@
 package com.zweigbergk.speedswede.activity;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,11 +8,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.fragment.ChangeLanguageFragment;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
@@ -29,6 +34,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+
 
         if (savedInstanceState == null) {
             createActivity();
@@ -87,11 +94,14 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     @Override
     public void displayChat(Chat chat) {
+
         if (chat != null) {
+
             Log.d(TAG, "Displaying chat with ID: " + chat.getId());
             ChatFragment chatFragment = new ChatFragment();
             chatFragment.setChat(chat);
             setTitle(chat.getName());
+            setUpActionBar(chatFragment);
             switchToFragment(chatFragment, true);
         } else {
             Log.e(TAG, "WARNING! Tried to display a null chat. ");
@@ -136,4 +146,58 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         Intent intent = new Intent(ChatActivity.this, SettingsActivity.class);
         startActivity(intent);
     }
+
+    public void setUpActionBar(ChatFragment chatFragment) {
+
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ImageView imageView = new ImageView(actionBar.getThemedContext());
+        imageView.setScaleType(ImageView.ScaleType.CENTER);
+
+        if(chatFragment.hasLocalUserLiked()) {
+            if (chatFragment.hasBothUsersLiked()) {
+
+                imageView.setImageResource(R.drawable.com_facebook_button_icon_blue);
+                imageView.setClickable(true);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+            }
+
+            else {
+
+                imageView.setImageResource(R.drawable.com_facebook_button_like_icon_selected);
+                imageView.setClickable(true);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        chatFragment.setLikeForLocalUser(false);
+                    }
+                });
+            }
+        } else {
+
+            imageView.setImageResource(R.drawable.com_facebook_button_like_background);
+            imageView.setClickable(true);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    chatFragment.setLikeForLocalUser(true);
+                }
+            });
+        }
+
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT
+                | Gravity.CENTER_VERTICAL);
+        layoutParams.rightMargin = 40;
+        imageView.setLayoutParams(layoutParams);
+        actionBar.setCustomView(imageView);
+    }
+
 }

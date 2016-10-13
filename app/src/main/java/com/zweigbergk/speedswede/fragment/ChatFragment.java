@@ -18,6 +18,7 @@ import android.widget.EditText;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.core.Chat;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
 import com.zweigbergk.speedswede.methodwrapper.CallerMethod;
@@ -31,6 +32,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
 
     private RecyclerView chatRecyclerView;
     private EditText mInputBox;
+
 
     //TODO presenter between interactor and fragment
     private ChatFragmentPresenter mPresenter;
@@ -172,4 +174,23 @@ public class ChatFragment extends Fragment implements ChatFragmentView, DialogFr
         mPresenter.onChangeNameClicked(getActivity().getBaseContext(), data);
 
     }
+
+    public Boolean hasLocalUserLiked() {
+        Chat chat = mPresenter.getChat();
+        return chat.hasLocalUserLiked();
+    }
+
+    public Boolean hasBothUsersLiked() {
+        Chat chat = mPresenter.getChat();
+        return (chat.hasLocalUserLiked() && chat.hasSecondUserLiked());
+    }
+
+    public void setLikeForLocalUser(Boolean likeStatus) {
+        //if(firstUSer)
+        DatabaseHandler.get(mPresenter.getChat()).setLikeStatusForFirstUser(likeStatus);
+        //else
+        //DatabaseHandler.get(mPresenter.getChat()).setLikeStatusForFirstUser(likeStatus);
+
+    }
+
 }

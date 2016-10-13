@@ -129,6 +129,7 @@ public class UserReference {
                 DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.ID, id));
     }
 
+
     public void bind(Client<DataChange<User>> client) {
         DbUserHandler.getInstance().getUserListener().addClient(mUser, client);
     }
