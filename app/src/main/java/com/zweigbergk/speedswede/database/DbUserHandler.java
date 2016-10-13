@@ -15,6 +15,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Banner;
+import com.zweigbergk.speedswede.core.MatchSkill;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.UserListener;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.zweigbergk.speedswede.Constants.POOL;
+import static com.zweigbergk.speedswede.Constants.SKILL;
 import static com.zweigbergk.speedswede.Constants.USERS;
 import static com.zweigbergk.speedswede.Constants.BANS;
 import static com.zweigbergk.speedswede.Constants.BANLIST;
@@ -72,14 +74,15 @@ class DbUserHandler extends DbHandler {
         mLoggedInUser = null;
     }
 
-    // NOTE: Listening to all Users all the time is invert optimal.
+    // NOTE: Listening to all Users all the time is not optimal.
     // It's whatever if it doesn't cause issues.
     void registerUsersListener() {
         mUsersListener = new UserListener();
 
+        Log.d(TAG, "In registerUsersListener");
         Query userRef = mRoot.child(USERS);
-        userRef.keepSynced(true);
         userRef.addChildEventListener(mUsersListener);
+        userRef.keepSynced(true);
     }
 
     private void initializeUserPoolListener() {
@@ -109,11 +112,16 @@ class DbUserHandler extends DbHandler {
 
     void pushUser(User user) {
         mRoot.child(Constants.USERS).child(user.getUid()).setValue(user);
+        mRoot.child(USERS).child(user.getUid()).child(SKILL).setValue(user.getOwnSkill().getValue());
     }
 
 
     void removeUserFromPool(User user) {
         mRoot.child(Constants.POOL).child(user.getUid()).setValue(null);
+    }
+
+    void setUserSkill(User user, MatchSkill value) {
+        mRoot.child(USERS).child(user.getUid()).child(SKILL).setValue(value);
     }
 
     void setUserAttribute(User user, UserReference.UserAttribute attribute, Object value) {
@@ -160,14 +168,6 @@ class DbUserHandler extends DbHandler {
         mLoggedInUser = user;
     }
 
-    void pushTestUser() {
-        getUser(Constants.TEST_USER_UID).then(user -> {
-            if (user == null) {
-                UserProfile testUserProfile = new UserProfile("TestBot", Constants.TEST_USER_UID);
-                DbUserHandler.INSTANCE.pushUser(testUserProfile);
-            }
-        });
-    }
 
     public Promise<User> getUser(String uid) {
         final Promise<User> promise = Promise.create();

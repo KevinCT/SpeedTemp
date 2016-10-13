@@ -157,13 +157,13 @@ public enum ChatMatcher {
 
         for(User user : mUsersInPool) {
             switch(user.getOwnSkill()) {
-                case BEGINNER:
+                case LEARNER:
                     learners.add(user);
                     break;
-                case INTERMEDIATE:
+                case CHATTER:
                     chatters.add(user);
                     break;
-                case SKILLED:
+                case MENTOR:
                     mentors.add(user);
                     break;
                 default:
@@ -218,7 +218,7 @@ public enum ChatMatcher {
 
 //    public List<User> checkIfMatch(User activeUser, User secondUser) {
 //        List<User> matchedUsers = new ArrayList<>();
-//        if(activeUser.getMatchSkill() == secondUser.getOwnSkill()) {
+//        if(activeUser.getmMatchSkill() == secondUser.getOwnSkill()) {
 //            List<User> skillGroup = new ArrayList<>();
 //            skillGroup.add(secondUser);
 //            boolean firstTime = true;

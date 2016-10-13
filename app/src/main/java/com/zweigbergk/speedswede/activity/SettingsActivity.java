@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.MatchSkill;
+import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.UserReference;
 import com.zweigbergk.speedswede.fragment.SettingsFragment;
@@ -50,19 +51,22 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d("DEBUG", "Local preferences changed: "+key+", "+sharedPreferences.getAll().get(key));
 
+        User activeUser = DatabaseHandler.getActiveUser();
         UserReference user = DatabaseHandler.get(DatabaseHandler.getActiveUser());
         switch(key) {
             case "pref_usage":
-                user.setPreference(Preference.USAGE, sharedPreferences.getString(key, "learn"));
                 switch(sharedPreferences.getString(key, "learn")) {
                     case "learn":
-                        DatabaseHandler.getActiveUser().setOwnSkill(MatchSkill.BEGINNER);
+                        user.setOwnSkill(MatchSkill.LEARNER);
+                        DatabaseHandler.get(activeUser).setOwnSkill(MatchSkill.LEARNER);
                         break;
                     case "mentor":
-                        DatabaseHandler.getActiveUser().setOwnSkill(MatchSkill.SKILLED);
+                        DatabaseHandler.get(activeUser).setOwnSkill(MatchSkill.MENTOR);
+                        user.setOwnSkill(MatchSkill.MENTOR);
                         break;
                     case "chat":
-                        DatabaseHandler.getActiveUser().setOwnSkill(MatchSkill.INTERMEDIATE);
+                        DatabaseHandler.get(activeUser).setOwnSkill(MatchSkill.CHATTER);
+                        user.setOwnSkill(MatchSkill.CHATTER);
                         break;
                     default:
                         break;

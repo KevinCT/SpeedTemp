@@ -1,7 +1,10 @@
 package com.zweigbergk.speedswede.util.factory;
 
+import android.util.Log;
+
 import com.google.firebase.database.DataSnapshot;
 import com.zweigbergk.speedswede.Constants;
+import com.zweigbergk.speedswede.core.MatchSkill;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 
@@ -11,6 +14,7 @@ import java.util.Map;
 import com.zweigbergk.speedswede.util.BooleanPreference;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.PreferenceValue;
+import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.StringPref;
@@ -18,15 +22,20 @@ import com.zweigbergk.speedswede.util.methodwrapper.EntryAssertion;
 
 import static com.zweigbergk.speedswede.Constants.LANGUAGE;
 import static com.zweigbergk.speedswede.Constants.NOTIFICATIONS;
+import static com.zweigbergk.speedswede.Constants.SKILL;
 import static com.zweigbergk.speedswede.Constants.USAGE;
 import static com.zweigbergk.speedswede.Constants.preference;
 
 public class UserFactory {
+    private static final String TAG = UserFactory.class.getSimpleName().toUpperCase();
+
     public static Promise<User> buildUser(Promise<User> builder, DataSnapshot dataSnapshot) {
         builder.setResultForm(reconstructionBlueprint);
 
+        Log.d(TAG, "In buildUser()");
+
         builder.requires(PromiseNeed.NAME, PromiseNeed.ID, PromiseNeed.NOTIFICATIONS,
-                PromiseNeed.LANGUAGE, PromiseNeed.USAGE);
+                PromiseNeed.LANGUAGE, PromiseNeed.SKILL);
 
         builder.addItem(PromiseNeed.NAME,
                 dataSnapshot.child(Constants.DISPLAY_NAME).getValue());
@@ -40,8 +49,7 @@ public class UserFactory {
         builder.addItem(PromiseNeed.LANGUAGE,
                 dataSnapshot.child(preference(LANGUAGE)).getValue());
 
-        builder.addItem(PromiseNeed.USAGE,
-                dataSnapshot.child(preference(USAGE)).getValue());
+        builder.addItem(PromiseNeed.SKILL, dataSnapshot.child(SKILL).getValue());
 
         return builder;
     }
@@ -53,11 +61,14 @@ public class UserFactory {
         Map<User.Preference, PreferenceValue> preferences = new HashMap<>();
         preferences.put(User.Preference.NOTIFICATIONS, new BooleanPreference(items.getBoolean(PromiseNeed.NOTIFICATIONS)));
         preferences.put(User.Preference.LANGUAGE, new StringPref(items.getString(PromiseNeed.LANGUAGE)));
-        preferences.put(User.Preference.USAGE, new StringPref(items.getString(PromiseNeed.USAGE)));
+        MatchSkill skill = MatchSkill.valueOf(MatchSkill.class, items.getString(PromiseNeed.SKILL));
+        Log.d(TAG, Stringify.curlyFormat("Skill: {skill}", skill.getValue()));
 
         EntryAssertion<User.Preference, PreferenceValue> isNull = e -> e.getValue() == null;
         Map<User.Preference, PreferenceValue> nonNullPrefs = Lists.reject(preferences, isNull);
 
-        return new UserProfile(name, id).withPreferences(nonNullPrefs);
+        User user = new UserProfile(name, id).withPreferences(nonNullPrefs);
+        user.setOwnSkill(skill);
+        return user;
     };
 }

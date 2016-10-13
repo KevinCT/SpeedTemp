@@ -5,8 +5,6 @@ import android.os.Parcelable;
 
 import com.zweigbergk.speedswede.util.PreferenceValue;
 
-import static android.os.Parcelable.Creator;
-
 import java.util.Arrays;
 import java.util.Map;
 
@@ -15,7 +13,6 @@ public interface User extends Parcelable {
     String getDisplayName();
     Object getPreference(Preference preference);
     Map<Preference, PreferenceValue> getPreferences();
-    MatchSkill getMatchSkill();
     MatchSkill getOwnSkill();
     void setOwnSkill(MatchSkill skill);
     long getTimeInQueue();
@@ -29,14 +26,14 @@ public interface User extends Parcelable {
 //    void setMatchingSkill(MatchSkill skill);
 
     enum Preference implements Parcelable {
-        NOTIFICATIONS, LANGUAGE, USAGE;
+        NOTIFICATIONS, LANGUAGE, OWN_SKILL;
 
         private final int mValue;
 
         public static Preference[] values = Preference.values();
 
         private static final Preference[] booleans = new Preference[] { NOTIFICATIONS };
-        private static final Preference[] strings = new Preference[] { LANGUAGE, USAGE };
+        private static final Preference[] strings = new Preference[] { LANGUAGE, OWN_SKILL};
 //        private static final Preference[] longs = new Preference[] { SWEDISH_SKILL, STRANGER_SWEDISH_SKILL };
 
         public boolean accepts(boolean value) {

@@ -5,7 +5,7 @@ package com.zweigbergk.speedswede.core;
  */
 
 public enum MatchSkill {
-    BEGINNER("beginner"), INTERMEDIATE("intermediate"), SKILLED("skilled");
+    LEARNER("learner"), CHATTER("chatter"), MENTOR("mentor");
 
     private String value;
 

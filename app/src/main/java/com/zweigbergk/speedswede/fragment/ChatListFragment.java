@@ -21,12 +21,14 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.database.eventListener.ChatListener;
+import com.zweigbergk.speedswede.util.ChildCountListener;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.ParcelHelper;
 
 import java.util.List;
 
-public class ChatListFragment extends Fragment {
+public class ChatListFragment extends Fragment implements ChildCountListener {
 
     public static final String TAG = ChatListFragment.class.getSimpleName().toUpperCase();
     public static final String TAG_CHATLIST = "ChatList";
@@ -34,6 +36,7 @@ public class ChatListFragment extends Fragment {
 
     RecyclerView chatListView;
     ChatAdapter mAdapter;
+    ImageView mBackgroundImageView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,9 @@ public class ChatListFragment extends Fragment {
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         chatListView.setLayoutManager(manager);
         chatListView.setAdapter(mAdapter);
+        mBackgroundImageView = (ImageView) mView.findViewById(R.id.fragment_chat_list_default_background);
+
+        mAdapter.setView(this);
 
         view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
 
@@ -77,6 +83,16 @@ public class ChatListFragment extends Fragment {
         Log.d(TAG, "onCreateView");
 
         return view;
+    }
+
+    public void onUpdate() {
+        Log.d(TAG, "Update background in ChatListFragment");
+
+        if (mAdapter.getItemCount() == 0 ) {
+            mBackgroundImageView.setImageResource(R.drawable.default_background_v1);
+        } else {
+            mBackgroundImageView.setImageResource(0);
+        }
     }
 
     @Override
@@ -107,12 +123,7 @@ public class ChatListFragment extends Fragment {
         Log.d(TAG, "ChatListFragment.onActivityCreated()");
         Log.d(TAG, "Item count in mAdapter: " + mAdapter.getItemCount());
 
-        ImageView backgroundImageView = (ImageView) mView.findViewById(R.id.fragment_chat_list_default_background);
-        if (mAdapter.getItemCount() == 0 ) {
-            backgroundImageView.setImageResource(R.drawable.default_background_v1);
-        } else {
-            backgroundImageView.setImageResource(0);
-        }
+
     }
 
     @Override

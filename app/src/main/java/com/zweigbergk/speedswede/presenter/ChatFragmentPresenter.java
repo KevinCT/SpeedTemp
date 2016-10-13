@@ -161,10 +161,6 @@ public class ChatFragmentPresenter {
         userRef.block(stranger);
 }
 
-    public void onChangeLanguageClicked() {
-        mView.openLanguageFragment();
-    }
-
     private MessageAdapter getMessageAdapter() {
         return (MessageAdapter) mView.getRecyclerView().getAdapter();
     }

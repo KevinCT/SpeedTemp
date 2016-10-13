@@ -2,6 +2,7 @@ package com.zweigbergk.speedswede.core;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.Exclude;
@@ -10,16 +11,19 @@ import com.zweigbergk.speedswede.util.PreferenceValue;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class UserProfile implements User {
 
     private String mName, mUid;
 //    private Timer timer;
 //    private int[] matchingInterval;
+<<<<<<< HEAD
 //    private int ownRating; 
     private MatchSkill mMatchSkill;
+=======
+//    private int ownRating;
+    @Exclude
+>>>>>>> 18e75846b15dd88785b10c25e410154f38aa8e8a
     private MatchSkill mOwnSkill;
     private long timeInQueue;
 
@@ -29,11 +33,8 @@ public class UserProfile implements User {
     public UserProfile(String name, String uid) {
         mName = name;
         mUid = uid;
-//        timer = new Timer();
-//        matchingInterval = new int[2];
-//        ownRating = 0;
-        mMatchSkill = MatchSkill.SKILLED;
-        mOwnSkill = MatchSkill.BEGINNER;
+
+        mOwnSkill = MatchSkill.LEARNER;
     }
 
     public UserProfile withPreferences(Map<Preference, PreferenceValue> preferences) {
@@ -64,7 +65,10 @@ public class UserProfile implements User {
     }
 
     public static UserProfile from(FirebaseUser user) {
-        return user == null ? null : new UserProfile(user.getDisplayName(), user.getUid());
+        if (user != null) {
+            return new UserProfile(user.getDisplayName(), user.getUid());
+        }
+        return null;
     }
 
     @Override
@@ -117,33 +121,21 @@ public class UserProfile implements User {
     }
 
     private UserProfile(Parcel in) {
-        mName = in.readString();
-        mUid = in.readString();
-        mPreferences = ParcelHelper.readParcelableMap(in, Preference.class, PreferenceValue.class);
+        if (in.readString() != null) {
+            mName = in.readString();
+            mUid = in.readString();
+            mPreferences = ParcelHelper.readParcelableMap(in, Preference.class, PreferenceValue.class);
+        }
     }
 
-    public MatchSkill getMatchSkill() {
-        return mMatchSkill;
-    }
+    @Exclude
     public MatchSkill getOwnSkill() {
         return mOwnSkill;
     }
 
+    @Exclude
     public void setOwnSkill(MatchSkill skill) {
         mOwnSkill = skill;
-        switch(skill) {
-            case BEGINNER:
-                mMatchSkill = MatchSkill.SKILLED;
-                break;
-            case INTERMEDIATE:
-                mMatchSkill = MatchSkill.INTERMEDIATE;
-                break;
-            case SKILLED:
-                mMatchSkill = MatchSkill.BEGINNER;
-                break;
-            default:
-                mMatchSkill = MatchSkill.BEGINNER;
-        }
     }
 
     public void startTime() {
@@ -161,15 +153,15 @@ public class UserProfile implements User {
 //
 //    public void setInitialMatchInterval() {
 //        switch(matchSkill) {
-//            case BEGINNER:
+//            case LEARNER:
 //                matchingInterval[0] = 0;
 //                matchingInterval[1] = 0;
 //                break;
-//            case INTERMEDIATE:
+//            case CHATTER:
 //                matchingInterval[0] = 50;
 //                matchingInterval[1] = 50;
 //                break;
-//            case SKILLED:
+//            case MENTOR:
 //                matchingInterval[0] = 100;
 //                matchingInterval[0] = 100;
 //                break;
