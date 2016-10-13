@@ -2,6 +2,7 @@ package com.zweigbergk.speedswede.core;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.Exclude;
@@ -59,7 +60,10 @@ public class UserProfile implements User {
     }
 
     public static UserProfile from(FirebaseUser user) {
-        return user == null ? null : new UserProfile(user.getDisplayName(), user.getUid());
+        if (user != null) {
+            return new UserProfile(user.getDisplayName(), user.getUid());
+        }
+        return null;
     }
 
     @Override
@@ -112,9 +116,11 @@ public class UserProfile implements User {
     }
 
     private UserProfile(Parcel in) {
-        mName = in.readString();
-        mUid = in.readString();
-        mPreferences = ParcelHelper.readParcelableMap(in, Preference.class, PreferenceValue.class);
+        if (in.readString() != null) {
+            mName = in.readString();
+            mUid = in.readString();
+            mPreferences = ParcelHelper.readParcelableMap(in, Preference.class, PreferenceValue.class);
+        }
     }
 
     @Exclude

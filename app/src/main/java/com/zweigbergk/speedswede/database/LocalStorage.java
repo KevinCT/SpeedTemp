@@ -34,7 +34,6 @@ public enum LocalStorage {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         preferences.edit().clear().apply();
-//        preferences.edit().clear().commit();
     }
 
 }

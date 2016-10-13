@@ -157,8 +157,12 @@ public class UserListener implements ChildEventListener {
     }
 
     private User convertToUser(DataSnapshot snapshot) {
-        return new UserProfile(snapshot.child(Constants.DISPLAY_NAME).getValue().toString(),
-                snapshot.child(Constants.USER_ID).getValue().toString());
+        if (snapshot.child(Constants.DISPLAY_NAME).getValue() != null &&
+                snapshot.child(Constants.USER_ID).getValue() != null) {
+            return new UserProfile(snapshot.child(Constants.DISPLAY_NAME).getValue().toString(),
+                    snapshot.child(Constants.USER_ID).getValue().toString());
+        }
+        return null;
     }
 
     @Override

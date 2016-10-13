@@ -19,6 +19,7 @@ import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
+import com.zweigbergk.speedswede.util.ChildCountListener;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 
@@ -31,12 +32,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     public enum Event { CHAT_VIEW_CLICKED, CHAT_REMOVED, CHAT_ADDED }
 
-
     public static final String TAG = ChatAdapter.class.getSimpleName().toUpperCase();
 
     private List<Chat> mChats;
     private Map<Event, List<Client<Chat>>> eventClients;
     private Context mContext;
+    private ChildCountListener mChildCountListener;
 
     public ChatAdapter(List<Chat> chats) {
         eventClients = new HashMap<>();
@@ -45,6 +46,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         for (Event event : Event.values()) {
             eventClients.put(event, new ArrayList<>());
         }
+    }
+
+    public void setView(ChildCountListener childCountListener) {
+       mChildCountListener = childCountListener;
     }
 
     public ChatAdapter() {
@@ -59,6 +64,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     public final void notifyChange(DataChange<Chat> change) {
         Chat chat = change.getItem();
         DatabaseEvent event = change.getEvent();
+
+        mChildCountListener.onUpdate();
 
         switch (event) {
             case ADDED:
@@ -96,6 +103,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     private void addChat(Chat chat) {
         Log.d(TAG, "In addChat");
+
+        mChildCountListener.onUpdate();
 
         if (!mChats.contains(chat)) {
             Log.d(TAG, "Did not contain our chat.");
