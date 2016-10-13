@@ -189,7 +189,7 @@ class DbUserHandler extends DbHandler {
     }
 
     Statement userExists(User user) {
-        return hasReferenceDebug(mRoot.child(USERS).child(user.getUid()));
+        return hasReference(mRoot.child(USERS).child(user.getUid()));
     }
 
     Statement userExists(String userId) {

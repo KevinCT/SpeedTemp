@@ -2,11 +2,6 @@ package com.zweigbergk.speedswede;
 
 import android.util.Log;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
@@ -16,8 +11,6 @@ import com.zweigbergk.speedswede.util.async.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Date;
-
-import static com.zweigbergk.speedswede.Constants.USERS;
 
 public class Initializer {
 

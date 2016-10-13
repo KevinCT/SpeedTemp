@@ -39,26 +39,6 @@ public abstract class DbHandler {
         return statement;
     }
 
-    Statement hasReferenceDebug(DatabaseReference ref) {
-        Statement statement = new Statement();
-
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "hasReferenceDebug: user exists: " + dataSnapshot.exists());
-                statement.setReturnValue(dataSnapshot.exists());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, "hasReferenceDebug failed!");
-                statement.setPromiseFailed(true);
-            }
-        });
-
-        return statement;
-    }
-
     DatabaseReference databasePath(String... strings) {
         return databasePath(FirebaseDatabase.getInstance().getReference(), strings);
     }
