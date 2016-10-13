@@ -130,9 +130,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         switch (item.getItemId()) {
             case R.id.blockUser:
                 mPresenter.onBanClicked();
-                return true;
-            case R.id.changeLangauge:
-                mPresenter.onChangeLanguageClicked();
+                mPresenter.terminateChat();
                 return true;
             case R.id.exitChat:
                 mPresenter.terminateChat();
