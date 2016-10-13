@@ -8,6 +8,7 @@ import com.google.firebase.database.Exclude;
 import com.zweigbergk.speedswede.util.ParcelHelper;
 import com.zweigbergk.speedswede.util.PreferenceValue;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,6 +21,7 @@ public class UserProfile implements User {
 //    private int ownRating;
     private MatchSkill mMatchSkill;
     private MatchSkill mOwnSkill;
+    private long timeInQueue;
 
     @Exclude
     private Map<Preference, PreferenceValue> mPreferences;
@@ -128,7 +130,7 @@ public class UserProfile implements User {
     }
 
     public void setOwnSkill(MatchSkill skill) {
-        mMatchSkill = skill;
+        mOwnSkill = skill;
         switch(skill) {
             case BEGINNER:
                 mMatchSkill = MatchSkill.SKILLED;
@@ -142,6 +144,15 @@ public class UserProfile implements User {
             default:
                 mMatchSkill = MatchSkill.BEGINNER;
         }
+    }
+
+    public void startTime() {
+        Date date = new Date();
+        timeInQueue = date.getTime();
+    }
+
+    public long getTimeInQueue() {
+        return timeInQueue;
     }
 
 //    public int getOwnRating() {

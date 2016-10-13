@@ -18,6 +18,8 @@ public interface User extends Parcelable {
     MatchSkill getMatchSkill();
     MatchSkill getOwnSkill();
     void setOwnSkill(MatchSkill skill);
+    long getTimeInQueue();
+    void startTime();
 //    int getOwnRating();
 //    int[] getMatchInterval();
 //    void incrementRating();

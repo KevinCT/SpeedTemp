@@ -5,16 +5,16 @@ import android.util.Log;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.async.Commitment;
 import com.zweigbergk.speedswede.util.async.GoodStatement;
 import com.zweigbergk.speedswede.util.async.Promise;
-import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -79,7 +79,7 @@ public enum ChatMatcher {
                     //Handle adding of user here
                     if (!hasBlock) {
                         mUsersInPool.add(user);
-                        match();
+                        matchingLoop();
                     }
                 });
     }
@@ -99,22 +99,22 @@ public enum ChatMatcher {
         DatabaseHandler.getPool().remove(user);
     }
 
-    public void match() {
-        Log.d(TAG, "Users in pool: " + mUsersInPool.size());
-        if (mUsersInPool.size() > 1) {
-            // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
-            List<User> matchedUsers = Lists.getFirstElements(mUsersInPool, 2);
-            //List<User> matchedUsers = sofisticatedMatch();
-           // if(matchedUsers != null) {
-                DatabaseHandler.getPool().removeUser(matchedUsers.get(0));
-                DatabaseHandler.getPool().removeUser(matchedUsers.get(1));
-
-                Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
-                Log.d("CHATMATCHER: NAME: ", chat.getName() + "");
-                DatabaseHandler.get(chat).push();
-            //}
-        }
-    }
+//    public void match() {
+//        Log.d(TAG, "Users in pool: " + mUsersInPool.size());
+//        if (mUsersInPool.size() > 1) {
+//            // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
+//            //List<User> matchedUsers = Lists.getFirstElements(mUsersInPool, 2);
+//            List<User> matchedUsers = sofisticatedMatch();
+//            if(matchedUsers != null) {
+//                DatabaseHandler.getPool().removeUser(matchedUsers.get(0));
+//                DatabaseHandler.getPool().removeUser(matchedUsers.get(0));
+//
+//                Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
+//                Log.d("CHATMATCHER: NAME: ", chat.getName() + "");
+//                DatabaseHandler.get(chat).push();
+//            }
+//        }
+//    }
 
     private List<String> getUserIdList(){
         List<String> userNameList = new ArrayList<>();
@@ -128,27 +128,120 @@ public enum ChatMatcher {
         mUsersInPool.clear();
     }
 
-    public List<User> sofisticatedMatch() {
-        User activeUser = DatabaseHandler.getActiveUser();
 
-        for(User secondUser : mUsersInPool) {
-            if(activeUser.getUid() != secondUser.getUid()) {
-                return checkIfMatch(activeUser, secondUser);
+//    public List<User> sofisticatedMatch() {
+//        User activeUser = DatabaseHandler.getActiveUser();
+//
+//        for(User secondUser : mUsersInPool) {
+//            if(activeUser.getUid() != secondUser.getUid()) {
+//                return checkIfMatch(activeUser, secondUser);
+//            }
+//        }
+//        return null;
+//    }
+
+    public void nextLevelMatch() {
+        Map<String, List<User>> listMap = seperatePools();
+        List<User> learners = listMap.get("learners");
+        List<User> mentors = listMap.get("mentors");
+        List<User> chatters = listMap.get("chatters");
+        matchLearners(learners, mentors);
+        matchChatters(chatters);
+    }
+
+    public Map<String, List<User>> seperatePools() {
+        List<User> learners = new ArrayList<>();
+        List<User> mentors = new ArrayList<>();
+        List<User> chatters = new ArrayList<>();
+        Map<String, List<User>> listMap = new HashMap<>();
+
+        for(User user : mUsersInPool) {
+            switch(user.getOwnSkill()) {
+                case BEGINNER:
+                    learners.add(user);
+                    break;
+                case INTERMEDIATE:
+                    chatters.add(user);
+                    break;
+                case SKILLED:
+                    mentors.add(user);
+                    break;
+                default:
+                    break;
             }
         }
-        return null;
+
+        listMap.put("learners", learners);
+        listMap.put("mentors", mentors);
+        listMap.put("chatters", chatters);
+        return listMap;
     }
 
-    public List<User> checkIfMatch(User activeUser, User secondUser) {
-        List<User> matchedUsers = new ArrayList<>();
-        if(activeUser.getMatchSkill() == secondUser.getOwnSkill()) {
-            matchedUsers.add(DatabaseHandler.getActiveUser());
-            matchedUsers.add(secondUser);
-            Log.d("FELIXMATCH", " : we got a match brah");
-            return matchedUsers;
+    public void matchLearners(List<User> learners, List<User> mentors) {
+        if(learners.size() > 0 && mentors.size() > 0) {
+            User firstBeginner = learners.get(0);
+            for (User user : learners) {
+                if (firstBeginner.getTimeInQueue() > user.getTimeInQueue()) {
+                    firstBeginner = user;
+                }
+            }
+            User firstMentor = mentors.get(0);
+            for (User user : mentors) {
+                if (firstMentor.getTimeInQueue() > user.getTimeInQueue()) {
+                    firstMentor = user;
+                }
+            }
+
+            DatabaseHandler.getPool().removeUser(firstBeginner);
+            DatabaseHandler.getPool().removeUser(firstMentor);
+
+            Chat chat = new Chat(firstBeginner, firstMentor);
+            Log.d("MAFAKALEARNERS", chat.getName() + "");
+            DatabaseHandler.get(chat).push();
         }
-        return null;
     }
+
+    public void matchChatters(List<User> userList) {
+        if(userList.size() > 1) {
+            List<User> matchedUsers = new ArrayList<>();
+            matchedUsers.add(userList.get(0));
+            matchedUsers.add(userList.get(1));
+
+            DatabaseHandler.getPool().removeUser(matchedUsers.get(0));
+            DatabaseHandler.getPool().removeUser(matchedUsers.get(1));
+
+            Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
+            Log.d("FILTHYCASUALS: ", chat.getName() + "");
+            DatabaseHandler.get(chat).push();
+        }
+    }
+
+//    public List<User> checkIfMatch(User activeUser, User secondUser) {
+//        List<User> matchedUsers = new ArrayList<>();
+//        if(activeUser.getMatchSkill() == secondUser.getOwnSkill()) {
+//            List<User> skillGroup = new ArrayList<>();
+//            skillGroup.add(secondUser);
+//            boolean firstTime = true;
+//            long temp = 0;
+//            User bestMatch = null;
+//            for(User matchedUser : skillGroup) {
+//                if(firstTime) {
+//                    temp = matchedUser.getTimeInQueue();
+//                    bestMatch = matchedUser;
+//                    firstTime = false;
+//                }
+//                if(temp > matchedUser.getTimeInQueue()) {
+//                    temp = matchedUser.getTimeInQueue();
+//                    bestMatch = matchedUser;
+//                }
+//            }
+//            matchedUsers.add(DatabaseHandler.getActiveUser());
+//            matchedUsers.add(bestMatch);
+//            Log.d("FELIXMATCH", " matched: " + bestMatch);
+//            return matchedUsers;
+//        }
+//        return null;
+//    }
 
     public void matchingLoop() {
         if(!loopIsActive) {
@@ -158,7 +251,7 @@ public enum ChatMatcher {
             timer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
-                    match();
+                    nextLevelMatch();
                 }
             }, 10 * 1000, 10 * 1000);
         }
