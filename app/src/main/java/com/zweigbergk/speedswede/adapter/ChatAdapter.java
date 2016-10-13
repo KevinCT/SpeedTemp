@@ -2,6 +2,7 @@ package com.zweigbergk.speedswede.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
+import com.zweigbergk.speedswede.fragment.ChatListFragment;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 
@@ -31,12 +33,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
 
     public static final String TAG = ChatAdapter.class.getSimpleName().toUpperCase();
-    private static final int NORMAL_VIEW = 1;
 
     private List<Chat> mChats;
     private Map<Event, List<Client<Chat>>> eventClients;
     private Context mContext;
-
 
     public ChatAdapter(List<Chat> chats) {
         eventClients = new HashMap<>();

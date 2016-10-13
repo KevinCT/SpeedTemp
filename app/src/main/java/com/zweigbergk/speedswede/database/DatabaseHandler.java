@@ -136,8 +136,8 @@ public enum DatabaseHandler {
         return DbUserHandler.getInstance().userExists(user);
     }
 
-    public static Statement isActiveUserBlockedBy(User user) {
-        return DbUserHandler.getInstance().isActiveUserBlockedBy(user);
+    public static boolean isActiveUserBlockedBy(User user) {
+        return getBans(user.getUid()).isBanned(getActiveUserId());
     }
 
     public static Statement hasUsers(Chat chat) {
@@ -154,16 +154,14 @@ public enum DatabaseHandler {
     }
 
     public static void sendObject(String child, Banner banner ){
-        HashMap<String, Boolean> map = new HashMap<>();
-        Lists.forEach(banner.getBanList(), uid -> map.put(uid, true));
-        root.child(BANS).child(DbUserHandler.INSTANCE.getActiveUserId()).child(BANLIST).setValue(map);
+        root.child(BANS).child(DbUserHandler.INSTANCE.getActiveUserId()).setValue(banner);
     }
 
     public static Banner getBans(String uID){
         root.child(BANS).child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-            //               mBanner = dataSnapshot.getValue(Banner.class);
+                mBanner = dataSnapshot.getValue(Banner.class);
             }
 
             @Override
