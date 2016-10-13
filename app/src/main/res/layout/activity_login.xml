@@ -19,17 +19,43 @@
         android:layout_height="match_parent"
         android:id="@+id/activity_login_content">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_yellow"
+            android:id="@+id/activity_login_logo"
+            android:layout_centerHorizontal="true"
+            android:cropToPadding="false"
+            android:layout_alignParentTop="true"
+            android:maxHeight="100dp"
+            android:layout_above="@+id/activity_login_login_button"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="20dp" />
+
         <com.facebook.login.widget.LoginButton
-            xmlns:facebook="http://schemas.android.com/apk/res-auto"
             android:id="@+id/activity_login_login_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
             android:drawableLeft="@null"
-            facebook:com_facebook_login_text="Custom login text 1337"
-            style="@style/FacebookLoginButtonCustom" />
+            style="@style/FacebookLoginButtonCustom"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:text="@string/activity_login_text"
+            android:ems="10"
+            android:id="@+id/activity_login_text"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:layout_below="@+id/activity_login_login_button"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:alpha="0.6" />
 
     </RelativeLayout>
 
