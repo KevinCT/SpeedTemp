@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
@@ -29,6 +30,7 @@ public class ChatListFragment extends Fragment {
 
     public static final String TAG = ChatListFragment.class.getSimpleName().toUpperCase();
     public static final String TAG_CHATLIST = "ChatList";
+    private View mView;
 
     RecyclerView chatListView;
     ChatAdapter mAdapter;
@@ -49,15 +51,17 @@ public class ChatListFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu,inflater);
         inflater.inflate(R.menu.menu_chat_list,menu);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
+
+        mView = view;
 
         chatListView = (RecyclerView) view.findViewById(R.id.fragment_chat_list_view);
 
@@ -101,6 +105,14 @@ public class ChatListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         checkSavedState(savedInstanceState);
         Log.d(TAG, "ChatListFragment.onActivityCreated()");
+        Log.d(TAG, "Item count in mAdapter: " + mAdapter.getItemCount());
+
+        ImageView backgroundImageView = (ImageView) mView.findViewById(R.id.fragment_chat_list_default_background);
+        if (mAdapter.getItemCount() == 0 ) {
+            backgroundImageView.setImageResource(R.drawable.default_background_v1);
+        } else {
+            backgroundImageView.setImageResource(0);
+        }
     }
 
     @Override
