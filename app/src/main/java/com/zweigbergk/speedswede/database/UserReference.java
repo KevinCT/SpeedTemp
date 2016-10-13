@@ -3,6 +3,7 @@ package com.zweigbergk.speedswede.database;
 
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Banner;
+import com.zweigbergk.speedswede.core.MatchSkill;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.async.GoodStatement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
@@ -103,10 +104,16 @@ public class UserReference {
             case LANGUAGE:
                 setLanguage(value);
                 break;
-            case USAGE:
+            case OWN_SKILL:
                 setUsage(value);
                 break;
         }
+    }
+
+    public void setOwnSkill(MatchSkill skill) {
+        ifStillValid().then(() -> {
+            DbUserHandler.getInstance().setUserSkill(mUser, skill);
+        });
     }
 
     private void setLanguage(String language) {

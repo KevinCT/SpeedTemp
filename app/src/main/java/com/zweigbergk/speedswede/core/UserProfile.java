@@ -10,8 +10,6 @@ import com.zweigbergk.speedswede.util.PreferenceValue;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class UserProfile implements User {
 
@@ -19,7 +17,7 @@ public class UserProfile implements User {
 //    private Timer timer;
 //    private int[] matchingInterval;
 //    private int ownRating;
-    private MatchSkill mMatchSkill;
+    @Exclude
     private MatchSkill mOwnSkill;
     private long timeInQueue;
 
@@ -29,11 +27,8 @@ public class UserProfile implements User {
     public UserProfile(String name, String uid) {
         mName = name;
         mUid = uid;
-//        timer = new Timer();
-//        matchingInterval = new int[2];
-//        ownRating = 0;
-        mMatchSkill = MatchSkill.SKILLED;
-        mOwnSkill = MatchSkill.BEGINNER;
+
+        mOwnSkill = MatchSkill.LEARNER;
     }
 
     public UserProfile withPreferences(Map<Preference, PreferenceValue> preferences) {
@@ -122,28 +117,14 @@ public class UserProfile implements User {
         mPreferences = ParcelHelper.readParcelableMap(in, Preference.class, PreferenceValue.class);
     }
 
-    public MatchSkill getMatchSkill() {
-        return mMatchSkill;
-    }
+    @Exclude
     public MatchSkill getOwnSkill() {
         return mOwnSkill;
     }
 
+    @Exclude
     public void setOwnSkill(MatchSkill skill) {
         mOwnSkill = skill;
-        switch(skill) {
-            case BEGINNER:
-                mMatchSkill = MatchSkill.SKILLED;
-                break;
-            case INTERMEDIATE:
-                mMatchSkill = MatchSkill.INTERMEDIATE;
-                break;
-            case SKILLED:
-                mMatchSkill = MatchSkill.BEGINNER;
-                break;
-            default:
-                mMatchSkill = MatchSkill.BEGINNER;
-        }
     }
 
     public void startTime() {
@@ -161,15 +142,15 @@ public class UserProfile implements User {
 //
 //    public void setInitialMatchInterval() {
 //        switch(matchSkill) {
-//            case BEGINNER:
+//            case LEARNER:
 //                matchingInterval[0] = 0;
 //                matchingInterval[1] = 0;
 //                break;
-//            case INTERMEDIATE:
+//            case CHATTER:
 //                matchingInterval[0] = 50;
 //                matchingInterval[1] = 50;
 //                break;
-//            case SKILLED:
+//            case MENTOR:
 //                matchingInterval[0] = 100;
 //                matchingInterval[0] = 100;
 //                break;

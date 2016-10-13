@@ -44,7 +44,7 @@ public class Initializer {
 
             userRef.setPreference(Preference.LANGUAGE, Constants.ENGLISH);
             userRef.setPreference(Preference.NOTIFICATIONS, true);
-            userRef.setPreference(Preference.USAGE, "learn");
+            userRef.setPreference(Preference.OWN_SKILL, "learn");
         });
     }
 }
