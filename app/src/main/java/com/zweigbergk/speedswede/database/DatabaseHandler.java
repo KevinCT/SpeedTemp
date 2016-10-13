@@ -163,7 +163,7 @@ public enum DatabaseHandler {
         root.child(BANS).child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mBanner = dataSnapshot.getValue(Banner.class);
+            //               mBanner = dataSnapshot.getValue(Banner.class);
             }
 
             @Override
