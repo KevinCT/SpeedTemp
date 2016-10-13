@@ -17,13 +17,8 @@ public class UserProfile implements User {
     private String mName, mUid;
 //    private Timer timer;
 //    private int[] matchingInterval;
-<<<<<<< HEAD
-//    private int ownRating; 
-    private MatchSkill mMatchSkill;
-=======
-//    private int ownRating;
+
     @Exclude
->>>>>>> 18e75846b15dd88785b10c25e410154f38aa8e8a
     private MatchSkill mOwnSkill;
     private long timeInQueue;
 

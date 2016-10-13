@@ -112,9 +112,10 @@ class DbUserHandler extends DbHandler {
 
     void pushUser(User user) {
         mRoot.child(Constants.USERS).child(user.getUid()).setValue(user);
-        mRoot.child(USERS).child(user.getUid()).child(SKILL).setValue(user.getOwnSkill().getValue());
+        DatabaseReference weirdRef = mRoot.child(Constants.USERS).child(user.getUid()).child(Constants.SKILL);
+        Log.d(TAG, "pushUser: " + weirdRef.toString());
+        weirdRef.setValue(user.getOwnSkill().getValue());
     }
-
 
     void removeUserFromPool(User user) {
         mRoot.child(Constants.POOL).child(user.getUid()).setValue(null);
