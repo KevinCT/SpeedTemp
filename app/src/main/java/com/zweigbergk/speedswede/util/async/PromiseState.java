@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede.util;
+package com.zweigbergk.speedswede.util.async;
 
 import android.util.Log;
 
@@ -7,12 +7,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
-import com.zweigbergk.speedswede.util.Promise.ItemMap;
+import com.zweigbergk.speedswede.util.async.Promise.ItemMap;
 
 /** Holds an unfinished object. Only releases it once it is completed,
  * i.e. all requirements are met. */
-public class PromiseState {
+class PromiseState {
 
     public static final String TAG = PromiseState.class.getSimpleName().toUpperCase();
 
@@ -24,7 +26,7 @@ public class PromiseState {
 
     private Map<PromiseNeed, StateRequirement> stateRequirements;
 
-    public PromiseState() {
+    PromiseState() {
         mItems = new ItemMap();
 
         needs = new HashSet<>();
@@ -33,7 +35,7 @@ public class PromiseState {
         stateRequirements = new HashMap<>();
     }
 
-    public void requireState(PromiseNeed key, StateRequirement requirement) {
+    void requireState(PromiseNeed key, StateRequirement requirement) {
         stateRequirements.put(key, requirement);
         Log.d(TAG, "Adding state requirement");
     }
@@ -42,7 +44,8 @@ public class PromiseState {
         Object object = mItems.get(need);
         if (hasStateRequirement(need)) {
             Log.d(TAG, "Check if need is fulfilled");
-            if (stateRequirements.get(need).isFulfilled(object)) {
+            StateRequirement req = stateRequirements.get(need);
+            if (req.isFulfilled(object)) {
                 Log.d(TAG, Stringify.curlyFormat("Need {need} is fulfilled!", need.name()));
                 fulfilledNeeds.add(need);
             }
@@ -51,7 +54,7 @@ public class PromiseState {
         }
     }
 
-    public void updateState() {
+    void updateState() {
         Lists.forEach(needs, this::updateState);
     }
 
@@ -64,11 +67,11 @@ public class PromiseState {
         return stateRequirements.get(need) != null;
     }
 
-    void addLock(PromiseNeed need) {
+    void addNeed(PromiseNeed need) {
         needs.add(need);
     }
 
-    public boolean isFulfilled() {
+    boolean isFulfilled() {
         return needs.equals(fulfilledNeeds);
     }
 

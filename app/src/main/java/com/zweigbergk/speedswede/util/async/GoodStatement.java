@@ -1,18 +1,15 @@
-package com.zweigbergk.speedswede.util;
+package com.zweigbergk.speedswede.util.async;
 
-import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
-public class Statement {
-
-    private Promise<Boolean> builder;
-
+public class GoodStatement extends Promise<Boolean> {
     private boolean inverted;
 
-    public Statement() {
-        builder = new Promise<>(assertionResult);
-        builder.needs(PromiseNeed.ASSERTION);
+    public GoodStatement() {
+        super(null);
 
+        requires(PromiseNeed.ASSERTION);
+        setResultForm(items -> items.getBoolean(PromiseNeed.ASSERTION));
         inverted = false;
     }
 
@@ -24,19 +21,24 @@ public class Statement {
         return builder.invert();
     }
 
+    @Override
+    public void addItem(PromiseNeed need, Object data) throws StatementException {
+        throw new StatementException("addItem() may not be called from within a Statement. Use a Promise instead.");
+    }
+
     public void setReturnValue(boolean value) {
-        builder.addItem(PromiseNeed.ASSERTION, value);
+        super.addItem(PromiseNeed.ASSERTION, value);
     }
 
     public void onTrue(Executable executable) {
-        builder.addExecutable(executable, this::onTrue);
+        addExecutable(executable, this::onTrue);
     }
 
     public void onFalse(Executable executable) {
-        builder.addExecutable(executable, this::onFalse);
+        addExecutable(executable, this::onFalse);
     }
 
-    public Statement invert() {
+    public GoodStatement invert() {
         inverted = true;
         return this;
     }
@@ -45,16 +47,9 @@ public class Statement {
         return statement.invert();
     }
 
-    public void setBuildFailed(boolean value) {
-        builder.setPromiseFailed(value);
-    }
-
     private boolean determineInterest(boolean value) {
         return (inverted || value) && !(inverted && value);
     }
-
-    private static Promise.Blueprint<Boolean> assertionResult =
-            items -> items.getBoolean(PromiseNeed.ASSERTION);
 
     private boolean onTrue(boolean value) {
         return determineInterest(value);
@@ -64,7 +59,9 @@ public class Statement {
         return determineInterest(!value);
     }
 
-    public void then(Client<Boolean> client) {
-        builder.addClient(client);
+    private static class StatementException extends RuntimeException {
+        StatementException(String message) {
+            super(message);
+        }
     }
 }

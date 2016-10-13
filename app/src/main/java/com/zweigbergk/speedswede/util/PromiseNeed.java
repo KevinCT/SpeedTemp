@@ -1,6 +1,0 @@
-package com.zweigbergk.speedswede.util;
-
-public enum PromiseNeed {
-    ID, NAME, TIMESTAMP, FIRST_USER, SECOND_USER, LIST, MESSAGE_LIST, ASSERTION, NOTIFICATIONS,
-    LANGUAGE, USAGE, LAYOUT_MANAGER, CHAT, TRANSLATION, USER_ID_LIST
-}

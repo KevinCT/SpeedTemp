@@ -1,7 +1,8 @@
-package com.zweigbergk.speedswede.util;
+package com.zweigbergk.speedswede.util.async;
 
 import android.util.Log;
 
+import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public class ListPromise<E> extends Promise<List<E>> {
 
     private Client<E> iteratorClient;
 
-    public ListPromise(Blueprint<List<E>> blueprint, PromiseNeed... needs) {
+    public ListPromise(Result<List<E>> blueprint, PromiseNeed... needs) {
         super(blueprint, needs);
     }
 
