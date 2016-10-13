@@ -72,7 +72,7 @@ public class UserProfile implements User {
 
     @Override
     public String toString() {
-        return String.format("UserProfile {\n\t\tname: %s,\n\t\tuid: %s,\n}",
+        return String.format("UserProfile {\n\t\tname: %s,\n\t\tuid: %s\n}",
                 mName, mUid);
     }
 

@@ -6,18 +6,9 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.util.ListBuilder;
-import com.zweigbergk.speedswede.util.Stringify;
+import com.zweigbergk.speedswede.util.async.ListPromise;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.Statement;
-import com.zweigbergk.speedswede.util.Lists;
-import com.zweigbergk.speedswede.util.ProductBuilder;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.zweigbergk.speedswede.util.async.Statement;
 
 public class ChatReference {
     public static final String TAG = ChatReference.class.getSimpleName().toUpperCase();
@@ -59,12 +50,12 @@ public class ChatReference {
             ChatAttribute node = mChat.getFirstUser().equals(user) ?
                     ChatAttribute.FIRST_USER : ChatAttribute.SECOND_USER;
 
-            DbChatHandler.INSTANCE.setChatAttribute(mChat, node, null);
+            DbChatHandler.getInstance().setChatAttribute(mChat, node, null);
         });
 
     }
 
-    public ListBuilder<Message> pullMessages() {
+    public ListPromise<Message> pullMessages() {
         return DbChatHandler.getInstance().pullMessages(mChat);
     }
 
@@ -74,26 +65,26 @@ public class ChatReference {
 
     public void setFirstUser(User user) {
         ifStillValid().then(() ->
-                DbChatHandler.INSTANCE.setChatAttribute(mChat, ChatAttribute.FIRST_USER, user));
+                DbChatHandler.getInstance().setChatAttribute(mChat, ChatAttribute.FIRST_USER, user));
 
     }
 
     public void setSecondUser(User user) {
         ifStillValid().then(() ->
-                DbChatHandler.INSTANCE.setChatAttribute(mChat, ChatAttribute.SECOND_USER, user));
+                DbChatHandler.getInstance().setChatAttribute(mChat, ChatAttribute.SECOND_USER, user));
     }
 
     public void sendMessage(Message message) {
         ifStillValid().then(
-                () -> DbChatHandler.INSTANCE.postMessageToChat(mChat, message));
+                () -> DbChatHandler.getInstance().postMessageToChat(mChat, message));
     }
 
     public void bind(Client<DataChange<Chat>> client) {
-        DbChatHandler.INSTANCE.getChatListener().addClient(mChat, client);
+        DbChatHandler.getInstance().getChatListener().addClient(mChat, client);
     }
 
     public void unbind(Client<DataChange<Chat>> client) {
-        DbChatHandler.INSTANCE.getChatListener().removeClient(mChat, client);
+        DbChatHandler.getInstance().getChatListener().removeClient(mChat, client);
     }
 
     public void bindMessages(Client<DataChange<Message>> client) {

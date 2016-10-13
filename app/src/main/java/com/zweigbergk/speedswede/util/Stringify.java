@@ -6,12 +6,12 @@ public class Stringify {
     public static final String TAG = Stringify.class.getSimpleName().toUpperCase();
 
     /**
-     * Format a String with args in curly braces.
+     * Format a String with args in curly braces. Use § sign for escaping characters.
      * @param source Unformatted string
      * @param args String arguments
      * @return A formatted string
      */
-    public static String curlyFormat(String source, String... args) {
+    public static String curlyFormat(String source, Object... args) {
         int i = 0;
         int argumentIndex = 0;
         boolean hold = false;
@@ -24,7 +24,7 @@ public class Stringify {
             //If new arg found, halt building and insert arg
             if (currentChar.equals("{")) {
                 hold = !hold;
-                builder.append(args[argumentIndex++]);
+                builder.append(args[argumentIndex++].toString());
                 continue;
             }
 

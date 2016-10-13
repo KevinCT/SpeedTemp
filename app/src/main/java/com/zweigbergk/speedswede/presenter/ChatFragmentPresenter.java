@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.google.firebase.database.DatabaseReference;
 import com.zweigbergk.speedswede.adapter.MessageAdapter;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
@@ -16,8 +17,10 @@ import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
+import com.zweigbergk.speedswede.database.UserReference;
 import com.zweigbergk.speedswede.interactor.BanInteractor;
 import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
@@ -149,9 +152,13 @@ public class ChatFragmentPresenter {
     }
 
     public void onBanClicked(){
-        String firstUserId = mChat.getFirstUser().getUid();
-        String secondUserId = mChat.getSecondUser().getUid();
-        mBanInteractor.addBan(firstUserId, secondUserId);
+        User activeUser = DatabaseHandler.getActiveUser();
+        UserReference userRef = DatabaseHandler.get(activeUser);
+
+        User stranger = mChat.getFirstUser().equals(activeUser) ?
+                mChat.getSecondUser() : mChat.getFirstUser();
+
+        userRef.block(stranger);
 }
 
     public void onChangeLanguageClicked() {

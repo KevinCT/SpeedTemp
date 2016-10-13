@@ -6,12 +6,19 @@ import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.Lists;
-import com.zweigbergk.speedswede.util.Statement;
+import com.zweigbergk.speedswede.util.async.Commitment;
+import com.zweigbergk.speedswede.util.async.GoodStatement;
+import com.zweigbergk.speedswede.util.async.Promise;
+import com.zweigbergk.speedswede.util.Stringify;
+import com.zweigbergk.speedswede.util.Tuple;
+import com.zweigbergk.speedswede.util.async.PromiseNeed;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static com.zweigbergk.speedswede.util.async.PromiseNeed.*;
 
 public enum ChatMatcher {
     INSTANCE;
@@ -33,8 +40,8 @@ public enum ChatMatcher {
 
         switch (event) {
             case ADDED:
-                addUserLocally(user);
                 Log.d(TAG, "addUserLocally: " + dataChange.getItem().getDisplayName());
+                handleUserAdded(user);
                 break;
             case REMOVED:
                 removeUserLocally(user);
@@ -44,35 +51,42 @@ public enum ChatMatcher {
         }
     }
 
-    /** Adds user to the local pool of users. Does nothing if the incoming user is blocked by our
-     * logged in user. */
-    private void addUserLocally(User user) {
-            if (!isBlocked(user) &&!DatabaseHandler.isActiveUserBlockedBy(user)) {
-                mUsersInPool.add(user);
-                Log.d(TAG, "Added user. Poolsize: " + mUsersInPool.size());
+    /**
+     * IF activeUser has not blocked user, and user has not blocked activeUser, this will
+     * add user to the local user pool (mUsersInPool) and then run match().
+     * @param user
+     */
+    private void handleUserAdded(User user) {
+        User activeUser = DatabaseHandler.getActiveUser();
 
-                User activeUser = DatabaseHandler.getActiveUser();
-                DatabaseHandler.getPool().contains(activeUser).onTrue(this::match);
-            }
+        GoodStatement activeUserBlockedPromised = DatabaseHandler.get(user).hasBlocked(activeUser);
+        GoodStatement strangerBlockedPromised = DatabaseHandler.get(activeUser).hasBlocked(user);
 
+        Promise.Result<Boolean> blockCheckResult = items -> {
+            boolean activeUserBlocked = items.getBoolean(FIRST_ASSERTION);
+            boolean strangerBlocked = items.getBoolean(SECOND_ASSERTION);
+
+            return activeUserBlocked || strangerBlocked;
+        };
+
+        List<Tuple<PromiseNeed, Commitment<?>>> commitments = new ArrayList<>();
+        commitments.add(new Tuple<>(FIRST_ASSERTION, activeUserBlockedPromised));
+        commitments.add(new Tuple<>(SECOND_ASSERTION, strangerBlockedPromised));
+
+        //Is there any block in one direction or the other?
+        Promise.group(blockCheckResult, commitments)
+                .then(hasBlock -> {
+                    //Handle adding of user here
+                    if (!hasBlock) {
+                        mUsersInPool.add(user);
+                        match();
+                    }
+                });
     }
 
     /** Removes user from the local pool of users */
     private void removeUserLocally(User user){
         mUsersInPool.remove(user);
-    }
-
-    private boolean isBlocked(User user) {
-        String activeUserId = DatabaseHandler.getActiveUserId();
-        Banner banner = DatabaseHandler.getBans(activeUserId);
-
-        if (banner != null) {
-            List<String> bannedIds = DatabaseHandler.getBans(activeUserId).getBanList();
-
-            return bannedIds.contains(user.getUid());
-        } else {
-            return false;
-        }
     }
 
     /** Include user in the matching process */
@@ -89,16 +103,16 @@ public enum ChatMatcher {
         Log.d(TAG, "Users in pool: " + mUsersInPool.size());
         if (mUsersInPool.size() > 1) {
             // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
-            //List<User> matchedUsers = Lists.getFirstElements(mUsersInPool, 2);
-            List<User> matchedUsers = sofisticatedMatch();
-            if(matchedUsers != null) {
+            List<User> matchedUsers = Lists.getFirstElements(mUsersInPool, 2);
+            //List<User> matchedUsers = sofisticatedMatch();
+           // if(matchedUsers != null) {
                 DatabaseHandler.getPool().removeUser(matchedUsers.get(0));
-                DatabaseHandler.getPool().removeUser(matchedUsers.get(0));
+                DatabaseHandler.getPool().removeUser(matchedUsers.get(1));
 
                 Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
                 Log.d("CHATMATCHER: NAME: ", chat.getName() + "");
                 DatabaseHandler.get(chat).push();
-            }
+            //}
         }
     }
 

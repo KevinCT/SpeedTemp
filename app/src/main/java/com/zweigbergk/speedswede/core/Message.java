@@ -86,7 +86,7 @@ public class Message implements Parcelable {
         }
     }
 
-    public TranslationCache getCache() {
+    public TranslationCache getTranslationCache() {
         return cache;
     }
 

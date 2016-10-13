@@ -2,16 +2,20 @@ package com.zweigbergk.speedswede.database;
 
 
 import com.zweigbergk.speedswede.Constants;
+import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.util.async.GoodStatement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.ProductBuilder;
-import com.zweigbergk.speedswede.util.Statement;
+import com.zweigbergk.speedswede.util.async.Promise;
+import com.zweigbergk.speedswede.util.async.Statement;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class UserReference {
-    public static final String TAG = UserReference.class.getSimpleName().toUpperCase();
+    private static DbChatHandler INSTANCE;
+
+    private static final String TAG = UserReference.class.getSimpleName().toUpperCase();
 
     enum UserAttribute {
         NAME, ID, NOTIFICATIONS, LANGUAGE, USAGE;
@@ -34,6 +38,8 @@ public class UserReference {
         }
     }
 
+
+
     private final User mUser;
 
     private UserReference(User user) {
@@ -48,18 +54,18 @@ public class UserReference {
         DbUserHandler.getInstance().pushUser(mUser);
     }
 
-    public ProductBuilder<User> pull() {
+    public Promise<User> pull() {
         return DbUserHandler.getInstance().getUser(mUser.getUid());
     }
 
     public void setName(String name) {
         ifStillValid().then(() ->
-                DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.NAME, name));
+                DbUserHandler.getInstance().setUserAttribute(mUser, UserAttribute.NAME, name));
     }
 
     private void setNotifications(boolean value) {
         ifStillValid().then(() ->
-                DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.NOTIFICATIONS, value));
+                DbUserHandler.getInstance().setUserAttribute(mUser, UserAttribute.NOTIFICATIONS, value));
     }
 
     public void setPreference(User.Preference preference, boolean value) {
@@ -108,7 +114,7 @@ public class UserReference {
         ifStillValid().then(() -> {
             List<String> languages = Arrays.asList(Constants.LANGUAGES);
             String newLanguage = languages.contains(language) ? language : Constants.ENGLISH;
-            DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.LANGUAGE, newLanguage);
+            DbUserHandler.getInstance().setUserAttribute(mUser, UserAttribute.LANGUAGE, newLanguage);
         });
     }
 
@@ -116,13 +122,29 @@ public class UserReference {
         ifStillValid().then(() -> {
             List<String> languages = Arrays.asList(Constants.USAGE);
             String newLanguage = languages.contains(usage) ? usage : Constants.ENGLISH;
-            DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.LANGUAGE, newLanguage);
+            DbUserHandler.getInstance().setUserAttribute(mUser, UserAttribute.LANGUAGE, newLanguage);
         });
+    }
+
+    public Promise<Banner> getBanner() {
+        return DbUserHandler.getInstance().getBans(mUser.getUid());
+    }
+
+    public GoodStatement hasBlocked(User user) {
+        return DbUserHandler.getInstance().hasBlockedUser(mUser, user);
+    }
+
+    public void block(User user) {
+        DbUserHandler.getInstance().blockUser(mUser, user);
+    }
+
+    public void liftBlock(String strangerUid) {
+        DbUserHandler.getInstance().liftBlock(strangerUid);
     }
 
     public void setId(String id) {
         ifStillValid().then(() ->
-                DbUserHandler.INSTANCE.setUserAttribute(mUser, UserAttribute.ID, id));
+                DbUserHandler.getInstance().setUserAttribute(mUser, UserAttribute.ID, id));
     }
 
     public void bind(Client<DataChange<User>> client) {
@@ -130,10 +152,12 @@ public class UserReference {
     }
 
     public void unbind(Client<DataChange<User>> client) {
-        DbUserHandler.INSTANCE.getUserListener().removeClient(mUser, client);
+        DbUserHandler.getInstance().getUserListener().removeClient(mUser, client);
     }
 
     private Statement ifStillValid() {
         return DbUserHandler.getInstance().exists(mUser);
     }
+
+
 }

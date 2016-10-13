@@ -154,4 +154,8 @@ public class Lists {
     public interface EntryMapping<K, V> {
         Map.Entry<K, V> map(Map.Entry entry);
     }
+
+    public interface EntryToTuple<K, V> {
+        Tuple<K, V> map(Map.Entry<?, ?> entry);
+    }
 }

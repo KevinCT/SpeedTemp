@@ -19,9 +19,10 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.UserListener;
 import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
+import com.zweigbergk.speedswede.util.async.GoodStatement;
 import com.zweigbergk.speedswede.util.Lists;
-import com.zweigbergk.speedswede.util.Statement;
-import com.zweigbergk.speedswede.util.Promise;
+import com.zweigbergk.speedswede.util.async.Statement;
+import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.factory.UserFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 
@@ -33,6 +34,10 @@ import static com.zweigbergk.speedswede.Constants.POOL;
 import static com.zweigbergk.speedswede.Constants.USERS;
 import static com.zweigbergk.speedswede.Constants.BANS;
 import static com.zweigbergk.speedswede.Constants.BANLIST;
+<<<<<<< fefe8094ae1b04825317f42cdba88f64249c48f3
+=======
+import static com.zweigbergk.speedswede.util.async.PromiseNeed.USER_ID_LIST;
+>>>>>>> Restructure async helper functions system
 
 class DbUserHandler extends DbHandler {
     private static DbUserHandler INSTANCE;
@@ -213,14 +218,14 @@ class DbUserHandler extends DbHandler {
 
     public Promise<Banner> getBans(String uid){
         Promise<Banner> promise = Promise.create();
-        promise.needs(USER_ID_LIST);
+        promise.requires(USER_ID_LIST);
 
         mRoot.child(BANS).child(uid).child(BANLIST).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<String> blockedList = new ArrayList<>();
 
-                StateRequirement<List> hasAllIds = list -> list.size() == dataSnapshot.getChildrenCount();
+                StateRequirement hasAllIds = list -> ((List<String>)list).size() == dataSnapshot.getChildrenCount();
                 promise.requireState(USER_ID_LIST, hasAllIds);
                 promise.addItem(USER_ID_LIST, blockedList);
 
@@ -241,13 +246,13 @@ class DbUserHandler extends DbHandler {
 
         return promise;
     }
-    
-    Statement hasBlockedUser(User subject, User target) {
-        DatabaseReference ref = mRoot.child(BANS).child(subject.getUid()).child(BANLIST).child(target.getUid());
-        return DbUserHandler.getInstance().hasReference(ref);
+
+    void blockUser(User subject, User target) {
+        mRoot.child(BANS).child(subject.getUid()).child(BANLIST).child(target.getUid()).setValue(true);
     }
 
-     Statement isActiveUserBlockedBy(User user) {
-         return hasBlockedUser(user, getActiveUser());
+    GoodStatement hasBlockedUser(User subject, User target) {
+        DatabaseReference ref = mRoot.child(BANS).child(subject.getUid()).child(BANLIST).child(target.getUid());
+        return DbUserHandler.getInstance().hasReference2(ref);
     }
 }

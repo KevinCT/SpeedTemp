@@ -8,9 +8,9 @@ import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.core.User.Preference;
 import com.zweigbergk.speedswede.database.UserReference;
 import com.zweigbergk.speedswede.database.DatabaseHandler.DatabaseNode;
-import com.zweigbergk.speedswede.util.Statement;
+import com.zweigbergk.speedswede.util.async.Statement;
 
-import static com.zweigbergk.speedswede.util.Statement.not;
+import static com.zweigbergk.speedswede.util.async.Statement.not;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;

@@ -23,14 +23,14 @@ import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.util.factory.ChatFactory;
-import com.zweigbergk.speedswede.util.ListPromise;
+import com.zweigbergk.speedswede.util.async.ListPromise;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.PreferenceValue;
-import com.zweigbergk.speedswede.util.Promise;
-import com.zweigbergk.speedswede.util.Statement;
-import com.zweigbergk.speedswede.util.PromiseNeed;
+import com.zweigbergk.speedswede.util.async.Promise;
+import com.zweigbergk.speedswede.util.async.Statement;
+import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 
 import static com.zweigbergk.speedswede.Constants.CHATS;
@@ -210,10 +210,6 @@ class DbChatHandler extends DbHandler {
         return prettyName.toString();
     }
 
-    Promise<Chat> createChatFrom(DataSnapshot snapshot) {
-        return ChatFactory.serializeChat(snapshot);
-    }
-
     void delete(DatabaseReference ref) {
         ref.removeValue();
     }
@@ -233,7 +229,7 @@ class DbChatHandler extends DbHandler {
 
     ListPromise<Message> pullMessages(Chat chat) {
         final ListPromise<Message> listPromise = ListPromise.empty();
-        listPromise.setBlueprint(items -> items.getList(PromiseNeed.LIST));
+        listPromise.setResultForm(items -> items.getList(PromiseNeed.LIST));
 
         List<Message> messages = new ArrayList<>();
 
@@ -254,7 +250,7 @@ class DbChatHandler extends DbHandler {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 long messageCount = dataSnapshot.getChildrenCount();
-                StateRequirement<List> hasAllMessages = list -> list.size() == messageCount;
+                StateRequirement hasAllMessages = list -> ((List<Message>) list).size() == messageCount;
 
 
                 listPromise.requireState(PromiseNeed.LIST, hasAllMessages);

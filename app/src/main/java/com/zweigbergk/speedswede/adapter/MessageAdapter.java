@@ -157,8 +157,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         };
 
 
-        if (message.hasCache() && message.getCache().isFromLocale(mLocale)) {
-            String cachedTranslation = message.getCache().getTranslatedText();
+        if (message.hasCache() && message.getTranslationCache().isFromLocale(mLocale)) {
+            String cachedTranslation = message.getTranslationCache().getTranslatedText();
             updateViewText.supply(cachedTranslation);
         } else {
             //No up-to-date cache, must translate message

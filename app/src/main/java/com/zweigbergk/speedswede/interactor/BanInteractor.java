@@ -9,12 +9,12 @@ public class BanInteractor  {
     public static String BANS = "bans";
 
     public BanInteractor(){
-        String userId = DatabaseHandler.getActiveUserId();
+        /*String userId = DatabaseHandler.getActiveUserId();
         if (DatabaseHandler.getBans(userId) != null) {
             mBanner = DatabaseHandler.getBans(userId);
         } else {
             mBanner = new Banner();
-        }
+        }*/
     }
 
     public void addBan(String firstUser, String secondUser){

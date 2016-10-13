@@ -5,5 +5,15 @@ package com.zweigbergk.speedswede.core;
  */
 
 public enum MatchSkill {
-    BEGINNER, INTERMEDIATE, SKILLED;
+    BEGINNER("beginner"), INTERMEDIATE("intermediate"), SKILLED("skilled");
+
+    private String value;
+
+    MatchSkill(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

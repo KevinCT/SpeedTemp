@@ -36,6 +36,11 @@ public class Tuple<K, V> implements Map.Entry<K, V> {
     }
 
     @Override
+    public String toString() {
+        return Stringify.curlyFormat("Tuple: key: {key}, value: {value}", key.toString(), value.toString());
+    }
+
+    @Override
     public int hashCode() {
         return this.key.hashCode() * 3 +
                 this.value.hashCode() * 5;

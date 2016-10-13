@@ -1,7 +1,7 @@
 package com.zweigbergk.speedswede.database;
 
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.util.Statement;
+import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public enum PoolReference {

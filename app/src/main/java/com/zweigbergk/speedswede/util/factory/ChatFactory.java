@@ -9,11 +9,14 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.util.async.Commitment;
 import com.zweigbergk.speedswede.util.Lists;
-import com.zweigbergk.speedswede.util.Promise;
-import com.zweigbergk.speedswede.util.PromiseNeed;
+import com.zweigbergk.speedswede.util.async.Guarantee;
+import com.zweigbergk.speedswede.util.async.Promise;
+import com.zweigbergk.speedswede.util.async.PromiseNeed;
+import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.Promise.ItemMap;
+import static com.zweigbergk.speedswede.util.async.PromiseNeed.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,62 +39,44 @@ public class ChatFactory {
         return new UserProfile(name, uid);
     }
 
-    public static void createChat(Collection<Client<Chat>> clients) {
-        String activeUserId = DatabaseHandler.getActiveUserId();
-
-        Promise<Chat> promise = new Promise<>(newChatBlueprint);
-        promise.needs(PromiseNeed.FIRST_USER,
-                PromiseNeed.SECOND_USER);
-
-        Lists.forEach(clients, promise::thenNotify);
-
-        //Append active user
-        DatabaseHandler.users().pull(activeUserId).then(user -> promise.addItem(PromiseNeed.FIRST_USER, user));
-
-        //Append test user
-        DatabaseHandler.users().pull(Constants.TEST_USER_UID).then(user -> promise.addItem(PromiseNeed.SECOND_USER, user));
-    }
-
-    /** Supplies a Client with a Chat created from a DataSnapshot. Returns null if the snapshot
-     * points to nothing. */
-    public static void createChatFrom(DataSnapshot snapshot, Client<Chat> client) {
-        if (snapshot.getValue() == null) {
-            Log.e(TAG, String.format(
-                    "WARNING! Tried to convert non-existing reference to a chat. (Reference: %s)",
-                    snapshot.getRef().toString()));
-            client.supply(null);
-            return;
-        }
-
-        serializeChat(snapshot).thenNotify(client);
-    }
-
     public static Promise<Chat> serializeChat(DataSnapshot snapshot) {
-        Promise<Chat> promise = new Promise<>(ChatFactory::getReconstructionBlueprint);
-
-        promise.needs(PromiseNeed.ID, PromiseNeed.NAME, PromiseNeed.TIMESTAMP, PromiseNeed.MESSAGE_LIST,
-                PromiseNeed.FIRST_USER, PromiseNeed.SECOND_USER);
-
-        String chatId = snapshot.getKey();
-        String name = (String) snapshot.child(Constants.NAME).getValue();
-
-        long chatTimestamp = (long) snapshot.child(Constants.TIMESTAMP).getValue();
-
-        Iterable<DataSnapshot> messageSnapshots = snapshot.child(Constants.MESSAGES).getChildren();
-        List<Message> messageList = asMessageList(messageSnapshots);
-
         String firstUserId = ChatFactory.getUserId(snapshot.child(Constants.FIRST_USER));
         String secondUserId = ChatFactory.getUserId(snapshot.child(Constants.SECOND_USER));
 
-        promise.addItem(PromiseNeed.ID, chatId);
-        promise.addItem(PromiseNeed.NAME, name);
-        promise.addItem(PromiseNeed.TIMESTAMP, chatTimestamp);
-        promise.addItem(PromiseNeed.MESSAGE_LIST, messageList);
+        Chat chatWithoutUsers = getChatWithoutUsers(snapshot);
+        Commitment<Chat> chatCommitment = new Guarantee<>(chatWithoutUsers);
 
-        DatabaseHandler.users().pull(firstUserId).then(user -> promise.addItem(PromiseNeed.FIRST_USER, user));
-        DatabaseHandler.users().pull(secondUserId).then(user -> promise.addItem(PromiseNeed.SECOND_USER, user));
+        Promise<User> firstUserPromised = DatabaseHandler.users().pull(firstUserId);
+        Promise<User> secondUserPromised = DatabaseHandler.users().pull(secondUserId);
 
-        return promise;
+        Promise.Result<Chat> chatResult = items -> {
+            Chat chat = (Chat) items.get(CHAT);
+            User firstUser = (User) items.get(FIRST_USER);
+            User secondUser = (User) items.get(SECOND_USER);
+            chat.setFirstUser(firstUser);
+            chat.setSecondUser(secondUser);
+            return chat;
+        };
+
+        List<Tuple<PromiseNeed, Commitment<?>>> commitments = new ArrayList<>();
+        commitments.add(new Tuple<>(CHAT, chatCommitment));
+        commitments.add(new Tuple<>(FIRST_USER, firstUserPromised));
+        commitments.add(new Tuple<>(SECOND_USER, secondUserPromised));
+
+        return Promise.group(chatResult, commitments);
+    }
+
+    private static Chat getChatWithoutUsers(DataSnapshot snapshot) {
+        String id = snapshot.getKey();
+
+        String name = (String) snapshot.child(Constants.NAME).getValue();
+
+        long timestamp = (long) snapshot.child(Constants.TIMESTAMP).getValue();
+
+        Iterable<DataSnapshot> messageSnapshots = snapshot.child(Constants.MESSAGES).getChildren();
+        List<Message> messages = asMessageList(messageSnapshots);
+
+        return new Chat(id, name, timestamp, messages, null, null);
     }
 
     private static List<Message> asMessageList(Iterable<DataSnapshot> snapshot) {
@@ -102,28 +87,6 @@ public class ChatFactory {
         });
 
         return messages;
-    }
-
-    private static Promise.Blueprint<Chat> newChatBlueprint = items -> {
-        User user1 = items.getUser(PromiseNeed.FIRST_USER);
-        User user2 = items.getUser(PromiseNeed.SECOND_USER);
-
-        return new Chat(user1, user2);
-    };
-
-    private static Chat getReconstructionBlueprint(ItemMap items) {
-        User user1 = items.getUser(PromiseNeed.FIRST_USER);
-        User user2 = items.getUser(PromiseNeed.SECOND_USER);
-
-        long timestamp = items.getLong(PromiseNeed.TIMESTAMP);
-        String id = items.getString(PromiseNeed.ID);
-        String name = items.getString(PromiseNeed.NAME);
-
-        List<Message> messages = new ArrayList<>();
-        List list = items.getList(PromiseNeed.MESSAGE_LIST);
-        Lists.addAll(messages, list);
-
-        return new Chat(id, name, timestamp, messages, user1, user2);
     }
 
     private static String getUserId(DataSnapshot snapshot) {

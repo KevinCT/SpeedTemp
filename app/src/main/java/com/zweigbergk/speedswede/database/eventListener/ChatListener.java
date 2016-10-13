@@ -7,11 +7,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
-import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
-import com.zweigbergk.speedswede.database.DbChatHandler;
-import com.zweigbergk.speedswede.util.ChatFactory;
+import com.zweigbergk.speedswede.util.factory.ChatFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Lists;
 
@@ -38,6 +36,7 @@ public class ChatListener implements ChildEventListener {
     // Thus there is no need for an initial SingleValueEventListener.
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        Log.d(TAG, "Snapshot onChildAdded: " + dataSnapshot.toString());
         ChatFactory.serializeChat(dataSnapshot).then(this::notifyAdded);
     }
 

@@ -11,8 +11,8 @@ import java.util.Map;
 import com.zweigbergk.speedswede.util.BooleanPreference;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.PreferenceValue;
-import com.zweigbergk.speedswede.util.Promise;
-import com.zweigbergk.speedswede.util.PromiseNeed;
+import com.zweigbergk.speedswede.util.async.Promise;
+import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.StringPref;
 import com.zweigbergk.speedswede.util.methodwrapper.EntryAssertion;
 
@@ -23,9 +23,9 @@ import static com.zweigbergk.speedswede.Constants.preference;
 
 public class UserFactory {
     public static Promise<User> buildUser(Promise<User> builder, DataSnapshot dataSnapshot) {
-        builder.setBlueprint(reconstructionBlueprint);
+        builder.setResultForm(reconstructionBlueprint);
 
-        builder.needs(PromiseNeed.NAME, PromiseNeed.ID, PromiseNeed.NOTIFICATIONS,
+        builder.requires(PromiseNeed.NAME, PromiseNeed.ID, PromiseNeed.NOTIFICATIONS,
                 PromiseNeed.LANGUAGE, PromiseNeed.USAGE);
 
         builder.addItem(PromiseNeed.NAME,
@@ -46,7 +46,7 @@ public class UserFactory {
         return builder;
     }
 
-    private static final Promise.Blueprint<User> reconstructionBlueprint = items -> {
+    private static final Promise.Result<User> reconstructionBlueprint = items -> {
         String name = items.getString(PromiseNeed.NAME);
         String id = items.getString(PromiseNeed.ID);
 

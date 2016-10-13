@@ -3,10 +3,9 @@ package com.zweigbergk.speedswede;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.util.ChatFactory;
+import com.zweigbergk.speedswede.util.factory.ChatFactory;
 
 import org.junit.Before;
-import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
