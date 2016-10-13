@@ -34,5 +34,6 @@
     <string name="settings_pref_usage_entry_learn">Jag vill lära mig</string>
     <string name="settings_pref_usage_entry_mentor">Jag vill vara mentor</string>
     <string name="settings_pref_usage_entry_chat">Jag vill bara chatta</string>
+    <string name="activity_login_text">Logga in via Facebook för att komma igång!</string>
 
 </resources>
