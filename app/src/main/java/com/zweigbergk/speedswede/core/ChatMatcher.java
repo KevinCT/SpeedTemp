@@ -47,17 +47,14 @@ public enum ChatMatcher {
     /** Adds user to the local pool of users. Does nothing if the incoming user is blocked by our
      * logged in user. */
     private void addUserLocally(User user) {
-        Statement bannedByUser = DatabaseHandler.isActiveUserBlockedBy(user);
-        bannedByUser.onFalse(() -> {
-            Log.d(TAG, "User " + user.getDisplayName() + " is not blocked");
-            if (!isBlocked(user)) {
+            if (!isBlocked(user) &&!DatabaseHandler.isActiveUserBlockedBy(user)) {
                 mUsersInPool.add(user);
                 Log.d(TAG, "Added user. Poolsize: " + mUsersInPool.size());
 
                 User activeUser = DatabaseHandler.getActiveUser();
                 DatabaseHandler.getPool().contains(activeUser).onTrue(this::match);
             }
-        });
+
     }
 
     /** Removes user from the local pool of users */

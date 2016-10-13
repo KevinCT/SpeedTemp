@@ -234,8 +234,4 @@ enum DbUserHandler {
         return builder;
     }
 
-     Statement isActiveUserBlockedBy(User user) {
-        DatabaseReference ref = mRoot.child(BANS).child(user.getUid()).child(BANLIST).child(getActiveUserId());
-        return DbUserHandler.getInstance().hasReference(ref);
-    }
 }
