@@ -6,9 +6,9 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.util.async.GoodStatement;
 import com.zweigbergk.speedswede.util.async.ListPromise;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.async.Statement;
 
 public class ChatReference {
     public static final String TAG = ChatReference.class.getSimpleName().toUpperCase();
@@ -96,7 +96,7 @@ public class ChatReference {
         DbChatHandler.getInstance().removeMessageClient(mChat, client);
     }
 
-    public Statement ifStillValid() {
+    public GoodStatement ifStillValid() {
         return DbChatHandler.getInstance().exists(mChat);
     }
 

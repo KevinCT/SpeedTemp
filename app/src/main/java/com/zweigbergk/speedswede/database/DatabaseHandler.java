@@ -18,7 +18,7 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
 
 import com.zweigbergk.speedswede.util.Lists;
-import com.zweigbergk.speedswede.util.async.Statement;
+import com.zweigbergk.speedswede.util.async.GoodStatement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 import java.util.HashMap;
@@ -129,16 +129,16 @@ public enum DatabaseHandler {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public static Statement hasUser(User user) {
+    public static GoodStatement hasUser(User user) {
         return DbUserHandler.getInstance().userExists(user);
     }
 
-    public static Statement hasUsers(Chat chat) {
+    public static GoodStatement hasUsers(Chat chat) {
         Log.d("Terminate chat testing", " we are in dbhandler");
         return DbChatHandler.getInstance().hasUsers(chat);
     }
 
-    public static Statement hasUser(String userId) {
+    public static GoodStatement hasUser(String userId) {
         return DbUserHandler.getInstance().userExists(userId);
     }
 

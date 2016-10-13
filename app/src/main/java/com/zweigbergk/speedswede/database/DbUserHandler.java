@@ -21,7 +21,6 @@ import com.zweigbergk.speedswede.database.eventListener.UserListener;
 import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
 import com.zweigbergk.speedswede.util.async.GoodStatement;
 import com.zweigbergk.speedswede.util.Lists;
-import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.factory.UserFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
@@ -34,10 +33,7 @@ import static com.zweigbergk.speedswede.Constants.POOL;
 import static com.zweigbergk.speedswede.Constants.USERS;
 import static com.zweigbergk.speedswede.Constants.BANS;
 import static com.zweigbergk.speedswede.Constants.BANLIST;
-<<<<<<< fefe8094ae1b04825317f42cdba88f64249c48f3
-=======
 import static com.zweigbergk.speedswede.util.async.PromiseNeed.USER_ID_LIST;
->>>>>>> Restructure async helper functions system
 
 class DbUserHandler extends DbHandler {
     private static DbUserHandler INSTANCE;
@@ -99,11 +95,11 @@ class DbUserHandler extends DbHandler {
         return mUsersListener;
     }
 
-    public Statement exists(User user) {
+    public GoodStatement exists(User user) {
         return hasReference(mRoot.child(USERS).child(user.getUid()));
     }
 
-    public Statement isInPool(User user) {
+    public GoodStatement isInPool(User user) {
         return hasReference(mRoot.child(POOL).child(user.getUid()));
     }
 
@@ -194,15 +190,15 @@ class DbUserHandler extends DbHandler {
         return promise;
     }
 
-    Statement userExists(User user) {
+    GoodStatement userExists(User user) {
         return hasReference(mRoot.child(USERS).child(user.getUid()));
     }
 
-    Statement userExists(String userId) {
+    GoodStatement userExists(String userId) {
         return hasReference(mRoot.child(USERS).child(userId));
     }
 
-    Statement isInUserPool(User user) {
+    GoodStatement isInUserPool(User user) {
         return hasReference(mRoot.child(POOL).child(user.getUid()));
     }
 
@@ -253,6 +249,6 @@ class DbUserHandler extends DbHandler {
 
     GoodStatement hasBlockedUser(User subject, User target) {
         DatabaseReference ref = mRoot.child(BANS).child(subject.getUid()).child(BANLIST).child(target.getUid());
-        return DbUserHandler.getInstance().hasReference2(ref);
+        return DbUserHandler.getInstance().hasReference(ref);
     }
 }

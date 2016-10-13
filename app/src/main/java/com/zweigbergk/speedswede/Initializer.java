@@ -8,9 +8,9 @@ import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.core.User.Preference;
 import com.zweigbergk.speedswede.database.UserReference;
 import com.zweigbergk.speedswede.database.DatabaseHandler.DatabaseNode;
-import com.zweigbergk.speedswede.util.async.Statement;
+import com.zweigbergk.speedswede.util.async.GoodStatement;
 
-import static com.zweigbergk.speedswede.util.async.Statement.not;
+import static com.zweigbergk.speedswede.util.async.GoodStatement.not;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -35,7 +35,7 @@ public class Initializer {
 
     private static void addUserToDatabase() {
         User activeUser = DatabaseHandler.getActiveUser();
-        Statement containsUser = DatabaseHandler.hasUser(activeUser);
+        GoodStatement containsUser = DatabaseHandler.hasUser(activeUser);
 
         not(containsUser).then(() -> {
             DatabaseHandler.users().push(activeUser);

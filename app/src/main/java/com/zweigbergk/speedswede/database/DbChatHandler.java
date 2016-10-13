@@ -22,14 +22,12 @@ import com.zweigbergk.speedswede.core.Pair;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
-import com.zweigbergk.speedswede.util.factory.ChatFactory;
+import com.zweigbergk.speedswede.util.async.GoodStatement;
 import com.zweigbergk.speedswede.util.async.ListPromise;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.PreferenceValue;
-import com.zweigbergk.speedswede.util.async.Promise;
-import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 
@@ -70,11 +68,11 @@ class DbChatHandler extends DbHandler {
         messageListeners = new HashMap<>();
     }
 
-    public Statement exists(Chat chat) {
+    public GoodStatement exists(Chat chat) {
         return hasReference(mRoot.child(CHATS).child(chat.getId()));
     }
 
-    public Statement exists(String chatId) {
+    public GoodStatement exists(String chatId) {
         return hasReference(mRoot.child(CHATS).child(chatId));
     }
 
@@ -301,8 +299,8 @@ class DbChatHandler extends DbHandler {
         messageListeners.put(chat.getId(), messageListener);
     }
 
-    Statement hasUsers(Chat chat) {
-        Statement statement = new Statement();
+    GoodStatement hasUsers(Chat chat) {
+        GoodStatement statement = new GoodStatement();
           hasReference(mRoot.child(CHATS).child(chat.getId()).child(FIRST_USER)).then(
                     firstExists -> {
                         hasReference(mRoot.child(CHATS).child(chat.getId()).child(SECOND_USER)).then(

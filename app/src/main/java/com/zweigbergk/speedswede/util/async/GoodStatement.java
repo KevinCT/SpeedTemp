@@ -17,7 +17,7 @@ public class GoodStatement extends Promise<Boolean> {
         onTrue(executable);
     }
 
-    public static Statement invert(Statement builder) {
+    public static GoodStatement invert(GoodStatement builder) {
         return builder.invert();
     }
 
@@ -43,7 +43,7 @@ public class GoodStatement extends Promise<Boolean> {
         return this;
     }
 
-    public static Statement not(Statement statement) {
+    public static GoodStatement not(GoodStatement statement) {
         return statement.invert();
     }
 

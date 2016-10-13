@@ -7,7 +7,6 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.async.GoodStatement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.async.Promise;
-import com.zweigbergk.speedswede.util.async.Statement;
 
 import java.util.Arrays;
 import java.util.List;
@@ -155,7 +154,7 @@ public class UserReference {
         DbUserHandler.getInstance().getUserListener().removeClient(mUser, client);
     }
 
-    private Statement ifStillValid() {
+    private GoodStatement ifStillValid() {
         return DbUserHandler.getInstance().exists(mUser);
     }
 
