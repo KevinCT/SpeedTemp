@@ -57,16 +57,16 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
             case "pref_usage":
                 switch(sharedPreferences.getString(key, "learn")) {
                     case "learn":
-                        user.setSkillCategory(SkillCategory.PUPIL);
-                        DatabaseHandler.get(activeUser).setSkillCategory(SkillCategory.PUPIL);
+                        user.setSkillCategory(SkillCategory.STUDENT);
+                        DatabaseHandler.get(activeUser).setSkillCategory(SkillCategory.STUDENT);
                         break;
                     case "mentor":
                         DatabaseHandler.get(activeUser).setSkillCategory(SkillCategory.MENTOR);
                         user.setSkillCategory(SkillCategory.MENTOR);
                         break;
                     case "chat":
-                        DatabaseHandler.get(activeUser).setSkillCategory(SkillCategory.UNSPECIFIED);
-                        user.setSkillCategory(SkillCategory.UNSPECIFIED);
+                        DatabaseHandler.get(activeUser).setSkillCategory(SkillCategory.CHATTER);
+                        user.setSkillCategory(SkillCategory.CHATTER);
                         break;
                     default:
                         break;

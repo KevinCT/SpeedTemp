@@ -1,11 +1,8 @@
 package com.zweigbergk.speedswede.core;
 
-/**
- * Created by FEngelbrektsson on 12/10/16.
- */
 
 public enum SkillCategory {
-    PUPIL("pupil"), UNSPECIFIED("unspecified"), MENTOR("mentor");
+    STUDENT("student"), CHATTER("chatter"), MENTOR("mentor");
 
     private String value;
 

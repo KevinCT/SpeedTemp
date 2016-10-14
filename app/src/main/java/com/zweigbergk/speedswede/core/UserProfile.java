@@ -142,11 +142,11 @@ public class UserProfile implements User {
 //
 //    public void setInitialMatchInterval() {
 //        switch(matchSkill) {
-//            case PUPIL:
+//            case STUDENT:
 //                matchingInterval[0] = 0;
 //                matchingInterval[1] = 0;
 //                break;
-//            case UNSPECIFIED:
+//            case CHATTER:
 //                matchingInterval[0] = 50;
 //                matchingInterval[1] = 50;
 //                break;
