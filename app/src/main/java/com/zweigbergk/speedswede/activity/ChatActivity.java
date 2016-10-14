@@ -13,7 +13,9 @@ import android.view.MenuItem;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Chat;
+import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.fragment.ChangeLanguageFragment;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
@@ -38,6 +40,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     }
 
     private void createActivity() {
+        User activeUser = DatabaseHandler.getActiveUser();
+        DatabaseHandler.get(activeUser)
         addFragment(new ChatListFragment(), false);
     }
 

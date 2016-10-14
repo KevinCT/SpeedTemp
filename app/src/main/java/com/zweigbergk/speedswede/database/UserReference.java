@@ -1,6 +1,5 @@
 package com.zweigbergk.speedswede.database;
 
-
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.activity.Language;
 import com.zweigbergk.speedswede.core.Banner;
@@ -15,24 +14,34 @@ public class UserReference {
     private static final String TAG = UserReference.class.getSimpleName().toUpperCase();
 
     enum UserAttribute {
-        NAME, ID, NOTIFICATIONS, LANGUAGE, USAGE;
+        NAME(Constants.DISPLAY_NAME), ID(Constants.USER_ID),
+        NOTIFICATIONS(Constants.makePath(Constants.PREFERENCES, Constants.NOTIFICATIONS)),
+        LANGUAGE(Constants.makePath(Constants.PREFERENCES, Constants.LANGUAGE)),
+        FIRST_LOGIN(Constants.FIRST_LOGIN)
 
-        public String getDbKey() {
-            switch(this) {
-                case NAME:
-                    return Constants.DISPLAY_NAME;
-                case ID:
-                    return Constants.USER_ID;
-                case NOTIFICATIONS:
-                    return Constants.makePath(Constants.PREFERENCES, Constants.NOTIFICATIONS);
-                case LANGUAGE:
-                    return Constants.makePath(Constants.PREFERENCES, Constants.LANGUAGE);
-                case USAGE:
-                    return Constants.makePath(Constants.PREFERENCES, Constants.USAGE);
-                default:
-                    return Constants.UNDEFINED;
-            }
+        private String path;
+
+        UserAttribute(String path) {
+            this.path = path;
         }
+
+        public String getPath() {
+            return path;
+        }
+    }
+
+    switch(attribute) {
+        case NAME:
+            return Constants.DISPLAY_NAME;
+        case ID:
+            return Constants.USER_ID;
+        case NOTIFICATIONS:
+            return Constants.makePath(Constants.PREFERENCES, Constants.NOTIFICATIONS);
+        case LANGUAGE:
+            return Constants.makePath(Constants.PREFERENCES, Constants.LANGUAGE);
+        case
+        default:
+            return Constants.UNDEFINED;
     }
 
 

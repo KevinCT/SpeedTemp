@@ -25,11 +25,7 @@ import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.factory.UserFactory;
-import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 
-
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
 
 import static com.zweigbergk.speedswede.Constants.POOL;
 import static com.zweigbergk.speedswede.Constants.SKILL_CATEGORY;
@@ -145,9 +141,9 @@ class DbUserHandler extends DbHandler {
     }
 
     void setUserAttribute(User user, UserReference.UserAttribute attribute, Object value) {
-        String key = attribute.getDbKey();
+        String key = Path.to(attribute);
 
-        mRoot.child(USERS).child(user.getUid()).child(key).setValue(value);
+        Path.append(Path.to(user), key).setValue(value);
     }
 
     String getActiveUserId() {

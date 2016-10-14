@@ -136,10 +136,10 @@ class DbChatHandler extends DbHandler {
      */
     private void pushPreferences(Chat chat) {
         Map<String, String> firstPojoMap = chat.getFirstUser().getPreferences().map(pojoEntry);
-        DatabasePath.firstUserPreferences(chat).setValue(firstPojoMap);
+        Path.firstUserPreferences(chat).setValue(firstPojoMap);
 
         Map<String, String> secondPojoMap = chat.getFirstUser().getPreferences().map(pojoEntry);
-        DatabasePath.secondUserPreferences(chat).setValue(secondPojoMap);
+        Path.secondUserPreferences(chat).setValue(secondPojoMap);
     }
 
     private static final EntryMapping<String, String> pojoEntry = mapEntry -> {

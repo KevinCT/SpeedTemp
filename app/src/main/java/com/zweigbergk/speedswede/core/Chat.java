@@ -34,7 +34,7 @@ public class Chat implements Parcelable {
         this.firstUser = firstUser;
         this.secondUser = secondUser;
 
-        this.name = Lists.randomPick(Constants.CHAT_NAMES);
+        this.name = Lists.randomPick(Constants.CHAT_TOPICS);
 
         this.messages = new ArrayList<>();
         timeStamp = (new Date()).getTime();
