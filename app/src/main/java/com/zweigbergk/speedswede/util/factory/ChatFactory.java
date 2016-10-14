@@ -27,14 +27,6 @@ public class ChatFactory {
 
     public static final String TAG = ChatFactory.class.getSimpleName().toUpperCase();
 
-    public final static String USER_1_NAME = "Sir";
-    public final static String USER_2_NAME = "Lord";
-    public final static String USER_3_NAME = "Igor";
-
-    public final static String USER_1_ID = "uid_user1";
-    public final static String USER_2_ID = "uid_user2";
-    public final static String USER_3_ID = "uid_user3";
-
     public static User mockUser(String name, String uid) {
         return new UserProfile(name, uid);
     }
@@ -92,18 +84,17 @@ public class ChatFactory {
     private static String getUserId(DataSnapshot snapshot) {
         Object value = snapshot.child(Constants.USER_ID).getValue();
         String userId;
-        try {
+        if (value.getClass().equals(String.class)) {
             userId = (String) value;
-        } catch (ClassCastException e) {
+        } else if (value.getClass().equals(HashMap.class)) {
             HashMap<String, Object> mapping = (HashMap) value;
             userId = (String) mapping.get(Constants.USER_ID);
-        }
-
-        if (userId == null) {
+        } else {
             Log.e(TAG, String.format(
                     "WARNING! Can not extract User ID for a user in chat [Chat ID: %s].\n(Path: %s)",
                     snapshot.getRef().getParent().getKey(),
                     snapshot.getRef().toString()));
+            userId = "";
         }
 
         return userId;

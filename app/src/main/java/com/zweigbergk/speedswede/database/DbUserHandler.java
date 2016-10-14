@@ -102,7 +102,10 @@ class DbUserHandler extends DbTopLevelHandler {
 //        }
 
 
+
+
         final Promise<User> promise = Promise.create();
+
 
         if(uid != null) {
             mRoot.child(Constants.USERS).child(uid).addListenerForSingleValueEvent(

@@ -192,8 +192,6 @@ public class Promise<E> extends Commitment<E> {
         }
     }
 
-
-
     @Override
     protected boolean isFulfilled() {
         return promiseState.isFulfilled();

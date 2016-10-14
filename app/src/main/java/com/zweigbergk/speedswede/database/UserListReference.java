@@ -11,14 +11,6 @@ public enum UserListReference {
         return INSTANCE;
     }
 
-    public Statement contains(User user) {
-        return DbUserHandler.getInstance().userExists(user);
-    }
-
-    public Statement contains(String userId) {
-        return DbUserHandler.getInstance().userExists(userId);
-    }
-
     public Statement not(Statement statement) {
         return statement.invert();
     }

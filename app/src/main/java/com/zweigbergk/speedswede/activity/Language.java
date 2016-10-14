@@ -30,8 +30,4 @@ public enum Language {
         List<Language> filtered = Lists.filter(values(), languageCode::equals);
         return filtered.size() != 0 ? filtered.get(0) : null;
     }
-
-//    public String[] getLanguageCodes() {
-//        return new String[ENGLISH,]
-//    }
 }

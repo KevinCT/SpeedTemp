@@ -97,15 +97,12 @@ public class ChatListener implements ChildEventListener {
         notifyClients(DatabaseEvent.CHANGED, chat);
     }
 
-    private void notifyInterrupted() {
-        notifyClients(DatabaseEvent.INTERRUPTED, null);
-    }
-
 
      /**
-     * Adds a client that will receive updates whenever the chat is added/removed/changed.
-     * */
-    public void addClient(String chatId, Client<DataChange<Chat>> client) {
+      * Adds a client that will receive updates whenever the chat is added/removed/changed.
+      * Should only be called from overriding methods in this class.
+      * */
+    private void addClient(String chatId, Client<DataChange<Chat>> client) {
         if (!chatClients.containsKey(chatId)) {
             chatClients.put(chatId, new HashSet<>());
         }
@@ -158,5 +155,13 @@ public class ChatListener implements ChildEventListener {
     @Override
     public boolean equals(Object other) {
         return other != null && this.getClass() == other.getClass() && hashCode() == other.hashCode();
+    }
+
+    /**
+     * Overriding hashCode since ChatListener is used in hashmaps.
+     */
+    @Override
+    public int hashCode() {
+        return chatClients.hashCode();
     }
 }

@@ -1,6 +1,8 @@
 package com.zweigbergk.speedswede.database;
 
 
+import android.util.Log;
+
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.activity.Language;
 import com.zweigbergk.speedswede.core.Banner;
