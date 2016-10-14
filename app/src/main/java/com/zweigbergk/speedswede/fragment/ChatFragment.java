@@ -131,21 +131,26 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
             case R.id.blockUser:
                 mPresenter.onBanClicked();
                 mPresenter.terminateChat();
+                mPresenter.removeLocalChatSettings(getActivity().getBaseContext());
                 return true;
             case R.id.exitChat:
                 mPresenter.terminateChat();
                 return true;
             case R.id.changeChatName:
-                FragmentManager fragmentManager = getChildFragmentManager();
-                DialogFragment dialogFragment = new DialogFragment ();
-                dialogFragment.show(fragmentManager, "Sample Fragment");
+                openDialog();
                 return true;
             case R.id.removeSettings:
-                LocalStorage.INSTANCE.removeSettings(getActivity().getBaseContext());
+                LocalStorage.INSTANCE.removeAllSettings(getActivity().getBaseContext());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void openDialog(){
+        FragmentManager fragmentManager = getChildFragmentManager();
+        DialogFragment dialogFragment = new DialogFragment ();
+        dialogFragment.show(fragmentManager, "Sample Fragment");
     }
 
     @Override
