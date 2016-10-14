@@ -5,7 +5,7 @@ import android.util.Log;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
-import java.util.List;
+import com.zweigbergk.speedswede.util.collection.List;
 
 public class ListPromise<E> extends Promise<List<E>> {
 
