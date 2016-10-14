@@ -1,17 +1,17 @@
 package com.zweigbergk.speedswede.util;
 
+import com.zweigbergk.speedswede.util.collection.Arrays;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.EntryAssertion;
 import com.zweigbergk.speedswede.util.methodwrapper.Query;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.zweigbergk.speedswede.util.collection.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import com.zweigbergk.speedswede.util.collection.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -157,6 +157,10 @@ public class Lists {
 
     public interface EntryMapping<K, V> {
         Map.Entry<K, V> map(Map.Entry entry);
+    }
+
+    public interface FilterMapping<K, V> {
+        Map.Entry<K, V> map(Map.Entry<K, V> entry);
     }
 
     public interface EntryToTuple<K, V> {

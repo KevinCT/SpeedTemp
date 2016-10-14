@@ -1,16 +1,27 @@
 package com.zweigbergk.speedswede.util.async;
 
+import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
+
+import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.List;
 
 public class Statement extends Promise<Boolean> {
     private boolean inverted;
 
-    public Statement() {
+    protected Statement(boolean needsAssertion) {
         super(null);
 
-        requires(PromiseNeed.ASSERTION);
-        setResultForm(items -> items.getBoolean(PromiseNeed.ASSERTION));
+        if (needsAssertion) {
+            requires(PromiseNeed.ASSERTION);
+            setResultForm(items -> items.getBoolean(PromiseNeed.ASSERTION));
+        }
+
         inverted = false;
+    }
+
+    public Statement() {
+        this(true);
     }
 
     /**
@@ -28,6 +39,35 @@ public class Statement extends Promise<Boolean> {
     @Override
     public void addItem(PromiseNeed need, Object data) throws StatementException {
         throw new StatementException("addItem() may not be called from within a Statement. Use a Promise instead.");
+    }
+
+    private StatementGroup combine(Result<Boolean> resultForm, List<Tuple<PromiseNeed, Statement>> statements) {
+        StatementGroup group = new StatementGroup(resultForm, statements);
+        return group;
+    }
+
+    public Statement and(Statement statement) {
+        List<Tuple<PromiseNeed, Statement>> combined = new ArrayList<>();
+        combined.add(new Tuple<>(PromiseNeed.FIRST_ASSERTION, this));
+        combined.add(new Tuple<>(PromiseNeed.SECOND_ASSERTION, statement));
+
+        Result<Boolean> result = items ->
+                items.getBoolean(PromiseNeed.FIRST_ASSERTION)
+                        && items.getBoolean(PromiseNeed.SECOND_ASSERTION);
+
+        return combine(result, combined);
+    }
+
+    public Statement or(Statement statement) {
+        List<Tuple<PromiseNeed, Statement>> combined = new ArrayList<>();
+        combined.add(new Tuple<>(PromiseNeed.TEST_1, this));
+        combined.add(new Tuple<>(PromiseNeed.TEST_2, statement));
+
+        Result<Boolean> result = items ->
+                items.getBoolean(PromiseNeed.TEST_1)
+                        || items.getBoolean(PromiseNeed.TEST_2);
+
+        return combine(result, combined);
     }
 
     public void setReturnValue(boolean value) {
@@ -49,6 +89,14 @@ public class Statement extends Promise<Boolean> {
 
     private boolean determineInterest(boolean value) {
         return (inverted || value) && !(inverted && value);
+    }
+
+
+    /**
+     *  Should never be used in a Statement. Only call from StatementGroup.
+     */
+    void addItemFromSubClass(PromiseNeed need, Boolean item) {
+        super.addItem(need, item);
     }
 
     private boolean onTrue(boolean value) {

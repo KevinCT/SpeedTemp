@@ -2,13 +2,12 @@ package com.zweigbergk.speedswede.util.async;
 
 import android.util.Log;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.collection.Map;
 
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Stringify;
+import com.zweigbergk.speedswede.util.collection.HashSet;
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 import com.zweigbergk.speedswede.util.async.Promise.ItemMap;
 
@@ -20,9 +19,9 @@ class PromiseState {
 
     private ItemMap mItems;
 
-    private Set<PromiseNeed> needs;
+    private HashSet<PromiseNeed> needs;
 
-    private Set<PromiseNeed> fulfilledNeeds;
+    private HashSet<PromiseNeed> fulfilledNeeds;
 
     private Map<PromiseNeed, StateRequirement> stateRequirements;
 
@@ -37,7 +36,7 @@ class PromiseState {
 
     void requireState(PromiseNeed key, StateRequirement requirement) {
         stateRequirements.put(key, requirement);
-        Log.d(TAG, "Adding state requirement");
+        Log.d(TAG, "Adding state requirement: " + key);
     }
 
     private void updateState(PromiseNeed need) {
@@ -51,6 +50,8 @@ class PromiseState {
             }
         } else {
             fulfilledNeeds.add(need);
+            Log.d(TAG, Stringify.curlyFormat("Need {need} is fulfilled!", need.name()));
+            Log.d(TAG, Stringify.curlyFormat("Total needs: {total}, needs remaining: {remaining}", needs, needs.difference(fulfilledNeeds)));
         }
     }
 

@@ -5,10 +5,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.Map;
 
 
 public class ParcelHelper {
@@ -52,7 +52,7 @@ public class ParcelHelper {
     public static <K extends Parcelable,V extends Parcelable> Map<K,V> readParcelableMap(
             Parcel parcel, Class<K> kClass, Class<V> vClass) {
         int size = parcel.readInt();
-        Map<K, V> map = new HashMap<>(size);
+        Map<K, V> map = new HashMap<>();
         for(int i = 0; i < size; i++){
             map.put(kClass.cast(parcel.readParcelable(kClass.getClassLoader())),
                     vClass.cast(parcel.readParcelable(vClass.getClassLoader())));

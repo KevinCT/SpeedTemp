@@ -3,8 +3,8 @@ package com.zweigbergk.speedswede.util.async;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
-import java.util.List;
-import java.util.Map;
+import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.Map;
 
 public abstract class Commitment<E> {
 

@@ -9,18 +9,18 @@ import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 
-import java.util.ArrayList;
+import com.zweigbergk.speedswede.util.collection.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.Map;
 
 public class Promise<E> extends Commitment<E> {
     public static final String TAG = Promise.class.getSimpleName().toUpperCase();
 
     Result<E> mResultForm;
 
-    private PromiseState promiseState;
+    protected PromiseState promiseState;
 
     private Map<PromiseNeed, List<Promise<?>>> chainedPromises;
 
@@ -97,7 +97,7 @@ public class Promise<E> extends Commitment<E> {
     @Override
     protected void addClient(Client<E> client) {
         if (!hasProduct()) {
-            Log.d(TAG, "No product. Adding client...");
+            Log.d(TAG, "No product, adding client");
             mClients.add(client);
         } else {
             Log.d(TAG, "Product found!");

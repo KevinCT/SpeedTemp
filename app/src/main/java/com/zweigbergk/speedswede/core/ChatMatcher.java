@@ -6,20 +6,16 @@ import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.Lists;
-import com.zweigbergk.speedswede.util.async.Commitment;
 import com.zweigbergk.speedswede.util.async.Statement;
-import com.zweigbergk.speedswede.util.async.Promise;
-import com.zweigbergk.speedswede.util.Tuple;
-import com.zweigbergk.speedswede.util.async.PromiseNeed;
+import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.Collection;
+import com.zweigbergk.speedswede.util.collection.List;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Collections;
+import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.collection.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static com.zweigbergk.speedswede.util.async.PromiseNeed.*;
 
 public enum ChatMatcher {
     INSTANCE;
@@ -63,26 +59,10 @@ public enum ChatMatcher {
         Statement activeUserBlockedPromised = DatabaseHandler.get(user).hasBlocked(activeUser);
         Statement strangerBlockedPromised = DatabaseHandler.get(activeUser).hasBlocked(user);
 
-        Promise.Result<Boolean> blockCheckResult = items -> {
-            boolean activeUserBlocked = items.getBoolean(FIRST_ASSERTION);
-            boolean strangerBlocked = items.getBoolean(SECOND_ASSERTION);
-
-            return activeUserBlocked || strangerBlocked;
-        };
-
-        List<Tuple<PromiseNeed, Commitment<?>>> commitments = new ArrayList<>();
-        commitments.add(new Tuple<>(FIRST_ASSERTION, activeUserBlockedPromised));
-        commitments.add(new Tuple<>(SECOND_ASSERTION, strangerBlockedPromised));
-
-        //Is there any block in one direction or the other?
-        Promise.group(blockCheckResult, commitments)
-                .then(hasBlock -> {
-                    //Handle adding of user here
-                    if (!hasBlock) {
-                        mUsersInPool.add(user);
-                        match();
-                    }
-                });
+        activeUserBlockedPromised.or(strangerBlockedPromised).onFalse(() -> {
+            mUsersInPool.add(user);
+            match();
+        });
     }
 
     /** Removes user from the local pool of users */
@@ -104,7 +84,7 @@ public enum ChatMatcher {
         Log.d(TAG, "Users in pool: " + mUsersInPool.size());
         if (mUsersInPool.size() > 1) {
             // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
-            List<User> matchedUsers = Lists.getFirstElements(mUsersInPool, 2);
+            List<User> matchedUsers = mUsersInPool.first(2);
 
             DatabaseHandler.getPool().removeUser(matchedUsers.get(0));
             DatabaseHandler.getPool().removeUser(matchedUsers.get(1));

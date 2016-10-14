@@ -9,8 +9,7 @@ import com.google.firebase.database.DatabaseError;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-
-import java.util.Collections;
+import com.zweigbergk.speedswede.util.collection.Collections;
 
 public class UserPoolListener extends FirebaseDataListener<User> implements ChildEventListener {
 

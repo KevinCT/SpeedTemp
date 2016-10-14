@@ -6,8 +6,8 @@ import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.Tuple;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.List;
 
 // TODO Use Tag() instead of Tuples...
 class PromiseGroup<E> extends Promise<E> {

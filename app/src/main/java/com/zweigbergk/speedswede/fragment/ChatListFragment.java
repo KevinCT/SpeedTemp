@@ -21,12 +21,10 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.util.ChildCountListener;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.ParcelHelper;
-
-import java.util.List;
+import com.zweigbergk.speedswede.util.collection.List;
 
 public class ChatListFragment extends Fragment implements ChildCountListener {
 
