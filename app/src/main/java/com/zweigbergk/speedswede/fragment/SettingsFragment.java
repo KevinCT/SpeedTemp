@@ -40,7 +40,7 @@ public class SettingsFragment extends PreferenceFragment {
             Preference preference = findPreference(s);
             //Make sure it only checks when listpreference is open
             if (preference instanceof ListPreference) {
-                String language = ((ListPreference) preference).getValue().toString();
+                String language = ((ListPreference) preference).getValue();
                 mPresenter.onListPreferenceSelected(language, getActivity().getBaseContext());
 
                 LanguageChanger.languageChanged(true);
@@ -48,6 +48,5 @@ public class SettingsFragment extends PreferenceFragment {
             }
 
         };
-
     }
 }
