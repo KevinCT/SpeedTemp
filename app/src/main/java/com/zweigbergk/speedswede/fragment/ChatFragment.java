@@ -47,7 +47,6 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
-
         Log.d(TAG, "ChatFragment.onCreate()");
     }
 

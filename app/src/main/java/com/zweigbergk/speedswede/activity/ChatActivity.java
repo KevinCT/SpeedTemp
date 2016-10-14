@@ -102,6 +102,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     @Override
     public void popBackStack() {
         getSupportFragmentManager().popBackStack();
+        invalidateOptionsMenu();
     }
 
     @Override

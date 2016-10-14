@@ -138,6 +138,7 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
     @Override
     public void onResume() {
         super.onResume();
+        getActivity().invalidateOptionsMenu();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
