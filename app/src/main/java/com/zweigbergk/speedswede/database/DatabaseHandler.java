@@ -21,7 +21,7 @@ import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
-import java.util.HashMap;
+import com.zweigbergk.speedswede.util.collection.HashMap;
 
 import static com.zweigbergk.speedswede.Constants.BANLIST;
 import static com.zweigbergk.speedswede.Constants.BANS;
@@ -134,7 +134,7 @@ public enum DatabaseHandler {
     }
 
     public static Statement hasUsers(Chat chat) {
-        Log.d("Terminate chat testing", " we are in dbhandler");
+        Log.d("Terminate toChat testing", " we are in dbhandler");
         return DbChatHandler.getInstance().hasUsers(chat);
     }
 

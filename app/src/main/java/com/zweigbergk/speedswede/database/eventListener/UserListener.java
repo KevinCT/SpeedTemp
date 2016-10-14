@@ -14,9 +14,9 @@ import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Lists;
 
-import java.util.HashMap;
+import com.zweigbergk.speedswede.util.collection.HashMap;
 import java.util.HashSet;
-import java.util.Map;
+import com.zweigbergk.speedswede.util.collection.Map;
 import java.util.Set;
 
 public class UserListener implements ChildEventListener {

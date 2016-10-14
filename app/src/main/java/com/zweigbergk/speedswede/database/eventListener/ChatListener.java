@@ -13,9 +13,9 @@ import com.zweigbergk.speedswede.util.factory.ChatFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Lists;
 
-import java.util.HashMap;
+import com.zweigbergk.speedswede.util.collection.HashMap;
 import java.util.HashSet;
-import java.util.Map;
+import com.zweigbergk.speedswede.util.collection.Map;
 import java.util.Set;
 
 public class ChatListener implements ChildEventListener {
@@ -103,7 +103,7 @@ public class ChatListener implements ChildEventListener {
 
 
      /**
-     * Adds a client that will receive updates whenever the chat is added/removed/changed.
+     * Adds a client that will receive updates whenever the toChat is added/removed/changed.
      * */
     public void addClient(String chatId, Client<DataChange<Chat>> client) {
         if (!chatClients.containsKey(chatId)) {
@@ -114,14 +114,14 @@ public class ChatListener implements ChildEventListener {
     }
 
     /**
-     * Adds a client that will receive updates whenever the chat is added/removed/changed.
+     * Adds a client that will receive updates whenever the toChat is added/removed/changed.
      * */
     public void addClient(Chat chat, Client<DataChange<Chat>> client) {
         addClient(chat.getId(), client);
     }
 
     /**
-     * Adds a client that will receive updates whenever <u>any</u> chat is added/removed/changed.
+     * Adds a client that will receive updates whenever <u>any</u> toChat is added/removed/changed.
      * */
     public void addClient(Client<DataChange<Chat>> client) {
         addClient(CLIENT_FOR_ALL_CHATS, client);
@@ -129,7 +129,7 @@ public class ChatListener implements ChildEventListener {
 
 
     /**
-     * Stops a client from receiving updates from the particular chat.
+     * Stops a client from receiving updates from the particular toChat.
      * */
     public void removeClient(String chatId, Client<DataChange<Chat>> client) {
         if (!chatClients.containsKey(chatId)) {
@@ -141,7 +141,7 @@ public class ChatListener implements ChildEventListener {
 
 
     /**
-     * Stops a client from receiving updates from the particular chat.
+     * Stops a client from receiving updates from the particular toChat.
      * */
     public void removeClient(Chat chat, Client<DataChange<Chat>> client) {
         removeClient(chat.getId(), client);
@@ -149,7 +149,7 @@ public class ChatListener implements ChildEventListener {
 
     /**
      * Removes a client from the set of clients that will receive updates whenever
-     * <u>any</u> chat is added/removed/changed.
+     * <u>any</u> toChat is added/removed/changed.
      * */
     public void removeClient(Client<DataChange<Chat>> client) {
         removeClient(CLIENT_FOR_ALL_CHATS, client);
