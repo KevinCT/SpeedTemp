@@ -7,10 +7,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.Exclude;
 import com.zweigbergk.speedswede.util.ParcelHelper;
 import com.zweigbergk.speedswede.util.PreferenceValue;
+import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.collection.Map;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserProfile implements User {
 
@@ -31,7 +31,7 @@ public class UserProfile implements User {
     }
 
     public UserProfile withPreferences(Map<Preference, PreferenceValue> preferences) {
-        mPreferences = preferences;
+        setPreferences(preferences);
         return this;
     }
 
@@ -55,6 +55,14 @@ public class UserProfile implements User {
     @Exclude
     public PreferenceValue getPreference(Preference preference) {
         return mPreferences.get(preference);
+    }
+
+    private void setPreferences(java.util.Map<Preference, PreferenceValue> map) {
+        for (Map.Entry<Preference, PreferenceValue> entry : map.entrySet()) {
+            if (entry.getValue() != null) {
+                mPreferences.put(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     @Override
@@ -123,7 +131,9 @@ public class UserProfile implements User {
         if (in.readString() != null) {
             displayName = in.readString();
             uid = in.readString();
-            mPreferences = ParcelHelper.readParcelableMap(in, Preference.class, PreferenceValue.class);
+            Map<Preference, PreferenceValue> preferences =
+                    ParcelHelper.readParcelableMap(in, Preference.class, PreferenceValue.class);
+            setPreferences(preferences);
         }
     }
 

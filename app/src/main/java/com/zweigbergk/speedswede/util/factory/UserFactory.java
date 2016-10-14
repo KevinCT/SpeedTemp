@@ -7,15 +7,11 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.PreferenceValue;
-import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
-import com.zweigbergk.speedswede.util.methodwrapper.EntryAssertion;
+import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.collection.Map;
 
 import static com.zweigbergk.speedswede.Constants.LANGUAGE;
 import static com.zweigbergk.speedswede.Constants.NOTIFICATIONS;
@@ -58,16 +54,12 @@ public class UserFactory {
         String name = items.getString(PromiseNeed.NAME);
         String id = items.getString(PromiseNeed.ID);
 
-        Map<User.Preference, PreferenceValue> preferences = new HashMap<>();
+        Map<Preference, PreferenceValue> preferences = new HashMap<>();
         preferences.put(Preference.NOTIFICATIONS, new BooleanValue(items.getBoolean(PromiseNeed.NOTIFICATIONS)));
         preferences.put(Preference.LANGUAGE, new StringValue(items.getString(PromiseNeed.LANGUAGE)));
         preferences.put(Preference.SKILL_CATEGORY, new StringValue(items.getString(PromiseNeed.SKILL_CATEGORY)));
 
-        //Remove null preferences
-        EntryAssertion<Preference, PreferenceValue> isNull = e -> e.getValue() == null;
-        preferences = Lists.reject(preferences, isNull);
-
-        User user = new UserProfile(name, id).withPreferences(preferences);
+        User user = new UserProfile(name, id).withPreferences(preferences.nonNull());
         return user;
 
     };

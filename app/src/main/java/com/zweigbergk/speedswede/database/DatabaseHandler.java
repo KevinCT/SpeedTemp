@@ -21,7 +21,7 @@ import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
-import java.util.HashMap;
+import com.zweigbergk.speedswede.util.collection.HashMap;
 
 import static com.zweigbergk.speedswede.Constants.BANLIST;
 import static com.zweigbergk.speedswede.Constants.BANS;

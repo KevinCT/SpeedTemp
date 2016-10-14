@@ -9,7 +9,7 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.database.LocalStorage;
 
 import java.util.Arrays;
-import java.util.List;
+import com.zweigbergk.speedswede.util.collection.List;
 import java.util.Locale;
 
 public class LanguageChanger {

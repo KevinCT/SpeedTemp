@@ -8,7 +8,7 @@ import com.zweigbergk.speedswede.util.factory.ChatFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
+import com.zweigbergk.speedswede.util.collection.List;
 
 import static org.junit.Assert.assertTrue;
 

@@ -43,7 +43,7 @@ public abstract class DbTopLevelHandler {
         return databasePath(FirebaseDatabase.getInstance().getReference(), strings);
     }
 
-    private DatabaseReference databasePath(DatabaseReference ref, String[] strings) {
+    DatabaseReference databasePath(DatabaseReference ref, String... strings) {
         if (strings.length > 0) {
             ref = ref.child(strings[0]);
             strings = Arrays.copyOfRange(strings, 1, strings.length);

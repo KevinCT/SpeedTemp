@@ -2,13 +2,11 @@ package com.zweigbergk.speedswede.database.eventListener;
 
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.util.collection.Collection;
+import com.zweigbergk.speedswede.util.collection.Collections;
+import com.zweigbergk.speedswede.util.collection.HashSet;
+import com.zweigbergk.speedswede.util.collection.Set;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.Lists;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 public abstract class FirebaseDataListener<T> {
 
@@ -47,7 +45,7 @@ public abstract class FirebaseDataListener<T> {
                 break;
         }
 
-        Lists.forEach(mClients, client -> client.supply(dataChange));
+        mClients.foreach(client -> client.supply(dataChange));
     }
 
     void notifyAdded(T item) {

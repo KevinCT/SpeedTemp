@@ -11,6 +11,7 @@ import android.util.Log;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.presenter.SettingsFragmentPresenter;
+import com.zweigbergk.speedswede.settings.LanguagePreferences;
 
 public class SettingsFragment extends PreferenceFragment {
     private SharedPreferences.OnSharedPreferenceChangeListener mListener;
@@ -38,12 +39,9 @@ public class SettingsFragment extends PreferenceFragment {
     private void initListener(){
         mListener = (sharedPreferences, s) -> {
             Preference preference = findPreference(s);
-            //Make sure it only checks when listpreference is open
-            if (preference instanceof ListPreference) {
-                String language = ((ListPreference) preference).getValue();
-                mPresenter.onListPreferenceSelected(language, getActivity().getBaseContext());
-
-                LanguageChanger.languageChanged(true);
+            //Make sure it only checks when Languagepreference is open
+            if (preference instanceof LanguagePreferences) {
+                mPresenter.onDialogPreferenceSelected(true);
                 getActivity().recreate();
             }
 

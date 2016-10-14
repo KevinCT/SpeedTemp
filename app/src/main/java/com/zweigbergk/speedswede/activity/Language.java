@@ -2,7 +2,7 @@ package com.zweigbergk.speedswede.activity;
 
 import com.zweigbergk.speedswede.util.Lists;
 
-import java.util.List;
+import com.zweigbergk.speedswede.util.collection.List;
 
 public enum Language {
     ENGLISH("en"),

@@ -2,12 +2,6 @@ package com.zweigbergk.speedswede.database;
 
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,9 +16,13 @@ import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.async.ListPromise;
+import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.Collections;
+import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.Map;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Tuple;
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.PreferenceValue;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
@@ -137,21 +135,14 @@ class DbChatHandler extends DbTopLevelHandler {
      * Push the preferences of the chat's users into the chat
      */
     private void pushPreferences(Chat chat) {
-        String firstUid = chat.getFirstUser().getUid();
-        String secondUid = chat.getSecondUser().getUid();
+        Map<String, String> firstPojoMap = chat.getFirstUser().getPreferences().map(pojoEntry);
+        DatabasePath.firstUserPreferences(chat).setValue(firstPojoMap);
 
-        Map<Preference, PreferenceValue> firstUserPrefs = chat.getFirstUser().getPreferences();
-        Map<Preference, PreferenceValue> secondUserPrefs = chat.getSecondUser().getPreferences();
-
-        Map<String, String> pojoMap = Lists.map(firstUserPrefs, createPojoEntry);
-
-        mRoot.child(CHATS).child(chat.getId()).child(FIRST_USER).child(Constants.PREFERENCES).setValue(pojoMap);
-
-        pojoMap = Lists.map(secondUserPrefs, createPojoEntry);
-        mRoot.child(CHATS).child(chat.getId()).child(SECOND_USER).child(Constants.PREFERENCES).setValue(pojoMap);
+        Map<String, String> secondPojoMap = chat.getFirstUser().getPreferences().map(pojoEntry);
+        DatabasePath.secondUserPreferences(chat).setValue(secondPojoMap);
     }
 
-    private static final EntryMapping<String, String> createPojoEntry = mapEntry -> {
+    private static final EntryMapping<String, String> pojoEntry = mapEntry -> {
         String prefAsString = parseToReadable((Preference) mapEntry.getKey());
 
         PreferenceValue prefValue = (PreferenceValue) mapEntry.getValue();
@@ -261,7 +252,7 @@ class DbChatHandler extends DbTopLevelHandler {
     public void removeMessageClient(Chat chat, Client<DataChange<Message>> client) {
         if (!messageListeners.containsKey(chat.getId())) {
             Log.e(TAG, String.format("WARNING: Tried removing client: [%s] from chat with id: [%s]," +
-                    " but the client was invert attached to the message listener.",
+                    " but the client was not attached to the message listener.",
                     client.toString(), chat.getId()));
             new Exception().printStackTrace();
             return;
