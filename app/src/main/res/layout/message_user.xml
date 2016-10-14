@@ -3,8 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/fragment_message_user"
-              android:layout_marginLeft="@dimen/spacing_normal"
-              android:layout_marginRight="@dimen/spacing_normal"
+    android:layout_marginStart="@dimen/spacing_message_large"
+    android:layout_marginEnd="@dimen/spacing_message_small"
     android:layout_marginTop="@dimen/spacing_normal">
 
     <LinearLayout
@@ -17,10 +17,10 @@
             android:id="@+id/message_textview_user"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_corner_stranger"
-            android:layout_weight="1"
+            android:layout_weight="6"
+            android:background="@drawable/rounded_corner_user"
             android:padding="16dp"
-            android:text="dummy text?"
+            android:text=""
             android:textColor="#000" />
     </LinearLayout>
 
