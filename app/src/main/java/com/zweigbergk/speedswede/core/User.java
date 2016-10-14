@@ -4,9 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.zweigbergk.speedswede.util.PreferenceValue;
+import com.zweigbergk.speedswede.util.collection.Map;
 
 import java.util.Arrays;
-import java.util.Map;
 
 public interface User extends Parcelable {
     String getUid();

@@ -1,6 +1,6 @@
 package com.zweigbergk.speedswede.util;
 
-import java.util.Map;
+import com.zweigbergk.speedswede.util.collection.Map;
 
 public class Tuple<K, V> implements Map.Entry<K, V> {
 

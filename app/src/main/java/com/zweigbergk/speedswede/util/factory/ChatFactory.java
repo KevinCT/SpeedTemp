@@ -15,13 +15,11 @@ import com.zweigbergk.speedswede.util.async.Guarantee;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.Tuple;
-import com.zweigbergk.speedswede.util.methodwrapper.Client;
-import static com.zweigbergk.speedswede.util.async.PromiseNeed.*;
+import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.collection.List;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import static com.zweigbergk.speedswede.util.async.PromiseNeed.*;
 
 public class ChatFactory {
 

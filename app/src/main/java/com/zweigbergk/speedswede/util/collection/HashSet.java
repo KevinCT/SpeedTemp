@@ -40,7 +40,7 @@ public class HashSet<E> extends java.util.HashSet<E> implements Set<E> {
     @Override
     public Set<E> difference(Iterable<E> other) {
         Set<E> result = new HashSet<>();
-        Set<E> otherSet = Lists.asSet(other);
+        Set<E> otherSet = Collections.asSet(other);
 
         Client<E> diff = e -> {
             if (!otherSet.contains(e)) {

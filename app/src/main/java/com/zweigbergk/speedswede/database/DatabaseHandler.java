@@ -134,7 +134,7 @@ public enum DatabaseHandler {
     }
 
     public static Statement hasUsers(Chat chat) {
-        Log.d("Terminate toChat testing", " we are in dbhandler");
+        Log.d("Terminate chat testing", " we are in dbhandler");
         return DbChatHandler.getInstance().hasUsers(chat);
     }
 

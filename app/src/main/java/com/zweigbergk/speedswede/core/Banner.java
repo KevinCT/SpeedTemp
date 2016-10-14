@@ -1,7 +1,7 @@
 package com.zweigbergk.speedswede.core;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.List;
 
 public class Banner {
     private List<String> banList;

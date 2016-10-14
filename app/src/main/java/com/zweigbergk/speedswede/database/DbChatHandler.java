@@ -132,7 +132,7 @@ class DbChatHandler extends DbHandler {
     }
 
     /**
-     * Push the preferences of the toChat's users into the toChat
+     * Push the preferences of the chat's users into the chat
      */
     private void pushPreferences(Chat chat) {
         Map<String, String> firstPojoMap = chat.getFirstUser().getPreferences().map(pojoEntry);
@@ -232,7 +232,7 @@ class DbChatHandler extends DbHandler {
                 listPromise.whenFinished(() -> {
                     mRoot.child(CHATS).child(chat.getId())
                             .child(MESSAGES).removeEventListener(listener);
-                    Log.d(TAG, "pullMessages(Chat toChat): ListPromise<Message> finished.");
+                    Log.d(TAG, "pullMessages(Chat chat): ListPromise<Message> finished.");
                 });
             }
 
@@ -251,8 +251,8 @@ class DbChatHandler extends DbHandler {
 
     public void removeMessageClient(Chat chat, Client<DataChange<Message>> client) {
         if (!messageListeners.containsKey(chat.getId())) {
-            Log.e(TAG, String.format("WARNING: Tried removing client: [%s] from toChat with id: [%s]," +
-                    " but the client was invert attached to the message listener.",
+            Log.e(TAG, String.format("WARNING: Tried removing client: [%s] from chat with id: [%s]," +
+                    " but the client was not attached to the message listener.",
                     client.toString(), chat.getId()));
             new Exception().printStackTrace();
             return;
@@ -264,7 +264,7 @@ class DbChatHandler extends DbHandler {
     private void createMessageListenerForChat(Chat chat) {
         MessageListener messageListener = new MessageListener(Collections.emptySet());
 
-        //Connect our listener to the toChat in our database
+        //Connect our listener to the chat in our database
         DatabaseReference ref = mRoot.child(CHATS).child(chat.getId()).child(Constants.MESSAGES);
         ref.addChildEventListener(messageListener);
 
