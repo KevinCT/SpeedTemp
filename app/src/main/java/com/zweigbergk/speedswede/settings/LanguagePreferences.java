@@ -27,6 +27,7 @@ public class LanguagePreferences extends DialogPreference {
         super(context, attributeSet);
 
         setPersistent(false);
+        setKey("language");
 
         setDialogLayoutResource(R.layout.fragment_change_language);
         
@@ -48,6 +49,7 @@ public class LanguagePreferences extends DialogPreference {
 
     private void changeLanguage(String languageCode) {
         LanguageChanger.changeLanguage(languageCode, getContext());
+        setSummary(languageCode);
         getDialog().dismiss();
 
     }

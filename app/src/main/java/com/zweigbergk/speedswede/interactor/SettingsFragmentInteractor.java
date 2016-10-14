@@ -10,9 +10,7 @@ public class SettingsFragmentInteractor {
     public SettingsFragmentInteractor(){
 
     }
-    //android specific code allowed?
-    public void changeLanguage(String string, Context context){
-        LanguageChanger.changeLanguage(string, context);
+    public void changeLanguage(boolean languageChanged){
         LanguageChanger.languageChanged(true);
     }
 
