@@ -37,7 +37,7 @@ import static com.zweigbergk.speedswede.core.User.Preference;
 import static com.zweigbergk.speedswede.util.Lists.EntryMapping;
 
 
-class DbChatHandler extends DbHandler {
+class DbChatHandler extends DbTopLevelHandler {
     private static DbChatHandler INSTANCE;
 
     private static final String TAG = DbChatHandler.class.getSimpleName().toUpperCase();
@@ -109,7 +109,7 @@ class DbChatHandler extends DbHandler {
      * Should <u>not</u> be used explicitly. Use DatabaseHandler.get(user).push instead.
      * */
     void pushChat(Chat chat) {
-        Log.d(TAG, chat.getName());
+        Log.d(TAG, "Push chat: " + chat.getName());
 
         DatabaseReference ref = mRoot.child(CHATS).child(chat.getId());
 

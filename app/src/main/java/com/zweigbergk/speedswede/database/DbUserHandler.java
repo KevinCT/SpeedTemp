@@ -25,11 +25,7 @@ import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.factory.UserFactory;
-import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.zweigbergk.speedswede.Constants.POOL;
 import static com.zweigbergk.speedswede.Constants.SKILL_CATEGORY;
@@ -38,7 +34,7 @@ import static com.zweigbergk.speedswede.Constants.BANS;
 import static com.zweigbergk.speedswede.Constants.BANLIST;
 import static com.zweigbergk.speedswede.util.async.PromiseNeed.SNAPSHOT;
 
-class DbUserHandler extends DbHandler {
+class DbUserHandler extends DbTopLevelHandler {
     private static DbUserHandler INSTANCE;
 
     public static final String TAG = DbUserHandler.class.getSimpleName().toUpperCase();
@@ -100,6 +96,12 @@ class DbUserHandler extends DbHandler {
     }
 
     public Promise<User> pullUser(String uid) {
+//        Promise.Result<User> userResult = items -> {
+//            DataSnapshot snapshot = items.getSnapshot(SNAPSHOT);
+//            return new User(Lists.map(snapshot.getChildren(), DataSnapshot::getKey));
+//        }
+
+
         final Promise<User> promise = Promise.create();
 
         if(uid != null) {
