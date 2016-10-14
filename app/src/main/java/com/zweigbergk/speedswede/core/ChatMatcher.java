@@ -156,10 +156,10 @@ public enum ChatMatcher {
 
         for(User user : mUsersInPool) {
             switch(user.getSkillCategory()) {
-                case PUPIL:
+                case STUDENT:
                     learners.add(user);
                     break;
-                case UNSPECIFIED:
+                case CHATTER:
                     chatters.add(user);
                     break;
                 case MENTOR:
