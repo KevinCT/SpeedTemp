@@ -28,7 +28,7 @@ import com.zweigbergk.speedswede.util.collection.List;
 
 public class ChatListFragment extends Fragment implements ChildCountListener {
 
-    public static final String TAG = ChatListFragment.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatListFragment.class.getSimpleName().toUpperCase();
     public static final String TAG_CHATLIST = "ChatList";
     private View mView;
 

@@ -37,17 +37,17 @@ public class ChatListener implements ChildEventListener {
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Log.d(TAG, "Snapshot onChildAdded: " + dataSnapshot.toString());
-        ChatFactory.serializeChat(dataSnapshot).then(this::notifyAdded);
+        ChatFactory.deserializeChat(dataSnapshot).then(this::notifyAdded);
     }
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        ChatFactory.serializeChat(dataSnapshot).then(this::notifyChanged);
+        ChatFactory.deserializeChat(dataSnapshot).then(this::notifyChanged);
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
-        ChatFactory.serializeChat(dataSnapshot).then(this::notifyRemoved);
+        ChatFactory.deserializeChat(dataSnapshot).then(this::notifyRemoved);
     }
 
     @Override

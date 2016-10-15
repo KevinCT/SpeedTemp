@@ -21,6 +21,7 @@ import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.UserListener;
 import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
 import com.zweigbergk.speedswede.util.async.FirebasePromise;
+import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.async.Promise;
@@ -96,14 +97,15 @@ class DbUserHandler extends DbHandler {
     }
 
     public Promise<User> pullUser(String uid) {
-        final Promise<User> promise = Promise.create();
+        final Promise<User> promise = new Promise<>(items -> items.getUser(PromiseNeed.USER));
+                promise.requires(PromiseNeed.USER);
 
         if(uid != null) {
             mRoot.child(Constants.USERS).child(uid).addListenerForSingleValueEvent(
                     new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            UserFactory.serializeUser(promise, dataSnapshot);
+                            promise.addItem(PromiseNeed.USER, UserFactory.deserializeUser(dataSnapshot));
                         }
 
                         @Override
@@ -136,14 +138,8 @@ class DbUserHandler extends DbHandler {
         mRoot.child(Constants.POOL).child(user.getUid()).setValue(null);
     }
 
-    void setUserSkill(User user, SkillCategory value) {
-        mRoot.child(USERS).child(user.getUid()).child(SKILL_CATEGORY).setValue(value);
-    }
-
     void setUserAttribute(User user, UserReference.UserAttribute attribute, Object value) {
-        String key = Path.to(attribute);
-
-        Path.append(Path.to(user), key).setValue(value);
+        Path.to(user).child(attribute.getPath()).setValue(value);
     }
 
     String getActiveUserId() {

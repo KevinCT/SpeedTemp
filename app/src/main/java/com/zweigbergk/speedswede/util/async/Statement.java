@@ -60,12 +60,12 @@ public class Statement extends Promise<Boolean> {
 
     public Statement or(Statement statement) {
         List<Tuple<PromiseNeed, Statement>> combined = new ArrayList<>();
-        combined.add(new Tuple<>(PromiseNeed.TEST_1, this));
-        combined.add(new Tuple<>(PromiseNeed.TEST_2, statement));
+        combined.add(new Tuple<>(PromiseNeed.FIRST_ASSERTION, this));
+        combined.add(new Tuple<>(PromiseNeed.SECOND_ASSERTION, statement));
 
         Result<Boolean> result = items ->
-                items.getBoolean(PromiseNeed.TEST_1)
-                        || items.getBoolean(PromiseNeed.TEST_2);
+                items.getBoolean(PromiseNeed.FIRST_ASSERTION)
+                        || items.getBoolean(PromiseNeed.SECOND_ASSERTION);
 
         return combine(result, combined);
     }

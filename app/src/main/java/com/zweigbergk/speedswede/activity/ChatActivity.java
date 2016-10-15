@@ -41,7 +41,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     private void createActivity() {
         User activeUser = DatabaseHandler.getActiveUser();
-        DatabaseHandler.get(activeUser)
+        //DatabaseHandler.get(activeUser)
         addFragment(new ChatListFragment(), false);
     }
 

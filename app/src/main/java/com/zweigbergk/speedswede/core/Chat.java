@@ -7,6 +7,7 @@ import com.google.firebase.database.Exclude;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.ParcelHelper;
+
 import com.zweigbergk.speedswede.util.collection.ArrayList;
 import com.zweigbergk.speedswede.util.collection.List;
 

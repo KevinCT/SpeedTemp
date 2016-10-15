@@ -81,8 +81,8 @@ class PromiseGroup<E> extends Promise<E> {
     protected boolean isFulfilled() {
         return Lists.reject(mPromiseTuples, tuple -> {
             Log.d(TAG, Stringify.curlyFormat("Tuple with key: {key} is fulfilled? {bool}",
-                    tuple.getKey(), tuple.getValue().isFulfilled()));
-            return tuple.getValue().isFulfilled();
+                    tuple.getKey(), tuple.toString().isFulfilled()));
+            return tuple.toString().isFulfilled();
         }).size() == 0;
     }*/
 

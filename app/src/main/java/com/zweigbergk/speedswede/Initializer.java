@@ -2,10 +2,14 @@ package com.zweigbergk.speedswede;
 
 import android.util.Log;
 
+import com.zweigbergk.speedswede.activity.Language;
 import com.zweigbergk.speedswede.core.ChatMatcher;
+import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.DatabaseHandler.DatabaseNode;
+import com.zweigbergk.speedswede.util.PreferenceValue;
+import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.async.Statement;
 
 import java.text.SimpleDateFormat;
@@ -33,12 +37,20 @@ public class Initializer {
         User activeUser = DatabaseHandler.getActiveUser();
         Statement containsUser = DatabaseHandler.hasUser(activeUser);
 
-        DatabaseHandler.users().push(activeUser);
-
-        /*containsUser.onFalse(() -> {
+        containsUser.onFalse(() -> {
             Log.d(TAG, "Pushing " + activeUser.getUid());
             DatabaseHandler.users().push(activeUser);
+
+            DatabaseHandler.get(activeUser).setPreference(User.Preference.SKILL_CATEGORY, SkillCategory.MENTOR.toString());
+            DatabaseHandler.get(activeUser).setPreference(User.Preference.NOTIFICATIONS, true);
+            DatabaseHandler.get(activeUser).setPreference(User.Preference.LANGUAGE, Language.SWEDISH.toString());
         });
-        containsUser.onTrue(() -> Log.d(TAG, "We have you...?"));*/
+
+        DatabaseHandler.get(activeUser).pull().then(user -> {
+            SkillCategory category = user.getSkillCategory();
+            Language lang = user.getLanguage();
+            boolean notify = user.getNotificationPreference();
+            Log.d(TAG, Stringify.curlyFormat("category: {0}, lang: {1}, notify: {2}", category, lang, notify));
+        });
     }
 }
