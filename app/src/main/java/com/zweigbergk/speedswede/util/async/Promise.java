@@ -3,6 +3,7 @@ package com.zweigbergk.speedswede.util.async;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
+import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
@@ -250,6 +251,10 @@ public class Promise<E> extends Commitment<E> {
 
         public List getList(PromiseNeed need) {
             return (List) items.get(need);
+        }
+
+        public User getUser(PromiseNeed need) {
+            return (User) items.get(need);
         }
 
         Map<PromiseNeed, Object> getItems() {

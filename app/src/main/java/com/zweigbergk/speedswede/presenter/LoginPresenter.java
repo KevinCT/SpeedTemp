@@ -56,9 +56,7 @@ public class LoginPresenter implements ActivityAttachable {
     }
 
     private void loginInOfflineMode() {
-        UserProfile user = UserProfile.from(FirebaseAuth.getInstance().getCurrentUser());
-        DatabaseHandler.setLoggedInUser(user);
-        mActivity.startChatActivity();
+        mActivity.onLogin(true);
     }
 
     private boolean hasLoggedInUser() {
@@ -90,7 +88,7 @@ public class LoginPresenter implements ActivityAttachable {
         switch (result) {
             case SUCCESS:
                 Log.d(TAG, "onAuthStateChanged:signed_in");
-                mActivity.startChatActivity();
+                mActivity.onLogin(false);
                 break;
             case FAIL:
                 Log.d(TAG, "onAuthStateChanged:signed_out");

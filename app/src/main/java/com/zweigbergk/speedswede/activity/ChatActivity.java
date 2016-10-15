@@ -22,8 +22,7 @@ import com.zweigbergk.speedswede.view.ChatView;
 
 
 public class ChatActivity extends AppCompatActivity implements ChatView {
-
-    public static final String TAG = ChatActivity.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatActivity.class.getSimpleName().toUpperCase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +93,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             setTitle(chat.getName());
             switchToFragment(chatFragment, true);
         } else {
-            Log.e(TAG, "WARNING! Tried to display a null chat. ");
+            Log.w(TAG, "WARNING! Tried to display a null chat. ");
             new Exception().printStackTrace();
         }
     }
@@ -130,6 +129,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         if (isStackEmpty) {
             super.onBackPressed();
         }
+        invalidateOptionsMenu();
     }
 
     public void startSettings() {

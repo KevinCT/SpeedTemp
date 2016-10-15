@@ -29,7 +29,7 @@ public class ChatFactory {
         return new UserProfile(name, uid);
     }
 
-    public static Promise<Chat> serializeChat(DataSnapshot snapshot) {
+    public static Promise<Chat> deserializeChat(DataSnapshot snapshot) {
         String firstUserId = ChatFactory.getUserId(snapshot.child(Constants.FIRST_USER));
         String secondUserId = ChatFactory.getUserId(snapshot.child(Constants.SECOND_USER));
 

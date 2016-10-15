@@ -8,9 +8,6 @@ import android.view.View;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
-
-import java.util.Map;
-
 import static com.zweigbergk.speedswede.Constants.ARABIC;
 import static com.zweigbergk.speedswede.Constants.DARI;
 import static com.zweigbergk.speedswede.Constants.ENGLISH;
@@ -27,7 +24,7 @@ public class LanguagePreferences extends DialogPreference {
         setKey("language");
 
         setDialogLayoutResource(R.layout.fragment_change_language);
-        
+
     }
 
     @Override

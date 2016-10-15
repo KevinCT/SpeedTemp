@@ -1,8 +1,6 @@
 package com.zweigbergk.speedswede.activity;
 
-import com.zweigbergk.speedswede.util.Lists;
-
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.Collections;
 
 public enum Language {
     ENGLISH("en"),
@@ -11,23 +9,28 @@ public enum Language {
     ARABIC("ar"),
     DARI("da");
 
+    public static final Language DEFAULT = Language.ENGLISH;
+
     private final String mLanguageCode;
 
     Language(String languageCode) {
         mLanguageCode = languageCode;
     }
 
+
+    public String toString() {
+        return getLanguageCode();
+    }
     public String getLanguageCode() {
         return mLanguageCode;
     }
 
     /**
-     *
-     * @param languageCode
      * @return the langauge matching the given languageCode, or null if there was no language for that code.
      */
     public static Language fromString(String languageCode) {
-        List<Language> filtered = Lists.filter(values(), languageCode::equals);
-        return filtered.size() != 0 ? filtered.get(0) : null;
+        return Collections.asList(values())
+                .filter(language -> language.getLanguageCode().equalsIgnoreCase(languageCode))
+                .getFirst();
     }
 }

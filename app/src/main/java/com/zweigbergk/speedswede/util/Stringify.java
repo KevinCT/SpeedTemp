@@ -2,6 +2,8 @@ package com.zweigbergk.speedswede.util;
 
 import android.util.Log;
 
+import com.zweigbergk.speedswede.util.collection.Collections;
+
 public class Stringify {
     public static final String TAG = Stringify.class.getSimpleName().toUpperCase();
 
@@ -51,5 +53,18 @@ public class Stringify {
 
     public static String removeCurlyBraces(String s) {
         return s.replace("{", "").replace("}", "");
+    }
+
+    public static void printStackTrace() {
+        StringBuilder builder = new StringBuilder();
+        Collections.asList(Thread.currentThread().getStackTrace()).foreach(trace -> {
+            if (trace.getLineNumber() >= 0) {
+                builder.append(trace.getClassName());
+                builder.append(Stringify.curlyFormat("(Line: {line})", trace.getLineNumber()));
+                builder.append("\n");
+            }
+        });
+
+        Log.d(TAG, builder.toString());
     }
 }

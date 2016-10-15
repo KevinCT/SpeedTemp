@@ -62,11 +62,11 @@ public enum DatabaseHandler {
         }
     }
 
-    public static ChatReference get(Chat chat) {
+    public static ChatReference getReference(Chat chat) {
         return ChatReference.create(chat);
     }
 
-    public static UserReference get(User user) {
+    public static UserReference getReference(User user) {
         return UserReference.create(user);
     }
 
