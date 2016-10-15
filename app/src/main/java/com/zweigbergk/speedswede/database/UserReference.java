@@ -17,7 +17,9 @@ public class UserReference {
         NAME(Constants.DISPLAY_NAME), ID(Constants.USER_ID),
         NOTIFICATIONS(Constants.makePath(Constants.PREFERENCES, Constants.NOTIFICATIONS)),
         LANGUAGE(Constants.makePath(Constants.PREFERENCES, Constants.LANGUAGE)),
-        FIRST_LOGIN(Constants.FIRST_LOGIN)
+        SKILL_CATEGORY(Constants.makePath(Constants.PREFERENCES, Constants.SKILL_CATEGORY)),
+        FIRST_LOGIN(Constants.FIRST_LOGIN),
+        UNDEFINED(Constants.UNDEFINED);
 
         private String path;
 
@@ -28,20 +30,6 @@ public class UserReference {
         public String getPath() {
             return path;
         }
-    }
-
-    switch(attribute) {
-        case NAME:
-            return Constants.DISPLAY_NAME;
-        case ID:
-            return Constants.USER_ID;
-        case NOTIFICATIONS:
-            return Constants.makePath(Constants.PREFERENCES, Constants.NOTIFICATIONS);
-        case LANGUAGE:
-            return Constants.makePath(Constants.PREFERENCES, Constants.LANGUAGE);
-        case
-        default:
-            return Constants.UNDEFINED;
     }
 
 
@@ -65,49 +53,33 @@ public class UserReference {
     }
 
     public void setName(String name) {
-        ifStillValid().then(() ->
+        attempt(() ->
                 userHandler.setUserAttribute(mUser, UserAttribute.NAME, name));
     }
 
-    private void setNotifications(boolean value) {
-        ifStillValid().then(() ->
-                userHandler.setUserAttribute(mUser, UserAttribute.NOTIFICATIONS, value));
+    public void setPreference(User.Preference preference, String value) {
+        attempt(() -> userHandler.setUserAttribute(mUser, fromPreference(preference), value));
     }
 
     public void setPreference(User.Preference preference, boolean value) {
-        if (!preference.accepts(value)) {
-            throw new RuntimeException(String.format(
-                    "Preference [ %s ] can invert be set to a boolean value.", preference));
-        }
-
-        switch (preference) {
-            case NOTIFICATIONS:
-                setNotifications(value);
-                break;
-        }
-    }
-
-    public void setPreference(User.Preference preference, String value) {
-        if (!preference.accepts(value)) {
-            throw new RuntimeException(String.format(
-                    "Preference [ %s ] can not be set to a string value.", preference));
-        }
-
-        switch (preference) {
-            case LANGUAGE:
-                setLanguage(Language.fromString(value));
-                break;
-            case SKILL_CATEGORY:
-                setSkillCategory(SkillCategory.fromString(value));
-        }
+        attempt(() -> userHandler.setUserAttribute(mUser, fromPreference(preference), value));
     }
 
     public void setSkillCategory(SkillCategory skill) {
-        attempt(() -> userHandler.setUserSkill(mUser, skill));
+        setPreference(User.Preference.SKILL_CATEGORY, skill.toString());
     }
 
-    private void setLanguage(Language language) {
-        attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.LANGUAGE, language.getLanguageCode()));
+    private UserAttribute fromPreference(User.Preference preference) {
+        switch (preference) {
+            case LANGUAGE:
+                return UserAttribute.LANGUAGE;
+            case NOTIFICATIONS:
+                return UserAttribute.NOTIFICATIONS;
+            case SKILL_CATEGORY:
+                return UserAttribute.SKILL_CATEGORY;
+            default:
+                return UserAttribute.UNDEFINED;
+        }
     }
 
     public Promise<Banner> bannerPromised() {
