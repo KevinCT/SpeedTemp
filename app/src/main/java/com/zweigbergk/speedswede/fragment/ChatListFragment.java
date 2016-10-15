@@ -1,6 +1,7 @@
 package com.zweigbergk.speedswede.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.baoyz.widget.PullRefreshLayout;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.adapter.ChatAdapter;
@@ -51,6 +53,20 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
         Log.d(TAG, "onCreate()");
     }
 
+    private void setupSwipeRefresh(View view) {
+        PullRefreshLayout layout = (PullRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        layout.setColorSchemeColors(
+                getResources().getColor(R.color.colorPrimaryLight),
+                getResources().getColor(R.color.colorPrimary),
+                getResources().getColor(R.color.colorPrimaryLight),
+                getResources().getColor(R.color.colorPrimary));
+
+        layout.setOnRefreshListener(() -> {
+            Handler handler = new Handler();
+            handler.postDelayed(() -> layout.setRefreshing(false), 200);
+        });
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu,inflater);
@@ -79,6 +95,8 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
         DatabaseHandler.bindToChatEvents(mAdapter::notifyChange);
 
         Log.d(TAG, "onCreateView");
+
+        setupSwipeRefresh(view);
 
         return view;
     }
