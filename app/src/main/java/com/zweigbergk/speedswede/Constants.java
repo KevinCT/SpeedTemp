@@ -1,9 +1,7 @@
 package com.zweigbergk.speedswede;
 
-import com.zweigbergk.speedswede.activity.Language;
-import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.util.Lists;
-import com.zweigbergk.speedswede.util.PreferenceValue;
+import com.zweigbergk.speedswede.util.PreferenceWrapper;
 import com.zweigbergk.speedswede.util.collection.Collections;
 import com.zweigbergk.speedswede.util.collection.List;
 
@@ -32,10 +30,13 @@ public class Constants {
     public static final String NOTIFICATIONS = "receiveNotifications";
     public static final String LANGUAGE = "language";
     public static final String FIRST_LOGIN = "firstLogin";
+    public static final String TIME_IN_QUEUE = "timeInQueue";
     public static final String SKILL_CATEGORY = "skillCategory";
 
     public static final String BANS = "bans";
     public static final String BANLIST = "banList";
+
+    public static final String SETTINGS_FIRST_SETUP = "settings_first_setup";
 
     public static final String[] CHAT_TOPICS = {"Cars", "Plants", "Skateboarding", "Donald Trump", "Asian cuisine", "Baseball", "The unvierse"};
 
@@ -68,11 +69,11 @@ public class Constants {
         return makePath(PREFERENCES, preference);
     }
 
-    public static List<PreferenceValue> shells =
+    public static List<PreferenceWrapper> shells =
             Collections.asList(
-                    PreferenceValue.StringValue.shell(),
-                    PreferenceValue.BooleanValue.shell(),
-                    PreferenceValue.LongValue.shell());
+                    PreferenceWrapper.StringWrapper.shell(),
+                    PreferenceWrapper.BooleanWrapper.shell(),
+                    PreferenceWrapper.LongWrapper.shell());
 
     /*public static List<PreferenceValue> shells =
             Collections.asList(

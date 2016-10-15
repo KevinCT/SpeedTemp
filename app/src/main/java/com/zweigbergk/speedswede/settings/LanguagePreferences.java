@@ -1,18 +1,13 @@
 package com.zweigbergk.speedswede.settings;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
-
-import java.util.Locale;
 
 import static com.zweigbergk.speedswede.Constants.ARABIC;
 import static com.zweigbergk.speedswede.Constants.DARI;
@@ -30,7 +25,7 @@ public class LanguagePreferences extends DialogPreference {
         setKey("language");
 
         setDialogLayoutResource(R.layout.fragment_change_language);
-        
+
     }
 
     @Override

@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
             } else {
                 startActivity(new Intent(this, ChatActivity.class));
             }
-            
+
             finish();
         });
     }

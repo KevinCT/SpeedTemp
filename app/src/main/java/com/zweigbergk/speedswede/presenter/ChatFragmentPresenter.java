@@ -59,7 +59,7 @@ public class ChatFragmentPresenter {
         MessageAdapter adapter = (MessageAdapter) mView.getRecyclerView().getAdapter();
         chatEventHandler = createChatEventHandler(adapter);
         Log.d(TAG, "Creating new chatEventHandler, toString(): " + chatEventHandler);
-        DatabaseHandler.get(mChat).bindMessages(chatEventHandler);
+        DatabaseHandler.getReference(mChat).bindMessages(chatEventHandler);
     }
 
     private void initializeRecyclerView() {
@@ -95,11 +95,11 @@ public class ChatFragmentPresenter {
 
     public void terminateChat() {
         User activeUser = DatabaseHandler.getActiveUser();
-        DatabaseHandler.get(mChat).removeUser(activeUser);
+        DatabaseHandler.getReference(mChat).removeUser(activeUser);
         DatabaseHandler.hasUsers(mChat).then(
                 result -> {
                     if(!result) {
-                        DatabaseHandler.get(mChat).remove();
+                        DatabaseHandler.getReference(mChat).remove();
                     }
                 }
         );
@@ -116,8 +116,8 @@ public class ChatFragmentPresenter {
                 messageText,
                 Time.getCurrentTime());
 
-        DatabaseHandler.get(mChat).sendMessage(message);
-
+        DatabaseHandler.getReference(mChat).sendMessage(message);
+        
         addToAdapter(message);
         mView.clearInputField();
     }
@@ -129,7 +129,7 @@ public class ChatFragmentPresenter {
 
     public void onBanClicked(){
         User activeUser = DatabaseHandler.getActiveUser();
-        UserReference userRef = DatabaseHandler.get(activeUser);
+        UserReference userRef = DatabaseHandler.getReference(activeUser);
 
         User stranger = mChat.getFirstUser().equals(activeUser) ?
                 mChat.getSecondUser() : mChat.getFirstUser();
@@ -154,7 +154,7 @@ public class ChatFragmentPresenter {
         //We no longer want updates from the old chat. Remove us as a client from the old chat.
         if (chatEventHandler != null) {
             Log.d(TAG, "Removing old chatEventHandler, toString(): " + chatEventHandler);
-            DatabaseHandler.get(mChat).unbindMessages(chatEventHandler);
+            DatabaseHandler.getReference(mChat).unbindMessages(chatEventHandler);
             chatEventHandler = null;
         }
     }

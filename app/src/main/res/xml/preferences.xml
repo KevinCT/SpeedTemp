@@ -22,5 +22,4 @@
             android:title="@string/settings_pref_notifications"
             android:summary="@string/settings_summary_notifications"
             android:defaultValue="true" />
-
 </PreferenceScreen>

@@ -6,7 +6,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 
-import com.zweigbergk.speedswede.util.PreferenceValue;
+import com.zweigbergk.speedswede.util.PreferenceWrapper;
 import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.collection.Collections;
 import com.zweigbergk.speedswede.util.collection.HashMap;
@@ -28,7 +28,7 @@ public class UserFactory {
         Object firstLoginObj = dataSnapshot.child(FIRST_LOGIN).getValue();
         boolean firstLogin = firstLoginObj != null && (boolean) firstLoginObj;
 
-        //First get a list of the preference key: value pairs
+        //First getReference a list of the preference key: value pairs
         List<DataSnapshot> preferences = Collections.asList(dataSnapshot.child(PREFERENCES)
                 .getChildren()
                 .iterator());
@@ -38,11 +38,11 @@ public class UserFactory {
                 .map(Preference::fromString);
 
         //Extract the values
-        List<PreferenceValue> preferenceValues = preferences
-                .map(snapshot -> PreferenceValue.cast(snapshot.getValue()));
+        List<PreferenceWrapper> preferenceValues = preferences
+                .map(snapshot -> PreferenceWrapper.cast(snapshot.getValue()));
 
         //Create a preference map
-        Map<Preference, PreferenceValue> preferenceMap = HashMap
+        Map<Preference, PreferenceWrapper> preferenceMap = HashMap
                 .create(preferenceKeys, preferenceValues)
                 .nonNull();
 

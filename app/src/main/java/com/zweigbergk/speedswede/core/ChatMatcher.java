@@ -5,13 +5,10 @@ import android.util.Log;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.Collection;
 import com.zweigbergk.speedswede.util.collection.List;
 
-import java.util.Collections;
 import com.zweigbergk.speedswede.util.collection.HashMap;
 import com.zweigbergk.speedswede.util.collection.Map;
 import java.util.Timer;
@@ -56,8 +53,8 @@ public enum ChatMatcher {
     private void handleUserAdded(User user) {
         User activeUser = DatabaseHandler.getActiveUser();
 
-        Statement activeUserBlockedPromised = DatabaseHandler.get(user).hasBlocked(activeUser);
-        Statement strangerBlockedPromised = DatabaseHandler.get(activeUser).hasBlocked(user);
+        Statement activeUserBlockedPromised = DatabaseHandler.getReference(user).hasBlocked(activeUser);
+        Statement strangerBlockedPromised = DatabaseHandler.getReference(activeUser).hasBlocked(user);
 
         activeUserBlockedPromised.or(strangerBlockedPromised).onFalse(() -> {
             mUsersInPool.add(user);
@@ -91,7 +88,7 @@ public enum ChatMatcher {
 
             Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
             Log.d(TAG, chat.getName());
-            DatabaseHandler.get(chat).push();
+            DatabaseHandler.getReference(chat).push();
         }
     }
 
@@ -176,7 +173,7 @@ public enum ChatMatcher {
 
             Chat chat = new Chat(firstBeginner, firstMentor);
             Log.d("MAFAKALEARNERS", chat.getName() + "");
-            DatabaseHandler.get(chat).push();
+            DatabaseHandler.getReference(chat).push();
         }
     }
 
@@ -191,7 +188,7 @@ public enum ChatMatcher {
 
             Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
             Log.d("FILTHYCASUALS: ", chat.getName() + "");
-            DatabaseHandler.get(chat).push();
+            DatabaseHandler.getReference(chat).push();
         }
     }
 

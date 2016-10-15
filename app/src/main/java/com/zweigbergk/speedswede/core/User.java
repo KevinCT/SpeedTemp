@@ -5,8 +5,7 @@ import android.os.Parcelable;
 
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.activity.Language;
-import com.zweigbergk.speedswede.database.UserReference;
-import com.zweigbergk.speedswede.util.PreferenceValue;
+import com.zweigbergk.speedswede.util.PreferenceWrapper;
 import com.zweigbergk.speedswede.util.collection.Map;
 
 import java.util.Arrays;
@@ -16,16 +15,18 @@ public interface User extends Parcelable {
     String getDisplayName();
 
     //Preferences
-    PreferenceValue getPreference(Preference preference);
-    Map<Preference, PreferenceValue> getPreferences();
+    PreferenceWrapper getPreference(Preference preference);
+    Map<Preference, PreferenceWrapper> getPreferences();
     boolean getNotificationPreference();
     Language getLanguage();
     SkillCategory getSkillCategory();
+    void setPreference(Preference preference, PreferenceWrapper wrapper);
 
     long getTimeInQueue();
 
     boolean isFirstLogin();
     void setFirstLogin(boolean value);
+    void setTimeInQueue(long value);
     void startTime();
 //    int getOwnRating();
 //    int[] getMatchInterval();
@@ -39,6 +40,10 @@ public interface User extends Parcelable {
         NOTIFICATIONS(Constants.NOTIFICATIONS), LANGUAGE(Constants.LANGUAGE), SKILL_CATEGORY(Constants.SKILL_CATEGORY);
 
         private final String value;
+
+        public String toString() {
+            return value;
+        }
 
         public static Preference[] values = Preference.values();
 
@@ -67,11 +72,6 @@ public interface User extends Parcelable {
                 }
             }
             return null;
-        }
-
-
-        public static Preference fromInt(int i) {
-            return Preference.values[i];
         }
 
         @Override

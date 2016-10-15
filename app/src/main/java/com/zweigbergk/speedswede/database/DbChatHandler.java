@@ -23,7 +23,7 @@ import com.zweigbergk.speedswede.util.collection.List;
 import com.zweigbergk.speedswede.util.collection.Map;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Tuple;
-import com.zweigbergk.speedswede.util.PreferenceValue;
+import com.zweigbergk.speedswede.util.PreferenceWrapper;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 
@@ -104,7 +104,7 @@ class DbChatHandler extends DbHandler {
     }
 
     /**
-     * Should <u>not</u> be used explicitly. Use DatabaseHandler.get(user).push instead.
+     * Should <u>not</u> be used explicitly. Use DatabaseHandler.getReference(user).push instead.
      * */
     void pushChat(Chat chat) {
         Log.d(TAG, chat.getName());
@@ -145,13 +145,13 @@ class DbChatHandler extends DbHandler {
     private static final EntryMapping<String, String> pojoEntry = mapEntry -> {
         String prefAsString = parseToReadable((Preference) mapEntry.getKey());
 
-        PreferenceValue prefValue = (PreferenceValue) mapEntry.getValue();
+        PreferenceWrapper prefValue = (PreferenceWrapper) mapEntry.getValue();
         String prefValueAsString = parseToReadable(prefValue);
 
         return new Tuple<>(prefAsString, prefValueAsString);
     };
 
-    private static String parseToReadable(PreferenceValue prefValue) {
+    private static String parseToReadable(PreferenceWrapper prefValue) {
         if (prefValue == null || prefValue.getValue() == null) {
             return null;
         }
@@ -189,7 +189,7 @@ class DbChatHandler extends DbHandler {
         if (hasMessageListenerForChat(chat)) {
             //If the listener is already there, we must explicitly pass every existing message
             // to our new client
-            DatabaseHandler.get(chat).pullMessages().forEach(
+            DatabaseHandler.getReference(chat).pullMessages().forEach(
                     message -> client.supply(DataChange.added(message)));
         } else {
             createMessageListenerForChat(chat);

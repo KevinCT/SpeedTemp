@@ -1,14 +1,17 @@
 package com.zweigbergk.speedswede.database;
 
 import com.zweigbergk.speedswede.Constants;
-import com.zweigbergk.speedswede.activity.Language;
 import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.util.PreferenceWrapper;
 import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
+
+import static com.zweigbergk.speedswede.util.PreferenceWrapper.StringWrapper;
+import static com.zweigbergk.speedswede.util.PreferenceWrapper.BooleanWrapper;
 
 public class UserReference {
     private static final String TAG = UserReference.class.getSimpleName().toUpperCase();
@@ -19,6 +22,7 @@ public class UserReference {
         LANGUAGE(Constants.makePath(Constants.PREFERENCES, Constants.LANGUAGE)),
         SKILL_CATEGORY(Constants.makePath(Constants.PREFERENCES, Constants.SKILL_CATEGORY)),
         FIRST_LOGIN(Constants.FIRST_LOGIN),
+        TIME_IN_QUEUE(Constants.TIME_IN_QUEUE),
         UNDEFINED(Constants.UNDEFINED);
 
         private String path;
@@ -52,21 +56,39 @@ public class UserReference {
         return userHandler.pullUser(mUser.getUid());
     }
 
-    public void setName(String name) {
-        attempt(() ->
-                userHandler.setUserAttribute(mUser, UserAttribute.NAME, name));
-    }
-
     public void setPreference(User.Preference preference, String value) {
+        updateActiveUserPreference(preference, new StringWrapper(value));
         attempt(() -> userHandler.setUserAttribute(mUser, fromPreference(preference), value));
     }
 
+    private void updateActiveUserPreference(User.Preference preference, PreferenceWrapper wrapper) {
+        if (mUser.equals(activeUser())) {
+            activeUser().setPreference(preference, wrapper);
+        }
+    }
+
+    public void setPreference(User.Preference preference, PreferenceWrapper wrapper) {
+        updateActiveUserPreference(preference, wrapper);
+        attempt(() -> userHandler.setUserAttribute(mUser, fromPreference(preference), wrapper.getValue()));
+    }
+
     public void setPreference(User.Preference preference, boolean value) {
+        updateActiveUserPreference(preference, new BooleanWrapper(value));
         attempt(() -> userHandler.setUserAttribute(mUser, fromPreference(preference), value));
     }
 
     public void setSkillCategory(SkillCategory skill) {
         setPreference(User.Preference.SKILL_CATEGORY, skill.toString());
+    }
+
+    public void setFirstLogin(boolean value) {
+        activeUser().setFirstLogin(value);
+        attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.FIRST_LOGIN, value));
+    }
+
+    public void setTimeInQueue(long value) {
+        activeUser().setTimeInQueue(value);
+        attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.TIME_IN_QUEUE, value));
     }
 
     private UserAttribute fromPreference(User.Preference preference) {
@@ -108,6 +130,10 @@ public class UserReference {
 
     public void unbind(Client<DataChange<User>> client) {
         userHandler.getUserListener().removeClient(mUser, client);
+    }
+
+    private User activeUser() {
+        return DatabaseHandler.getActiveUser();
     }
 
     private void attempt(Executable executable) {

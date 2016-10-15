@@ -15,21 +15,21 @@ import com.google.firebase.database.ValueEventListener;
 
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Banner;
-import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.UserListener;
 import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
+import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.async.FirebasePromise;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.async.Promise;
+import com.zweigbergk.speedswede.util.collection.Collections;
 import com.zweigbergk.speedswede.util.factory.UserFactory;
 
 
 import static com.zweigbergk.speedswede.Constants.POOL;
-import static com.zweigbergk.speedswede.Constants.SKILL_CATEGORY;
 import static com.zweigbergk.speedswede.Constants.USERS;
 import static com.zweigbergk.speedswede.Constants.BANS;
 import static com.zweigbergk.speedswede.Constants.BANLIST;
@@ -38,7 +38,7 @@ import static com.zweigbergk.speedswede.util.async.PromiseNeed.SNAPSHOT;
 class DbUserHandler extends DbHandler {
     private static DbUserHandler INSTANCE;
 
-    public static final String TAG = DbUserHandler.class.getSimpleName().toUpperCase();
+    private static final String TAG = DbUserHandler.class.getSimpleName().toUpperCase();
 
     private DatabaseReference mRoot;
 
@@ -105,7 +105,18 @@ class DbUserHandler extends DbHandler {
                     new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            promise.addItem(PromiseNeed.USER, UserFactory.deserializeUser(dataSnapshot));
+                            if (dataSnapshot.exists()) {
+                                User user = UserFactory.deserializeUser(dataSnapshot);
+
+                                //Update the active user
+                                if (user.equals(getActiveUser())) {
+                                    DatabaseHandler.setLoggedInUser(user);
+                                }
+
+                                promise.addItem(PromiseNeed.USER, user);
+                            } else {
+                                promise.addItem(PromiseNeed.USER, null);
+                            }
                         }
 
                         @Override
@@ -131,7 +142,10 @@ class DbUserHandler extends DbHandler {
     }
 
     void pushUser(User user) {
-        mRoot.child(Constants.USERS).child(user.getUid()).setValue(user);
+        Path.to(user).setValue(user);
+
+        user.getPreferences().foreach(prefEntry ->
+                DatabaseHandler.getReference(user).setPreference(prefEntry.getKey(), prefEntry.getValue()));
     }
 
     void removeUserFromPool(User user) {
@@ -143,8 +157,8 @@ class DbUserHandler extends DbHandler {
     }
 
     String getActiveUserId() {
-        if (getActiveUser() != null) {
-            return getActiveUser().getUid();
+        if (mLoggedInUser != null) {
+            return mLoggedInUser.getUid();
         }
 
         return getFirebaseAuthUid();
@@ -167,10 +181,7 @@ class DbUserHandler extends DbHandler {
     User getActiveUser() {
         if (mLoggedInUser == null) {
             User firebaseUser = UserProfile.from(FirebaseAuth.getInstance().getCurrentUser());
-
-            if (firebaseUser != null) {
-                setLoggedInUser(firebaseUser);
-            }
+            setLoggedInUser(firebaseUser);
         }
 
         return mLoggedInUser;
