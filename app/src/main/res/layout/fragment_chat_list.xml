@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:background="@color/colorPrimary"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/white"
         android:text="@string/leta_kompis"
         android:textSize="@dimen/font_large"
         android:id="@+id/match_button"

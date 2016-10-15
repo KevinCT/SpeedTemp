@@ -1,18 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    android:layout_width="fill_parent"
-    android:fillViewport="true"
-    android:isScrollContainer="true">
+    android:layout_width="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_chat_recycler_view"
-        android:scrollbars="vertical"
+    <FrameLayout
+        android:id="@+id/menu_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:background="@color/scrim"
+        android:visibility="invisible"
+        >
+
+    <com.ogaclejapan.arclayout.ArcLayout
+        android:id="@+id/arc_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="32dp"
+        app:arc_axisRadius="@dimen/layout_child_offset_path"
+        app:arc_freeAngle="true"
+        app:arc_origin="top|right"
+        app:arc_radius="@dimen/layout_radius_path"
+        >
+
+        <Button
+            style="@style/Item.Path"
+            android:textColor="@color/white"
+            app:arc_angle="22.5"
+            />
+
+        <Button
+            style="@style/Item.Path"
+            android:textColor="@color/white"
+            app:arc_angle="77.5"
+            />
+
+
+    </com.ogaclejapan.arclayout.ArcLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_chat_recycler_view"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
 
         <include
             layout="@layout/type_message_area"
@@ -22,7 +60,20 @@
             android:layout_weight="0"
             android:gravity="center_horizontal|bottom"
             android:layout_marginStart="20dp"/>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/path_fab"
+        android:text="+"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        />
 
 
-
-</LinearLayout>
+</RelativeLayout>
