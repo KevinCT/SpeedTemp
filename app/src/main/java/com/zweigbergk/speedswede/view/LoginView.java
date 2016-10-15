@@ -8,7 +8,7 @@ import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public interface LoginView {
     LoginButton getLoginButton();
-    void startChatActivity();
+    void onLogin(boolean offlineMode);
     void onLoginClick(View.OnClickListener listener);
     void setProgressCircleVisibility(int visibility);
     void setContentVisibility(int visibility);

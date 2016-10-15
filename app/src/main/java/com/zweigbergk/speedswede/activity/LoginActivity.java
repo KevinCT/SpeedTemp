@@ -4,13 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.facebook.login.widget.LoginButton;
+import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.Initializer;
 import com.zweigbergk.speedswede.R;
+import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.presenter.LoginPresenter;
 import com.zweigbergk.speedswede.util.ActivityAttachable;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
@@ -41,10 +45,21 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     }
 
     @Override
-    public void startChatActivity() {
-        startActivity(new Intent(this, ChatActivity.class));
-        Initializer.onLogin();
-        finish();
+    public void onLogin(boolean isOfflineMode) {
+        Initializer.onLogin(isOfflineMode);
+
+        Initializer.runOnLogin(user -> {
+            if (user.isFirstLogin()) {
+                //Show settings setup
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                settingsIntent.putExtra(Constants.SETTINGS_FIRST_SETUP, true);
+                startActivity(settingsIntent);
+            } else {
+                startActivity(new Intent(this, ChatActivity.class));
+            }
+            
+            finish();
+        });
     }
 
     @Override

@@ -13,9 +13,7 @@ import android.view.MenuItem;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Chat;
-import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
-import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.fragment.ChangeLanguageFragment;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
@@ -24,8 +22,7 @@ import com.zweigbergk.speedswede.view.ChatView;
 
 
 public class ChatActivity extends AppCompatActivity implements ChatView {
-
-    public static final String TAG = ChatActivity.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatActivity.class.getSimpleName().toUpperCase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +37,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     }
 
     private void createActivity() {
-        User activeUser = DatabaseHandler.getActiveUser();
-        //DatabaseHandler.get(activeUser)
         addFragment(new ChatListFragment(), false);
     }
 
@@ -98,7 +93,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             setTitle(chat.getName());
             switchToFragment(chatFragment, true);
         } else {
-            Log.e(TAG, "WARNING! Tried to display a null chat. ");
+            Log.w(TAG, "WARNING! Tried to display a null chat. ");
             new Exception().printStackTrace();
         }
     }

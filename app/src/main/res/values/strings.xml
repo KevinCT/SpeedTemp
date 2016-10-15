@@ -24,6 +24,7 @@
     <string name="remove_settings">remove settings</string>
     <string name="settings_pref_usage">How do you want to use this app?</string>
     <string name="settings_pref_usage_default">learn</string>
+    <string name="settings_pref_first_login_continue_text">continue</string>
 
     <string name="settings_pref_usage_entry_learn">I want to learn</string>
     <string name="settings_pref_usage_entry_mentor">I want to mentor</string>

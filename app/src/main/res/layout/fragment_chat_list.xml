@@ -16,10 +16,10 @@
         android:background="@color/colorPrimary"
         android:textColor="@color/colorWhite"
         android:text="@string/leta_kompis"
-        android:textSize="18sp"
+        android:textSize="@dimen/font_large"
         android:id="@+id/match_button"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50px" />
+        android:layout_marginBottom="@dimen/spacing_huge" />
 
     <!--<Space-->
         <!--android:layout_width="match_parent"-->
