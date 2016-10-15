@@ -1,6 +1,11 @@
 package com.zweigbergk.speedswede;
 
+import com.zweigbergk.speedswede.activity.Language;
+import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.PreferenceValue;
+import com.zweigbergk.speedswede.util.collection.Collections;
+import com.zweigbergk.speedswede.util.collection.List;
 
 import java.util.Arrays;
 
@@ -26,7 +31,7 @@ public class Constants {
     public static final String PREFERENCES = "preferences";
     public static final String NOTIFICATIONS = "receiveNotifications";
     public static final String LANGUAGE = "language";
-    public static final String FIRST_LOGIN = "language";
+    public static final String FIRST_LOGIN = "firstLogin";
     public static final String SKILL_CATEGORY = "skillCategory";
 
     public static final String BANS = "bans";
@@ -62,4 +67,19 @@ public class Constants {
     public static String preference(String preference) {
         return makePath(PREFERENCES, preference);
     }
+
+    public static List<PreferenceValue> shells =
+            Collections.asList(
+                    PreferenceValue.StringValue.shell(),
+                    PreferenceValue.BooleanValue.shell(),
+                    PreferenceValue.LongValue.shell());
+
+    /*public static List<PreferenceValue> shells =
+            Collections.asList(
+                    PreferenceValue.StringValue.shell(),
+                    PreferenceValue.BooleanValue.shell(),
+                    PreferenceValue.LongValue.shell(),
+                    PreferenceValue.SkillCategoryValue.shell(),
+                    PreferenceValue.LanguageValue.shell());*/
+
 }
