@@ -2,13 +2,37 @@ package com.zweigbergk.speedswede.util;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import com.zweigbergk.speedswede.Constants;
 
 public abstract class PreferenceValue<T> implements Parcelable {
+    private static final String TAG = PreferenceValue.class.getSimpleName().toUpperCase();
 
-    T mValue;
+    private T mValue;
 
-    PreferenceValue(T value) {
+    private PreferenceValue(T value) {
         mValue = value;
+    }
+
+    public T getValue() {
+        return mValue;
+    }
+
+    abstract PreferenceValue<T> withValue(T value);
+
+    public static <T> PreferenceValue<T> cast(Object object) {
+        for (PreferenceValue shell : Constants.shells) {
+            try {
+                T item = (T) shell.getValue().getClass().cast(object);
+                Log.d(TAG, "Returning from cast with: " + item.toString());
+                return shell.withValue(item);
+            } catch (ClassCastException e) {
+                Log.d(TAG, "Could not cast to " + shell.getValue().getClass());
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -20,10 +44,6 @@ public abstract class PreferenceValue<T> implements Parcelable {
         return 0;
     }
 
-    public T getValue() {
-        return mValue;
-    }
-
     public String toString() {
         return mValue.getClass().getSimpleName();
     }
@@ -31,6 +51,15 @@ public abstract class PreferenceValue<T> implements Parcelable {
     public static class StringValue extends PreferenceValue<String> {
         public StringValue(String value) {
             super(value);
+        }
+
+        @Override
+        PreferenceValue<String> withValue(String value) {
+            return new StringValue(value);
+        }
+
+        public static StringValue shell() {
+            return new StringValue("");
         }
 
         public static final Creator<StringValue> CREATOR = new Creator<StringValue>() {
@@ -49,7 +78,7 @@ public abstract class PreferenceValue<T> implements Parcelable {
 
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeString(mValue);
+            out.writeString(getValue());
         }
 
         private StringValue(Parcel in) {
@@ -60,6 +89,14 @@ public abstract class PreferenceValue<T> implements Parcelable {
     public static class BooleanValue extends PreferenceValue<Boolean> {
         public BooleanValue(Boolean value) {
             super(value);
+        }
+
+        public static BooleanValue shell() {
+            return new BooleanValue(true);
+        }
+
+        public BooleanValue withValue(Boolean value) {
+            return new BooleanValue(value);
         }
 
         public static final Parcelable.Creator<BooleanValue> CREATOR = new Parcelable.Creator<BooleanValue>() {
@@ -91,6 +128,14 @@ public abstract class PreferenceValue<T> implements Parcelable {
             super(value);
         }
 
+        public static LongValue shell() {
+            return new LongValue(0L);
+        }
+
+        public LongValue withValue(Long value) {
+            return new LongValue(value);
+        }
+
         public static final Creator<LongValue> CREATOR = new Creator<LongValue>() {
             public LongValue createFromParcel(Parcel in) {
                 return new LongValue(in);
@@ -107,7 +152,7 @@ public abstract class PreferenceValue<T> implements Parcelable {
 
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeLong(mValue);
+            out.writeLong(getValue());
         }
 
         private LongValue(Parcel in) {
