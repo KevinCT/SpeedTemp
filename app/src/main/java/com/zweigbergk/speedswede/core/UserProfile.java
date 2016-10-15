@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.Exclude;
+import com.zweigbergk.speedswede.activity.Language;
 import com.zweigbergk.speedswede.util.ParcelHelper;
 import com.zweigbergk.speedswede.util.PreferenceValue;
 import com.zweigbergk.speedswede.util.collection.HashMap;
@@ -15,6 +16,7 @@ import java.util.Date;
 public class UserProfile implements User {
 
     private String displayName, uid;
+    private boolean isFirstLogin;
 //    private Timer timer;
 //    private int[] matchingInterval;
 
@@ -28,6 +30,7 @@ public class UserProfile implements User {
         this.uid = uid;
 
         mPreferences = new HashMap<>();
+        isFirstLogin = false;
     }
 
     public UserProfile withPreferences(Map<Preference, PreferenceValue> preferences) {
@@ -38,8 +41,32 @@ public class UserProfile implements User {
     @Exclude
     @Override
     public SkillCategory getSkillCategory() {
-        return SkillCategory.fromString((String) getPreference(Preference.SKILL_CATEGORY).getValue());
+        PreferenceValue pref = getPreference(Preference.SKILL_CATEGORY);
+        SkillCategory skillCategory = SkillCategory.fromString((String) pref.getValue());
+        return skillCategory != null ? skillCategory : SkillCategory.DEFAULT;
 }
+    @Exclude
+    @Override
+    public boolean getNotificationPreference() {
+        PreferenceValue value = getPreference(Preference.NOTIFICATIONS);
+        return value != null && (boolean) value.getValue();
+    }
+
+    @Exclude
+    @Override
+    public Language getLanguage() {
+        PreferenceValue pref = getPreference(Preference.LANGUAGE);
+        Language language = Language.fromString((String) pref.getValue());
+        return language != null ? language : Language.DEFAULT;
+    }
+
+    public boolean isFirstLogin() {
+        return isFirstLogin;
+    }
+
+    public void setFirstLogin(boolean value) {
+        isFirstLogin = value;
+    }
 
     @Override
     public String getUid() {
