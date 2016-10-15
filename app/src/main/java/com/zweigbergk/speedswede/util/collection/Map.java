@@ -11,7 +11,7 @@ public interface Map<K, V> extends java.util.Map<K, V> {
     public <E> List<E> transform(Lists.Mapping<Map.Entry<K, V>, E> mapping);
     public Set<K> keys();
 
-    public void forEach(Client<Entry<K, V>> client);
+    public void foreach(Client<Entry<K, V>> client);
 
     @NonNull
     public Set<V> values();

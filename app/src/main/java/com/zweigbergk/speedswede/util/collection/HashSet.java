@@ -2,6 +2,7 @@ package com.zweigbergk.speedswede.util.collection;
 
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
+import com.zweigbergk.speedswede.util.methodwrapper.Query;
 
 public class HashSet<E> extends java.util.HashSet<E> implements Set<E> {
 
@@ -45,9 +46,23 @@ public class HashSet<E> extends java.util.HashSet<E> implements Set<E> {
         Client<E> diff = e -> {
             if (!otherSet.contains(e)) {
                 result.add(e);
-        }};
+            }
+        };
 
         this.foreach(diff);
+
+        return result;
+    }
+
+    @Override
+    public Set<E> reject(Query<E> query) {
+        Set<E> result = new HashSet<>();
+
+        foreach(e -> {
+            if (!query.matches(e)) {
+                result.add(e);
+            }
+        });
 
         return result;
     }
@@ -57,5 +72,18 @@ public class HashSet<E> extends java.util.HashSet<E> implements Set<E> {
         for (E item : this) {
             client.supply(item);
         }
+    }
+
+    @Override
+    public Set<E> filter(Query<E> query) {
+        Set<E> result = new HashSet<>();
+
+        foreach(e -> {
+            if (query.matches(e)) {
+                result.add(e);
+            }
+        });
+
+        return result;
     }
 }

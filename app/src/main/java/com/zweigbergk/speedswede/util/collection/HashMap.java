@@ -3,8 +3,13 @@ package com.zweigbergk.speedswede.util.collection;
 import android.support.annotation.NonNull;
 
 import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Query;
+
+import static com.zweigbergk.speedswede.util.collection.Collections.SizeMismatchException;
+
+import java.util.Iterator;
 
 public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> {
     @Override
@@ -14,7 +19,7 @@ public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> 
             Map.Entry<X, Y> mappedEntry = mapping.map(entry);
             result.put(mappedEntry.getKey(), mappedEntry.getValue());
         };
-        forEach(addMapping);
+        foreach(addMapping);
 
         return result;
     }
@@ -23,7 +28,7 @@ public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> 
     public <E> List<E> transform(Lists.Mapping<Entry<K, V>, E> mapping) {
         List<E> result = new ArrayList<>();
         Client<Map.Entry<K, V>> addTransform = entry -> result.add(mapping.map(entry));
-        forEach(addTransform);
+        foreach(addTransform);
 
         return result;
     }
@@ -33,7 +38,7 @@ public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> 
     public Set<V> values() {
         Set<V> result = new HashSet<>();
         Client<Map.Entry<K, V>> addValue = entry -> result.add(entry.getValue());
-        forEach(addValue);
+        foreach(addValue);
 
         return result;
     }
@@ -42,13 +47,13 @@ public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> 
     public Set<K> keys() {
         Set<K> result = new HashSet<>();
         Client<Map.Entry<K, V>> addKey = entry -> result.add(entry.getKey());
-        forEach(addKey);
+        foreach(addKey);
 
         return result;
     }
 
     @Override
-    public void forEach(Client<Entry<K, V>> client) {
+    public void foreach(Client<Entry<K, V>> client) {
         for (Map.Entry<K, V> item : this.entrySet()) {
             client.supply(item);
         }
@@ -58,7 +63,7 @@ public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> 
     public Map<V, K> invert() {
         Map<V, K> result = new HashMap<>();
         Client<Map.Entry<K, V>> addInvertedEntry = entry -> result.put(entry.getValue(), entry.getKey());
-        forEach(addInvertedEntry);
+        foreach(addInvertedEntry);
 
         return result;
     }
@@ -72,7 +77,7 @@ public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> 
           }
         };
 
-        forEach(addMatches);
+        foreach(addMatches);
 
         return result;
     }
@@ -86,15 +91,36 @@ public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> 
             }
         };
 
-        forEach(addMatches);
+        foreach(addMatches);
 
         return result;
     }
 
     @Override
     public Map<K, V> nonNull() {
-        Query<Map.Entry<K, V>> isNull = entry -> entry.getValue() != null;
+        Query<Map.Entry<K, V>> isNull = entry -> entry.getValue() == null;
 
         return reject(isNull);
     }
+
+    public static <K, V> Map<K, V> create(Collection<K> keys, Collection<V> values) {
+        if (keys.size() != values.size()) {
+            throw new SizeMismatchException(Stringify.curlyFormat(
+                    "Key collection (size: {keyCount}) must be of same size as value collection" +
+                            " (size: {valueCount}).", keys.size(), values.size())
+            );
+        }
+
+        Map<K, V> result = new HashMap<>();
+        Iterator<K> keyIterator = keys.iterator();
+        Iterator<V> valueIterator = values.iterator();
+
+        while(keyIterator.hasNext()) {
+            result.put(keyIterator.next(), valueIterator.next());
+        }
+
+        return result;
+    }
+
+
 }
