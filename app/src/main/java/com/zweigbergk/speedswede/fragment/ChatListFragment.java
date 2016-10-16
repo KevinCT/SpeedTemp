@@ -71,7 +71,7 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu,inflater);
-        inflater.inflate(R.menu.menu_chat_list,menu);
+        inflater.inflate(R.menu.menu_chat_list, menu);
     }
 
     @Override

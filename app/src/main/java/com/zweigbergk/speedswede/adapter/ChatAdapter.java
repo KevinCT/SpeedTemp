@@ -122,12 +122,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     private void removeChat(Chat chat) {
         int position = mChats.indexOf(chat);
 
-        Log.d(TAG, "In removeChat, position: " + position);
+        if (position != -1) {
+            Log.d(TAG, "In removeChat, position: " + position);
 
-        mChats.remove(chat);
-        notifyItemRemoved(position);
+            mChats.remove(chat);
+            notifyItemRemoved(position);
 
-        broadcastEvent(Event.CHAT_REMOVED, chat);
+            broadcastEvent(Event.CHAT_REMOVED, chat);
+        }
     }
 
     private void broadcastEvent(Event event, Chat chat) {

@@ -61,6 +61,10 @@ public class Chat implements Parcelable {
         return firstUser.equals(user) || secondUser.equals(user);
     }
 
+    public User getOtherUser(User user) {
+        return getFirstUser().equals(user) ? getSecondUser() : getFirstUser();
+    }
+
     public String getName() {
         return this.name;
     }

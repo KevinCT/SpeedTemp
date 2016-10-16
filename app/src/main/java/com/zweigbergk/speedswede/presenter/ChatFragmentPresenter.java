@@ -96,13 +96,7 @@ public class ChatFragmentPresenter {
     public void terminateChat() {
         User activeUser = DatabaseHandler.getActiveUser();
         DatabaseHandler.getReference(mChat).removeUser(activeUser);
-        DatabaseHandler.hasUsers(mChat).then(
-                result -> {
-                    if(!result) {
-                        DatabaseHandler.getReference(mChat).remove();
-                    }
-                }
-        );
+        DatabaseHandler.hasUsers(mChat).onFalse(DatabaseHandler.getReference(mChat)::remove);
     }
 
     public void removeLocalChatSettings(Context context){

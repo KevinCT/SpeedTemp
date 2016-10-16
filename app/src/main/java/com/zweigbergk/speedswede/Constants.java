@@ -38,7 +38,7 @@ public class Constants {
 
     public static final String SETTINGS_FIRST_SETUP = "settings_first_setup";
 
-    public static final String[] CHAT_TOPICS = {"Cars", "Plants", "Skateboarding", "Donald Trump", "Asian cuisine", "Baseball", "The unvierse"};
+    public static final String[] CHAT_TOPICS = {"Cars", "Plants", "Skateboarding", "Donald Trump", "Asian cuisine", "Baseball", "The Universe"};
 
     //Languages
     public static final String ENGLISH = "en";
