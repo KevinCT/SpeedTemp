@@ -115,7 +115,7 @@ class DbChatHandler extends DbHandler {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    pushPreferences(chat);
+                    //pushPreferences(chat);
                     Log.d(TAG, "In listener where pushPreferences is called");
                     ref.removeEventListener(this);
                 }

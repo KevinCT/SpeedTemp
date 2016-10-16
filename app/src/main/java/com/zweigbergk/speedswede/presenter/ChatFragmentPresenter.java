@@ -101,7 +101,6 @@ public class ChatFragmentPresenter {
 
     public void removeLocalChatSettings(Context context){
         LocalStorage.INSTANCE.removeSetting(context, mChat.getId());
-
     }
 
     private void postMessage(String messageText) {

@@ -1,10 +1,8 @@
 package com.zweigbergk.speedswede.fragment;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -23,7 +21,10 @@ import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.eyecandy.ArcMenu;
 import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
+import com.zweigbergk.speedswede.util.Stringify;
+import com.zweigbergk.speedswede.util.collection.Point;
 import com.zweigbergk.speedswede.util.methodwrapper.CallerMethod;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
@@ -36,6 +37,8 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
 
     private RecyclerView chatRecyclerView;
     private EditText mInputBox;
+
+    private ArcMenu arcMenu;
 
     Point arcLayoutPosition = new Point(0, 0);
 
@@ -98,6 +101,8 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         chatRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_chat_recycler_view);
         mInputBox = (EditText) view.findViewById(R.id.fragment_chat_message_text);
 
+        arcMenu = new ArcMenu(parent());
+
         return view;
     }
 
@@ -108,6 +113,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
 
             int x = location[0];
             int y = location[1];
+        Log.d(TAG, Stringify.curlyFormat("getMenuItemPosition(): x: {x}, y: {y}", x, y));
         return new Point(x, y);
     }
 
@@ -140,19 +146,17 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         super.onCreateOptionsMenu(menu,inflater);
 
         //Assign actions to the arc menu items
-        Button btnBlockUser = parent().getBlockUserButton();
-        btnBlockUser.setBackgroundResource(R.drawable.ic_lock);
+        Button btnBlockUser = arcMenu.getButton(R.id.btn_arc_menu_block_user);
+        //btnBlockUser.setBackgroundResource(R.drawable.ic_lock);
         User activeUser = DatabaseHandler.getActiveUser();
         User otherUser = mPresenter.getChat().getOtherUser(activeUser);
 
-        //btnBlockUser.setOnClickListener(v -> DatabaseHandler.getReference(activeUser).block(otherUser));
-        btnBlockUser.setOnClickListener(v -> Log.d(TAG, "Clicked on btnBlockUser."));
+        btnBlockUser.setOnClickListener(v -> DatabaseHandler.getReference(activeUser).block(otherUser));
 
-        Button btnLeaveChat = parent().getLeaveChatButton();
-        btnLeaveChat.setBackgroundResource(R.drawable.ic_trash);
+        Button btnLeaveChat = arcMenu.getButton(R.id.btn_arc_menu_leave_chat);
         btnLeaveChat.setOnClickListener(v -> {
+            arcMenu.onDestroy();
             mPresenter.terminateChat();
-            parent().hideArcMenu();
             parent().getSupportFragmentManager().popBackStackImmediate();
         });
     }
@@ -161,23 +165,14 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.show_actions:
-                if (arcLayoutPosition.equals(new Point(0, 0))) {
-                    Log.d(TAG, "First time, setting position...");
+                    Log.d(TAG, "onOptionsItemSelected: setting position...");
                     arcLayoutPosition = getMenuItemPosition(R.id.show_actions);
-                    parent().setArcLayoutPosition(arcLayoutPosition);
-                }
-
-                parent().updateArcMenu();
+                    arcMenu.setOrigin(arcLayoutPosition);
+                arcMenu.update();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void openDialog(){
-        FragmentManager fragmentManager = getChildFragmentManager();
-        DialogFragment dialogFragment = new DialogFragment ();
-        dialogFragment.show(fragmentManager, "Sample Fragment");
     }
 
     @Override
@@ -191,6 +186,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         Log.d(TAG, "onDestroy()");
 
         mPresenter.onDestroy();
+        arcMenu.onDestroy();
 
         super.onDestroy();
     }

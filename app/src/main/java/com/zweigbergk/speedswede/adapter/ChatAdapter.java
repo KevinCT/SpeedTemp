@@ -96,8 +96,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     private void updateChat(@NonNull Chat chat) {
         int index = mChats.indexOf(chat);
-        mChats.set(index, chat);
-        notifyItemChanged(index);
+        if (index != -1) {
+            mChats.set(index, chat);
+            notifyItemChanged(index);
+        }
     }
 
     private void addChat(Chat chat) {

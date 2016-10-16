@@ -1,5 +1,6 @@
 package com.zweigbergk.speedswede.coreTest;
 
+import com.zweigbergk.speedswede.ChatMatcherTest;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
@@ -22,9 +23,9 @@ public class ChatTest {
 
     @Before
     public void initialize() {
-        sir = ChatFactory.mockUser(ChatFactory.USER_1_NAME, ChatFactory.USER_1_ID);
-        lord = ChatFactory.mockUser(ChatFactory.USER_2_NAME, ChatFactory.USER_2_ID);
-        igor = ChatFactory.mockUser(ChatFactory.USER_3_NAME, ChatFactory.USER_3_ID);
+        sir = ChatFactory.mockUser(ChatMatcherTest.USER_1_NAME, ChatMatcherTest.USER_1_ID);
+        lord = ChatFactory.mockUser(ChatMatcherTest.USER_2_NAME, ChatMatcherTest.USER_2_ID);
+        igor = ChatFactory.mockUser(ChatMatcherTest.USER_3_NAME, ChatMatcherTest.USER_3_ID);
 
         chat = new Chat(sir, lord);
     }
