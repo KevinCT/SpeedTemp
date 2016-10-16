@@ -3,5 +3,62 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_chat_root">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+        <RelativeLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/menu_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <com.zweigbergk.speedswede.eyecandy.TransparentLayout
+            android:id="@+id/arc_clickable_view_or_no"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </com.zweigbergk.speedswede.eyecandy.TransparentLayout>
+
+        <com.ogaclejapan.arclayout.ArcLayout
+            android:id="@+id/arc_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:arc_axisRadius="@dimen/layout_child_offset_path"
+            app:arc_color="@color/colorAccent"
+            app:arc_freeAngle="true"
+            app:arc_origin="top|right"
+            android:alpha="0.8"
+            app:arc_radius="145dp">
+
+            <Button
+                android:id="@+id/btn_arc_menu_block_user"
+                style="@style/Item.Path"
+                app:arc_angle="22.5"/>
+
+            <Button
+                android:id="@+id/btn_arc_menu_leave_chat"
+                style="@style/Item.Path"
+                app:arc_angle="67.5"/>
+        </com.ogaclejapan.arclayout.ArcLayout>
+
+    </RelativeLayout>
 </RelativeLayout>

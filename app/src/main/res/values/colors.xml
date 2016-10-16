@@ -3,7 +3,7 @@
     <color name="colorPrimary">#f4d100</color>
     <color name="colorPrimaryDark">#ceb000</color>
     <color name="colorPrimaryLight">#fff5bb</color>
-    <color name="colorAccent">#3E377A</color>
+    <color name="colorAccent">#F479F3</color>
     <color name="colorInputText">#232323</color>
     <color name="white">#ffffff</color>
 
@@ -12,11 +12,4 @@
 
     <!-- Eyecandy -->
     <color name="path_primary">#E62F17</color>
-    <color name="path_orange">#FF9500</color>
-    <color name="path_blue">#1774E6</color>
-    <color name="path_black">#403B36</color>
-    <color name="path_green">#5FB336</color>
-    <color name="path_purple">#49098A</color>
-
-    <color name="scrim">#42000000</color>
 </resources>
