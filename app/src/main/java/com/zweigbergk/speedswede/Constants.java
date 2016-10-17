@@ -6,6 +6,7 @@ import com.zweigbergk.speedswede.util.collection.Collections;
 import com.zweigbergk.speedswede.util.collection.List;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public class Constants {
     public static final String ERROR = "ERROR";
@@ -38,7 +39,42 @@ public class Constants {
 
     public static final String SETTINGS_FIRST_SETUP = "settings_first_setup";
 
-    public static final String[] CHAT_TOPICS = {"Cars", "Plants", "Skateboarding", "Donald Trump", "Fishing", "Baseball", "The Universe"};
+    //Topics
+    public static final int DEAFULT_TOPIC_IMAGE = R.drawable.ic_speech_bubble;
+
+    public enum Topic {
+        Cars(R.drawable.ic_taxi), Theatre(R.drawable.ic_comedy), Universe(R.drawable.ic_nature),
+        School(R.drawable.ic_scholarship), Basketball(R.drawable.ic_basketball), Pets(R.drawable.ic_animals),
+        Clothes(R.drawable.ic_shirt);
+
+        private final int resourceId;
+
+        Topic(int resourceId) {
+            this.resourceId = resourceId;
+        }
+
+        public int getResourceId() {
+            return resourceId;
+        }
+
+        public static Topic getRandom() {
+            Random random = new Random();
+            random.nextInt();
+            random.nextInt();
+            Topic[] values = values();
+
+            return values[random.nextInt(values.length)];
+        }
+
+        public static Topic fromString(String name) {
+            return Collections.asList(values())
+                    .filter(topic -> topic.name().equalsIgnoreCase(name))
+                    .getFirst();
+        }
+    }
+
+    //Chat list
+    public static final int MAX_PREVIEW_LENGTH = 40;
 
     //Languages
     public static final String ENGLISH = "en";
@@ -74,13 +110,4 @@ public class Constants {
                     PreferenceWrapper.StringWrapper.shell(),
                     PreferenceWrapper.BooleanWrapper.shell(),
                     PreferenceWrapper.LongWrapper.shell());
-
-    /*public static List<PreferenceValue> shells =
-            Collections.asList(
-                    PreferenceValue.StringValue.shell(),
-                    PreferenceValue.BooleanValue.shell(),
-                    PreferenceValue.LongValue.shell(),
-                    PreferenceValue.SkillCategoryValue.shell(),
-                    PreferenceValue.LanguageValue.shell());*/
-
 }

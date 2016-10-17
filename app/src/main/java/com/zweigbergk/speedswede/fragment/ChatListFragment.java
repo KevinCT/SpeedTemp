@@ -123,7 +123,7 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
     private void checkSavedState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             List<Chat> list = ParcelHelper.retrieveParcableList(savedInstanceState, TAG_CHATLIST);
-            Lists.forEach(list, chat ->  adapter.notifyChange(DataChange.added(chat)));
+            list.foreach(chat -> adapter.notifyChange(DataChange.added(chat)));
         }
     }
 
@@ -139,8 +139,6 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
         checkSavedState(savedInstanceState);
         Log.d(TAG, "ChatListFragment.onActivityCreated()");
         Log.d(TAG, "Item count in adapter: " + adapter.getItemCount());
-
-
     }
 
     @Override

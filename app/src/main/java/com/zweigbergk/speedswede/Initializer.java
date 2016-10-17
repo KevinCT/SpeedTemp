@@ -36,7 +36,6 @@ public class Initializer {
             offlineLogin();
         }
 
-        DatabaseHandler.registerListener(DatabaseNode.CHATS);
         DatabaseHandler.registerListener(DatabaseNode.USERS);
         DatabaseHandler.getPool().bind(ChatMatcher.INSTANCE::handleUser);
     }

@@ -7,7 +7,6 @@ dependencies {
     //Animations & graphical touchup libraries
     compile 'com.ogaclejapan.arclayout:library:1.1.0@aar'
     compile 'com.baoyz.pullrefreshlayout:library:1.2.0'
-    compile 'com.orhanobut:dialogplus:1.11@aar'
 
     //Support framework
     compile 'com.android.support:support-v4:24.2.1'
@@ -52,6 +51,10 @@ android {
         debug {
             testCoverageEnabled = true
         }
+    }
+
+    lintOptions {
+        disable "ResourceType"
     }
 
     dexOptions {

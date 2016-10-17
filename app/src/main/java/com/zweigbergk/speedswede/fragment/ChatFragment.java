@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -145,20 +146,45 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         inflater.inflate(R.menu.new_menu_chat, menu);
         super.onCreateOptionsMenu(menu,inflater);
 
-        //Assign actions to the arc menu items
         Button btnBlockUser = arcMenu.getButton(R.id.btn_arc_menu_block_user);
-        //btnBlockUser.setBackgroundResource(R.drawable.ic_lock);
+        btnBlockUser.setOnClickListener(v -> showBlockConfirmationDialog());
+
+        Button btnLeaveChat = arcMenu.getButton(R.id.btn_arc_menu_leave_chat);
+        btnLeaveChat.setOnClickListener(v -> showLeaveChatConfirmationDialog());
+    }
+
+    private void showBlockConfirmationDialog() {
         User activeUser = DatabaseHandler.getActiveUser();
         User otherUser = mPresenter.getChat().getOtherUser(activeUser);
 
-        btnBlockUser.setOnClickListener(v -> DatabaseHandler.getReference(activeUser).block(otherUser));
 
-        Button btnLeaveChat = arcMenu.getButton(R.id.btn_arc_menu_leave_chat);
-        btnLeaveChat.setOnClickListener(v -> {
-            arcMenu.onDestroy();
-            mPresenter.terminateChat();
-            parent().getSupportFragmentManager().popBackStackImmediate();
-        });
+        new AlertDialog.Builder(getContext())
+                .setTitle("Block this user?")
+                .setMessage("You will not be matched with him or her again.")
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                    dialog.dismiss();
+                    DatabaseHandler.getReference(activeUser).block(otherUser);
+                    arcMenu.onDestroy();
+                    parent().popBackStack();
+                })
+                .setNegativeButton(android.R.string.no, ((dialog, which) -> dialog.dismiss()))
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    private void showLeaveChatConfirmationDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Leave this chat?")
+                .setMessage("You will not be able to come back to it.")
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                    dialog.dismiss();
+                    mPresenter.terminateChat();
+                    arcMenu.onDestroy();
+                    parent().popBackStack();
+                })
+                .setNegativeButton(android.R.string.no, ((dialog, which) -> dialog.dismiss()))
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     @Override

@@ -18,6 +18,7 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
 
 import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
@@ -55,11 +56,11 @@ public enum DatabaseHandler {
 
     public static void registerListener(DatabaseNode node) {
         switch (node) {
-            case CHATS:
-                DbChatHandler.getInstance().registerChatsListener();
-                break;
             case USERS:
                 DbUserHandler.getInstance().registerUsersListener();
+            default:
+                Log.w(TAG, "registerListener(): There is no setting for that node.");
+                Stringify.printStackTrace();
         }
     }
 

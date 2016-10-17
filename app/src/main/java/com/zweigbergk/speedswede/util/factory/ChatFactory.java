@@ -32,7 +32,6 @@ public class ChatFactory {
 
     public static Promise<Chat> deserializeChat(DataSnapshot snapshot) {
         Log.d(TAG, "Deserializing chat!");
-        Stringify.printStackTrace();
 
         String firstUserId = ChatFactory.getUserId(snapshot.child(Constants.FIRST_USER));
         String secondUserId = ChatFactory.getUserId(snapshot.child(Constants.SECOND_USER));

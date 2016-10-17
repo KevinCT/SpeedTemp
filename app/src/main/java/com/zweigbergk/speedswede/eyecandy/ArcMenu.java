@@ -3,7 +3,6 @@ package com.zweigbergk.speedswede.eyecandy;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.Button;
 
 import com.ogaclejapan.arclayout.ArcLayout;
 import com.zweigbergk.speedswede.R;
-import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.collection.Point;
 import com.zweigbergk.speedswede.view.ChatView;
@@ -23,7 +21,7 @@ import com.zweigbergk.speedswede.util.collection.HashMap;
 
 
 public class ArcMenu {
-    private static final String TAG = ChatActivity.class.getSimpleName().toUpperCase();
+    private static final String TAG = ArcMenu.class.getSimpleName().toUpperCase();
 
 
     private ViewGroup rootLayout;
@@ -45,18 +43,13 @@ public class ArcMenu {
         bgCircleView = components.get(R.id.arc_layout_background_circle);
 
 
-        maskLayout.onTouchRegistered(() -> {
-            Log.d(TAG, "Touch received~");
-            hide();
-        });
+        maskLayout.onTouchRegistered(this::hide);
     }
 
     public void update() {
         if (rootLayout.getVisibility() == View.VISIBLE) {
-            Log.d(TAG, "We are visible, hide us!");
             hide();
         } else {
-            Log.d(TAG, "We are invisible, show us!");
             show();
         }
     }

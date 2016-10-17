@@ -10,6 +10,7 @@
 
     <string name="leta_kompis">Match with a stranger</string>
     <string name="block_user">Block user</string>
+    <string name="confirm_block_user">Block user?</string>
 
     <string name="settings_show_actions">Show actions</string>
 
@@ -41,4 +42,6 @@
     <string name="language_skills">Language skills</string>
     <string name="languages">Languages</string>
     <string name="other">Other</string>
+    <string name="confirm_action">Confirm</string>
+    <string name="topic_image_description">topic image</string>
 </resources>
