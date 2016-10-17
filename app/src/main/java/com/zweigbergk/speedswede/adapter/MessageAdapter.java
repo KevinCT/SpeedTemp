@@ -148,26 +148,39 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         Message message = mMessages.get(position);
 
-        Client<String> updateViewText = translation -> {
-            String text = Stringify.curlyFormat("{current text}\n\nTranslation:{translation}",
-                    message.getText(), translation);
-            holder.mTextView.setText(text);
-        };
-
-
+        //If the message has a cached translation
         if (message.hasCache() && message.getTranslationCache().isFromLocale(mLocale)) {
             String cachedTranslation = message.getTranslationCache().getTranslatedText();
-            updateViewText.supply(cachedTranslation);
-        } else {
-            //No up-to-date cache, must translate message
-            Translation.translate(message.getText(), Language.SWEDISH, Language.ENGLISH)
+            Log.d(TAG, "Using cached transation. Translated text: " + cachedTranslation);
+            updateMessageText(holder, message.getText(), cachedTranslation);
+            return;
+        }
+
+        //No up-to-date cache, must translate message
+        Language currentLanguage = Language.fromString(DatabaseHandler.getActiveUser().getLanguage().getLanguageCode());
+        Log.d(TAG, "Current language: " + currentLanguage);
+
+        //We don't need to translate if our language is Swedish
+        if (!currentLanguage.equals(Language.SWEDISH)) {
+            Translation.translate(message.getText(), Language.SWEDISH, currentLanguage)
                     .then(translatedText -> {
                         //Update cache of the message
                         TranslationCache cache = Translation.TranslationCache.cache(mLocale.getLanguage(), translatedText);
                         message.setTranslationCache(cache);
-                        updateViewText.supply(translatedText);
+                        updateMessageText(holder, message.getText(), translatedText);
                     });
+        } else {
+            updateMessageText(holder, message.getText(), null);
         }
+    }
+
+    private void updateMessageText(ViewHolder holder, String text, String translation) {
+        String completeText = text;
+        if (translation != null) {
+            completeText += "\n\nTranslation: " + translation;
+        }
+
+        holder.mTextView.setText(completeText);
     }
 
     @Override

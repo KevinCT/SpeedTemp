@@ -34,10 +34,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 
         btnContinue = (Button) findViewById(R.id.preference_continue_btn_continue);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
         handleIntent();
 
         getFragmentManager().beginTransaction().replace(R.id.activity_settings_fragment_container, new SettingsFragment()).commit();
@@ -49,6 +45,10 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     private void handleIntent() {
         isFirstTime = getIntent().getBooleanExtra(SETTINGS_FIRST_SETUP, false);
         if (!isFirstTime) {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+
             btnContinue.setVisibility(View.GONE);
         } else {
             btnContinue.setOnClickListener(v -> close());

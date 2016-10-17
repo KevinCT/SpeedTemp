@@ -3,6 +3,7 @@ package com.zweigbergk.speedswede.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,9 +40,19 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
     private ChatAdapter adapter;
     private ImageView backgroundImageView;
 
+    public ChatListFragment() {
+        super();
+
+        if (getArguments() == null) {
+            setArguments(new Bundle());
+            Log.d(TAG, "Arguments was null. Setting arguments to new bundle.");
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate()");
 
         setHasOptionsMenu(true);
 
@@ -50,8 +61,6 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
         //Make us switch to the chat if we click its view.
         adapter.addEventClient(ChatAdapter.Event.CHAT_VIEW_CLICKED,
                 ((ChatActivity) getActivity())::displayChat);
-
-        Log.d(TAG, "onCreate()");
     }
 
     private void setupSwipeRefresh(View view) {
@@ -68,6 +77,14 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
         });
     }
 
+    private void saveState() {
+        Log.d(TAG, "saveState()");
+        Bundle bundle = getArguments();
+        List<Chat> list = adapter.getChats();
+        Log.d(TAG, "Saving chats to arguments. Chat amount: " + list.size());
+        ParcelHelper.saveParcableList(bundle, list, TAG_CHATLIST);
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu,inflater);
@@ -80,7 +97,6 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
         this.view = view;
-
         chatListView = (RecyclerView) view.findViewById(R.id.fragment_chat_list_view);
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
@@ -98,6 +114,8 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
         Log.d(TAG, "onCreateView");
 
         setupSwipeRefresh(view);
+
+        loadSavedState();
 
         return view;
     }
@@ -120,25 +138,29 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
         super.onDestroyView();
     }
 
-    private void checkSavedState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            List<Chat> list = ParcelHelper.retrieveParcableList(savedInstanceState, TAG_CHATLIST);
-            list.foreach(chat -> adapter.notifyChange(DataChange.added(chat)));
+    private void loadSavedState() {
+        Log.d(TAG, "loadSavedState()");
+        Bundle savedState = getArguments();
+
+        if (savedState != null) {
+            Log.d(TAG, "We have a saved state!");
+            List<Chat> savedChats = ParcelHelper.retrieveParcableList(savedState, TAG_CHATLIST);
+            Log.d(TAG, "Saved chat amount: " + savedChats);
+                savedChats.foreach(chat -> adapter.notifyChange(DataChange.added(chat)));
+
+            savedState.clear();
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        List<Chat> list = adapter.getChats();
-        ParcelHelper.saveParcableList(outState, list, TAG_CHATLIST);
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState()");
     }
 
     @Override
     public void onActivityCreated (Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        checkSavedState(savedInstanceState);
-        Log.d(TAG, "ChatListFragment.onActivityCreated()");
-        Log.d(TAG, "Item count in adapter: " + adapter.getItemCount());
     }
 
     @Override
@@ -156,7 +178,19 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
     public void onResume() {
         super.onResume();
         getActivity().invalidateOptionsMenu();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop()");
+
+        saveState();
     }
 
     public void addUser(View view) {

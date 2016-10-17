@@ -52,7 +52,6 @@ public class Translation {
         } catch (UnsupportedEncodingException e) {
             Log.w(TAG, "Warning: UnsupportedEncodingException. Stacktrace: ");
             e.printStackTrace();
-            // TODO Signify in the return that there was an error
             return new Translation();
         }
     }

@@ -19,9 +19,6 @@ import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.fragment.ChangeLanguageFragment;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
-import com.zweigbergk.speedswede.presenter.ChatPresenter;
-import com.zweigbergk.speedswede.util.collection.Arrays;
-import com.zweigbergk.speedswede.util.collection.Collections;
 import com.zweigbergk.speedswede.util.collection.HashMap;
 import com.zweigbergk.speedswede.util.methodwrapper.CallerMethod;
 import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
@@ -33,7 +30,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     private static final int FRAGMENT_CONTAINER = R.id.fragment_container;
 
-    private HashMap<Integer, View> arcComponents;
 
     private Toolbar toolbar;
 
@@ -41,6 +37,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        Log.d(TAG, "onCreate()");
 
         if (savedInstanceState == null) {
             createActivity();
@@ -53,20 +51,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setHomeAsUpIndicator(upArrow);
         }
-
-        new ChatPresenter(this);
-
-        arcComponents = new HashMap<>();
-        Integer[] arcComponentIds = {
-                R.id.arc_root_layout, R.id.arc_layout,
-                R.id.arc_clickable_view_or_no, R.id.arc_layout_background_circle
-        };
-
-        Arrays.asList(arcComponentIds).foreach(this::addArcComponent);
-    }
-
-    private void addArcComponent(int resId) {
-        arcComponents.put(resId, findViewById(resId));
     }
 
     @Override
@@ -118,6 +102,10 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         }
 
         transaction.commit();
+    }
+
+    private void hideMatcherLayout() {
+
     }
 
     private String getFragmentName(Fragment fragment) {
@@ -189,10 +177,5 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     @Override
     public void useContext(CallerMethod<Context> method) {
         method.call(this);
-    }
-
-    @Override
-    public HashMap<Integer, View> getArcComponents() {
-        return arcComponents;
     }
 }

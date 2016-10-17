@@ -59,7 +59,6 @@ public enum DatabaseHandler {
                 DbUserHandler.getInstance().registerUsersListener();
             default:
                 Log.w(TAG, "registerListener(): There is no setting for that node.");
-                Stringify.printStackTrace();
         }
     }
 

@@ -22,10 +22,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/spacing_huge" />
 
-    <!--<Space-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="30dp"-->
-        <!--android:layout_alignParentBottom="true" />-->
     <com.baoyz.widget.PullRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
@@ -39,5 +35,4 @@
             android:layout_height="match_parent" />
 
     </com.baoyz.widget.PullRefreshLayout>
-
 </RelativeLayout>

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.util.methodwrapper.CallerMethod;
+import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
 
 public interface ChatFragmentView {
@@ -15,4 +16,5 @@ public interface ChatFragmentView {
     void clearInputField();
     String getInputText();
     void openLanguageFragment();
+    void useContext(Client<Context> client);
 }

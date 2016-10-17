@@ -67,6 +67,7 @@ public class ParcelHelper {
                 Log.w(TAG, String.format("Overwriting data in bundle %s at tag %s with index %d",
                         bundle.toString(), tag, i));
             }
+            Log.d(TAG, "Saving item: " + list.get(i));
             bundle.putParcelable(tag + i, list.get(i));
         }
     }
@@ -75,6 +76,7 @@ public class ParcelHelper {
         List<E> list = new ArrayList<>();
         int size = bundle.getInt(tag);
         for (int i = 0; i < size; i++) {
+            Log.d(TAG, "retrieveParcelableList(): Adding item!");
             list.add(bundle.getParcelable(tag + i));
         }
         return list;

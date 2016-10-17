@@ -3,6 +3,7 @@ package com.zweigbergk.speedswede.eyecandy;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.ogaclejapan.arclayout.ArcLayout;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.collection.Point;
+import com.zweigbergk.speedswede.view.ChatFragmentView;
 import com.zweigbergk.speedswede.view.ChatView;
 
 import com.zweigbergk.speedswede.util.collection.HashMap;
@@ -30,17 +32,15 @@ public class ArcMenu {
     private View bgCircleView;
 
     private Point origin = new Point(0, 0);
-    private ChatView contextProvider;
+    private ChatFragmentView contextProvider;
 
-    public ArcMenu(ChatView contextProvider) {
+    public ArcMenu(ChatFragmentView contextProvider, HashMap<Integer, View> arcComponents) {
         this.contextProvider = contextProvider;
 
-        HashMap<Integer, View> components = contextProvider.getArcComponents();
-
-        rootLayout = (ViewGroup) components.get(R.id.arc_root_layout);
-        arcLayout = (ArcLayout) components.get(R.id.arc_layout);
-        maskLayout = (TransparentLayout) components.get(R.id.arc_clickable_view_or_no);
-        bgCircleView = components.get(R.id.arc_layout_background_circle);
+        rootLayout = (ViewGroup) arcComponents.get(R.id.arc_root_layout);
+        arcLayout = (ArcLayout) arcComponents.get(R.id.arc_layout);
+        maskLayout = (TransparentLayout) arcComponents.get(R.id.arc_clickable_view_or_no);
+        bgCircleView = arcComponents.get(R.id.arc_layout_background_circle);
 
 
         maskLayout.onTouchRegistered(this::hide);
@@ -59,6 +59,7 @@ public class ArcMenu {
     }
 
     private void fadeOut(View view) {
+
         contextProvider.useContext(context ->
                 view.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_out)));
     }

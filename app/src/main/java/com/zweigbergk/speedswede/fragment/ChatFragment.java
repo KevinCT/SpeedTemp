@@ -25,6 +25,8 @@ import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.eyecandy.ArcMenu;
 import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
 import com.zweigbergk.speedswede.util.Stringify;
+import com.zweigbergk.speedswede.util.collection.Arrays;
+import com.zweigbergk.speedswede.util.collection.HashMap;
 import com.zweigbergk.speedswede.util.collection.Point;
 import com.zweigbergk.speedswede.util.methodwrapper.CallerMethod;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
@@ -41,6 +43,9 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
 
     private ArcMenu arcMenu;
 
+    private HashMap<Integer, View> arcComponents;
+
+
     Point arcLayoutPosition = new Point(0, 0);
 
     //TODO presenter between interactor and fragment
@@ -54,10 +59,14 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "ChatFragment.onCreate()");
 
         setHasOptionsMenu(true);
         getActivity().invalidateOptionsMenu();
-        Log.d(TAG, "ChatFragment.onCreate()");
+    }
+
+    private void addArcComponent(int resId) {
+        arcComponents.put(resId, getView().findViewById(resId));
     }
 
     private void checkSavedState(Bundle savedInstanceState) {
@@ -102,7 +111,15 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         chatRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_chat_recycler_view);
         mInputBox = (EditText) view.findViewById(R.id.fragment_chat_message_text);
 
-        arcMenu = new ArcMenu(parent());
+        arcComponents = new HashMap<>();
+        Integer[] arcComponentIds = {
+                R.id.arc_root_layout, R.id.arc_layout,
+                R.id.arc_clickable_view_or_no, R.id.arc_layout_background_circle
+        };
+
+        Arrays.asList(arcComponentIds).foreach(this::addArcComponent);
+
+        arcMenu = new ArcMenu(this, arcComponents);
 
         return view;
     }
@@ -245,5 +262,10 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
     public void supply(String s) {
         getActivity().setTitle(s);
         mPresenter.onChangeNameClicked(getActivity().getBaseContext(), s);
+    }
+
+    @Override
+    public void useContext(Client<Context> client) {
+        client.supply(getContext());
     }
 }
