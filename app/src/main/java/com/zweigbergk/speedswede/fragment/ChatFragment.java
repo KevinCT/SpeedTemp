@@ -19,6 +19,7 @@ import android.widget.EditText;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.core.Chat;
+import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
@@ -35,6 +36,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
     private RecyclerView chatRecyclerView;
     private EditText mInputBox;
 
+    private boolean isLocalUserFirstUser;
 
     //TODO presenter between interactor and fragment
     private ChatFragmentPresenter mPresenter;
@@ -192,21 +194,50 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
     }
 
     public Boolean hasLocalUserLiked() {
+        isLocalUserFirstUser();
         Chat chat = mPresenter.getChat();
-        return chat.hasLocalUserLiked();
+        if(isLocalUserFirstUser) {
+            return chat.hasFirstUserLiked();
+        } else {
+            return chat.hasSecondUserLiked();
+        }
+    }
+
+    public Boolean hasOtherUserLiked() {
+        isLocalUserFirstUser();
+        Chat chat = mPresenter.getChat();
+        if(!isLocalUserFirstUser) {
+            return chat.hasSecondUserLiked();
+        } else {
+            return chat.hasFirstUserLiked();
+        }
     }
 
     public Boolean hasBothUsersLiked() {
         Chat chat = mPresenter.getChat();
-        return (chat.hasLocalUserLiked() && chat.hasSecondUserLiked());
+        System.out.println("First user like?" + chat.hasFirstUserLiked());
+        System.out.println("Second user like?" + chat.hasSecondUserLiked());
+        return (chat.hasFirstUserLiked() && chat.hasSecondUserLiked());
     }
 
     public void setLikeForLocalUser(Boolean likeStatus) {
-        //if(firstUSer)
-        DatabaseHandler.get(mPresenter.getChat()).setLikeStatusForFirstUser(likeStatus);
-        //else
-        //DatabaseHandler.get(mPresenter.getChat()).setLikeStatusForFirstUser(likeStatus);
+        isLocalUserFirstUser();
+        if(isLocalUserFirstUser) {
 
+            DatabaseHandler.get(mPresenter.getChat()).setLikeStatusForFirstUser(likeStatus);
+
+        } else {
+            DatabaseHandler.get(mPresenter.getChat()).setLikeStatusForSecondUser(likeStatus);
+
+        }
+    }
+
+    public void isLocalUserFirstUser() {
+        User activeUser = DatabaseHandler.getActiveUser();
+        DatabaseHandler.get(activeUser).pull().then(user -> {
+            boolean isFirstUser = user.equals(mPresenter.getChat().getFirstUser());
+            isLocalUserFirstUser = isFirstUser;
+        } );
     }
 
 }

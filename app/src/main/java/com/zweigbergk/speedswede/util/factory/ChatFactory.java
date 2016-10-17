@@ -42,6 +42,8 @@ public class ChatFactory {
     public static Promise<Chat> serializeChat(DataSnapshot snapshot) {
         String firstUserId = ChatFactory.getUserId(snapshot.child(Constants.FIRST_USER));
         String secondUserId = ChatFactory.getUserId(snapshot.child(Constants.SECOND_USER));
+        Boolean likeStatusFirstUser = ChatFactory.getLikeStatus(snapshot.child(Constants.LIKED_BY_FIRST_USER));
+        Boolean likeStatusSecondUser = ChatFactory.getLikeStatus(snapshot.child(Constants.LIKED_BY_SECOND_USER));
 
         Chat chatWithoutUsers = getChatWithoutUsers(snapshot);
         Commitment<Chat> chatCommitment = new Guarantee<>(chatWithoutUsers);
@@ -55,6 +57,8 @@ public class ChatFactory {
             User secondUser = (User) items.get(SECOND_USER);
             chat.setFirstUser(firstUser);
             chat.setSecondUser(secondUser);
+            chat.setLikeStatusFirstUser(likeStatusFirstUser);
+            chat.setLikeStatusSecondUser(likeStatusSecondUser);
             return chat;
         };
 
@@ -73,10 +77,29 @@ public class ChatFactory {
 
         long timestamp = (long) snapshot.child(Constants.TIMESTAMP).getValue();
 
+        Boolean likeStatusFirstUser;
+        Boolean likeStatusSecondUser;
+        if(snapshot.child(Constants.LIKED_BY_FIRST_USER).getValue() == null) {
+            likeStatusFirstUser = false;
+        } else {
+            likeStatusFirstUser = (boolean) snapshot.child(Constants.LIKED_BY_FIRST_USER).getValue();
+        }
+
+        if(snapshot.child(Constants.LIKED_BY_SECOND_USER).getValue() == null) {
+            likeStatusSecondUser = false;
+        } else {
+            likeStatusSecondUser = (boolean) snapshot.child(Constants.LIKED_BY_SECOND_USER).getValue();
+        }
+
+
         Iterable<DataSnapshot> messageSnapshots = snapshot.child(Constants.MESSAGES).getChildren();
         List<Message> messages = asMessageList(messageSnapshots);
 
-        return new Chat(id, name, timestamp, messages, null, null);
+        Chat chat = new Chat(id, name, timestamp, messages, null, null);
+        chat.setLikeStatusFirstUser(likeStatusFirstUser);
+        chat.setLikeStatusSecondUser(likeStatusSecondUser);
+
+        return chat;
     }
 
     private static List<Message> asMessageList(Iterable<DataSnapshot> snapshot) {
@@ -107,5 +130,22 @@ public class ChatFactory {
         }
 
         return userId;
+    }
+
+    private static Boolean getLikeStatus(DataSnapshot snapshot) {
+        Object value = snapshot.getValue();
+        Boolean liked;
+        try {
+            liked = (Boolean) value;
+        } catch (ClassCastException e) {
+            HashMap<String, Object> mapping = (HashMap) value;
+            liked = (Boolean) mapping.get(snapshot.getKey());
+        }
+
+        if (liked == null) {
+            liked = false;
+        }
+
+        return liked;
     }
 }

@@ -1,6 +1,6 @@
 package com.zweigbergk.speedswede.activity;
 
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,8 +34,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
-
 
         if (savedInstanceState == null) {
             createActivity();
@@ -148,48 +146,64 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     }
 
     public void setUpActionBar(ChatFragment chatFragment) {
-
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
+
+        actionBar.setTitle("Title");
+
         ImageView imageView = new ImageView(actionBar.getThemedContext());
         imageView.setScaleType(ImageView.ScaleType.CENTER);
 
-        if(chatFragment.hasLocalUserLiked()) {
-            if (chatFragment.hasBothUsersLiked()) {
+        likeCheck(chatFragment, imageView, actionBar, false);
 
-                imageView.setImageResource(R.drawable.com_facebook_button_icon_blue);
-                imageView.setClickable(true);
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+        imageView.setClickable(true);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                    }
-                });
+                likeCheck(chatFragment, imageView, actionBar, true);
             }
+        });
 
-            else {
+    }
 
-                imageView.setImageResource(R.drawable.com_facebook_button_like_icon_selected);
-                imageView.setClickable(true);
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        chatFragment.setLikeForLocalUser(false);
-                    }
-                });
-            }
-        } else {
+    public void likeCheck(ChatFragment chatFragment, ImageView imageView, ActionBar actionBar, boolean hasClicked) {
 
-            imageView.setImageResource(R.drawable.com_facebook_button_like_background);
-            imageView.setClickable(true);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    chatFragment.setLikeForLocalUser(true);
-                }
-            });
+
+        if (chatFragment.hasBothUsersLiked() && hasClicked) {
+            //Open facebook link
+            imageView.setImageResource(R.drawable.com_facebook_button_icon_blue);
+
+        }
+
+        else if(chatFragment.hasBothUsersLiked() && !hasClicked) {
+            imageView.setImageResource(R.drawable.com_facebook_button_icon_blue);
+        }
+
+        else if(chatFragment.hasLocalUserLiked() && hasClicked) {
+            chatFragment.setLikeForLocalUser(false);
+            imageView.setImageResource(R.drawable.com_facebook_button_send_icon_blue);
+
+        }
+        else if(chatFragment.hasLocalUserLiked() && !hasClicked) {
+            imageView.setImageResource(R.drawable.com_facebook_button_like_icon_selected);
+        }
+
+        else if(chatFragment.hasOtherUserLiked() && hasClicked) {
+            chatFragment.setLikeForLocalUser(true);
+            imageView.setImageResource(R.drawable.com_facebook_button_icon_blue);
+
+        }
+
+        else if (!chatFragment.hasLocalUserLiked() && hasClicked) { //Double check
+            chatFragment.setLikeForLocalUser(true);
+            imageView.setImageResource(R.drawable.com_facebook_button_like_icon_selected);
+        }
+
+        else if(!hasClicked) {
+            imageView.setImageResource(R.drawable.com_facebook_button_send_icon_blue);
         }
 
         ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
@@ -200,5 +214,4 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         imageView.setLayoutParams(layoutParams);
         actionBar.setCustomView(imageView);
     }
-
 }

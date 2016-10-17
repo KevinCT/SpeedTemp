@@ -91,7 +91,7 @@ public class Chat implements Parcelable {
         return secondUser;
     }
 
-    public boolean hasLocalUserLiked() {
+    public boolean hasFirstUserLiked() {
 
         return likedByFirstUser;
     }
