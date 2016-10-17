@@ -2,8 +2,8 @@ package com.zweigbergk.speedswede.core.local;
 
 import com.zweigbergk.speedswede.core.Chat;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.List;
 
 public class UserData {
     List<Chat> chats;

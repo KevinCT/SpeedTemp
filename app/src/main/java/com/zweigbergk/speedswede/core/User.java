@@ -3,18 +3,30 @@ package com.zweigbergk.speedswede.core;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.zweigbergk.speedswede.util.PreferenceValue;
+import com.zweigbergk.speedswede.Constants;
+import com.zweigbergk.speedswede.activity.Language;
+import com.zweigbergk.speedswede.util.PreferenceWrapper;
+import com.zweigbergk.speedswede.util.collection.Map;
 
 import java.util.Arrays;
-import java.util.Map;
 
 public interface User extends Parcelable {
     String getUid();
     String getDisplayName();
-    Object getPreference(Preference preference);
-    Map<Preference, PreferenceValue> getPreferences();
-    long getTimeInQueue();
+
+    //Preferences
+    PreferenceWrapper getPreference(Preference preference);
+    Map<Preference, PreferenceWrapper> getPreferences();
+    boolean getNotificationPreference();
+    Language getLanguage();
     SkillCategory getSkillCategory();
+    void setPreference(Preference preference, PreferenceWrapper wrapper);
+
+    long getTimeInQueue();
+
+    boolean isFirstLogin();
+    void setFirstLogin(boolean value);
+    void setTimeInQueue(long value);
     void startTime();
 //    int getOwnRating();
 //    int[] getMatchInterval();
@@ -25,9 +37,13 @@ public interface User extends Parcelable {
 //    void setMatchingSkill(MatchSkill skill);
 
     enum Preference implements Parcelable {
-        NOTIFICATIONS, LANGUAGE, SKILL_CATEGORY;
+        NOTIFICATIONS(Constants.NOTIFICATIONS), LANGUAGE(Constants.LANGUAGE), SKILL_CATEGORY(Constants.SKILL_CATEGORY);
 
-        private final int mValue;
+        private final String value;
+
+        public String toString() {
+            return value;
+        }
 
         public static Preference[] values = Preference.values();
 
@@ -36,28 +52,31 @@ public interface User extends Parcelable {
         //private static final Preference[] longs = new Preference[] { };
 
         public boolean accepts(boolean value) {
-            return Arrays.asList(booleans).contains(this);
-        }
-
-        public boolean accepts(String value) {
-            return Arrays.asList(strings).contains(this);
+            return Arrays.asList(booleans).contains(value);
         }
 
        /* public boolean accepts(long value) {
             return Arrays.asList(longs).contains(this);
         }*/
 
-        Preference() {
-            mValue = ordinal();
+        Preference(String value) {
+            this.value = value;
         }
 
-        public static Preference fromInt(int i) {
-            return Preference.values[i];
+        public static Preference fromString(String text) {
+            if (text != null) {
+                for (Preference preference : Preference.values()) {
+                    if (text.equalsIgnoreCase(preference.value)) {
+                        return preference;
+                    }
+                }
+            }
+            return null;
         }
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeInt(this.mValue);
+            dest.writeString(this.value);
         }
 
         @Override
@@ -68,7 +87,7 @@ public interface User extends Parcelable {
         public static final Creator<Preference> CREATOR = new Creator<Preference>() {
             @Override
             public Preference createFromParcel(Parcel in) {
-                return Preference.fromInt(in.readInt());
+                return Preference.fromString(in.readString());
             }
 
             @Override

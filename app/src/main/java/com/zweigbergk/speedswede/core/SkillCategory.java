@@ -1,30 +1,25 @@
 package com.zweigbergk.speedswede.core;
 
-/**
- * Created by FEngelbrektsson on 12/10/16.
- */
+import com.zweigbergk.speedswede.util.collection.Collections;
 
 public enum SkillCategory {
-    PUPIL("pupil"), UNSPECIFIED("unspecified"), MENTOR("mentor");
+    STUDENT("student"), CHATTER("chatter"), MENTOR("mentor"), UNDEFINED("undefined");
 
+    public static final SkillCategory DEFAULT = SkillCategory.STUDENT;
     private String value;
 
     SkillCategory(String value) {
         this.value = value;
     }
 
-    public String getValue() {
+    @Override
+    public String toString() {
         return value;
     }
 
-    public static SkillCategory fromString(String text) {
-        if (text != null) {
-            for (SkillCategory skill : SkillCategory.values()) {
-                if (text.equalsIgnoreCase(skill.value)) {
-                    return skill;
-                }
-            }
-        }
-        return null;
+    public static SkillCategory fromString(String string) {
+        return Collections.asList(values())
+                .filter(category -> category.toString().equalsIgnoreCase(string))
+                .getFirst();
     }
 }

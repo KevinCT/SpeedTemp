@@ -8,10 +8,11 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.ParcelHelper;
 
+import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.List;
+
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 public class Chat implements Parcelable {
 
@@ -39,7 +40,7 @@ public class Chat implements Parcelable {
         this.firstUser = firstUser;
         this.secondUser = secondUser;
 
-        this.name = Lists.randomPick(Constants.CHAT_NAMES);
+        this.name = Constants.Topic.getRandom().name();
 
         this.messages = new ArrayList<>();
         timeStamp = (new Date()).getTime();
@@ -63,6 +64,10 @@ public class Chat implements Parcelable {
 
     public boolean includesUser(User user) {
         return firstUser.equals(user) || secondUser.equals(user);
+    }
+
+    public User getOtherUser(User user) {
+        return getFirstUser().equals(user) ? getSecondUser() : getFirstUser();
     }
 
     public String getName() {
@@ -179,7 +184,7 @@ public class Chat implements Parcelable {
     @Override
     public String toString() {
         return String.format(Locale.ENGLISH,
-                "Chat {id: %s,%sname: %s,%sfirstUser: %s,%secondUser: %s,%smessageCount: %d,\n},",
+                "Chat {id: %s,%sname: %s,%sfirstUser: %s,%secondUser: %s,%smessageCount: %d,%n},",
                 id, NEWLINE,
                 name, NEWLINE,
                 firstUser != null ? firstUser.toString() : "null", NEWLINE,

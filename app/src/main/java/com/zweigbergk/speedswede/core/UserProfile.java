@@ -5,41 +5,73 @@ import android.os.Parcelable;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.Exclude;
+import com.zweigbergk.speedswede.activity.Language;
 import com.zweigbergk.speedswede.util.ParcelHelper;
-import com.zweigbergk.speedswede.util.PreferenceValue;
+import com.zweigbergk.speedswede.util.PreferenceWrapper;
+import com.zweigbergk.speedswede.util.Stringify;
+import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.collection.Map;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserProfile implements User {
 
     private String displayName, uid;
+    private boolean isFirstLogin;
 //    private Timer timer;
 //    private int[] matchingInterval;
 
     private long timeInQueue;
 
     @Exclude
-    private Map<Preference, PreferenceValue> mPreferences;
+    private Map<Preference, PreferenceWrapper> mPreferences;
 
     public UserProfile(String name, String uid) {
         this.displayName = name;
         this.uid = uid;
 
         mPreferences = new HashMap<>();
+        isFirstLogin = false;
     }
 
-    public UserProfile withPreferences(Map<Preference, PreferenceValue> preferences) {
-        mPreferences = preferences;
+    public UserProfile withPreferences(Map<Preference, PreferenceWrapper> preferences) {
+        setPreferences(preferences);
         return this;
     }
 
     @Exclude
     @Override
     public SkillCategory getSkillCategory() {
-        return SkillCategory.fromString((String) getPreference(Preference.SKILL_CATEGORY).getValue());
+        PreferenceWrapper pref = getPreference(Preference.SKILL_CATEGORY);
+        SkillCategory skillCategory = SkillCategory.fromString((String) pref.getValue());
+        return skillCategory != null ? skillCategory : SkillCategory.DEFAULT;
 }
+    @Exclude
+    @Override
+    public boolean getNotificationPreference() {
+        PreferenceWrapper value = getPreference(Preference.NOTIFICATIONS);
+        return value != null && (boolean) value.getValue();
+    }
+
+    @Exclude
+    @Override
+    public Language getLanguage() {
+        PreferenceWrapper pref = getPreference(Preference.LANGUAGE);
+        Language language = Language.fromString((String) pref.getValue());
+        return language != null ? language : Language.DEFAULT;
+    }
+
+    public boolean isFirstLogin() {
+        return isFirstLogin;
+    }
+
+    public void setFirstLogin(boolean value) {
+        isFirstLogin = value;
+    }
+
+    public void setTimeInQueue(long value) {
+        timeInQueue = value;
+    }
 
     @Override
     public String getUid() {
@@ -53,14 +85,26 @@ public class UserProfile implements User {
 
     @Override
     @Exclude
-    public PreferenceValue getPreference(Preference preference) {
+    public PreferenceWrapper getPreference(Preference preference) {
         return mPreferences.get(preference);
+    }
+
+    private void setPreferences(java.util.Map<Preference, PreferenceWrapper> map) {
+        for (Map.Entry<Preference, PreferenceWrapper> entry : map.entrySet()) {
+            if (entry.getValue() != null) {
+                mPreferences.put(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     @Override
     @Exclude
-    public Map<Preference, PreferenceValue> getPreferences() {
+    public Map<Preference, PreferenceWrapper> getPreferences() {
         return mPreferences;
+    }
+
+    public void setPreference(Preference pref, PreferenceWrapper wrapper) {
+        mPreferences.put(pref, wrapper);
     }
 
     public static UserProfile from(FirebaseUser user) {
@@ -77,8 +121,14 @@ public class UserProfile implements User {
 
     @Override
     public String toString() {
-        return String.format("UserProfile {\n\t\tdisplayName: %s,\n\t\tuid: %s\n}",
-                displayName, uid);
+        StringBuilder preferences = new StringBuilder();
+        mPreferences.foreach(entry -> {
+            preferences.append(Stringify.curlyFormat("%nkey: {key}", entry.getKey().toString()));
+            preferences.append(Stringify.curlyFormat("\tvalue: {value}", entry.getValue().getValue().toString()));
+        });
+
+        return String.format("UserProfile {%n\t\tdisplayName: %s,%n\t\tuid: %s,\n\t\tpreferences: %s%n}",
+                displayName, uid, preferences);
     }
 
     @Override
@@ -123,7 +173,9 @@ public class UserProfile implements User {
         if (in.readString() != null) {
             displayName = in.readString();
             uid = in.readString();
-            mPreferences = ParcelHelper.readParcelableMap(in, Preference.class, PreferenceValue.class);
+            Map<Preference, PreferenceWrapper> preferences =
+                    ParcelHelper.readParcelableMap(in, Preference.class, PreferenceWrapper.class);
+            setPreferences(preferences);
         }
     }
 
@@ -142,11 +194,11 @@ public class UserProfile implements User {
 //
 //    public void setInitialMatchInterval() {
 //        switch(matchSkill) {
-//            case PUPIL:
+//            case STUDENT:
 //                matchingInterval[0] = 0;
 //                matchingInterval[1] = 0;
 //                break;
-//            case UNSPECIFIED:
+//            case CHATTER:
 //                matchingInterval[0] = 50;
 //                matchingInterval[1] = 50;
 //                break;

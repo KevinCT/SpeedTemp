@@ -12,8 +12,8 @@ public class SettingsFragmentPresenter {
 
     }
 
-    public void onListPreferenceSelected(String string, Context context){
-        mInteractor.changeLanguage(string, context);
+    public void onDialogPreferenceSelected(Boolean languageChanged){
+        mInteractor.changeLanguage(languageChanged);
     }
 
 }

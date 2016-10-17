@@ -9,13 +9,14 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.factory.ChatFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Lists;
 
-import java.util.HashMap;
+import com.zweigbergk.speedswede.util.collection.HashMap;
 import java.util.HashSet;
-import java.util.Map;
+import com.zweigbergk.speedswede.util.collection.Map;
 import java.util.Set;
 
 public class ChatListener implements ChildEventListener {
@@ -37,17 +38,17 @@ public class ChatListener implements ChildEventListener {
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Log.d(TAG, "Snapshot onChildAdded: " + dataSnapshot.toString());
-        ChatFactory.serializeChat(dataSnapshot).then(this::notifyAdded);
+        ChatFactory.deserializeChat(dataSnapshot).then(this::notifyAdded);
     }
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        ChatFactory.serializeChat(dataSnapshot).then(this::notifyChanged);
+        ChatFactory.deserializeChat(dataSnapshot).then(this::notifyChanged);
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
-        ChatFactory.serializeChat(dataSnapshot).then(this::notifyRemoved);
+        ChatFactory.deserializeChat(dataSnapshot).then(this::notifyRemoved);
     }
 
     @Override
@@ -97,15 +98,12 @@ public class ChatListener implements ChildEventListener {
         notifyClients(DatabaseEvent.CHANGED, chat);
     }
 
-    private void notifyInterrupted() {
-        notifyClients(DatabaseEvent.INTERRUPTED, null);
-    }
-
 
      /**
-     * Adds a client that will receive updates whenever the chat is added/removed/changed.
-     * */
-    public void addClient(String chatId, Client<DataChange<Chat>> client) {
+      * Adds a client that will receive updates whenever the chat is added/removed/changed.
+      * Should only be called from overriding methods in this class.
+      * */
+    private void addClient(String chatId, Client<DataChange<Chat>> client) {
         if (!chatClients.containsKey(chatId)) {
             chatClients.put(chatId, new HashSet<>());
         }
@@ -125,6 +123,7 @@ public class ChatListener implements ChildEventListener {
      * */
     public void addClient(Client<DataChange<Chat>> client) {
         addClient(CLIENT_FOR_ALL_CHATS, client);
+        Stringify.printStackTrace();
     }
 
 
@@ -158,5 +157,13 @@ public class ChatListener implements ChildEventListener {
     @Override
     public boolean equals(Object other) {
         return other != null && this.getClass() == other.getClass() && hashCode() == other.hashCode();
+    }
+
+    /**
+     * Overriding hashCode since ChatListener is used in hashmaps.
+     */
+    @Override
+    public int hashCode() {
+        return chatClients.hashCode();
     }
 }

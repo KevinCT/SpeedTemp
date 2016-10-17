@@ -19,11 +19,11 @@ import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.Translation;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.collection.List;
 import java.util.Locale;
-import java.util.Map;
+import com.zweigbergk.speedswede.util.collection.Map;
 
 import com.zweigbergk.speedswede.util.Translation.TranslationCache;
 
@@ -151,9 +151,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Client<String> updateViewText = translation -> {
             String text = Stringify.curlyFormat("{current text}\n\nTranslation:{translation}",
                     message.getText(), translation);
-            Log.d(TAG, "Setting text to:  " + text);
-            holder.mTextView.setText(text
-                    );
+            holder.mTextView.setText(text);
         };
 
 

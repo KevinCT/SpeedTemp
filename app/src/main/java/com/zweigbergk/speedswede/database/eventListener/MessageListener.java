@@ -10,9 +10,8 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.util.Stringify;
+import com.zweigbergk.speedswede.util.collection.Collection;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
-
-import java.util.Collection;
 
 public class MessageListener extends FirebaseDataListener<Message> implements ChildEventListener {
     public static final String TAG = MessageListener.class.getSimpleName().toUpperCase();
@@ -80,5 +79,10 @@ public class MessageListener extends FirebaseDataListener<Message> implements Ch
         MessageListener other = (MessageListener) object;
         Log.d(TAG, String.format("IDENTIFIERS: %s ::: %s", mIdentifier, other.mIdentifier));
         return this.mIdentifier.equals(other.mIdentifier);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.mIdentifier.hashCode();
     }
 }

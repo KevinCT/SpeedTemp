@@ -2,12 +2,6 @@ package com.zweigbergk.speedswede.database;
 
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,10 +16,14 @@ import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.async.ListPromise;
+import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.Collections;
+import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.Map;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Tuple;
-import com.zweigbergk.speedswede.util.Lists;
-import com.zweigbergk.speedswede.util.PreferenceValue;
+import com.zweigbergk.speedswede.util.PreferenceWrapper;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 
@@ -37,7 +35,7 @@ import static com.zweigbergk.speedswede.core.User.Preference;
 import static com.zweigbergk.speedswede.util.Lists.EntryMapping;
 
 
-class DbChatHandler extends DbHandler {
+class DbChatHandler extends DbTopLevelHandler {
     private static DbChatHandler INSTANCE;
 
     private static final String TAG = DbChatHandler.class.getSimpleName().toUpperCase();
@@ -52,7 +50,7 @@ class DbChatHandler extends DbHandler {
 
     }
 
-    public static DbChatHandler getInstance() {
+    public static synchronized DbChatHandler getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new DbChatHandler();
         }
@@ -78,6 +76,7 @@ class DbChatHandler extends DbHandler {
         mChatListener = new ChatListener();
 
         String uid = DbUserHandler.getInstance().getActiveUserId();
+        Log.d(TAG, "Active user ID: " + uid);
 
         Query firstUserRef = mRoot.child(CHATS).orderByChild("firstUser/uid").equalTo(uid);
         firstUserRef.keepSynced(true);
@@ -89,6 +88,10 @@ class DbChatHandler extends DbHandler {
     }
 
     ChatListener getChatListener() {
+        if (mChatListener == null) {
+            registerChatsListener();
+        }
+
         return mChatListener;
     }
 
@@ -106,10 +109,10 @@ class DbChatHandler extends DbHandler {
     }
 
     /**
-     * Should <u>not</u> be used explicitly. Use DatabaseHandler.get(user).push instead.
+     * Should <u>not</u> be used explicitly. Use DatabaseHandler.getReference(user).push instead.
      * */
     void pushChat(Chat chat) {
-        Log.d(TAG, chat.getName());
+        Log.d(TAG, "Push chat: " + chat.getName());
 
         DatabaseReference ref = mRoot.child(CHATS).child(chat.getId());
 
@@ -117,7 +120,7 @@ class DbChatHandler extends DbHandler {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    pushPreferences(chat);
+                    //pushPreferences(chat);
                     Log.d(TAG, "In listener where pushPreferences is called");
                     ref.removeEventListener(this);
                 }
@@ -133,63 +136,6 @@ class DbChatHandler extends DbHandler {
         mRoot.child(CHATS).child(chat.getId()).setValue(chat);
     }
 
-    /**
-     * Push the preferences of the chat's users into the chat
-     */
-    private void pushPreferences(Chat chat) {
-        String firstUid = chat.getFirstUser().getUid();
-        String secondUid = chat.getSecondUser().getUid();
-
-        Map<Preference, PreferenceValue> firstUserPrefs = chat.getFirstUser().getPreferences();
-        Map<Preference, PreferenceValue> secondUserPrefs = chat.getSecondUser().getPreferences();
-
-        Map<String, String> pojoMap = Lists.map(firstUserPrefs, createPojoEntry);
-
-        mRoot.child(CHATS).child(chat.getId()).child(FIRST_USER).child(Constants.PREFERENCES).setValue(pojoMap);
-
-        pojoMap = Lists.map(secondUserPrefs, createPojoEntry);
-        mRoot.child(CHATS).child(chat.getId()).child(SECOND_USER).child(Constants.PREFERENCES).setValue(pojoMap);
-    }
-
-    private static final EntryMapping<String, String> createPojoEntry = mapEntry -> {
-        String prefAsString = parseToReadable((Preference) mapEntry.getKey());
-
-        PreferenceValue prefValue = (PreferenceValue) mapEntry.getValue();
-        String prefValueAsString = parseToReadable(prefValue);
-
-        return new Tuple<>(prefAsString, prefValueAsString);
-    };
-
-    private static String parseToReadable(PreferenceValue prefValue) {
-        if (prefValue == null || prefValue.getValue() == null) {
-            return null;
-        }
-
-        String value = prefValue.getValue().toString();
-
-        return value;
-    }
-
-    private static String parseToReadable(Preference preference) {
-        if (preference == null) {
-            return "";
-        }
-
-        String name = preference.toString().toLowerCase();
-        StringBuilder prettyName = new StringBuilder();
-
-        for (int i = 0; i < name.length(); ++i) {
-            if (name.charAt(i) == '_') {
-                prettyName.append(Character.toUpperCase(name.charAt(++i)));
-                continue;
-            }
-
-            prettyName.append(name.charAt(i));
-        }
-
-        return prettyName.toString();
-    }
-
     void delete(DatabaseReference ref) {
         ref.removeValue();
     }
@@ -198,7 +144,7 @@ class DbChatHandler extends DbHandler {
         if (hasMessageListenerForChat(chat)) {
             //If the listener is already there, we must explicitly pass every existing message
             // to our new client
-            DatabaseHandler.get(chat).pullMessages().forEach(
+            DatabaseHandler.getReference(chat).pullMessages().forEach(
                     message -> client.supply(DataChange.added(message)));
         } else {
             createMessageListenerForChat(chat);
@@ -261,7 +207,7 @@ class DbChatHandler extends DbHandler {
     public void removeMessageClient(Chat chat, Client<DataChange<Message>> client) {
         if (!messageListeners.containsKey(chat.getId())) {
             Log.e(TAG, String.format("WARNING: Tried removing client: [%s] from chat with id: [%s]," +
-                    " but the client was invert attached to the message listener.",
+                    " but the client was not attached to the message listener.",
                     client.toString(), chat.getId()));
             new Exception().printStackTrace();
             return;

@@ -12,36 +12,29 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Banner;
-import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.UserListener;
 import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
-import com.zweigbergk.speedswede.util.async.FirebasePromise;
-import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.async.FirebasePromise;
 import com.zweigbergk.speedswede.util.async.Promise;
+import com.zweigbergk.speedswede.util.async.PromiseNeed;
+import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.factory.UserFactory;
-import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.zweigbergk.speedswede.Constants.POOL;
-import static com.zweigbergk.speedswede.Constants.SKILL_CATEGORY;
-import static com.zweigbergk.speedswede.Constants.USERS;
-import static com.zweigbergk.speedswede.Constants.BANS;
 import static com.zweigbergk.speedswede.Constants.BANLIST;
+import static com.zweigbergk.speedswede.Constants.BANS;
+import static com.zweigbergk.speedswede.Constants.POOL;
+import static com.zweigbergk.speedswede.Constants.USERS;
 import static com.zweigbergk.speedswede.util.async.PromiseNeed.SNAPSHOT;
 
-class DbUserHandler extends DbHandler {
+class DbUserHandler extends DbTopLevelHandler {
     private static DbUserHandler INSTANCE;
 
-    public static final String TAG = DbUserHandler.class.getSimpleName().toUpperCase();
+    private static final String TAG = DbUserHandler.class.getSimpleName().toUpperCase();
 
     private DatabaseReference mRoot;
 
@@ -54,7 +47,7 @@ class DbUserHandler extends DbHandler {
 
     }
 
-    public static DbUserHandler getInstance() {
+    public static synchronized DbUserHandler getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new DbUserHandler();
         }
@@ -100,14 +93,27 @@ class DbUserHandler extends DbHandler {
     }
 
     public Promise<User> pullUser(String uid) {
-        final Promise<User> promise = Promise.create();
+        final Promise<User> promise = new Promise<>(items -> items.getUser(PromiseNeed.USER));
+                promise.requires(PromiseNeed.USER);
+
 
         if(uid != null) {
             mRoot.child(Constants.USERS).child(uid).addListenerForSingleValueEvent(
                     new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            UserFactory.serializeUser(promise, dataSnapshot);
+                            if (dataSnapshot.exists()) {
+                                User user = UserFactory.deserializeUser(dataSnapshot);
+
+                                //Update the active user
+                                if (user.equals(getActiveUser())) {
+                                    DatabaseHandler.setLoggedInUser(user);
+                                }
+
+                                promise.addItem(PromiseNeed.USER, user);
+                            } else {
+                                promise.addItem(PromiseNeed.USER, null);
+                            }
                         }
 
                         @Override
@@ -133,26 +139,23 @@ class DbUserHandler extends DbHandler {
     }
 
     void pushUser(User user) {
-        mRoot.child(Constants.USERS).child(user.getUid()).setValue(user);
+        Path.to(user).setValue(user);
+
+        user.getPreferences().foreach(prefEntry ->
+                DatabaseHandler.getReference(user).setPreference(prefEntry.getKey(), prefEntry.getValue()));
     }
 
     void removeUserFromPool(User user) {
         mRoot.child(Constants.POOL).child(user.getUid()).setValue(null);
     }
 
-    void setUserSkill(User user, SkillCategory value) {
-        mRoot.child(USERS).child(user.getUid()).child(SKILL_CATEGORY).setValue(value);
-    }
-
     void setUserAttribute(User user, UserReference.UserAttribute attribute, Object value) {
-        String key = attribute.getDbKey();
-
-        mRoot.child(USERS).child(user.getUid()).child(key).setValue(value);
+        Path.to(user).child(attribute.getPath()).setValue(value);
     }
 
     String getActiveUserId() {
-        if (getActiveUser() != null) {
-            return getActiveUser().getUid();
+        if (mLoggedInUser != null) {
+            return mLoggedInUser.getUid();
         }
 
         return getFirebaseAuthUid();
@@ -175,10 +178,7 @@ class DbUserHandler extends DbHandler {
     User getActiveUser() {
         if (mLoggedInUser == null) {
             User firebaseUser = UserProfile.from(FirebaseAuth.getInstance().getCurrentUser());
-
-            if (firebaseUser != null) {
-                setLoggedInUser(firebaseUser);
-            }
+            setLoggedInUser(firebaseUser);
         }
 
         return mLoggedInUser;

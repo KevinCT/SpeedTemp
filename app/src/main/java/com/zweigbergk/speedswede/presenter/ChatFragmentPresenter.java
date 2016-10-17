@@ -16,8 +16,6 @@ import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.database.UserReference;
-import com.zweigbergk.speedswede.interactor.BanInteractor;
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
@@ -30,8 +28,6 @@ import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
 public class ChatFragmentPresenter {
     public static final String TAG = ChatFragmentPresenter.class.getSimpleName().toUpperCase();
 
-    private BanInteractor mBanInteractor;
-
     private ChatFragmentView mView;
     private Client<DataChange<Message>> chatEventHandler;
 
@@ -39,7 +35,6 @@ public class ChatFragmentPresenter {
 
     public ChatFragmentPresenter(ChatFragmentView view){
         mView = view;
-        mBanInteractor = new BanInteractor();
     }
     public Chat getChat(){
         return mChat;
@@ -64,7 +59,7 @@ public class ChatFragmentPresenter {
         MessageAdapter adapter = (MessageAdapter) mView.getRecyclerView().getAdapter();
         chatEventHandler = createChatEventHandler(adapter);
         Log.d(TAG, "Creating new chatEventHandler, toString(): " + chatEventHandler);
-        DatabaseHandler.get(mChat).bindMessages(chatEventHandler);
+        DatabaseHandler.getReference(mChat).bindMessages(chatEventHandler);
     }
 
     private void initializeRecyclerView() {
@@ -85,27 +80,6 @@ public class ChatFragmentPresenter {
         adapter.addEventCallback(DatabaseEvent.ADDED, this::smoothScrollToBottomOfList);
     }
 
-    private void smoothScrollToBottomOfList(Message message) {
-        RecyclerView recyclerView = mView.getRecyclerView();
-        int scrollOffset = recyclerView.computeVerticalScrollOffset();
-
-        int verticalRange = recyclerView.computeVerticalScrollRange();
-        int verticalExtent = recyclerView.computeVerticalScrollExtent();
-
-        int scrollHeight = verticalRange - verticalExtent;
-
-        if (recyclerView.getAdapter().getItemCount() <= 0) {
-            return;
-        }
-
-        // Only scroll to the bottom if the new message was posted by us,
-        //   OR if you are at the relative bottom of the chat.
-        if ((message.getId() != null && message.getId().equals(DatabaseHandler.getActiveUserId()))
-                || (scrollHeight - scrollOffset < recyclerView.getHeight())) {
-            recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
-        }
-    }
-
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(CHAT_PARCEL, mChat);
     }
@@ -121,14 +95,12 @@ public class ChatFragmentPresenter {
 
     public void terminateChat() {
         User activeUser = DatabaseHandler.getActiveUser();
-        DatabaseHandler.get(mChat).removeUser(activeUser);
-        DatabaseHandler.hasUsers(mChat).then(
-                result -> {
-                    if(!result) {
-                        DatabaseHandler.get(mChat).remove();
-                    }
-                }
-        );
+        DatabaseHandler.getReference(mChat).removeUser(activeUser);
+        DatabaseHandler.hasUsers(mChat).onFalse(DatabaseHandler.getReference(mChat)::remove);
+    }
+
+    public void removeLocalChatSettings(Context context){
+        LocalStorage.INSTANCE.removeSetting(context, mChat.getId());
     }
 
     private void postMessage(String messageText) {
@@ -137,8 +109,8 @@ public class ChatFragmentPresenter {
                 messageText,
                 Time.getCurrentTime());
 
-        DatabaseHandler.get(mChat).sendMessage(message);
-
+        DatabaseHandler.getReference(mChat).sendMessage(message);
+        
         addToAdapter(message);
         mView.clearInputField();
     }
@@ -150,7 +122,7 @@ public class ChatFragmentPresenter {
 
     public void onBanClicked(){
         User activeUser = DatabaseHandler.getActiveUser();
-        UserReference userRef = DatabaseHandler.get(activeUser);
+        UserReference userRef = DatabaseHandler.getReference(activeUser);
 
         User stranger = mChat.getFirstUser().equals(activeUser) ?
                 mChat.getSecondUser() : mChat.getFirstUser();
@@ -175,12 +147,33 @@ public class ChatFragmentPresenter {
         //We no longer want updates from the old chat. Remove us as a client from the old chat.
         if (chatEventHandler != null) {
             Log.d(TAG, "Removing old chatEventHandler, toString(): " + chatEventHandler);
-            DatabaseHandler.get(mChat).unbindMessages(chatEventHandler);
+            DatabaseHandler.getReference(mChat).unbindMessages(chatEventHandler);
             chatEventHandler = null;
         }
     }
 
     public void onChangeNameClicked(Context context, String chatName){
         LocalStorage.INSTANCE.saveSettings(context, mChat.getId(), chatName);
+    }
+
+    private void smoothScrollToBottomOfList(Message message) {
+        RecyclerView recyclerView = mView.getRecyclerView();
+        int scrollOffset = recyclerView.computeVerticalScrollOffset();
+
+        int verticalRange = recyclerView.computeVerticalScrollRange();
+        int verticalExtent = recyclerView.computeVerticalScrollExtent();
+
+        int scrollHeight = verticalRange - verticalExtent;
+
+        if (recyclerView.getAdapter().getItemCount() <= 0) {
+            return;
+        }
+
+        // Only scroll to the bottom if the new message was posted by us,
+        //   OR if you are at the relative bottom of the chat.
+        if ((message.getId() != null && message.getId().equals(DatabaseHandler.getActiveUserId()))
+                || (scrollHeight - scrollOffset < recyclerView.getHeight())) {
+            recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
+        }
     }
 }

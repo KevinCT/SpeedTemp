@@ -1,37 +1,39 @@
 package com.zweigbergk.speedswede.database;
 
-
+import android.util.Log;
 import com.zweigbergk.speedswede.Constants;
-import com.zweigbergk.speedswede.activity.Language;
 import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.util.PreferenceWrapper;
 import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
+import static com.zweigbergk.speedswede.util.PreferenceWrapper.StringWrapper;
+import static com.zweigbergk.speedswede.util.PreferenceWrapper.BooleanWrapper;
+
 public class UserReference {
     private static final String TAG = UserReference.class.getSimpleName().toUpperCase();
 
     enum UserAttribute {
-        NAME, ID, NOTIFICATIONS, LANGUAGE, USAGE;
+        NAME(Constants.DISPLAY_NAME), ID(Constants.USER_ID),
+        NOTIFICATIONS(Constants.makePath(Constants.PREFERENCES, Constants.NOTIFICATIONS)),
+        LANGUAGE(Constants.makePath(Constants.PREFERENCES, Constants.LANGUAGE)),
+        SKILL_CATEGORY(Constants.makePath(Constants.PREFERENCES, Constants.SKILL_CATEGORY)),
+        FIRST_LOGIN(Constants.FIRST_LOGIN),
+        TIME_IN_QUEUE(Constants.TIME_IN_QUEUE),
+        UNDEFINED(Constants.UNDEFINED);
 
-        public String getDbKey() {
-            switch(this) {
-                case NAME:
-                    return Constants.DISPLAY_NAME;
-                case ID:
-                    return Constants.USER_ID;
-                case NOTIFICATIONS:
-                    return Constants.makePath(Constants.PREFERENCES, Constants.NOTIFICATIONS);
-                case LANGUAGE:
-                    return Constants.makePath(Constants.PREFERENCES, Constants.LANGUAGE);
-                case USAGE:
-                    return Constants.makePath(Constants.PREFERENCES, Constants.USAGE);
-                default:
-                    return Constants.UNDEFINED;
-            }
+        private String path;
+
+        UserAttribute(String path) {
+            this.path = path;
+        }
+
+        public String getPath() {
+            return path;
         }
     }
 
@@ -55,50 +57,52 @@ public class UserReference {
         return userHandler.pullUser(mUser.getUid());
     }
 
-    public void setName(String name) {
-        ifStillValid().then(() ->
-                userHandler.setUserAttribute(mUser, UserAttribute.NAME, name));
+    public void setPreference(User.Preference preference, String value) {
+        updateActiveUserPreference(preference, new StringWrapper(value));
+        attempt(() -> userHandler.setUserAttribute(mUser, fromPreference(preference), value));
     }
 
-    private void setNotifications(boolean value) {
-        ifStillValid().then(() ->
-                userHandler.setUserAttribute(mUser, UserAttribute.NOTIFICATIONS, value));
+    private void updateActiveUserPreference(User.Preference preference, PreferenceWrapper wrapper) {
+        if (mUser.equals(activeUser())) {
+            activeUser().setPreference(preference, wrapper);
+        }
+    }
+
+    public void setPreference(User.Preference preference, PreferenceWrapper wrapper) {
+        updateActiveUserPreference(preference, wrapper);
+        attempt(() -> userHandler.setUserAttribute(mUser, fromPreference(preference), wrapper.getValue()));
     }
 
     public void setPreference(User.Preference preference, boolean value) {
-        if (!preference.accepts(value)) {
-            throw new RuntimeException(String.format(
-                    "Preference [ %s ] can invert be set to a boolean value.", preference));
-        }
-
-        switch (preference) {
-            case NOTIFICATIONS:
-                setNotifications(value);
-                break;
-        }
-    }
-
-    public void setPreference(User.Preference preference, String value) {
-        if (!preference.accepts(value)) {
-            throw new RuntimeException(String.format(
-                    "Preference [ %s ] can not be set to a string value.", preference));
-        }
-
-        switch (preference) {
-            case LANGUAGE:
-                setLanguage(Language.fromString(value));
-                break;
-            case SKILL_CATEGORY:
-                setSkillCategory(SkillCategory.fromString(value));
-        }
+        updateActiveUserPreference(preference, new BooleanWrapper(value));
+        attempt(() -> userHandler.setUserAttribute(mUser, fromPreference(preference), value));
     }
 
     public void setSkillCategory(SkillCategory skill) {
-        attempt(() -> userHandler.setUserSkill(mUser, skill));
+        setPreference(User.Preference.SKILL_CATEGORY, skill.toString());
     }
 
-    private void setLanguage(Language language) {
-        attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.LANGUAGE, language.getLanguageCode()));
+    public void setFirstLogin(boolean value) {
+        activeUser().setFirstLogin(value);
+        attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.FIRST_LOGIN, value));
+    }
+
+    public void setTimeInQueue(long value) {
+        activeUser().setTimeInQueue(value);
+        attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.TIME_IN_QUEUE, value));
+    }
+
+    private UserAttribute fromPreference(User.Preference preference) {
+        switch (preference) {
+            case LANGUAGE:
+                return UserAttribute.LANGUAGE;
+            case NOTIFICATIONS:
+                return UserAttribute.NOTIFICATIONS;
+            case SKILL_CATEGORY:
+                return UserAttribute.SKILL_CATEGORY;
+            default:
+                return UserAttribute.UNDEFINED;
+        }
     }
 
     public Promise<Banner> bannerPromised() {
@@ -128,6 +132,10 @@ public class UserReference {
 
     public void unbind(Client<DataChange<User>> client) {
         userHandler.getUserListener().removeClient(mUser, client);
+    }
+
+    private User activeUser() {
+        return DatabaseHandler.getActiveUser();
     }
 
     private void attempt(Executable executable) {

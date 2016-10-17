@@ -6,7 +6,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -31,6 +33,18 @@
 
     <style name="PreferenceScreen" parent="AppTheme">
         <!--<item name="android:title">@color/colorPrimaryDark</item>-->
+    </style>
+
+    <!-- Eyecandy -->
+    <style name="Item" parent="">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Item.Path">
+        <item name="android:layout_width">@dimen/item_circle_size_path</item>
+        <item name="android:layout_height">@dimen/item_circle_size_path</item>
+        <item name="android:textSize">@dimen/item_font_size_path</item>
+        <item name="android:background">@drawable/path_white_oval</item>
     </style>
 
 </resources>

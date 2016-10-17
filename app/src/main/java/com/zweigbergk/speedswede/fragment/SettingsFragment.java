@@ -2,17 +2,25 @@ package com.zweigbergk.speedswede.fragment;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.zweigbergk.speedswede.R;
-import com.zweigbergk.speedswede.core.local.LanguageChanger;
+import com.zweigbergk.speedswede.activity.SettingsActivity;
 import com.zweigbergk.speedswede.presenter.SettingsFragmentPresenter;
+import com.zweigbergk.speedswede.settings.LanguagePreferences;
 
 public class SettingsFragment extends PreferenceFragment {
+    private static final String TAG = SettingsActivity.class.getSimpleName().toUpperCase();
+
+
     private SharedPreferences.OnSharedPreferenceChangeListener mListener;
     private SettingsFragmentPresenter mPresenter;
 
@@ -38,16 +46,12 @@ public class SettingsFragment extends PreferenceFragment {
     private void initListener(){
         mListener = (sharedPreferences, s) -> {
             Preference preference = findPreference(s);
-            //Make sure it only checks when listpreference is open
-            if (preference instanceof ListPreference) {
-                String language = ((ListPreference) preference).getValue().toString();
-                mPresenter.onListPreferenceSelected(language, getActivity().getBaseContext());
-
-                LanguageChanger.languageChanged(true);
+            //Make sure it only checks when Languagepreference is open
+            if (preference instanceof LanguagePreferences) {
+                mPresenter.onDialogPreferenceSelected(true);
                 getActivity().recreate();
             }
 
         };
-
     }
 }

@@ -6,8 +6,8 @@ import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.Tuple;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.List;
 
 // TODO Use Tag() instead of Tuples...
 class PromiseGroup<E> extends Promise<E> {
@@ -81,8 +81,8 @@ class PromiseGroup<E> extends Promise<E> {
     protected boolean isFulfilled() {
         return Lists.reject(mPromiseTuples, tuple -> {
             Log.d(TAG, Stringify.curlyFormat("Tuple with key: {key} is fulfilled? {bool}",
-                    tuple.getKey(), tuple.getValue().isFulfilled()));
-            return tuple.getValue().isFulfilled();
+                    tuple.getKey(), tuple.toString().isFulfilled()));
+            return tuple.toString().isFulfilled();
         }).size() == 0;
     }*/
 

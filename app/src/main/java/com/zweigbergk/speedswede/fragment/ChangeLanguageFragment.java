@@ -7,9 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.R;
-import com.zweigbergk.speedswede.activity.Language;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
 
 import static com.zweigbergk.speedswede.Constants.ARABIC;

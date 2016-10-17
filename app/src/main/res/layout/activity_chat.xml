@@ -1,11 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/activity_chat_root"
-    tools:context=".activity.ChatActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_chat_root">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+        <RelativeLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/arc_root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <View
+            android:id="@+id/arc_layout_background_circle"
+            android:background="@drawable/ic_oval"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:translationX="72.5dp"
+            android:translationY="-72.5dp"
+            android:alpha="0.3"
+            android:elevation="6dp"/>
+
+
+        <com.zweigbergk.speedswede.eyecandy.TransparentLayout
+            android:id="@+id/arc_clickable_view_or_no"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </com.zweigbergk.speedswede.eyecandy.TransparentLayout>
+
+        <com.ogaclejapan.arclayout.ArcLayout
+            android:id="@+id/arc_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:arc_axisRadius="@dimen/layout_child_offset_path"
+            app:arc_freeAngle="true"
+            app:arc_origin="top|right"
+            android:alpha="0.8"
+            app:arc_radius="145dp">
+
+            <Button
+                android:id="@+id/btn_arc_menu_block_user"
+                android:background="@drawable/ic_lock"
+                style="@style/Item.Path"
+                app:arc_angle="22.5"/>
+
+            <Button
+                android:id="@+id/btn_arc_menu_leave_chat"
+                android:background="@drawable/ic_trashcan"
+                style="@style/Item.Path"
+                app:arc_angle="67.5"/>
+        </com.ogaclejapan.arclayout.ArcLayout>
+
+    </RelativeLayout>
 </RelativeLayout>

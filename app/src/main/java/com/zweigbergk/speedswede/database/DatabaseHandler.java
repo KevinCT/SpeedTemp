@@ -18,10 +18,11 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
 
 import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
-import java.util.HashMap;
+import com.zweigbergk.speedswede.util.collection.HashMap;
 
 import static com.zweigbergk.speedswede.Constants.BANLIST;
 import static com.zweigbergk.speedswede.Constants.BANS;
@@ -52,22 +53,21 @@ public enum DatabaseHandler {
         DbUserHandler.getInstance().initialize();
     }
 
-
     public static void registerListener(DatabaseNode node) {
         switch (node) {
-            case CHATS:
-                DbChatHandler.getInstance().registerChatsListener();
-                break;
             case USERS:
                 DbUserHandler.getInstance().registerUsersListener();
+            default:
+                Log.w(TAG, "registerListener(): There is no setting for that node.");
+                Stringify.printStackTrace();
         }
     }
 
-    public static ChatReference get(Chat chat) {
+    public static ChatReference getReference(Chat chat) {
         return ChatReference.create(chat);
     }
 
-    public static UserReference get(User user) {
+    public static UserReference getReference(User user) {
         return UserReference.create(user);
     }
 
@@ -134,7 +134,6 @@ public enum DatabaseHandler {
     }
 
     public static Statement hasUsers(Chat chat) {
-        Log.d("Terminate chat testing", " we are in dbhandler");
         return DbChatHandler.getInstance().hasUsers(chat);
     }
 

@@ -1,14 +1,18 @@
 package com.zweigbergk.speedswede;
 
 import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.PreferenceWrapper;
+import com.zweigbergk.speedswede.util.collection.Collections;
+import com.zweigbergk.speedswede.util.collection.List;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public class Constants {
     public static final String ERROR = "ERROR";
     public static final String DEBUG = "DEBUG";
 
-
+    //Database nodes
     public static final String CHATS = "chats";
     public static final String USERS = "users";
     public static final String MESSAGES = "messages";
@@ -17,29 +21,63 @@ public class Constants {
     public static final String POOL = "pool";
     public static final String SECOND_USER = "secondUser";
     public static final String NAME = "name";
-    public static final String DISPLAY_NAME = "displayName";
     public static final String UNDEFINED = "undefined";
+
+    //User Attributes
+    public static final String USER_ID = "uid";
+    public static final String DISPLAY_NAME = "displayName";
     public static final String PREFERENCES = "preferences";
     public static final String NOTIFICATIONS = "receiveNotifications";
     public static final String LANGUAGE = "language";
-    public static final String SWEDISH_SKILL = "swedishSkill";
-    public static final String STRANGER_SWEDISH_SKILL = "strangerSwedishSkill";
+
     public static final String LIKED_BY_FIRST_USER = "likedByFirstUser";
     public static final String LIKED_BY_SECOND_USER = "likedBySecondUser";
-    public static final String USAGE = "usage";
-    public static final String CHAT_STATE = "chatState";
+
+    public static final String FIRST_LOGIN = "firstLogin";
+    public static final String TIME_IN_QUEUE = "timeInQueue";
+    public static final String SKILL_CATEGORY = "skillCategory";
+
     public static final String BANS = "bans";
     public static final String BANLIST = "banList";
 
-    public static final String SKILL_CATEGORY = "skill";
+    public static final String SETTINGS_FIRST_SETUP = "settings_first_setup";
 
+    //Topics
+    public static final int DEAFULT_TOPIC_IMAGE = R.drawable.ic_speech_bubble;
 
-    //For PreferenceValue pushing
-    public static final String STRING = String.valueOf("").getClass().getSimpleName();
-    public static final String LONG = Long.valueOf(1).getClass().getSimpleName();
-    public static final String BOOLEAN = Boolean.valueOf(true).getClass().getSimpleName();
+    public enum Topic {
+        Cars(R.drawable.ic_taxi), Theatre(R.drawable.ic_comedy), Universe(R.drawable.ic_nature),
+        School(R.drawable.ic_scholarship), Basketball(R.drawable.ic_basketball), Pets(R.drawable.ic_animals),
+        Clothes(R.drawable.ic_shirt);
 
-    public static final String[] CHAT_NAMES = {"Bench", "Learning", "Rainbow", "Happy", "Social", "Shop", "Sunshine"};
+        private final int resourceId;
+
+        Topic(int resourceId) {
+            this.resourceId = resourceId;
+        }
+
+        public int getResourceId() {
+            return resourceId;
+        }
+
+        public static Topic getRandom() {
+            Random random = new Random();
+            random.nextInt();
+            random.nextInt();
+            Topic[] values = values();
+
+            return values[random.nextInt(values.length)];
+        }
+
+        public static Topic fromString(String name) {
+            return Collections.asList(values())
+                    .filter(topic -> topic.name().equalsIgnoreCase(name))
+                    .getFirst();
+        }
+    }
+
+    //Chat list
+    public static final int MAX_PREVIEW_LENGTH = 40;
 
     //Languages
     public static final String ENGLISH = "en";
@@ -48,19 +86,8 @@ public class Constants {
     public static final String TURKISH = "tr";
     public static final String DARI = "da";
 
-    //Fragments
-    public static final boolean SAVE_TO_STACK = true;
-
     //For saving instance state
     public static final String CHAT_PARCEL = "chatParcel";
-
-    public static final String[] LANGUAGES = { ENGLISH, SWEDISH, ARABIC, TURKISH, DARI };
-
-
-    public static final String USER_ID = "uid";
-
-    public static final String TEST_USER_NAME = "Peter";
-    public static final String TEST_USER_UID = "wS0GTtAOaRhztVGhaJYzFY4kQI82";
 
     public static String makePath(String... constants) {
         if (constants.length == 0)
@@ -80,4 +107,10 @@ public class Constants {
     public static String preference(String preference) {
         return makePath(PREFERENCES, preference);
     }
+
+    public static List<PreferenceWrapper> shells =
+            Collections.asList(
+                    PreferenceWrapper.StringWrapper.shell(),
+                    PreferenceWrapper.BooleanWrapper.shell(),
+                    PreferenceWrapper.LongWrapper.shell());
 }

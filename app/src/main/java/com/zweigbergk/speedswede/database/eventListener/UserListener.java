@@ -11,12 +11,13 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.util.factory.UserFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Lists;
 
-import java.util.HashMap;
+import com.zweigbergk.speedswede.util.collection.HashMap;
 import java.util.HashSet;
-import java.util.Map;
+import com.zweigbergk.speedswede.util.collection.Map;
 import java.util.Set;
 
 public class UserListener implements ChildEventListener {
@@ -148,26 +149,17 @@ public class UserListener implements ChildEventListener {
         removeClient(user.getUid(), client);
     }
 
-    /**
-     * Removes a client from the set of clients that will receive updates whenever
-     * <u>any</u> user is added/removed/changed.
-     * */
-    public void removeClient(Client<DataChange<User>> client) {
-        removeClient(CLIENT_FOR_ALL_USERS, client);
-    }
-
     private User convertToUser(DataSnapshot snapshot) {
-        Log.d(TAG, "convertToUser: snapshot: " + snapshot.toString());
-        if (snapshot.child(Constants.DISPLAY_NAME).getValue() != null &&
-                snapshot.child(Constants.USER_ID).getValue() != null) {
-            return new UserProfile(snapshot.child(Constants.DISPLAY_NAME).getValue().toString(),
-                    snapshot.child(Constants.USER_ID).getValue().toString());
-        }
-        return null;
+        return UserFactory.deserializeUser(snapshot);
     }
 
     @Override
     public boolean equals(Object other) {
         return other != null && this.getClass() == other.getClass() && hashCode() == other.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.userClients.hashCode();
     }
 }

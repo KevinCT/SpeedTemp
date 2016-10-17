@@ -9,37 +9,30 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.async.Commitment;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.async.Guarantee;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.Tuple;
-import com.zweigbergk.speedswede.util.methodwrapper.Client;
-import static com.zweigbergk.speedswede.util.async.PromiseNeed.*;
+import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.collection.List;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import static com.zweigbergk.speedswede.util.async.PromiseNeed.*;
 
 public class ChatFactory {
 
     public static final String TAG = ChatFactory.class.getSimpleName().toUpperCase();
 
-    public final static String USER_1_NAME = "Sir";
-    public final static String USER_2_NAME = "Lord";
-    public final static String USER_3_NAME = "Igor";
-
-    public final static String USER_1_ID = "uid_user1";
-    public final static String USER_2_ID = "uid_user2";
-    public final static String USER_3_ID = "uid_user3";
-
     public static User mockUser(String name, String uid) {
         return new UserProfile(name, uid);
     }
 
-    public static Promise<Chat> serializeChat(DataSnapshot snapshot) {
+    public static Promise<Chat> deserializeChat(DataSnapshot snapshot) {
+        Log.d(TAG, "Deserializing chat!");
+
         String firstUserId = ChatFactory.getUserId(snapshot.child(Constants.FIRST_USER));
         String secondUserId = ChatFactory.getUserId(snapshot.child(Constants.SECOND_USER));
         Boolean likeStatusFirstUser = ChatFactory.getLikeStatus(snapshot.child(Constants.LIKED_BY_FIRST_USER));
@@ -115,18 +108,17 @@ public class ChatFactory {
     private static String getUserId(DataSnapshot snapshot) {
         Object value = snapshot.child(Constants.USER_ID).getValue();
         String userId;
-        try {
+        if (value.getClass().equals(String.class)) {
             userId = (String) value;
-        } catch (ClassCastException e) {
+        } else if (value.getClass().equals(HashMap.class)) {
             HashMap<String, Object> mapping = (HashMap) value;
             userId = (String) mapping.get(Constants.USER_ID);
-        }
-
-        if (userId == null) {
+        } else {
             Log.e(TAG, String.format(
-                    "WARNING! Can not extract User ID for a user in chat [Chat ID: %s].\n(Path: %s)",
+                    "WARNING! Can not extract User ID for a user in chat [Chat ID: %s].%n(Path: %s)",
                     snapshot.getRef().getParent().getKey(),
                     snapshot.getRef().toString()));
+            userId = "";
         }
 
         return userId;
