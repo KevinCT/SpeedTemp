@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -17,8 +21,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.ViewParent;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
@@ -26,16 +31,16 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.eyecandy.ArcMenu;
+import com.zweigbergk.speedswede.pathmenu.FloatingActionMenu;
+import com.zweigbergk.speedswede.pathmenu.SubActionButton;
 import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
-import com.zweigbergk.speedswede.util.Stringify;
-import com.zweigbergk.speedswede.util.collection.Arrays;
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.Point;
 import com.zweigbergk.speedswede.util.methodwrapper.CallerMethod;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
 
@@ -50,9 +55,13 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
     private Button btnLikeChat;
 
     private HashMap<Integer, View> arcComponents;
+    private FloatingActionMenu pathMenu;
 
+    Timer timer;
+    TimerTask timerTask;
+    final Handler handler = new Handler();
+    SubActionButton.Builder itemBuilder;
 
-    Point arcLayoutPosition = new Point(0, 0);
 
     //TODO presenter between interactor and fragment
     private ChatFragmentPresenter mPresenter;
@@ -67,12 +76,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         super.onCreate(savedInstanceState);
         Log.d(TAG, "ChatFragment.onCreate()");
 
-        setHasOptionsMenu(true);
         getActivity().invalidateOptionsMenu();
-    }
-
-    private void addArcComponent(int resId) {
-        arcComponents.put(resId, getView().findViewById(resId));
     }
 
     private void checkSavedState(Bundle savedInstanceState) {
@@ -109,6 +113,8 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
         Log.d(TAG, "onCreateView");
@@ -120,28 +126,76 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
 
         mInputBox = (EditText) view.findViewById(R.id.fragment_chat_message_text);
 
-        arcComponents = new HashMap<>();
-        Integer[] arcComponentIds = {
-                R.id.arc_root_layout, R.id.arc_layout,
-                R.id.arc_clickable_view_or_no, R.id.arc_layout_background_circle
-        };
-
-        Arrays.asList(arcComponentIds).foreach(this::addArcComponent);
-
-        arcMenu = new ArcMenu(this, arcComponents);
+        getActivity().findViewById(R.id.sliding_layout).setOnClickListener(v -> pathMenu.close(true));
 
         return view;
     }
 
-    private Point getMenuItemPosition(int resId) {
-        View myActionView = parent().getToolbar().findViewById(resId);
-            int[] location = new int[2];
-            myActionView.getLocationOnScreen(location);
+    private SubActionButton createPathButton(int resId) {
+        ImageView imageView = new ImageView(getActivity());
+        imageView.setImageDrawable(scaleImage(getResources().getDrawable(resId), 2));
+        return itemBuilder.setContentView(imageView).build();
+    }
 
-            int x = location[0];
-            int y = location[1];
-        Log.d(TAG, Stringify.curlyFormat("getMenuItemPosition(): x: {x}, y: {y}", x, y));
-        return new Point(x, y);
+    public Drawable scaleImage(Drawable image, float scaleFactor) {
+
+        if ((image == null) || !(image instanceof BitmapDrawable)) {
+            return image;
+        }
+
+        Bitmap b = ((BitmapDrawable)image).getBitmap();
+
+        int sizeX = Math.round(image.getIntrinsicWidth() * scaleFactor);
+        int sizeY = Math.round(image.getIntrinsicHeight() * scaleFactor);
+
+        Bitmap bitmapResized = Bitmap.createScaledBitmap(b, sizeX, sizeY, false);
+
+        image = new BitmapDrawable(getResources(), bitmapResized);
+
+        return image;
+
+    }
+
+    private void initializeTimerTask() {
+        timerTask = new TimerTask() {
+            public void run() {
+                handler.post(() -> {
+                    View btnShowActions = parent().findViewById(R.id.show_actions);
+                    if (btnShowActions != null) {
+                        stoptimertask();
+
+                        SubActionButton leaveButton = createPathButton(R.drawable.ic_trashcan);
+                        SubActionButton blockButton = createPathButton(R.drawable.ic_lock);
+
+                        pathMenu = new FloatingActionMenu.Builder(getActivity())
+                                .setRadius(getResources().getDimensionPixelSize(R.dimen.path_menu_radius))
+                                .addSubActionView(blockButton)
+                                .addSubActionView(leaveButton)
+                                .setStartAngle(112)
+                                .setEndAngle(158)
+                                .attachTo(btnShowActions)
+                                .build();
+                    }
+                });
+            }};
+    }
+
+    public void startTimer() {
+        //set a new Timer
+        timer = new Timer();
+
+        //initialize the TimerTask's job
+        initializeTimerTask();
+
+        timer.schedule(timerTask, 0, 50); //
+    }
+
+    public void stoptimertask() {
+        //stop the timer, if it's not already null
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
     }
 
     public void setChat(Chat newChat) {
@@ -169,8 +223,8 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        inflater.inflate(R.menu.new_menu_chat, menu);
         super.onCreateOptionsMenu(menu,inflater);
+<<<<<<< 30d3d8dbf95c6005a928c214246554e6bcbe3d41
 
         Button btnBlockUser = arcMenu.getButton(R.id.btn_arc_menu_block_user);
         btnBlockUser.setOnClickListener(v -> showBlockConfirmationDialog());
@@ -182,7 +236,6 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
 
         setIcon();
         btnLikeChat.setOnClickListener(v  -> likeChatUpdate());
-
 
     }
 
@@ -197,7 +250,6 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
                 .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                     dialog.dismiss();
                     DatabaseHandler.getReference(activeUser).block(otherUser);
-                    arcMenu.onDestroy();
                     parent().popBackStack();
                 })
                 .setNegativeButton(android.R.string.no, ((dialog, which) -> dialog.dismiss()))
@@ -212,7 +264,6 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
                 .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                     dialog.dismiss();
                     mPresenter.terminateChat();
-                    arcMenu.onDestroy();
                     parent().popBackStack();
                 })
                 .setNegativeButton(android.R.string.no, ((dialog, which) -> dialog.dismiss()))
@@ -293,10 +344,6 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.show_actions:
-                    Log.d(TAG, "onOptionsItemSelected: setting position...");
-                    arcLayoutPosition = getMenuItemPosition(R.id.show_actions);
-                    arcMenu.setOrigin(arcLayoutPosition);
-                arcMenu.update();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -314,7 +361,8 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         Log.d(TAG, "onDestroy()");
 
         mPresenter.onDestroy();
-        arcMenu.onDestroy();
+        pathMenu.close(false);
+
 
         super.onDestroy();
     }
@@ -404,5 +452,15 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
     @Override
     public void useContext(Client<Context> client) {
         client.supply(getContext());
+    }
+
+    @Override
+    public ImageView getImageView() {
+        return new ImageView(getActivity());
+    }
+
+    @Override
+    public ChatActivity getParent() {
+        return parent();
     }
 }

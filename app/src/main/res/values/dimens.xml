@@ -13,8 +13,15 @@
     <dimen name="spacing_small">10dp</dimen>
     <dimen name="spacing_tiny">4dp</dimen>
 
+    <!-- Path menu -->
+    <dimen name="path_menu_radius">85dp</dimen>
+    <dimen name="path_menu_button_size">48dp</dimen>
+
     <dimen name="spacing_message_small">14dp</dimen>
     <dimen name="spacing_message_large">80dp</dimen>
+
+
+
 
     <!-- typical sizes of views -->
     <dimen name="button_height_tall">60dp</dimen>

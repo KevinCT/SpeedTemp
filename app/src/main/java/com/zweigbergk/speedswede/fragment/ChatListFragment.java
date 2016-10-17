@@ -107,7 +107,7 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
 
         adapter.setView(this);
 
-        view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
+        //view.findViewById(R.id.match_button).setOnClickListener(this::addUser);
 
         DatabaseHandler.bindToChatEvents(adapter::notifyChange);
 

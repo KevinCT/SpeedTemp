@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <Button
+    <!-- <Button
         style="@android:style/Widget.Button"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
         android:textSize="@dimen/font_large"
         android:id="@+id/match_button"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/spacing_huge" />
+        android:layout_marginBottom="@dimen/spacing_huge" /> -->
 
     <com.baoyz.widget.PullRefreshLayout
         android:id="@+id/swipeRefreshLayout"
