@@ -11,7 +11,7 @@ import com.zweigbergk.speedswede.util.Translation.TranslationCache;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Message implements Parcelable {
+public class Message implements Parcelable, Cloneable {
 
     private String id;
     private String text;
@@ -76,6 +76,12 @@ public class Message implements Parcelable {
 
         return otherMessage.getId().equals(this.getId())
                 && otherMessage.getTimeStamp() == this.getTimeStamp();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getId().hashCode() * 3 +
+                (int) this.getTimeStamp() * 5;
     }
 
     @Exclude

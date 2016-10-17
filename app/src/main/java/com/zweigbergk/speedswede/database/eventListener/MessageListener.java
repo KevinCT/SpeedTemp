@@ -80,4 +80,9 @@ public class MessageListener extends FirebaseDataListener<Message> implements Ch
         Log.d(TAG, String.format("IDENTIFIERS: %s ::: %s", mIdentifier, other.mIdentifier));
         return this.mIdentifier.equals(other.mIdentifier);
     }
+
+    @Override
+    public int hashCode() {
+        return this.mIdentifier.hashCode();
+    }
 }

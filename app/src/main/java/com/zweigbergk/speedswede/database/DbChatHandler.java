@@ -50,7 +50,7 @@ class DbChatHandler extends DbTopLevelHandler {
 
     }
 
-    public static DbChatHandler getInstance() {
+    public static synchronized DbChatHandler getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new DbChatHandler();
         }

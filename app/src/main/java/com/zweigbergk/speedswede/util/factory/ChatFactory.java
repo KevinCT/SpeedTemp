@@ -89,7 +89,7 @@ public class ChatFactory {
             userId = (String) mapping.get(Constants.USER_ID);
         } else {
             Log.e(TAG, String.format(
-                    "WARNING! Can not extract User ID for a user in chat [Chat ID: %s].\n(Path: %s)",
+                    "WARNING! Can not extract User ID for a user in chat [Chat ID: %s].%n(Path: %s)",
                     snapshot.getRef().getParent().getKey(),
                     snapshot.getRef().toString()));
             userId = "";

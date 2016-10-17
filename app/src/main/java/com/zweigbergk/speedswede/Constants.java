@@ -11,7 +11,6 @@ public class Constants {
     public static final String ERROR = "ERROR";
     public static final String DEBUG = "DEBUG";
 
-
     //Database nodes
     public static final String CHATS = "chats";
     public static final String USERS = "users";

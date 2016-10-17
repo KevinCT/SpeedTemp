@@ -173,5 +173,10 @@ public abstract class PreferenceWrapper<T> implements Parcelable {
 
             return other.getValue().longValue() == this.getValue().longValue();
         }
+
+        @Override
+        public int hashCode() {
+            return this.getValue().hashCode();
+        }
     }
 }

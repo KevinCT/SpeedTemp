@@ -47,7 +47,7 @@ class DbUserHandler extends DbTopLevelHandler {
 
     }
 
-    public static DbUserHandler getInstance() {
+    public static synchronized DbUserHandler getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new DbUserHandler();
         }

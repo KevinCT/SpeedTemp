@@ -149,14 +149,6 @@ public class UserListener implements ChildEventListener {
         removeClient(user.getUid(), client);
     }
 
-    /**
-     * Removes a client from the set of clients that will receive updates whenever
-     * <u>any</u> user is added/removed/changed.
-     * */
-    public void removeClient(Client<DataChange<User>> client) {
-        removeClient(CLIENT_FOR_ALL_USERS, client);
-    }
-
     private User convertToUser(DataSnapshot snapshot) {
         return UserFactory.deserializeUser(snapshot);
     }
@@ -164,5 +156,10 @@ public class UserListener implements ChildEventListener {
     @Override
     public boolean equals(Object other) {
         return other != null && this.getClass() == other.getClass() && hashCode() == other.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.userClients.hashCode();
     }
 }
