@@ -1,16 +1,18 @@
 package com.zweigbergk.speedswede.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-
-
-
+import android.view.View;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
@@ -18,11 +20,22 @@ import com.zweigbergk.speedswede.fragment.ChangeLanguageFragment;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
 import com.zweigbergk.speedswede.presenter.ChatPresenter;
+import com.zweigbergk.speedswede.util.collection.Arrays;
+import com.zweigbergk.speedswede.util.collection.Collections;
+import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.methodwrapper.CallerMethod;
+import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
 import com.zweigbergk.speedswede.view.ChatView;
 
 
 public class ChatActivity extends AppCompatActivity implements ChatView {
     private static final String TAG = ChatActivity.class.getSimpleName().toUpperCase();
+
+    private static final int FRAGMENT_CONTAINER = R.id.fragment_container;
+
+    private HashMap<Integer, View> arcComponents;
+
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +46,34 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             createActivity();
         }
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        final Drawable upArrow = getResources().getDrawable(R.drawable.ic_go_back_left_arrow);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeAsUpIndicator(upArrow);
+        }
+
         new ChatPresenter(this);
+
+        arcComponents = new HashMap<>();
+        Integer[] arcComponentIds = {
+                R.id.arc_root_layout, R.id.arc_layout,
+                R.id.arc_clickable_view_or_no, R.id.arc_layout_background_circle
+        };
+
+        Arrays.asList(arcComponentIds).foreach(this::addArcComponent);
+    }
+
+    private void addArcComponent(int resId) {
+        arcComponents.put(resId, findViewById(resId));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_chat_activity, menu);
+        return true;
     }
 
     private void createActivity() {
@@ -57,7 +97,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.activity_chat_root, fragment, name);
+                .add(FRAGMENT_CONTAINER, fragment, name);
 
         if (addToBackstack) {
             transaction.addToBackStack(name);
@@ -71,7 +111,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.activity_chat_root, fragment, name);
+                .replace(FRAGMENT_CONTAINER, fragment, name);
 
         if (addToBackstack) {
             transaction.addToBackStack(name);
@@ -135,5 +175,24 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     public void startSettings() {
         Intent intent = new Intent(ChatActivity.this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
+
+    @Override
+    public <T> T contextualize(ProviderMethod<T, Context> method) {
+        return method.call(this);
+    }
+
+    @Override
+    public void useContext(CallerMethod<Context> method) {
+        method.call(this);
+    }
+
+    @Override
+    public HashMap<Integer, View> getArcComponents() {
+        return arcComponents;
     }
 }

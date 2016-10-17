@@ -3,10 +3,13 @@
     <color name="colorPrimary">#f4d100</color>
     <color name="colorPrimaryDark">#ceb000</color>
     <color name="colorPrimaryLight">#fff5bb</color>
-    <color name="colorAccent">#ffea00</color>
+    <color name="colorAccent">#F479F3</color>
     <color name="colorInputText">#232323</color>
-    <color name="colorWhite">#ffffff</color>
+    <color name="white">#ffffff</color>
 
     <color name="colorChatMessageUser">#ffe75b</color>
     <color name="colorChatMessageStranger">#dddddd</color>
+
+    <!-- Eyecandy -->
+    <color name="path_primary">#E62F17</color>
 </resources>

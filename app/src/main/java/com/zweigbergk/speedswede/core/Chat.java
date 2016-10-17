@@ -35,7 +35,7 @@ public class Chat implements Parcelable {
         this.firstUser = firstUser;
         this.secondUser = secondUser;
 
-        this.name = Lists.randomPick(Constants.CHAT_TOPICS);
+        this.name = Constants.Topic.getRandom().name();
 
         this.messages = new ArrayList<>();
         timeStamp = (new Date()).getTime();
@@ -59,6 +59,10 @@ public class Chat implements Parcelable {
 
     public boolean includesUser(User user) {
         return firstUser.equals(user) || secondUser.equals(user);
+    }
+
+    public User getOtherUser(User user) {
+        return getFirstUser().equals(user) ? getSecondUser() : getFirstUser();
     }
 
     public String getName() {

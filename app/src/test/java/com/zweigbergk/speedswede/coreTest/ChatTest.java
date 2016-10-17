@@ -1,5 +1,6 @@
 package com.zweigbergk.speedswede.coreTest;
 
+import com.zweigbergk.speedswede.ChatMatcherTest;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;

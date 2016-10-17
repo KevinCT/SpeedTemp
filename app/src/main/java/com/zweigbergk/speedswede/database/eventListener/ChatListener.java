@@ -9,6 +9,7 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.factory.ChatFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Lists;
@@ -122,6 +123,7 @@ public class ChatListener implements ChildEventListener {
      * */
     public void addClient(Client<DataChange<Chat>> client) {
         addClient(CLIENT_FOR_ALL_CHATS, client);
+        Stringify.printStackTrace();
     }
 
 

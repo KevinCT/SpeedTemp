@@ -76,6 +76,7 @@ class DbChatHandler extends DbTopLevelHandler {
         mChatListener = new ChatListener();
 
         String uid = DbUserHandler.getInstance().getActiveUserId();
+        Log.d(TAG, "Active user ID: " + uid);
 
         Query firstUserRef = mRoot.child(CHATS).orderByChild("firstUser/uid").equalTo(uid);
         firstUserRef.keepSynced(true);
@@ -87,6 +88,10 @@ class DbChatHandler extends DbTopLevelHandler {
     }
 
     ChatListener getChatListener() {
+        if (mChatListener == null) {
+            registerChatsListener();
+        }
+
         return mChatListener;
     }
 
@@ -115,7 +120,7 @@ class DbChatHandler extends DbTopLevelHandler {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    pushPreferences(chat);
+                    //pushPreferences(chat);
                     Log.d(TAG, "In listener where pushPreferences is called");
                     ref.removeEventListener(this);
                 }
@@ -129,56 +134,6 @@ class DbChatHandler extends DbTopLevelHandler {
 
         mRoot.child(CHATS).child(chat.getId()).addValueEventListener(listener);
         mRoot.child(CHATS).child(chat.getId()).setValue(chat);
-    }
-
-    /**
-     * Push the preferences of the chat's users into the chat
-     */
-    private void pushPreferences(Chat chat) {
-        Map<String, String> firstPojoMap = chat.getFirstUser().getPreferences().map(pojoEntry);
-        Path.firstUserPreferences(chat).setValue(firstPojoMap);
-
-        Map<String, String> secondPojoMap = chat.getFirstUser().getPreferences().map(pojoEntry);
-        Path.secondUserPreferences(chat).setValue(secondPojoMap);
-    }
-
-    private static final EntryMapping<String, String> pojoEntry = mapEntry -> {
-        String prefAsString = parseToReadable((Preference) mapEntry.getKey());
-
-        PreferenceWrapper prefValue = (PreferenceWrapper) mapEntry.getValue();
-        String prefValueAsString = parseToReadable(prefValue);
-
-        return new Tuple<>(prefAsString, prefValueAsString);
-    };
-
-    private static String parseToReadable(PreferenceWrapper prefValue) {
-        if (prefValue == null || prefValue.getValue() == null) {
-            return null;
-        }
-
-        String value = prefValue.getValue().toString();
-
-        return value;
-    }
-
-    private static String parseToReadable(Preference preference) {
-        if (preference == null) {
-            return "";
-        }
-
-        String name = preference.toString().toLowerCase();
-        StringBuilder prettyName = new StringBuilder();
-
-        for (int i = 0; i < name.length(); ++i) {
-            if (name.charAt(i) == '_') {
-                prettyName.append(Character.toUpperCase(name.charAt(++i)));
-                continue;
-            }
-
-            prettyName.append(name.charAt(i));
-        }
-
-        return prettyName.toString();
     }
 
     void delete(DatabaseReference ref) {

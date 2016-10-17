@@ -1,15 +1,18 @@
 package com.zweigbergk.speedswede.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
@@ -18,7 +21,6 @@ import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
-import com.zweigbergk.speedswede.fragment.ChatListFragment;
 import com.zweigbergk.speedswede.util.ChildCountListener;
 import com.zweigbergk.speedswede.util.collection.ArrayList;
 import com.zweigbergk.speedswede.util.collection.HashMap;
@@ -26,6 +28,9 @@ import com.zweigbergk.speedswede.util.collection.List;
 import com.zweigbergk.speedswede.util.collection.Map;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
+
+import static com.zweigbergk.speedswede.Constants.DEAFULT_TOPIC_IMAGE;
+import static com.zweigbergk.speedswede.Constants.MAX_PREVIEW_LENGTH;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
@@ -64,13 +69,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         Chat chat = change.getItem();
         DatabaseEvent event = change.getEvent();
 
+        Log.d(TAG, "notifyChange.");
+
+
         mChildCountListener.onUpdate();
 
         switch (event) {
             case ADDED:
+                Log.d(TAG, "notifyChange: chat added.");
                 addChat(chat);
                 break;
             case CHANGED:
+                Log.d(TAG, "notifyChange: chat changed?");
                 User activeUser = DatabaseHandler.getActiveUser();
                 if (!chat.includesUser(activeUser)) {
                     removeChat(chat);
@@ -96,8 +106,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     private void updateChat(@NonNull Chat chat) {
         int index = mChats.indexOf(chat);
-        mChats.set(index, chat);
-        notifyItemChanged(index);
+        if (index != -1) {
+            mChats.set(index, chat);
+            notifyItemChanged(index);
+        }
     }
 
     private void addChat(Chat chat) {
@@ -122,12 +134,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     private void removeChat(Chat chat) {
         int position = mChats.indexOf(chat);
 
-        Log.d(TAG, "In removeChat, position: " + position);
+        if (position != -1) {
+            Log.d(TAG, "In removeChat, position: " + position);
 
-        mChats.remove(chat);
-        notifyItemRemoved(position);
+            mChats.remove(chat);
+            notifyItemRemoved(position);
 
-        broadcastEvent(Event.CHAT_REMOVED, chat);
+            broadcastEvent(Event.CHAT_REMOVED, chat);
+        }
+    }
+
+    public List<Chat> getChats() {
+        return mChats;
     }
 
     private void broadcastEvent(Event event, Chat chat) {
@@ -139,7 +157,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public ChatAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mContext =parent.getContext();
+        mContext = parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_chat_list_item, parent, false);
         return new ViewHolder(view);
     }
@@ -151,12 +169,34 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
         Message latestMessage = chat.getLatestMessage();
 
-        String messageText = latestMessage != null ? latestMessage.getText() : "";
+
+        //Set appropriate text as latest message text
+        String messageText = "";
+        if (latestMessage != null) {
+            messageText = latestMessage.getText();
+
+            String activeUid = DatabaseHandler.getActiveUserId();
+            if (latestMessage.getId().equals(activeUid)) {
+                messageText = "You: " + messageText;
+            } else {
+                messageText = "Other person: " + messageText;
+            }
+        }
+
+        if (messageText.length() > MAX_PREVIEW_LENGTH) {
+            messageText = messageText.substring(0, MAX_PREVIEW_LENGTH) + "...";
+        }
+
         String formattedTime = latestMessage != null ? Time.formatMessageDate(latestMessage) : "";
 
-        holder.mName.setText(chat.getName());
-        holder.mLatestMessage.setText(messageText);
-        holder.mTimestamp.setText(formattedTime);
+        //Default
+        Constants.Topic topic = Constants.Topic.fromString(chat.getName());
+        int topicResId = topic != null ? topic.getResourceId() : DEAFULT_TOPIC_IMAGE;
+
+        holder.name.setText(chat.getName());
+        holder.latestMessage.setText(messageText);
+        holder.timestamp.setText(formattedTime);
+        holder.topicImage.setImageDrawable(ContextCompat.getDrawable(mContext, + topicResId));
 
         holder.mView.setOnClickListener(chatView -> broadcastEvent(Event.CHAT_VIEW_CLICKED, chat));
     }
@@ -168,22 +208,20 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView mName;
-        TextView mLatestMessage;
-        TextView mTimestamp;
+        TextView name;
+        TextView latestMessage;
+        TextView timestamp;
+        ImageView topicImage;
         View mView;
 
         ViewHolder(View view) {
             super(view);
 
             mView = view;
-            mName = (TextView) view.findViewById(R.id.row_chat_list_item_name);
-            mLatestMessage = (TextView) view.findViewById(R.id.row_chat_list_item_latest_message);
-            mTimestamp = (TextView) view.findViewById(R.id.row_chat_list_item_timestamp);
+            name = (TextView) view.findViewById(R.id.row_chat_list_item_name);
+            latestMessage = (TextView) view.findViewById(R.id.row_chat_list_item_latest_message);
+            timestamp = (TextView) view.findViewById(R.id.row_chat_list_item_timestamp);
+            topicImage = (ImageView) view.findViewById(R.id.topic_image);
         }
-    }
-
-    public List<Chat> getChats() {
-        return mChats;
     }
 }
