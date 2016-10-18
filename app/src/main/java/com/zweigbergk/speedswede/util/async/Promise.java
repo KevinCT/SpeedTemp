@@ -294,7 +294,7 @@ public class Promise<E> extends Commitment<E> {
             Object item = items.get(need);
 
             if (item == null) {
-                return null;
+                return false;
             }
 
             Boolean value = false;

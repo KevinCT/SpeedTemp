@@ -43,12 +43,14 @@ public class Constants {
     public static final String SETTINGS_FIRST_SETUP = "settings_first_setup";
 
     //Topics
-    public static final int DEAFULT_TOPIC_IMAGE = R.drawable.ic_speech_bubble;
+    public static final int DEAFULT_TOPIC_IMAGE = R.drawable.ic_default_chat;
 
     public enum Topic {
         Cars(R.drawable.ic_taxi), Theatre(R.drawable.ic_comedy), Universe(R.drawable.ic_nature),
         School(R.drawable.ic_scholarship), Basketball(R.drawable.ic_basketball), Pets(R.drawable.ic_animals),
-        Clothes(R.drawable.ic_shirt);
+        Clothes(R.drawable.ic_shirt), Movies(R.drawable.ic_movie), Football(R.drawable.ic_soccer),
+        Travel(R.drawable.ic_travel), Music(R.drawable.ic_music), Food(R.drawable.ic_food), Books(R.drawable.ic_book),
+        Fitness(R.drawable.ic_fitness);
 
         private final int resourceId;
 
@@ -70,9 +72,10 @@ public class Constants {
         }
 
         public static Topic fromString(String name) {
-            return Collections.asList(values())
+            final Topic returnTopic = Collections.asList(values())
                     .filter(topic -> topic.name().equalsIgnoreCase(name))
                     .getFirst();
+            return returnTopic;
         }
     }
 

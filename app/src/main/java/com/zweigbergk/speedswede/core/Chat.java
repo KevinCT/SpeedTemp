@@ -193,7 +193,7 @@ public class Chat implements Parcelable {
                 );
     }
 
-    private static final String NEWLINE = "\n\t\t";
+    private static final String NEWLINE = "%n\t\t";
 
 
     /**
