@@ -15,7 +15,6 @@ import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
-import com.zweigbergk.speedswede.database.UserReference;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
@@ -126,16 +125,6 @@ public class ChatFragmentPresenter {
         adapter.onListChanged(DataChange.added(message));
     }
 
-    public void onBanClicked(){
-        User activeUser = DatabaseHandler.getActiveUser();
-        UserReference userRef = DatabaseHandler.getReference(activeUser);
-
-        User stranger = mChat.getFirstUser().equals(activeUser) ?
-                mChat.getSecondUser() : mChat.getFirstUser();
-
-        userRef.block(stranger);
-}
-
     private MessageAdapter getMessageAdapter() {
         return (MessageAdapter) mView.getRecyclerView().getAdapter();
     }
@@ -156,10 +145,6 @@ public class ChatFragmentPresenter {
             DatabaseHandler.getReference(mChat).unbindMessages(chatEventHandler);
             chatEventHandler = null;
         }
-    }
-
-    public void onChangeNameClicked(Context context, String chatName){
-        LocalStorage.INSTANCE.saveSettings(context, mChat.getId(), chatName);
     }
 
     private void smoothScrollToBottomOfList(Message message) {

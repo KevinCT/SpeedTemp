@@ -36,7 +36,7 @@ class DbUserHandler extends DbTopLevelHandler {
 
     private static final String TAG = DbUserHandler.class.getSimpleName().toUpperCase();
 
-    private DatabaseReference mRoot = FirebaseDatabase.getInstance().getReference();;
+    private DatabaseReference mRoot = FirebaseDatabase.getInstance().getReference();
 
     private UserListener mUsersListener;
     private UserPoolListener mUserPoolListener;

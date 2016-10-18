@@ -5,7 +5,6 @@ dependencies {
 
 
     //Animations & graphical touchup libraries
-    compile 'com.ogaclejapan.arclayout:library:1.1.0@aar'
     compile 'com.baoyz.pullrefreshlayout:library:1.2.0'
     compile 'com.sothree.slidinguppanel:library:3.3.1'
     compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'

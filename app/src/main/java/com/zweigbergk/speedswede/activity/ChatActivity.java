@@ -10,10 +10,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
-
 import android.view.Menu;
-
+import android.view.MenuItem;
 import android.view.View;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -27,8 +25,8 @@ import com.zweigbergk.speedswede.eyecandy.MatchLoadingIndicatorLayout;
 import com.zweigbergk.speedswede.eyecandy.PanelSlideListener;
 import com.zweigbergk.speedswede.eyecandy.TransparentLayout;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
-import com.zweigbergk.speedswede.util.collection.Arrays;
 import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.Arrays;
 import com.zweigbergk.speedswede.util.collection.List;
 import com.zweigbergk.speedswede.util.methodwrapper.CallerMethod;
 import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
@@ -112,14 +110,14 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
                 .onPanelSlide(slideOffset ->
                         matchButton.setAlpha(Math.max(slideOffset, MATCH_BUTTON_MIN_ALPHA)))
                 .onPanelStateChanged(newState -> {
-            switch (newState) {
-                case COLLAPSED:
-                    coverMatchButtonLayout.setBlockClickEvents(true);
-                    break;
-                default:
-                    coverMatchButtonLayout.setBlockClickEvents(false);
-            }
-        }));
+                    switch (newState) {
+                        case COLLAPSED:
+                            coverMatchButtonLayout.setBlockClickEvents(true);
+                            break;
+                        default:
+                            coverMatchButtonLayout.setBlockClickEvents(false);
+                    }
+                }));
 
         //Matcher button
         matchButton.setOnClickListener(v -> {
@@ -201,7 +199,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     @Override
     public void displayChat(Chat chat) {
-
         if (chat != null) {
             Log.d(TAG, "Displaying chat with ID: " + chat.getId());
             Intent chatIntent = new Intent(this, SingleChatActivity.class);
@@ -284,7 +281,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     @Override
     public void onBackPressed() {
-        setTitle(R.string.chat_header);
+        setTitle(R.string.app_name);
 
         FragmentManager manager = getSupportFragmentManager();
 
@@ -304,65 +301,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         Intent intent = new Intent(ChatActivity.this, SettingsActivity.class);
         startActivity(intent);
     }
-/*
-    public void setUpActionBar(ChatFragment chatFragment) {
-        ActionBar actionBar = getSupportActionBar();
-
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
-
-        ImageView imageView = new ImageView(actionBar.getThemedContext());
-        imageView.setScaleType(ImageView.ScaleType.CENTER);
-
-        likeCheck(chatFragment, imageView, actionBar, false);
-
-        imageView.setClickable(true);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                likeCheck(chatFragment, imageView, actionBar, true);
-            }
-        });
-
-    }
-
-    public void likeCheck(ChatFragment chatFragment, ImageView imageView, ActionBar actionBar, boolean hasClicked) {
-
-
-        if (chatFragment.hasBothUsersLiked() && hasClicked) {
-
-            //Open facebook link
-            imageView.setImageResource(R.drawable.com_facebook_button_icon_blue);
-
-        } else if (chatFragment.hasBothUsersLiked() && !hasClicked) {
-            imageView.setImageResource(R.drawable.com_facebook_button_icon_blue);
-        } else if (chatFragment.hasLocalUserLiked() && hasClicked) {
-            chatFragment.setLikeForLocalUser(false);
-            imageView.setImageResource(R.drawable.com_facebook_button_send_icon_blue);
-
-        } else if (chatFragment.hasLocalUserLiked() && !hasClicked) {
-            imageView.setImageResource(R.drawable.com_facebook_button_like_icon_selected);
-        } else if (chatFragment.hasOtherUserLiked() && hasClicked) {
-            chatFragment.setLikeForLocalUser(true);
-            imageView.setImageResource(R.drawable.com_facebook_button_icon_blue);
-
-        } else if (!chatFragment.hasLocalUserLiked() && hasClicked) { //Double check
-            chatFragment.setLikeForLocalUser(true);
-            imageView.setImageResource(R.drawable.com_facebook_button_like_icon_selected);
-        } else if (!hasClicked) {
-            imageView.setImageResource(R.drawable.com_facebook_button_send_icon_blue);
-        }
-
-        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
-                ActionBar.LayoutParams.WRAP_CONTENT,
-                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT
-                | Gravity.CENTER_VERTICAL);
-        layoutParams.rightMargin = 40;
-        imageView.setLayoutParams(layoutParams);
-        actionBar.setCustomView(imageView);
-    }
- */
 
     public Toolbar getToolbar() {
         return toolbar;

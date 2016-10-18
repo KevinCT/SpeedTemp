@@ -1,5 +1,7 @@
 package com.zweigbergk.speedswede.database.eventListener;
 
+import android.util.Log;
+
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.util.collection.Collection;
@@ -9,6 +11,8 @@ import com.zweigbergk.speedswede.util.collection.Set;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public abstract class FirebaseDataListener<T> {
+    private static final String TAG = FirebaseDataListener.class.getSimpleName().toUpperCase();
+
 
     private Set<Client<DataChange<T>>> mClients;
 
@@ -45,6 +49,7 @@ public abstract class FirebaseDataListener<T> {
                 break;
         }
 
+        Log.d(TAG, "mClients.size(): " + mClients.size());
         mClients.foreach(client -> client.supply(dataChange));
     }
 

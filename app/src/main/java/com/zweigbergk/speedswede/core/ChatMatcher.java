@@ -71,7 +71,6 @@ public enum ChatMatcher {
 
     /** Include user in the matching process */
     public void pushUser(User user) {
-        DatabaseHandler.getPool().bind(ChatMatcher.INSTANCE::handleUser);
         DatabaseHandler.getPool().push(user);
     }
 

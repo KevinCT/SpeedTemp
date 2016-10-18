@@ -78,10 +78,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         eventCallbacks.get(event).add(callback);
     }
 
-    public void removeEventCallback(DatabaseEvent event, Client<Message> callback) {
-        eventCallbacks.get(event).remove(callback);
-    }
-
     private void updateMessage(@NonNull Message message) {
 
         int position = mMessages.indexOf(message);
@@ -147,6 +143,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Message message = mMessages.get(position);
+
         Client<String> updateViewText = translation -> {
             holder.mTextView.setText(message.getText());
             final String newText = holder.mTextView.getText().toString();
@@ -160,38 +157,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             });
         };
 
+
         if (message.hasCache() && message.getTranslationCache().isFromLocale(mLocale)) {
             String cachedTranslation = message.getTranslationCache().getTranslatedText();
-            Log.d(TAG, "Using cached transation. Translated text: " + cachedTranslation);
-            updateMessageText(holder, message.getText(), cachedTranslation);
-            return;
-        }
-
-        //No up-to-date cache, must translate message
-        Language currentLanguage = Language.fromString(DatabaseHandler.getActiveUser().getLanguage().getLanguageCode());
-        Log.d(TAG, "Current language: " + currentLanguage);
-
-        //We don't need to translate if our language is Swedish
-        if (!currentLanguage.equals(Language.SWEDISH)) {
-            Translation.translate(message.getText(), Language.SWEDISH, currentLanguage)
+            updateViewText.supply(cachedTranslation);
+        } else {
+            //No up-to-date cache, must translate message
+            Translation.translate(message.getText(), Language.SWEDISH, Language.ENGLISH)
                     .then(translatedText -> {
                         //Update cache of the message
                         TranslationCache cache = Translation.TranslationCache.cache(mLocale.getLanguage(), translatedText);
                         message.setTranslationCache(cache);
-                        updateMessageText(holder, message.getText(), translatedText);
+                        updateViewText.supply(translatedText);
                     });
-        } else {
-            updateMessageText(holder, message.getText(), null);
         }
-    }
-
-    private void updateMessageText(ViewHolder holder, String text, String translation) {
-        String completeText = text;
-        if (translation != null) {
-            completeText += "\n\nTranslation: " + translation;
-        }
-
-        holder.mTextView.setText(completeText);
     }
 
     @Override

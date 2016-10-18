@@ -35,6 +35,7 @@ public class Initializer {
         }
 
         DatabaseHandler.registerListener(DatabaseNode.USERS);
+        DatabaseHandler.getPool().bind(ChatMatcher.INSTANCE::handleUser);
     }
 
     private static void onlineLogin() {
