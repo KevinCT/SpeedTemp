@@ -30,6 +30,8 @@ import static com.zweigbergk.speedswede.Constants.BANS;
 public enum DatabaseHandler {
     INSTANCE;
 
+    public static String facebookUserID = "";
+
     public enum DatabaseNode {
         CHATS, USERS
     }
@@ -57,6 +59,7 @@ public enum DatabaseHandler {
         switch (node) {
             case USERS:
                 DbUserHandler.getInstance().registerUsersListener();
+                break;
             default:
                 Log.w(TAG, "registerListener(): There is no setting for that node.");
         }

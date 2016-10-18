@@ -3,8 +3,6 @@ package com.zweigbergk.speedswede.eyecandy;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -14,12 +12,10 @@ import android.widget.Button;
 
 import com.ogaclejapan.arclayout.ArcLayout;
 import com.zweigbergk.speedswede.R;
-import com.zweigbergk.speedswede.util.Stringify;
+import com.zweigbergk.speedswede.util.collection.HashMap;
 import com.zweigbergk.speedswede.util.collection.Point;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
 import com.zweigbergk.speedswede.view.ChatView;
-
-import com.zweigbergk.speedswede.util.collection.HashMap;
 
 
 public class ArcMenu {
@@ -79,14 +75,19 @@ public class ArcMenu {
         Point p2 = new Point(0, 0);
         Animator firstAnimator = createShowItemAnimator(arcLayout.getChildAt(0), p1);
         Animator secondAnimator = createShowItemAnimator(arcLayout.getChildAt(1), p2);
+        Animator thirdAnimator = createShowItemAnimator(arcLayout.getChildAt(2), p2);
 
         firstAnimator.setDuration(400);
         firstAnimator.setInterpolator(new OvershootInterpolator(1.5f));
         secondAnimator.setDuration(400);
         secondAnimator.setInterpolator(new OvershootInterpolator(1.5f));
+        thirdAnimator.setDuration(400);
+        thirdAnimator.setInterpolator(new OvershootInterpolator(1.5f));
         firstAnimator.start();
         secondAnimator.setStartDelay(35);
         secondAnimator.start();
+        thirdAnimator.setStartDelay(35);
+        thirdAnimator.start();
     }
 
     public Button getButton(int resId) {
@@ -106,11 +107,15 @@ public class ArcMenu {
         Point p2 = new Point(0, 0);
         Animator firstAnimator = createHideItemAnimator(arcLayout.getChildAt(0), p1);
         Animator secondAnimator = createHideItemAnimator(arcLayout.getChildAt(1), p2);
+        Animator thirdAnimator = createHideItemAnimator(arcLayout.getChildAt(2), p2);
+
 
         firstAnimator.setDuration(400);
         firstAnimator.setInterpolator(new AnticipateInterpolator(1.5f));
         secondAnimator.setDuration(400);
         secondAnimator.setInterpolator(new AnticipateInterpolator(1.5f));
+        thirdAnimator.setDuration(400);
+        thirdAnimator.setInterpolator(new AnticipateInterpolator(1.5f));
         firstAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -119,6 +124,8 @@ public class ArcMenu {
             }
         });
 
+        thirdAnimator.start();
+        thirdAnimator.setStartDelay(35);
         secondAnimator.start();
         firstAnimator.setStartDelay(35);
         firstAnimator.start();
@@ -136,7 +143,7 @@ public class ArcMenu {
         float dx = origin.x - item.getX() - delta.x;
         float dy = origin.y - item.getY() + delta.y;
 
-        Log.d(TAG, Stringify.curlyFormat("createShowItemAnimator: x: {x}, y: {y}", dx, dy));
+//        Log.d(TAG, Stringify.curlyFormat("createShowItemAnimator: x: {x}, y: {y}", dx, dy));
 
         item.setRotation(0f);
         item.setTranslationX(dx);
@@ -166,7 +173,7 @@ public class ArcMenu {
 
         //printAngleInCelcius(new Point(origin.x - item.getX(), origin.y - item.getY()));
 
-        Log.d(TAG, Stringify.curlyFormat("createHideItemAnimator: x: {x}, y: {y}", dx, dy));
+//        Log.d(TAG, Stringify.curlyFormat("createHideItemAnimator: x: {x}, y: {y}", dx, dy));
 
         Animator animator = ObjectAnimator.ofPropertyValuesHolder(
                 item,
@@ -188,13 +195,13 @@ public class ArcMenu {
         return animator;
     }
 
-    private Animator createShowItemAnimator(View item) {
-        return createShowItemAnimator(item, new Point(0, 0));
-    }
-
-    private Animator createHideItemAnimator(final View item) {
-        return createHideItemAnimator(item, new Point(0, 0));
-    }
+//    private Animator createShowItemAnimator(View item) {
+//        return createShowItemAnimator(item, new Point(0, 0));
+//    }
+//
+//    private Animator createHideItemAnimator(final View item) {
+//        return createHideItemAnimator(item, new Point(0, 0));
+//    }
 
     /**
      *
@@ -206,7 +213,7 @@ public class ArcMenu {
         double rad = (angle * Math.PI) / 180;
         double x = Math.sin(rad) * value;
         double y = Math.cos(rad) * value;
-        Log.d(TAG, Stringify.curlyFormat("calculateDelta: angle: {angle} x: {x}, y: {y}", angle, x, y));
+//        Log.d(TAG, Stringify.curlyFormat("calculateDelta: angle: {angle} x: {x}, y: {y}", angle, x, y));
         return new Point((float) x, (float) y);
     }
 

@@ -1,7 +1,10 @@
 package com.zweigbergk.speedswede.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +24,7 @@ import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.eyecandy.ArcMenu;
 import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
@@ -41,7 +45,9 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
     private RecyclerView chatRecyclerView;
     private EditText mInputBox;
 
+    private boolean isLocalUserFirstUser;
     private ArcMenu arcMenu;
+    private Button btnLikeChat;
 
     private HashMap<Integer, View> arcComponents;
 
@@ -98,6 +104,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         if (parentToolbar != null) {
             parentToolbar.setDisplayHomeAsUpEnabled(true);
         }
+
     }
 
     @Override
@@ -109,6 +116,8 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         view.findViewById(R.id.fragment_chat_post_message).setOnClickListener(this::onButtonClick);
 
         chatRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_chat_recycler_view);
+
+
         mInputBox = (EditText) view.findViewById(R.id.fragment_chat_message_text);
 
         arcComponents = new HashMap<>();
@@ -168,6 +177,13 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
 
         Button btnLeaveChat = arcMenu.getButton(R.id.btn_arc_menu_leave_chat);
         btnLeaveChat.setOnClickListener(v -> showLeaveChatConfirmationDialog());
+
+        btnLikeChat = arcMenu.getButton(R.id.btn_arc_menu_like_chat);
+
+        setIcon();
+        btnLikeChat.setOnClickListener(v  -> likeChatUpdate());
+
+
     }
 
     private void showBlockConfirmationDialog() {
@@ -176,8 +192,8 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
 
 
         new AlertDialog.Builder(getContext())
-                .setTitle("Block this user?")
-                .setMessage("You will not be matched with him or her again.")
+                .setTitle(R.string.confirm_block_user)
+                .setMessage(R.string.block_user_text)
                 .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                     dialog.dismiss();
                     DatabaseHandler.getReference(activeUser).block(otherUser);
@@ -191,8 +207,8 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
 
     private void showLeaveChatConfirmationDialog() {
         new AlertDialog.Builder(getContext())
-                .setTitle("Leave this chat?")
-                .setMessage("You will not be able to come back to it.")
+                .setTitle(R.string.exit_chat)
+                .setMessage(R.string.exit_chat_text)
                 .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                     dialog.dismiss();
                     mPresenter.terminateChat();
@@ -203,6 +219,75 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
+
+    private void setIcon() {
+        if(!hasLocalUserLiked()) {
+            System.out.println("hasLocalUserLiked() = " + hasLocalUserLiked());
+            btnLikeChat.setBackgroundResource(R.drawable.ic_thumb_up_white_24dp);
+        }
+
+        else if(hasLocalUserLiked() && !hasOtherUserLiked()) {
+            System.out.println("hasLocalUserLiked() = " + hasLocalUserLiked());
+            btnLikeChat.setBackgroundResource(R.drawable.com_facebook_button_like_icon_selected);
+        }
+
+        else if(hasBothUsersLiked()) {
+            System.out.println("hasBothUsersLiked() = ");
+            btnLikeChat.setBackgroundResource(R.drawable.com_facebook_button_icon_white);
+
+        }
+
+    }
+
+    private void likeChatUpdate() {
+
+        if(hasBothUsersLiked()) {
+            Chat chat = mPresenter.getChat();
+            isLocalUserFirstUser();
+            String facebookUserID = "";
+            if(isLocalUserFirstUser) {
+                UserProfile otherUser = (UserProfile) chat.getSecondUser();
+                facebookUserID = otherUser.facebookUserID;
+                System.out.println("facebookUserID = " + otherUser.facebookUserID); //returnerar samma id för båda användare
+            } else {
+                UserProfile otherUser = (UserProfile) chat.getFirstUser();
+                otherUser.facebookUserID = otherUser.facebookUserID;
+                System.out.println("facebookUserID = " + otherUser.facebookUserID);
+            }
+            String url = "http://www.facebook.com/" + facebookUserID;
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+
+        } else if (hasLocalUserLiked()) {
+            setLikeForLocalUser(false);
+            setIcon();
+
+        } else {
+            showLikeChatConfirmationDialog();
+            setIcon();
+        }
+
+    }
+
+    private void showLikeChatConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Like this chat?");
+        builder.setMessage("If you like this chat, your messaging partner will be able to view your facebook profile");
+        builder.setPositiveButton(android.R.string.yes, (dialog, which) -> {
+            setLikeForLocalUser(true);
+            setIcon();
+            dialog.dismiss();
+            arcMenu.onDestroy();
+            parent().popBackStack();
+        });
+
+        builder.setNegativeButton(android.R.string.no, ((dialog, which) -> dialog.dismiss()));
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.show();
+    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -246,6 +331,58 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
     @Override
     public void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
         chatRecyclerView.setLayoutManager(layoutManager);
+    }
+
+    private Boolean hasLocalUserLiked() {
+        isLocalUserFirstUser();
+        Chat chat = mPresenter.getChat();
+        System.out.println();
+        if(isLocalUserFirstUser) {
+            return chat.hasFirstUserLiked();
+        } else {
+            return chat.hasSecondUserLiked();
+        }
+    }
+
+    private Boolean hasOtherUserLiked() {
+        isLocalUserFirstUser();
+        System.out.println("hasOtherUserLiked() - Is local user first user? " + isLocalUserFirstUser);
+        Chat chat = mPresenter.getChat();
+        if(isLocalUserFirstUser) {
+            return chat.hasSecondUserLiked();
+        } else {
+            return chat.hasFirstUserLiked();
+        }
+    }
+
+    @NonNull
+    private Boolean hasBothUsersLiked() {
+        Chat chat = mPresenter.getChat();
+
+        return (chat.hasFirstUserLiked() && chat.hasSecondUserLiked());
+    }
+
+    private void setLikeForLocalUser(Boolean likeStatus) {
+        isLocalUserFirstUser();
+        System.out.println("setLikeForLocalUser() - Is local user first user? " + isLocalUserFirstUser);
+        if(isLocalUserFirstUser) {
+
+            DatabaseHandler.getReference(mPresenter.getChat()).setLikeStatusForFirstUser(likeStatus);
+            //mPresenter.getChat().setLikeStatusFirstUser(likeStatus);
+            setIcon();
+        } else {
+
+            DatabaseHandler.getReference(mPresenter.getChat()).setLikeStatusForSecondUser(likeStatus);
+            //mPresenter.getChat().setLikeStatusSecondUser(likeStatus);
+            setIcon();
+        }
+    }
+
+    private void isLocalUserFirstUser() {
+        User activeUser = DatabaseHandler.getActiveUser();
+        DatabaseHandler.getReference(activeUser).pull().then(user -> {
+            isLocalUserFirstUser = user.equals(mPresenter.getChat().getFirstUser());
+        } );
     }
 
     @Override

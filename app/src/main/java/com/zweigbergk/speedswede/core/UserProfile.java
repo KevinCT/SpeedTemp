@@ -18,6 +18,7 @@ public class UserProfile implements User {
 
     private String displayName, uid;
     private boolean isFirstLogin;
+    public static String facebookUserID = "";
 //    private Timer timer;
 //    private int[] matchingInterval;
 
@@ -127,7 +128,7 @@ public class UserProfile implements User {
             preferences.append(Stringify.curlyFormat("\tvalue: {value}", entry.getValue().getValue().toString()));
         });
 
-        return String.format("UserProfile {%n\t\tdisplayName: %s,%n\t\tuid: %s,\n\t\tpreferences: %s%n}",
+        return String.format("UserProfile {%n\t\tdisplayName: %s,%n\t\tuid: %s,%n\t\tpreferences: %s%n}",
                 displayName, uid, preferences);
     }
 

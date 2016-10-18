@@ -15,7 +15,7 @@ import static com.zweigbergk.speedswede.Constants.SWEDISH;
 import static com.zweigbergk.speedswede.Constants.TURKISH;
 
 public class LanguagePreferences extends DialogPreference {
-    public static String TAG  = "LanguagePreferences";
+    public static final String TAG  = "LanguagePreferences";
 
     public LanguagePreferences(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -25,6 +25,18 @@ public class LanguagePreferences extends DialogPreference {
 
         setDialogLayoutResource(R.layout.fragment_change_language);
 
+    }
+
+    @Override
+    protected void onAttachedToActivity() {
+        super.onAttachedToActivity();
+        setSummary(R.string.chosen_language);
+    }
+
+    @Override
+    protected void onBindView(View view) {
+        super.onBindView(view);
+        setSummary(R.string.chosen_language);
     }
 
     @Override
@@ -54,7 +66,7 @@ public class LanguagePreferences extends DialogPreference {
 
     private void changeLanguage(String languageCode) {
         LanguageChanger.changeLanguage(languageCode, getContext());
-        setSummary(languageCode);
+        setSummary(R.string.chosen_language);
         getDialog().dismiss();
     }
 

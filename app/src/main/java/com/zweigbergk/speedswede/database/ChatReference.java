@@ -14,7 +14,7 @@ public class ChatReference {
     public static final String TAG = ChatReference.class.getSimpleName().toUpperCase();
 
     enum ChatAttribute {
-        FIRST_USER, SECOND_USER;
+        FIRST_USER, SECOND_USER, LIKED_BY_FIRST_USER, LIKED_BY_SECOND_USER;
 
         public String getDbKey() {
             switch(this) {
@@ -22,6 +22,10 @@ public class ChatReference {
                     return Constants.FIRST_USER;
                 case SECOND_USER:
                     return Constants.SECOND_USER;
+                case LIKED_BY_FIRST_USER:
+                    return Constants.LIKED_BY_FIRST_USER;
+                case LIKED_BY_SECOND_USER:
+                    return Constants.LIKED_BY_SECOND_USER;
                 default:
                     return Constants.UNDEFINED;
             }
@@ -72,6 +76,16 @@ public class ChatReference {
     public void setSecondUser(User user) {
         ifStillValid().then(() ->
                 DbChatHandler.getInstance().setChatAttribute(mChat, ChatAttribute.SECOND_USER, user));
+    }
+
+    public void setLikeStatusForFirstUser(Boolean likeStatus) {
+        ifStillValid().then(() ->
+                DbChatHandler.getInstance().setChatAttribute(mChat, ChatAttribute.LIKED_BY_FIRST_USER, likeStatus));
+    }
+
+    public void setLikeStatusForSecondUser(Boolean likeStatus) {
+        ifStillValid().then(() ->
+                DbChatHandler.getInstance().setChatAttribute(mChat, ChatAttribute.LIKED_BY_SECOND_USER, likeStatus));
     }
 
     public void sendMessage(Message message) {

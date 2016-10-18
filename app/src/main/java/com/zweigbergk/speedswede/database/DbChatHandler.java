@@ -245,4 +245,5 @@ class DbChatHandler extends DbTopLevelHandler {
         delete(mRoot.child(CHATS).child(chat.getId()));
     }
 
+
 }

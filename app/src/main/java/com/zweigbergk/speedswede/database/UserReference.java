@@ -125,6 +125,7 @@ public class UserReference {
         attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.ID, id));
     }
 
+
     public void bind(Client<DataChange<User>> client) {
         userHandler.getUserListener().addClient(mUser, client);
     }

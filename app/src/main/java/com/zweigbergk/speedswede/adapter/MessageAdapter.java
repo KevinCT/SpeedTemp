@@ -98,7 +98,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     private void addMessage(Message message) {
-        Log.d(TAG, "adMessage() text: " + message.getText());
+        Log.d(TAG, "addMessage() text: " + message.getText());
         if (!mMessages.contains(message)) {
             message.setText(message.getText());
 
@@ -147,8 +147,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Message message = mMessages.get(position);
+        Client<String> updateViewText = translation -> {
+            holder.mTextView.setText(message.getText());
+            final String newText = holder.mTextView.getText().toString();
+            holder.mTextView.setOnClickListener(v -> {
+                if (message.isTranslated()) {
+                    holder.mTextView.setText(message.getText());
+                } else {
+                    holder.mTextView.setText(newText + "\n\nTranslation:\n" + translation);
+                }
+                message.invertIsTranslated();
+            });
+        };
 
-        //If the message has a cached translation
         if (message.hasCache() && message.getTranslationCache().isFromLocale(mLocale)) {
             String cachedTranslation = message.getTranslationCache().getTranslatedText();
             Log.d(TAG, "Using cached transation. Translated text: " + cachedTranslation);
@@ -208,5 +219,4 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             mTextView = (TextView) view.findViewById(R.id.message_textview_user);
         }
     }
-
 }
