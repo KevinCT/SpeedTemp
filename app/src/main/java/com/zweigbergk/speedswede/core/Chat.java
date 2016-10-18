@@ -21,8 +21,8 @@ public class Chat implements Parcelable {
     private User secondUser;
 
 
-    private boolean likedByFirstUser;
-    private boolean likedBySecondUser;
+    private boolean likedByFirstUser = false;
+    private boolean likedBySecondUser = false;
 
     private List<Message> messages;
     private String id;

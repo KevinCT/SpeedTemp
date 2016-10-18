@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -94,6 +95,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         if (parentToolbar != null) {
             parentToolbar.setDisplayHomeAsUpEnabled(true);
         }
+
     }
 
     @Override
@@ -158,6 +160,7 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         btnLeaveChat.setOnClickListener(v -> showLeaveChatConfirmationDialog());
 
         btnLikeChat = arcMenu.getButton(R.id.btn_arc_menu_like_chat);
+
         setIcon();
         btnLikeChat.setOnClickListener(v  -> likeChatUpdate());
 
@@ -200,16 +203,21 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
 
     private void setIcon() {
         if(!hasLocalUserLiked()) {
-            btnLikeChat.setBackgroundResource(R.drawable.com_facebook_button_send_icon_blue);
+            System.out.println("hasLocalUserLiked() = " + hasLocalUserLiked());
+            btnLikeChat.setBackgroundResource(R.drawable.ic_thumb_up_white_24dp);
         }
 
         else if(hasLocalUserLiked() && !hasOtherUserLiked()) {
+            System.out.println("hasLocalUserLiked() = " + hasLocalUserLiked());
             btnLikeChat.setBackgroundResource(R.drawable.com_facebook_button_like_icon_selected);
         }
 
         else if(hasBothUsersLiked()) {
-            btnLikeChat.setBackgroundResource(R.drawable.com_facebook_button_icon_blue);
+            System.out.println("hasBothUsersLiked() = ");
+            btnLikeChat.setBackgroundResource(R.drawable.com_facebook_button_icon_white);
+
         }
+
     }
 
     private void likeChatUpdate() {
@@ -232,17 +240,13 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
             intent.setData(Uri.parse(url));
             startActivity(intent);
 
-        } else if (!hasLocalUserLiked()) {
+        } else if (hasLocalUserLiked()) {
+            setLikeForLocalUser(false);
+            setIcon();
+
+        } else {
             showLikeChatConfirmationDialog();
             setIcon();
-        } else {
-            if(hasLocalUserLiked()) {
-                setLikeForLocalUser(false);
-                setIcon();
-            } else {
-                setLikeForLocalUser(true);
-                setIcon();
-            }
         }
 
     }
@@ -326,9 +330,10 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         mPresenter.onChangeNameClicked(getActivity().getBaseContext(), s);
     }
 
-    public Boolean hasLocalUserLiked() {
+    private Boolean hasLocalUserLiked() {
         isLocalUserFirstUser();
         Chat chat = mPresenter.getChat();
+        System.out.println();
         if(isLocalUserFirstUser) {
             return chat.hasFirstUserLiked();
         } else {
@@ -336,8 +341,9 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         }
     }
 
-    public Boolean hasOtherUserLiked() {
+    private Boolean hasOtherUserLiked() {
         isLocalUserFirstUser();
+        System.out.println("hasOtherUserLiked() - Is local user first user? " + isLocalUserFirstUser);
         Chat chat = mPresenter.getChat();
         if(isLocalUserFirstUser) {
             return chat.hasSecondUserLiked();
@@ -346,25 +352,30 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         }
     }
 
-    public Boolean hasBothUsersLiked() {
+    @NonNull
+    private Boolean hasBothUsersLiked() {
         Chat chat = mPresenter.getChat();
-        System.out.println("First user like?" + chat.hasFirstUserLiked());
-        System.out.println("Second user like?" + chat.hasSecondUserLiked());
+
         return (chat.hasFirstUserLiked() && chat.hasSecondUserLiked());
     }
 
-    public void setLikeForLocalUser(Boolean likeStatus) {
+    private void setLikeForLocalUser(Boolean likeStatus) {
         isLocalUserFirstUser();
+        System.out.println("setLikeForLocalUser() - Is local user first user? " + isLocalUserFirstUser);
         if(isLocalUserFirstUser) {
+
             DatabaseHandler.getReference(mPresenter.getChat()).setLikeStatusForFirstUser(likeStatus);
-
+            //mPresenter.getChat().setLikeStatusFirstUser(likeStatus);
+            setIcon();
         } else {
-            DatabaseHandler.getReference(mPresenter.getChat()).setLikeStatusForSecondUser(likeStatus);
 
+            DatabaseHandler.getReference(mPresenter.getChat()).setLikeStatusForSecondUser(likeStatus);
+            //mPresenter.getChat().setLikeStatusSecondUser(likeStatus);
+            setIcon();
         }
     }
 
-    public void isLocalUserFirstUser() {
+    private void isLocalUserFirstUser() {
         User activeUser = DatabaseHandler.getActiveUser();
         DatabaseHandler.getReference(activeUser).pull().then(user -> {
             isLocalUserFirstUser = user.equals(mPresenter.getChat().getFirstUser());
