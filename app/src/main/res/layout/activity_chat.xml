@@ -32,19 +32,6 @@
         android:layout_height="match_parent"
         android:visibility="invisible">
 
-        <View
-            android:id="@+id/arc_layout_background_circle"
-            android:background="@drawable/ic_oval"
-            android:layout_width="220dp"
-            android:layout_height="220dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:translationX="72.5dp"
-            android:translationY="-72.5dp"
-            android:alpha="0.3"
-            android:elevation="6dp"/>
-
-
         <com.zweigbergk.speedswede.eyecandy.TransparentLayout
             android:id="@+id/arc_clickable_view_or_no"
             android:layout_width="match_parent"
@@ -63,16 +50,29 @@
 
             <Button
                 android:id="@+id/btn_arc_menu_block_user"
-                android:background="@drawable/ic_lock"
+                android:background="@drawable/ic_block"
                 style="@style/Item.Path"
                 app:arc_angle="22.5"/>
 
             <Button
                 android:id="@+id/btn_arc_menu_leave_chat"
-                android:background="@drawable/ic_trashcan"
+                android:background="@drawable/ic_leave"
                 style="@style/Item.Path"
                 app:arc_angle="67.5"/>
         </com.ogaclejapan.arclayout.ArcLayout>
+
+        <View
+            android:id="@+id/arc_layout_background_circle"
+            android:background="@drawable/ic_oval"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:translationX="72.5dp"
+            android:translationY="-72.5dp"
+            android:alpha="0.8"
+            android:elevation="6dp"
+            android:translationZ="-10dp"/>
 
     </RelativeLayout>
 </RelativeLayout>

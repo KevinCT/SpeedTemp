@@ -3,7 +3,6 @@ package com.zweigbergk.speedswede.eyecandy;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -13,11 +12,9 @@ import android.widget.Button;
 
 import com.ogaclejapan.arclayout.ArcLayout;
 import com.zweigbergk.speedswede.R;
-import com.zweigbergk.speedswede.util.Stringify;
+import com.zweigbergk.speedswede.util.collection.HashMap;
 import com.zweigbergk.speedswede.util.collection.Point;
 import com.zweigbergk.speedswede.view.ChatView;
-
-import com.zweigbergk.speedswede.util.collection.HashMap;
 
 
 public class ArcMenu {
@@ -135,7 +132,7 @@ public class ArcMenu {
         float dx = origin.x - item.getX() - delta.x;
         float dy = origin.y - item.getY() + delta.y;
 
-        Log.d(TAG, Stringify.curlyFormat("createShowItemAnimator: x: {x}, y: {y}", dx, dy));
+//        Log.d(TAG, Stringify.curlyFormat("createShowItemAnimator: x: {x}, y: {y}", dx, dy));
 
         item.setRotation(0f);
         item.setTranslationX(dx);
@@ -165,7 +162,7 @@ public class ArcMenu {
 
         //printAngleInCelcius(new Point(origin.x - item.getX(), origin.y - item.getY()));
 
-        Log.d(TAG, Stringify.curlyFormat("createHideItemAnimator: x: {x}, y: {y}", dx, dy));
+//        Log.d(TAG, Stringify.curlyFormat("createHideItemAnimator: x: {x}, y: {y}", dx, dy));
 
         Animator animator = ObjectAnimator.ofPropertyValuesHolder(
                 item,
@@ -205,7 +202,7 @@ public class ArcMenu {
         double rad = (angle * Math.PI) / 180;
         double x = Math.sin(rad) * value;
         double y = Math.cos(rad) * value;
-        Log.d(TAG, Stringify.curlyFormat("calculateDelta: angle: {angle} x: {x}, y: {y}", angle, x, y));
+//        Log.d(TAG, Stringify.curlyFormat("calculateDelta: angle: {angle} x: {x}, y: {y}", angle, x, y));
         return new Point((float) x, (float) y);
     }
 
