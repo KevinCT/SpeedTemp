@@ -28,6 +28,18 @@ public class LanguagePreferences extends DialogPreference {
     }
 
     @Override
+    protected void onAttachedToActivity() {
+        super.onAttachedToActivity();
+        setSummary(R.string.chosen_language);
+    }
+
+    @Override
+    protected void onBindView(View view) {
+        super.onBindView(view);
+        setSummary(R.string.chosen_language);
+    }
+
+    @Override
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
 
@@ -54,7 +66,7 @@ public class LanguagePreferences extends DialogPreference {
 
     private void changeLanguage(String languageCode) {
         LanguageChanger.changeLanguage(languageCode, getContext());
-        setSummary(languageCode);
+        setSummary(R.string.chosen_language);
         getDialog().dismiss();
     }
 

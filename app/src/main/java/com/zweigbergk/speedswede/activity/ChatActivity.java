@@ -59,6 +59,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
                 R.id.arc_clickable_view_or_no
         };
 
+        setTitle(R.string.chat_header);
+
         Arrays.asList(arcComponentIds).foreach(this::addArcComponent);
     }
 
@@ -156,7 +158,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     @Override
     public void onBackPressed() {
-        setTitle(R.string.app_name);
+        setTitle(R.string.chat_header);
 
         FragmentManager manager = getSupportFragmentManager();
 
