@@ -19,6 +19,6 @@ public interface ChatFragmentView {
     String getInputText();
     void openLanguageFragment();
     void useContext(Client<Context> client);
-    ImageView getImageView();
+    ImageView getImageView(int resId);
     ChatActivity getParent();
 }

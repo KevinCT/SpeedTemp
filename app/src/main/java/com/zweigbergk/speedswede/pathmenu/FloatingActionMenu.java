@@ -23,8 +23,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.zweigbergk.speedswede.util.Stringify;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +33,10 @@ import java.util.List;
  */
 
 public class FloatingActionMenu {
+    private static final String TAG = FloatingActionMenu.class.getSimpleName().toUpperCase();
+
+    public View.OnClickListener disabledClickListener;
+
 
     /** Reference to the view (usually a button) to trigger the menu to show */
     private View mainActionView;
@@ -80,7 +82,11 @@ public class FloatingActionMenu {
                               boolean animated,
                               MenuStateChangeListener stateChangeListener,
                               final boolean systemOverlay) {
+        Log.d(TAG, "This is called. (1)");
         this.mainActionView = mainActionView;
+        int id = 233225871;
+        Integer wtf = id;
+        mainActionView.setId(wtf);
         this.startAngle = startAngle;
         this.endAngle = endAngle;
         this.radius = radius;
@@ -182,7 +188,6 @@ public class FloatingActionMenu {
                 // just before the animation starts
                 if (subActionItems.get(i).view.getParent() != null) {
                     ((ViewGroup) subActionItems.get(i).view.getParent()).removeView(subActionItems.get(i).view);
-                    Log.d("FloatingActionMenu", Stringify.curlyFormat("This fucker: {fucker}, parent: {fuckerParent}!", subActionItems.get(i), subActionItems.get(i).view.getParent()));
                     throw new RuntimeException("All of the sub action items have to be independent from a parent.");
                 }
 
@@ -268,6 +273,14 @@ public class FloatingActionMenu {
         else {
             open(animated);
         }
+    }
+
+    public void disable() {
+        mainActionView.setOnClickListener(disabledClickListener);
+    }
+
+    public void enable() {
+        mainActionView.setOnClickListener(new ActionViewClickListener());
     }
 
     /**
@@ -491,7 +504,9 @@ public class FloatingActionMenu {
     }
 
     public void detachOverlayContainer() {
-        getWindowManager().removeView(overlayContainer);
+        if (overlayContainer != null) {
+            getWindowManager().removeView(overlayContainer);
+        }
     }
 
     public int getStatusBarHeight() {

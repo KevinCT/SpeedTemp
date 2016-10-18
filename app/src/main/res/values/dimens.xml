@@ -13,6 +13,8 @@
     <dimen name="spacing_small">10dp</dimen>
     <dimen name="spacing_tiny">4dp</dimen>
 
+    <dimen name="hide_view">-500dp</dimen>
+
     <!-- Path menu -->
     <dimen name="path_menu_radius">85dp</dimen>
     <dimen name="path_menu_button_size">48dp</dimen>

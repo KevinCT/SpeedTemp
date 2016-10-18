@@ -2,6 +2,7 @@ package com.zweigbergk.speedswede.eyecandy;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
@@ -15,6 +16,8 @@ import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 public class TransparentLayout extends FrameLayout {
     private static final String TAG = TransparentLayout.class.getSimpleName().toUpperCase();
 
+
+    private boolean stopClicks = false;
 
     private List<Executable> executables = new ArrayList<>();
 
@@ -30,6 +33,10 @@ public class TransparentLayout extends FrameLayout {
         super(context, attrs);
     }
 
+    public void setStopClicks(boolean value) {
+        stopClicks = value;
+    }
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
@@ -37,8 +44,10 @@ public class TransparentLayout extends FrameLayout {
                 break;
             default:
         }
+
+        Log.d(TAG, "onInterceptTouchEvent()");
         executables.foreach(Executable::run);
-        return false;
+        return stopClicks;
     }
 
     public void onTouchRegistered(Executable executable) {

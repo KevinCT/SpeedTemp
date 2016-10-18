@@ -9,7 +9,8 @@
 
     <string name="hint_message_input_field">Write a message...</string>
 
-    <string name="leta_kompis">Match with a stranger</string>
+    <string name="start_matching_text">New chat</string>
+    <string name="looking_for_match">Looking for a chat...</string>
     <string name="block_user">Block user</string>
     <string name="confirm_block_user">Block user?</string>
 

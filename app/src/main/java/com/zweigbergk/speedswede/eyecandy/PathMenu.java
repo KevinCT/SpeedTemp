@@ -1,28 +1,34 @@
 package com.zweigbergk.speedswede.eyecandy;
-
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.pathmenu.FloatingActionMenu;
 import com.zweigbergk.speedswede.pathmenu.SubActionButton;
+import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.List;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class PathMenu {
+    private static final String TAG = PathMenu.class.getSimpleName().toUpperCase();
+
+    private View.OnClickListener disabledClickListener;
 
     private FloatingActionMenu pathMenu;
+    private View btnShowActions;
 
-    Timer timer;
-    TimerTask timerTask;
-    final Handler handler = new Handler();
-    SubActionButton.Builder itemBuilder;
+    private Timer timer;
+    private TimerTask timerTask;
+    private final Handler handler = new Handler();
+    private SubActionButton.Builder itemBuilder;
+    private List<SubActionButton> buttons = new ArrayList<>();
 
 
     private ChatFragmentView contextProvider;
@@ -30,6 +36,24 @@ public class PathMenu {
     public PathMenu(ChatFragmentView contextProvider, SubActionButton.Builder itemBuilder) {
         this.contextProvider = contextProvider;
         this.itemBuilder = itemBuilder;
+    }
+
+    public void setDisabledOnClick(View.OnClickListener listener) {
+        this.disabledClickListener = listener;
+    }
+
+    public void allGone() {
+        Log.d(TAG, "allGone()");
+        pathMenu.disable();
+        btnShowActions.setVisibility(View.GONE);
+        buttons.foreach(button -> button.setVisibility(View.GONE));
+        //contextProvider.useContext(context -> btnShowActions.setX(context.getResources().getDimension(R.dimen.hide_view)));
+    }
+
+    public void addImageViewWithAction(ImageView imageView, View.OnClickListener listener) {
+        SubActionButton button = createPathButton(imageView);
+        button.setOnClickListener(listener);
+        buttons.add(button);
     }
 
     public void create() {
@@ -40,57 +64,55 @@ public class PathMenu {
         pathMenu.close(animated);
     }
 
-    private SubActionButton createPathButton(int resId) {
-        ImageView imageView = contextProvider.getImageView();
-        contextProvider.useContext(context -> imageView.setImageDrawable(scaleImage(context.getResources().getDrawable(resId), 2)));
-        return itemBuilder.setContentView(imageView).build();
-    }
-
-    public Drawable scaleImage(Drawable image, float scaleFactor) {
-
-        if ((image == null) || !(image instanceof BitmapDrawable)) {
-            return image;
-        }
-
-        Bitmap b = ((BitmapDrawable)image).getBitmap();
-
-        int sizeX = Math.round(image.getIntrinsicWidth() * scaleFactor);
-        int sizeY = Math.round(image.getIntrinsicHeight() * scaleFactor);
-
-        Bitmap bitmapResized = Bitmap.createScaledBitmap(b, sizeX, sizeY, false);
-
-        image = contextProvider.contextualize(
-                context -> new BitmapDrawable(context.getResources(), bitmapResized));
-
-        return image;
-
+    private SubActionButton createPathButton(ImageView view) {
+        return itemBuilder.setContentView(view).build();
     }
 
     private void initializeTimerTask() {
         timerTask = new TimerTask() {
             public void run() {
                 handler.post(() -> {
-                    View btnShowActions = contextProvider.getParent().findViewById(R.id.show_actions);
+                    btnShowActions = contextProvider.getParent().findViewById(R.id.show_actions);
                     if (btnShowActions != null) {
                         stoptimertask();
 
-                        SubActionButton leaveButton = createPathButton(R.drawable.ic_trashcan);
-                        SubActionButton blockButton = createPathButton(R.drawable.ic_lock);
-
-                        pathMenu = new FloatingActionMenu.Builder(contextProvider.getParent())
-                                .setRadius(contextProvider.getParent().getResources().getDimensionPixelSize(R.dimen.path_menu_radius))
-                                .addSubActionView(blockButton)
-                                .addSubActionView(leaveButton)
-                                .setStartAngle(112)
+                        FloatingActionMenu.Builder builder = new FloatingActionMenu.Builder(contextProvider.getParent())
+                                .setRadius(contextProvider.getParent().getResources().getDimensionPixelSize(R.dimen.path_menu_radius));
+                        buttons.foreach(button -> builder.addSubActionView(button, 210, 210));
+                        pathMenu = builder.setStartAngle(112)
                                 .setEndAngle(158)
                                 .attachTo(btnShowActions)
                                 .build();
+
+                        pathMenu.disabledClickListener = disabledClickListener;
+
+                        pathMenu.setStateChangeListener(new FloatingActionMenu.MenuStateChangeListener() {
+                            @Override
+                            public void onMenuOpened(FloatingActionMenu menu) {
+                                if (btnShowActions != null) {
+                                    btnShowActions.setRotation(0);
+                                    PropertyValuesHolder pvhR = PropertyValuesHolder.ofFloat(View.ROTATION, 45);
+                                    ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(btnShowActions, pvhR);
+                                    animation.start();
+                                }
+                            }
+
+                            @Override
+                            public void onMenuClosed(FloatingActionMenu menu) {
+                                if (btnShowActions != null) {
+                                    btnShowActions.setRotation(45);
+                                    PropertyValuesHolder pvhR = PropertyValuesHolder.ofFloat(View.ROTATION, 0);
+                                    ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(btnShowActions, pvhR);
+                                    animation.start();
+                                }
+                            }
+                        });
                     }
                 });
             }};
     }
 
-    public void startTimer() {
+    private void startTimer() {
         //set a new Timer
         timer = new Timer();
 
@@ -100,7 +122,7 @@ public class PathMenu {
         timer.schedule(timerTask, 0, 50); //
     }
 
-    public void stoptimertask() {
+    private void stoptimertask() {
         //stop the timer, if it's not already null
         if (timer != null) {
             timer.cancel();

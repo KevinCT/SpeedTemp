@@ -54,6 +54,11 @@ public class ArrayList<E> extends java.util.ArrayList<E> implements List<E> {
         return result;
     }
 
+    @Override
+    public void removeLast() {
+        remove(size() - 1);
+    }
+
     public void foreach(Client<E> client) {
         for(E e : this) {
             client.supply(e);
@@ -66,6 +71,14 @@ public class ArrayList<E> extends java.util.ArrayList<E> implements List<E> {
         }
 
         return get(0);
+    }
+
+    public E getLast() {
+        if (size() == 0) {
+            return null;
+        }
+
+        return get(size() - 1);
     }
 
     @Override
