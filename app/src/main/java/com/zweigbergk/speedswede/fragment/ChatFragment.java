@@ -100,6 +100,8 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         view.findViewById(R.id.fragment_chat_post_message).setOnClickListener(this::onButtonClick);
 
         chatRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_chat_recycler_view);
+
+
         mInputBox = (EditText) view.findViewById(R.id.fragment_chat_message_text);
 
         arcMenu = new ArcMenu(parent());

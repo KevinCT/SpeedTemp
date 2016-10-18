@@ -25,4 +25,6 @@ public class MessageTest {
         assertTrue(this.message.equals(otherMessage));
     }
 
+
+
 }
