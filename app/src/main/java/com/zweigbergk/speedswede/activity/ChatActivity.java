@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
@@ -54,8 +55,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         arcComponents = new HashMap<>();
         Integer[] arcComponentIds = {
-                R.id.arc_root_layout, R.id.arc_layout,
-                R.id.arc_clickable_view_or_no, R.id.arc_layout_background_circle
+                R.id.arc_layout_background_circle, R.id.arc_root_layout, R.id.arc_layout,
+                R.id.arc_clickable_view_or_no
         };
 
         Arrays.asList(arcComponentIds).foreach(this::addArcComponent);

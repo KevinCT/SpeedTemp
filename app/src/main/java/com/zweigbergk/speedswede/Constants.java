@@ -39,7 +39,7 @@ public class Constants {
     public static final String SETTINGS_FIRST_SETUP = "settings_first_setup";
 
     //Topics
-    public static final int DEAFULT_TOPIC_IMAGE = R.drawable.ic_speech_bubble;
+    public static final int DEAFULT_TOPIC_IMAGE = R.drawable.ic_default_chat;
 
     public enum Topic {
         Cars(R.drawable.ic_taxi), Theatre(R.drawable.ic_comedy), Universe(R.drawable.ic_nature),
