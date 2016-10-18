@@ -39,4 +39,5 @@
     <string name="settings_pref_first_login_continue_text">استمرار</string>
 
     <!--<string name="activity_settings_title">إعدادات</string>-->
+    <string name="chosen_language">العربية</string>
 </resources>

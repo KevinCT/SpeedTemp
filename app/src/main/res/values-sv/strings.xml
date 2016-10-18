@@ -41,4 +41,6 @@
     <string name="other">Annat</string>
     <string name="settings_pref_first_login_continue_text">Fortsätt</string>
 
+    <string name="chosen_language">Svenska</string>
+
 </resources>

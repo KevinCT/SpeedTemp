@@ -44,4 +44,6 @@
     <string name="other">Other</string>
     <string name="confirm_action">Confirm</string>
     <string name="topic_image_description">topic image</string>
+
+    <string name="chosen_language">English</string>
 </resources>
