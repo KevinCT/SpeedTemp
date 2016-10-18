@@ -19,9 +19,7 @@ import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.fragment.ChangeLanguageFragment;
 import com.zweigbergk.speedswede.fragment.ChatFragment;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
-import com.zweigbergk.speedswede.presenter.ChatPresenter;
 import com.zweigbergk.speedswede.util.collection.Arrays;
-import com.zweigbergk.speedswede.util.collection.Collections;
 import com.zweigbergk.speedswede.util.collection.HashMap;
 import com.zweigbergk.speedswede.util.methodwrapper.CallerMethod;
 import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
@@ -53,8 +51,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setHomeAsUpIndicator(upArrow);
         }
-
-        new ChatPresenter(this);
 
         arcComponents = new HashMap<>();
         Integer[] arcComponentIds = {
