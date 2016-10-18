@@ -44,8 +44,8 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void initListener(){
-        mListener = (sharedPreferences, s) -> {
-            Preference preference = findPreference(s);
+        mListener = (sharedPreferences, key) -> {
+            Preference preference = findPreference(key);
             //Make sure it only checks when Languagepreference is open
             if (preference instanceof LanguagePreferences) {
                 mPresenter.onDialogPreferenceSelected(true);

@@ -34,7 +34,7 @@
     <string name="settings_pref_usage_entry_learn">I want to learn</string>
     <string name="settings_pref_usage_entry_mentor">I want to mentor</string>
     <string name="settings_pref_usage_entry_chat">I just want to chat</string>
-    
+
     <string name="change_name">Change name</string>
     <string name="cancel">Cancel</string>
     <string name="chatname_here">Chat name here</string>

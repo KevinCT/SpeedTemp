@@ -41,9 +41,13 @@ public class ChatFragmentPresenter {
     }
 
     public void setChat(Chat chat) {
-        Log.d(TAG, "setChat()");
-
-        mChat = chat;
+        Log.d(TAG, "setChat(). New chat: " + chat);
+        if (chat != null) {
+            Log.d(TAG, "chat ID: " + chat.getId());
+            mChat = chat;
+        } else {
+            throw new RuntimeException("Tried to set a null chat. setChat() in ChatFragmentPresenter");
+        }
     }
 
     /**
@@ -55,8 +59,10 @@ public class ChatFragmentPresenter {
 
         getMessageAdapter().clear();
 
-        //We want updates from the new chat! Add us as a client to that one :)
         MessageAdapter adapter = (MessageAdapter) mView.getRecyclerView().getAdapter();
+        mChat.getMessages().foreach(message -> adapter.onListChanged(DataChange.added(message)));
+
+        //We want updates from the new chat! Add us as a client to that one :)
         chatEventHandler = createChatEventHandler(adapter);
         Log.d(TAG, "Creating new chatEventHandler, toString(): " + chatEventHandler);
         DatabaseHandler.getReference(mChat).bindMessages(chatEventHandler);

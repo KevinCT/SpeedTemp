@@ -28,8 +28,6 @@ public class Initializer {
     private static List<Client<User>> loginClients = new ArrayList<>();
 
     public static void onLogin(boolean isOfflineMode) {
-        DatabaseHandler.onStartup();
-
         if (!isOfflineMode) {
             onlineLogin();
         } else {
@@ -37,7 +35,6 @@ public class Initializer {
         }
 
         DatabaseHandler.registerListener(DatabaseNode.USERS);
-        DatabaseHandler.getPool().bind(ChatMatcher.INSTANCE::handleUser);
     }
 
     private static void onlineLogin() {

@@ -42,17 +42,8 @@ public enum DatabaseHandler {
 
     private static DatabaseReference root = FirebaseDatabase.getInstance().getReference();
 
-    public static boolean hasConnection() {
-        return mFirebaseConnectionStatus;
-    }
-
     public static DatabaseHandler getInstance() {
         return INSTANCE;
-    }
-
-    public static void onStartup() {
-        DbChatHandler.getInstance().initialize();
-        DbUserHandler.getInstance().initialize();
     }
 
     public static void registerListener(DatabaseNode node) {
@@ -97,30 +88,12 @@ public enum DatabaseHandler {
         DbChatHandler.getInstance().getChatListener().removeClient(client);
     }
 
-    private static String getFirebaseAuthUid() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
-        if (user != null) {
-            for (UserInfo profile : user.getProviderData()) {
-                String uid = profile.getUid();
-                if (uid != null)
-                    return uid;
-            }
-        }
-
-        return null;
-    }
-
     public static User getActiveUser() {
         return DbUserHandler.getInstance().getActiveUser();
     }
 
     public static String getActiveUserId() {
         return DbUserHandler.getInstance().getActiveUserId();
-    }
-
-    public static boolean hasFirebaseConnection() {
-        return mFirebaseConnectionStatus;
     }
 
     public static boolean isNetworkAvailable(Context context) {
@@ -147,7 +120,7 @@ public enum DatabaseHandler {
         return root.push().getKey();
     }
 
-    public static void sendObject(String child, Banner banner ){
+    public static void pushBanner(Banner banner ){
         HashMap<String, Boolean> map = new HashMap<>();
         Lists.forEach(banner.getBanList(), uid -> map.put(uid, true));
         root.child(BANS).child(DbUserHandler.getInstance().getActiveUserId()).child(BANLIST).setValue(map);

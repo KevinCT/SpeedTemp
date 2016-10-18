@@ -2,6 +2,7 @@ package com.zweigbergk.speedswede.core;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.Exclude;
@@ -15,6 +16,9 @@ import com.zweigbergk.speedswede.util.collection.Map;
 import java.util.Date;
 
 public class UserProfile implements User {
+    public static final String TAG = UserProfile.class.getSimpleName().toUpperCase();
+
+
 
     private String displayName, uid;
     private boolean isFirstLogin;
@@ -25,14 +29,14 @@ public class UserProfile implements User {
     private long timeInQueue;
 
     @Exclude
-    private Map<Preference, PreferenceWrapper> mPreferences;
+    private Map<Preference, PreferenceWrapper> mPreferences = new HashMap<>();
 
     public UserProfile(String name, String uid) {
         this.displayName = name;
         this.uid = uid;
 
         mPreferences = new HashMap<>();
-        isFirstLogin = false;
+        isFirstLogin = true;
     }
 
     public UserProfile withPreferences(Map<Preference, PreferenceWrapper> preferences) {
@@ -91,6 +95,10 @@ public class UserProfile implements User {
     }
 
     private void setPreferences(java.util.Map<Preference, PreferenceWrapper> map) {
+        if (mPreferences == null) {
+            mPreferences = new HashMap<>();
+        }
+
         for (Map.Entry<Preference, PreferenceWrapper> entry : map.entrySet()) {
             if (entry.getValue() != null) {
                 mPreferences.put(entry.getKey(), entry.getValue());
@@ -167,17 +175,17 @@ public class UserProfile implements User {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(displayName);
         dest.writeString(uid);
+        mPreferences.foreach(pref -> Log.d(TAG, "A pref value: " + pref.getValue()));
         ParcelHelper.writeParcelableMap(dest, 0, mPreferences);
     }
 
     private UserProfile(Parcel in) {
-        if (in.readString() != null) {
             displayName = in.readString();
             uid = in.readString();
             Map<Preference, PreferenceWrapper> preferences =
                     ParcelHelper.readParcelableMap(in, Preference.class, PreferenceWrapper.class);
+
             setPreferences(preferences);
-        }
     }
 
     public void startTime() {

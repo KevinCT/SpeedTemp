@@ -57,8 +57,10 @@ public enum ChatMatcher {
         Statement strangerBlockedPromised = DatabaseHandler.getReference(activeUser).hasBlocked(user);
 
         activeUserBlockedPromised.or(strangerBlockedPromised).onFalse(() -> {
-            mUsersInPool.add(user);
-            match();
+            if (!mUsersInPool.contains(user)) {
+                mUsersInPool.add(user);
+                match();
+            }
         });
     }
 
@@ -69,6 +71,7 @@ public enum ChatMatcher {
 
     /** Include user in the matching process */
     public void pushUser(User user) {
+        DatabaseHandler.getPool().bind(ChatMatcher.INSTANCE::handleUser);
         DatabaseHandler.getPool().push(user);
     }
 

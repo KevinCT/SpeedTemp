@@ -122,12 +122,12 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
 
     public void onUpdate() {
         Log.d(TAG, "Update background in ChatListFragment");
-
+        /*
         if (adapter.getItemCount() == 0 ) {
             backgroundImageView.setImageResource(R.drawable.default_background_v1);
         } else {
             backgroundImageView.setImageResource(0);
-        }
+        }*/
     }
 
     @Override
@@ -191,10 +191,6 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
         Log.d(TAG, "onStop()");
 
         saveState();
-    }
-
-    public void addUser(View view) {
-        ChatMatcher.INSTANCE.pushUser(DatabaseHandler.getActiveUser());
     }
 
     public void startSettings() {

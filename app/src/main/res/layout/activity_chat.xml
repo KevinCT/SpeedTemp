@@ -16,11 +16,6 @@
         android:layout_height="match_parent"
         android:id="@+id/activity_chat_root">
 
-        <com.zweigbergk.speedswede.eyecandy.TransparentLayout
-            android:id="@+id/transparent_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -55,71 +50,64 @@
             android:background="@color/colorPrimary"
             android:layout_height="24dp"/>
 
-        <ImageView
-            android:id="@+id/dragger_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="0.8"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            android:visibility="gone"
-            android:layout_marginTop="6dp"
-            android:src="@drawable/ic_menu"/>
-
         <com.zweigbergk.speedswede.eyecandy.TransparentLayout
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:id="@+id/cover_match_button_layout"
-            android:layout_width="match_parent"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorAccent"
-            android:visibility="visible"
-            android:clickable="true"
-            android:alpha="0.7"
-            android:layout_height="80dp"/>
-
-        <mehdi.sakout.fancybuttons.FancyButton
-            android:id="@+id/button_start_match"
-            android:layout_centerHorizontal="true"
-            android:alpha="0.25"
             android:layout_below="@id/matcher_layout_top_bar"
-            android:layout_marginTop="20dp"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:padding="10dp"
-            android:clickable="false"
-            fancy:fb_borderColor="#1976D2"
-            fancy:fb_borderWidth="1dp"
-            fancy:fb_defaultColor="#ECEFF1"
-            fancy:fb_iconPaddingLeft="0dp"
-            fancy:fb_iconPaddingRight="0dp"
-            fancy:fb_focusColor="#313131"
-            fancy:fb_iconResource="@drawable/ic_search"
-            fancy:fb_radius="64dp"
-            android:elevation="6dp">
-        </mehdi.sakout.fancybuttons.FancyButton>
-
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/match_loading_indicator"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:visibility="visible"
+            android:clickable="true">
+
+            <mehdi.sakout.fancybuttons.FancyButton
+                android:id="@+id/button_start_match"
+                android:alpha="0.25"
+                android:layout_centerHorizontal="true"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:padding="@dimen/spacing_small"
+                android:clickable="false"
+                fancy:fb_borderColor="#1976D2"
+                fancy:fb_borderWidth="1dp"
+                fancy:fb_defaultColor="#BBDEFB"
+                fancy:fb_iconPaddingLeft="0dp"
+                fancy:fb_iconPaddingRight="0dp"
+                fancy:fb_focusColor="#64B5F6"
+                fancy:fb_iconResource="@drawable/ic_search"
+                fancy:fb_radius="64dp"
+                android:elevation="6dp">
+            </mehdi.sakout.fancybuttons.FancyButton>
+        </com.zweigbergk.speedswede.eyecandy.TransparentLayout>
+
+        <com.zweigbergk.speedswede.eyecandy.MatchLoadingIndicatorLayout
+            android:id="@+id/match_loading_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:indicatorName="BallClipRotatePulseIndicator"
-            app:indicatorColor="@color/colorPrimary"
-        />
-
-        <TextView
-            android:id="@+id/text_start_match"
-            android:layout_marginTop="66dp"
             android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/font_small"
-            android:textStyle="bold"
-            android:alpha="0.7"
             android:visibility="gone"
-            android:text="@string/looking_for_match"
-            />
+            android:orientation="vertical">
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/match_loading_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:indicatorName="BallClipRotatePulseIndicator"
+                app:indicatorColor="@color/colorPrimary"
+                />
+
+            <TextView
+                android:id="@+id/match_loading_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="@dimen/font_small"
+                android:textStyle="bold"
+                android:alpha="0.7"
+                android:text="@string/looking_for_match"
+                />
+        </com.zweigbergk.speedswede.eyecandy.MatchLoadingIndicatorLayout>
     </RelativeLayout>
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

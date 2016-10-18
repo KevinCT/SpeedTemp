@@ -14,11 +14,7 @@ public interface ChatFragmentView {
     RecyclerView getRecyclerView();
     void setLayoutManager(RecyclerView.LayoutManager layoutManager);
     <T> T contextualize(ProviderMethod<T, Context> method);
-    void useActivity(CallerMethod<ChatActivity> method);
     void clearInputField();
     String getInputText();
-    void openLanguageFragment();
-    void useContext(Client<Context> client);
     ImageView getImageView(int resId);
-    ChatActivity getParent();
 }
