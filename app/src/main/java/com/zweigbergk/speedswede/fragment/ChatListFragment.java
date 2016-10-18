@@ -17,16 +17,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.baoyz.widget.PullRefreshLayout;
-import com.ogaclejapan.arclayout.ArcLayout;
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.ChatActivity;
 import com.zweigbergk.speedswede.adapter.ChatAdapter;
 import com.zweigbergk.speedswede.core.Chat;
-import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.ChildCountListener;
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.ParcelHelper;
 import com.zweigbergk.speedswede.util.collection.List;
 
