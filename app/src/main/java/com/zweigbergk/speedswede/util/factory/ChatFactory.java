@@ -85,7 +85,10 @@ public class ChatFactory {
     private static String getUserId(DataSnapshot snapshot) {
         Object value = snapshot.child(Constants.USER_ID).getValue();
         String userId;
-        if (value.getClass().equals(String.class)) {
+        if(value == null) {
+            return null;
+        }
+        else if (value.getClass().equals(String.class)) {
             userId = (String) value;
         } else if (value.getClass().equals(HashMap.class)) {
             HashMap<String, Object> mapping = (HashMap) value;
