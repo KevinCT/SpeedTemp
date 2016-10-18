@@ -19,7 +19,7 @@ import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public class LoginInteractor implements ActivityAttachable {
 
-    public static AuthCredential userCredential;
+    static AuthCredential userCredential;
 
     public static final String TAG = "LoginInteractor";
 

@@ -15,7 +15,7 @@ import static com.zweigbergk.speedswede.Constants.SWEDISH;
 import static com.zweigbergk.speedswede.Constants.TURKISH;
 
 public class LanguagePreferences extends DialogPreference {
-    public static String TAG  = "LanguagePreferences";
+    public static final String TAG  = "LanguagePreferences";
 
     public LanguagePreferences(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);

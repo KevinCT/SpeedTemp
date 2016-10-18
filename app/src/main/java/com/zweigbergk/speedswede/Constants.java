@@ -68,9 +68,10 @@ public class Constants {
         }
 
         public static Topic fromString(String name) {
-            return Collections.asList(values())
+            final Topic returnTopic = Collections.asList(values())
                     .filter(topic -> topic.name().equalsIgnoreCase(name))
                     .getFirst();
+            return returnTopic;
         }
     }
 
