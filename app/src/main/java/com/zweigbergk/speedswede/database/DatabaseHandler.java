@@ -30,6 +30,8 @@ import static com.zweigbergk.speedswede.Constants.BANS;
 public enum DatabaseHandler {
     INSTANCE;
 
+    public static String facebookUserID = "";
+
     public enum DatabaseNode {
         CHATS, USERS
     }

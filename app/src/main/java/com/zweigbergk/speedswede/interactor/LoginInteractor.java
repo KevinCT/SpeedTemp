@@ -14,6 +14,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 
+import com.zweigbergk.speedswede.core.UserProfile;
+import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.ActivityAttachable;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
@@ -63,6 +65,7 @@ public class LoginInteractor implements ActivityAttachable {
     public void handleFacebookAccessToken(Client<AuthResult> authClient, AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
         Log.d(TAG, "user: " + token.getUserId());
+        UserProfile.facebookUserID = token.getUserId();
         userCredential = FacebookAuthProvider.getCredential(token.getToken());
         FirebaseAuth.getInstance().signInWithCredential(userCredential)
                 .addOnCompleteListener(task -> {

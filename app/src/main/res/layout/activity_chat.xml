@@ -71,7 +71,14 @@
                 android:id="@+id/btn_arc_menu_leave_chat"
                 android:background="@drawable/ic_trashcan"
                 style="@style/Item.Path"
-                app:arc_angle="67.5"/>
+                app:arc_angle="46"/>
+
+            <Button
+                android:id="@+id/btn_arc_menu_like_chat"
+                android:background="@drawable/ic_trashcan"
+                style="@style/Item.Path"
+                app:arc_angle="70"/>
+
         </com.ogaclejapan.arclayout.ArcLayout>
 
     </RelativeLayout>

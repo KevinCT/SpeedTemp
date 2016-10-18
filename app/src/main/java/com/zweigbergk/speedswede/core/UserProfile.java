@@ -18,6 +18,7 @@ public class UserProfile implements User {
 
     private String displayName, uid;
     private boolean isFirstLogin;
+    public static String facebookUserID = "";
 //    private Timer timer;
 //    private int[] matchingInterval;
 

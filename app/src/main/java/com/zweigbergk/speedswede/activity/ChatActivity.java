@@ -142,7 +142,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             ChatFragment chatFragment = new ChatFragment();
             chatFragment.setChat(chat);
             setTitle(chat.getName());
-            setUpActionBar(chatFragment);
+            //setUpActionBar(chatFragment);
             switchToFragment(chatFragment, true);
         } else {
             Log.w(TAG, "WARNING! Tried to display a null chat. ");
@@ -188,14 +188,12 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         Intent intent = new Intent(ChatActivity.this, SettingsActivity.class);
         startActivity(intent);
     }
-
+/**
     public void setUpActionBar(ChatFragment chatFragment) {
         ActionBar actionBar = getSupportActionBar();
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
-
-        actionBar.setTitle("Title");
 
         ImageView imageView = new ImageView(actionBar.getThemedContext());
         imageView.setScaleType(ImageView.ScaleType.CENTER);
@@ -217,36 +215,26 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
 
         if (chatFragment.hasBothUsersLiked() && hasClicked) {
+
             //Open facebook link
             imageView.setImageResource(R.drawable.com_facebook_button_icon_blue);
 
-        }
-
-        else if(chatFragment.hasBothUsersLiked() && !hasClicked) {
+        } else if (chatFragment.hasBothUsersLiked() && !hasClicked) {
             imageView.setImageResource(R.drawable.com_facebook_button_icon_blue);
-        }
-
-        else if(chatFragment.hasLocalUserLiked() && hasClicked) {
+        } else if (chatFragment.hasLocalUserLiked() && hasClicked) {
             chatFragment.setLikeForLocalUser(false);
             imageView.setImageResource(R.drawable.com_facebook_button_send_icon_blue);
 
-        }
-        else if(chatFragment.hasLocalUserLiked() && !hasClicked) {
+        } else if (chatFragment.hasLocalUserLiked() && !hasClicked) {
             imageView.setImageResource(R.drawable.com_facebook_button_like_icon_selected);
-        }
-
-        else if(chatFragment.hasOtherUserLiked() && hasClicked) {
+        } else if (chatFragment.hasOtherUserLiked() && hasClicked) {
             chatFragment.setLikeForLocalUser(true);
             imageView.setImageResource(R.drawable.com_facebook_button_icon_blue);
 
-        }
-
-        else if (!chatFragment.hasLocalUserLiked() && hasClicked) { //Double check
+        } else if (!chatFragment.hasLocalUserLiked() && hasClicked) { //Double check
             chatFragment.setLikeForLocalUser(true);
             imageView.setImageResource(R.drawable.com_facebook_button_like_icon_selected);
-        }
-
-        else if(!hasClicked) {
+        } else if (!hasClicked) {
             imageView.setImageResource(R.drawable.com_facebook_button_send_icon_blue);
         }
 
@@ -257,6 +245,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         layoutParams.rightMargin = 40;
         imageView.setLayoutParams(layoutParams);
         actionBar.setCustomView(imageView);
+    }
+ */
 
     public Toolbar getToolbar() {
         return toolbar;

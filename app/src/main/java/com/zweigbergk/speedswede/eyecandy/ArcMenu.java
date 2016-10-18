@@ -78,14 +78,19 @@ public class ArcMenu {
         Point p2 = new Point(0, 0);
         Animator firstAnimator = createShowItemAnimator(arcLayout.getChildAt(0), p1);
         Animator secondAnimator = createShowItemAnimator(arcLayout.getChildAt(1), p2);
+        Animator thirdAnimator = createShowItemAnimator(arcLayout.getChildAt(2), p2);
 
         firstAnimator.setDuration(400);
         firstAnimator.setInterpolator(new OvershootInterpolator(1.5f));
         secondAnimator.setDuration(400);
         secondAnimator.setInterpolator(new OvershootInterpolator(1.5f));
+        thirdAnimator.setDuration(400);
+        thirdAnimator.setInterpolator(new OvershootInterpolator(1.5f));
         firstAnimator.start();
         secondAnimator.setStartDelay(35);
         secondAnimator.start();
+        thirdAnimator.setStartDelay(35);
+        thirdAnimator.start();
     }
 
     public Button getButton(int resId) {
@@ -105,11 +110,15 @@ public class ArcMenu {
         Point p2 = new Point(0, 0);
         Animator firstAnimator = createHideItemAnimator(arcLayout.getChildAt(0), p1);
         Animator secondAnimator = createHideItemAnimator(arcLayout.getChildAt(1), p2);
+        Animator thirdAnimator = createHideItemAnimator(arcLayout.getChildAt(2), p2);
+
 
         firstAnimator.setDuration(400);
         firstAnimator.setInterpolator(new AnticipateInterpolator(1.5f));
         secondAnimator.setDuration(400);
         secondAnimator.setInterpolator(new AnticipateInterpolator(1.5f));
+        thirdAnimator.setDuration(400);
+        thirdAnimator.setInterpolator(new AnticipateInterpolator(1.5f));
         firstAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -118,6 +127,8 @@ public class ArcMenu {
             }
         });
 
+        thirdAnimator.start();
+        thirdAnimator.setStartDelay(35);
         secondAnimator.start();
         firstAnimator.setStartDelay(35);
         firstAnimator.start();
