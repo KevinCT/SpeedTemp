@@ -7,7 +7,7 @@
     <color name="colorInputText">#232323</color>
     <color name="white">#ffffff</color>
 
-    <color name="colorChatMessageUser">#ffe75b</color>
+    <color name="colorChatMessageUser">#ffda00</color>
     <color name="colorChatMessageStranger">#dddddd</color>
 
     <!-- Eyecandy -->
