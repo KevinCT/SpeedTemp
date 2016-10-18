@@ -62,11 +62,17 @@ public class LoginInteractor implements ActivityAttachable {
         return msg.equals("CONNECTION_FAILURE");
     }
 
+    private static void setUserCredential(AuthCredential authCredential) {
+        userCredential = authCredential;
+    }
+
     public void handleFacebookAccessToken(Client<AuthResult> authClient, AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
         Log.d(TAG, "user: " + token.getUserId());
+
         UserProfile.facebookUserID = token.getUserId();
         userCredential = FacebookAuthProvider.getCredential(token.getToken());
+        setUserCredential(FacebookAuthProvider.getCredential(token.getToken()));
         FirebaseAuth.getInstance().signInWithCredential(userCredential)
                 .addOnCompleteListener(task -> {
                     Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());

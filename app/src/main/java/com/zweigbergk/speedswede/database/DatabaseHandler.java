@@ -59,6 +59,7 @@ public enum DatabaseHandler {
         switch (node) {
             case USERS:
                 DbUserHandler.getInstance().registerUsersListener();
+                break;
             default:
                 Log.w(TAG, "registerListener(): There is no setting for that node.");
                 Stringify.printStackTrace();

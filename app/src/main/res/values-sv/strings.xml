@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="chat_header">Konversationer</string>
     <string name="app_name">SpeedSwede</string>
     <string name="title_activity_login">LoginActivity</string>
 
@@ -42,5 +43,7 @@
     <string name="settings_pref_first_login_continue_text">Fortsätt</string>
 
     <string name="chosen_language">Svenska</string>
+    <string name="block_user_text">Du kommer inte bli matchad med denna personen igen</string>
+    <string name="exit_chat_text">Du kommer inte kunna återvända till denna chat</string>
 
 </resources>

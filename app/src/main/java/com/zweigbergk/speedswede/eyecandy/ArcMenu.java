@@ -195,13 +195,13 @@ public class ArcMenu {
         return animator;
     }
 
-    private Animator createShowItemAnimator(View item) {
-        return createShowItemAnimator(item, new Point(0, 0));
-    }
-
-    private Animator createHideItemAnimator(final View item) {
-        return createHideItemAnimator(item, new Point(0, 0));
-    }
+//    private Animator createShowItemAnimator(View item) {
+//        return createShowItemAnimator(item, new Point(0, 0));
+//    }
+//
+//    private Animator createHideItemAnimator(final View item) {
+//        return createHideItemAnimator(item, new Point(0, 0));
+//    }
 
     /**
      *

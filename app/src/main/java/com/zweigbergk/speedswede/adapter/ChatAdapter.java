@@ -71,7 +71,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
         Log.d(TAG, "notifyChange.");
 
-
         mChildCountListener.onUpdate();
 
         switch (event) {

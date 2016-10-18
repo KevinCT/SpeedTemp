@@ -98,7 +98,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     private void addMessage(Message message) {
-        Log.d(TAG, "adMessage() text: " + message.getText());
+        Log.d(TAG, "addMessage() text: " + message.getText());
         if (!mMessages.contains(message)) {
             message.setText(message.getText());
 
@@ -149,9 +149,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Message message = mMessages.get(position);
 
         Client<String> updateViewText = translation -> {
-            String text = Stringify.curlyFormat("{current text}\n\nTranslation:{translation}",
-                    message.getText(), translation);
-            holder.mTextView.setText(text);
+            holder.mTextView.setText(message.getText());
+            final String newText = holder.mTextView.getText().toString();
+            holder.mTextView.setOnClickListener(v -> {
+                if (message.isTranslated()) {
+                    holder.mTextView.setText(message.getText());
+                } else {
+                    holder.mTextView.setText(newText + "\n\nTranslation:\n" + translation);
+                }
+                message.invertIsTranslated();
+            });
         };
 
 
@@ -195,5 +202,4 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             mTextView = (TextView) view.findViewById(R.id.message_textview_user);
         }
     }
-
 }
