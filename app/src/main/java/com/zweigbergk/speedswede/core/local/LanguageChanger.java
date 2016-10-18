@@ -25,12 +25,11 @@ public class LanguageChanger {
         Resources resources = context.getResources();
         Configuration config;
         config = resources.getConfiguration();
-
-        languageCode = languageCode.contains(languageCode) ? languageCode : Constants.ENGLISH;
-        config.locale = new Locale(languageCode);
+        String newLanguage = languageCode.length() != 0 ? languageCode : Constants.ENGLISH;
+        config.setLocale(new Locale(newLanguage));
 
         resources.updateConfiguration(config, resources.getDisplayMetrics());
-        saveLanguage(context,languageCode);
+        saveLanguage(context, newLanguage);
     }
 
     private static void saveLanguage(Context context, String language){

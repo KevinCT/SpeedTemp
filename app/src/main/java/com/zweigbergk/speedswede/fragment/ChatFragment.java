@@ -100,6 +100,8 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
         view.findViewById(R.id.fragment_chat_post_message).setOnClickListener(this::onButtonClick);
 
         chatRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_chat_recycler_view);
+
+
         mInputBox = (EditText) view.findViewById(R.id.fragment_chat_message_text);
 
         arcMenu = new ArcMenu(parent());
@@ -159,8 +161,8 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
 
 
         new AlertDialog.Builder(getContext())
-                .setTitle("Block this user?")
-                .setMessage("You will not be matched with him or her again.")
+                .setTitle(R.string.confirm_block_user)
+                .setMessage(R.string.block_user_text)
                 .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                     dialog.dismiss();
                     DatabaseHandler.getReference(activeUser).block(otherUser);
@@ -174,8 +176,8 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
 
     private void showLeaveChatConfirmationDialog() {
         new AlertDialog.Builder(getContext())
-                .setTitle("Leave this chat?")
-                .setMessage("You will not be able to come back to it.")
+                .setTitle(R.string.exit_chat)
+                .setMessage(R.string.exit_chat_text)
                 .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                     dialog.dismiss();
                     mPresenter.terminateChat();

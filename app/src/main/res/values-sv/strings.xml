@@ -43,5 +43,7 @@
     <string name="settings_pref_first_login_continue_text">Fortsätt</string>
 
     <string name="chosen_language">Svenska</string>
+    <string name="block_user_text">Du kommer inte bli matchad med denna personen igen</string>
+    <string name="exit_chat_text">Du kommer inte kunna återvända till denna chat</string>
 
 </resources>

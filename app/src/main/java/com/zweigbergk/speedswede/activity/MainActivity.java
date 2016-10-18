@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -19,6 +20,8 @@ import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.presenter.MainPresenter;
 import com.zweigbergk.speedswede.view.MainView;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
             calledAlready = true;
         }
 
+        // TODO: Is this really needed? Move all logic from MainActivity to MainPresenter?
         new MainPresenter(this);
         setUpContent();
 
@@ -70,11 +74,14 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
             for (android.content.pm.Signature signature : packageInfo.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
+
+                ByteBuffer bf = Charset.forName("UTF-8").encode(signature.toCharsString());
+
+                md.update(bf.array());
                 key = new String(Base64.encode(md.digest(), 0));
 
-                // String key = new String(Base64.encodeBytes(md.digest()));
-                Log.e("Key Hash=", key);
+//                 String key = new String(Base64.encodeBytes(md.digest()));
+//                Log.e("Key Hash=", key);
             }
         } catch (PackageManager.NameNotFoundException e1) {
             Log.e("Name invert found", e1.toString());

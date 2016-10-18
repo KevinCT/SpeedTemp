@@ -2,6 +2,7 @@ package com.zweigbergk.speedswede.core;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.firebase.database.Exclude;
 
@@ -17,6 +18,7 @@ public class Message implements Parcelable, Cloneable {
     private String text;
     private TranslationCache cache;
     private final long timeStamp;
+    private boolean isTranslated;
 
     //For JSON de-serialization
     public Message() {
@@ -27,6 +29,15 @@ public class Message implements Parcelable, Cloneable {
         this.id = id;
         this.text = text;
         this.timeStamp = timeStamp;
+        this.isTranslated = false;
+    }
+
+    public void invertIsTranslated() {
+        this.isTranslated = !this.isTranslated;
+    }
+
+    public boolean isTranslated() {
+        return this.isTranslated;
     }
 
     @Exclude
@@ -102,6 +113,11 @@ public class Message implements Parcelable, Cloneable {
     }
 
     public Message clone() {
+        try {
+            super.clone();
+        } catch(CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
         return new Message(id, text, timeStamp);
     }
 
