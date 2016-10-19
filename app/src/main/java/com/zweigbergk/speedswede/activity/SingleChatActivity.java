@@ -163,8 +163,8 @@ public class SingleChatActivity extends AppCompatActivity implements ChatFragmen
 
 
             new AlertDialog.Builder(this)
-                    .setTitle("Block this user?")
-                    .setMessage("You will not be matched with him or her again.")
+                    .setTitle(R.string.confirm_block_user)
+                    .setMessage(R.string.block_user_text)
                     .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                         dialog.dismiss();
                         DatabaseHandler.getReference(activeUser).block(otherUser);
@@ -178,8 +178,8 @@ public class SingleChatActivity extends AppCompatActivity implements ChatFragmen
 
         private void showLeaveChatConfirmationDialog() {
             new AlertDialog.Builder(this)
-                    .setTitle("Leave this chat?")
-                    .setMessage("You will not be able to come back to it.")
+                    .setTitle(R.string.exit_chat)
+                    .setMessage(R.string.exit_chat_text)
                     .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                         dialog.dismiss();
                         mPresenter.terminateChat();
