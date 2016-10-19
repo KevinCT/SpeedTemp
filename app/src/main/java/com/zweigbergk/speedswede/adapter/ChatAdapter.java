@@ -200,7 +200,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         Constants.Topic topic = Constants.Topic.fromString(chat.getName());
         int topicResId = topic != null ? topic.getResourceId() : DEAFULT_TOPIC_IMAGE;
 
-        holder.name.setText(topicMap.get(chat.getName()));
+        holder.name.setText(chat.getName());
         holder.latestMessage.setText(messageText);
         holder.timestamp.setText(formattedTime);
         holder.topicImage.setImageDrawable(ContextCompat.getDrawable(mContext, + topicResId));
