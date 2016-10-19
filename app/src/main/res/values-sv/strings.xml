@@ -24,7 +24,7 @@
     <string name="chat_name_error">Namnet kan inte vara tomt!</string>
 
     <string name="settings_pref_notifications">Notifikationer</string>
-    <string name="settings_summary_notifications">Ange ifall du vill bli notifierad när en nya meddelanden eller matchningar dyker upp.</string>
+    <string name="settings_summary_notifications">Ange ifall du vill bli notifierad när ett nytt meddelande eller matchning dyker upp.</string>
     <string name="settings_pref_app_lang">Appens språk</string>
     <string name="settings_pref_app_lang_default">English</string>
     <string name="exit_chat">Lämna chat</string>
