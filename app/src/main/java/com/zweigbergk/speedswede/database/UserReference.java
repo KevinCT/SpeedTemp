@@ -23,7 +23,7 @@ public class UserReference {
         LANGUAGE(Constants.makePath(Constants.PREFERENCES, Constants.LANGUAGE)),
         SKILL_CATEGORY(Constants.makePath(Constants.PREFERENCES, Constants.SKILL_CATEGORY)),
         FIRST_LOGIN(Constants.FIRST_LOGIN),
-        TIME_IN_QUEUE(Constants.TIME_IN_QUEUE),
+        TIME_IN_QUEUE(Constants.TIME_IN_QUEUE),FACEBOOK_ID(Constants.FACEBOOK_ID),
         UNDEFINED(Constants.UNDEFINED);
 
         private String path;
@@ -87,6 +87,11 @@ public class UserReference {
         attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.FIRST_LOGIN, value));
     }
 
+    public void setFacebookId(String id) {
+        //activeUser().setFacebookId();
+        attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.FACEBOOK_ID, id));
+    }
+
     public void setTimeInQueue(long value) {
         activeUser().setTimeInQueue(value);
         attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.TIME_IN_QUEUE, value));
@@ -124,7 +129,6 @@ public class UserReference {
     public void setId(String id) {
         attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.ID, id));
     }
-
 
     public void bind(Client<DataChange<User>> client) {
         userHandler.getUserListener().addClient(mUser, client);

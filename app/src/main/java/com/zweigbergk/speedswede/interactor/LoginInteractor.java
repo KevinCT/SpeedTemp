@@ -71,6 +71,7 @@ public class LoginInteractor implements ActivityAttachable {
         Log.d(TAG, "user: " + token.getUserId());
 
         //Unsure about merge conflict
+        DatabaseHandler.setFacebookUserID(token.getUserId());
         UserProfile.facebookUserID = token.getUserId();
         userCredential = FacebookAuthProvider.getCredential(token.getToken());
         setUserCredential(FacebookAuthProvider.getCredential(token.getToken()));

@@ -32,6 +32,7 @@ public class Constants {
 
     public static final String LIKED_BY_FIRST_USER = "likedByFirstUser";
     public static final String LIKED_BY_SECOND_USER = "likedBySecondUser";
+    public static final String FACEBOOK_ID = "facebookId";
 
     public static final String FIRST_LOGIN = "firstLogin";
     public static final String TIME_IN_QUEUE = "timeInQueue";

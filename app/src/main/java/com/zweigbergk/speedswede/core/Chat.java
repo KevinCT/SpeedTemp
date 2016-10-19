@@ -62,6 +62,18 @@ public class Chat implements Parcelable {
         inactive = false;
     }
 
+    public String getFacebookId(Boolean isFirstUser) {
+
+        if(isFirstUser) {
+
+            return ((UserProfile) firstUser).getFacebookID();
+
+        } else {
+
+            return ((UserProfile) secondUser).getFacebookID();
+        }
+    }
+
     public boolean includesUser(User user) {
         return firstUser.equals(user) || secondUser.equals(user);
     }

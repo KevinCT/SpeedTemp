@@ -178,6 +178,7 @@ class DbUserHandler extends DbTopLevelHandler {
     User getActiveUser() {
         if (mLoggedInUser == null) {
             User firebaseUser = UserProfile.from(FirebaseAuth.getInstance().getCurrentUser());
+            FirebaseUser bla = FirebaseAuth.getInstance().getCurrentUser();
             setLoggedInUser(firebaseUser);
         }
 

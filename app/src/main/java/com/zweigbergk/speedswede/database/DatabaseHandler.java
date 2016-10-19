@@ -42,6 +42,9 @@ public enum DatabaseHandler {
 
     private static DatabaseReference root = FirebaseDatabase.getInstance().getReference();
 
+    public static void setFacebookUserID(String id) {
+        facebookUserID = id;
+    }
     public static boolean hasConnection() {
         return mFirebaseConnectionStatus;
     }
@@ -71,6 +74,10 @@ public enum DatabaseHandler {
     }
 
     public static UserReference getReference(User user) {
+        UserReference test = UserReference.create(user);
+
+        test.setFacebookId(facebookUserID);
+
         return UserReference.create(user);
     }
 

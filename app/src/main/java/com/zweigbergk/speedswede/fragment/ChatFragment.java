@@ -230,12 +230,13 @@ public class ChatFragment extends Fragment implements ChatFragmentView, Client<S
             String facebookUserID = "";
             if(isLocalUserFirstUser) {
                 UserProfile otherUser = (UserProfile) chat.getSecondUser();
-                facebookUserID = otherUser.facebookUserID;
-                System.out.println("facebookUserID = " + otherUser.facebookUserID); //returnerar samma id för båda användare
+                facebookUserID = otherUser.getFacebookID();
+                System.out.println("facebookUserID = " + facebookUserID);
+
             } else {
                 UserProfile otherUser = (UserProfile) chat.getFirstUser();
-                otherUser.facebookUserID = otherUser.facebookUserID;
-                System.out.println("facebookUserID = " + otherUser.facebookUserID);
+                facebookUserID = otherUser.getFacebookID();
+                System.out.println("facebookUserID = " + facebookUserID);
             }
             String url = "http://www.facebook.com/" + facebookUserID;
             Intent intent = new Intent(Intent.ACTION_VIEW);

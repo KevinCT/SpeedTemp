@@ -19,6 +19,7 @@ public class UserProfile implements User {
     private String displayName, uid;
     private boolean isFirstLogin;
     public static String facebookUserID = "";
+    private String facebookID;
 //    private Timer timer;
 //    private int[] matchingInterval;
 
@@ -33,6 +34,7 @@ public class UserProfile implements User {
 
         mPreferences = new HashMap<>();
         isFirstLogin = false;
+        facebookID = facebookUserID;
     }
 
     public UserProfile withPreferences(Map<Preference, PreferenceWrapper> preferences) {
@@ -72,6 +74,10 @@ public class UserProfile implements User {
 
     public void setTimeInQueue(long value) {
         timeInQueue = value;
+    }
+
+    public String getFacebookID() {
+        return facebookID;
     }
 
     @Override
