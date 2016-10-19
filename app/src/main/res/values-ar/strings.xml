@@ -41,4 +41,6 @@
 
     <!--<string name="activity_settings_title">إعدادات</string>-->
     <string name="chosen_language">العربية</string>
+    <string name="block_user_text">حظرالمستخدم?</string>
+    <string name="exit_chat_text">ترك المحادثة?</string>
 </resources>
