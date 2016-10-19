@@ -21,6 +21,7 @@ import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
+import com.zweigbergk.speedswede.util.AbuseFilter;
 import com.zweigbergk.speedswede.util.ChildCountListener;
 import com.zweigbergk.speedswede.util.collection.ArrayList;
 import com.zweigbergk.speedswede.util.collection.Arrays;
@@ -183,10 +184,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             messageText = latestMessage.getText();
 
             String activeUid = DatabaseHandler.getActiveUserId();
+            String filteredMessage = AbuseFilter.filterMessage(messageText);
+
             if (latestMessage.getId().equals(activeUid)) {
-                messageText = "You: " + messageText;
+                messageText = "You: " + filteredMessage;
             } else {
-                messageText = "Other person: " + messageText;
+                messageText = "Other person: " + filteredMessage;
             }
         }
 

@@ -15,6 +15,7 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.util.AbuseFilter;
 import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.Translation;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
@@ -145,13 +146,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Message message = mMessages.get(position);
 
         Client<String> updateViewText = translation -> {
-            holder.mTextView.setText(message.getText());
-            final String newText = holder.mTextView.getText().toString();
+
+            final String newText = AbuseFilter.filterMessage(message.getText());
+            holder.mTextView.setText(newText);
+
             holder.mTextView.setOnClickListener(v -> {
                 if (message.isTranslated()) {
-                    holder.mTextView.setText(message.getText());
+                    holder.mTextView.setText(newText);
                 } else {
-                    holder.mTextView.setText(newText + "\n\nTranslation:\n" + translation);
+                    String filteredTranslation = AbuseFilter.filterMessage(translation);
+                    holder.mTextView.setText(newText + "\n\nTranslation:\n" + filteredTranslation);
                 }
                 message.invertIsTranslated();
             });
