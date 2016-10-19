@@ -8,12 +8,14 @@ import android.widget.ImageView;
 
 import com.zweigbergk.speedswede.R;
 import com.zweigbergk.speedswede.activity.SingleChatActivity;
+import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.pathmenu.FloatingActionMenu;
 import com.zweigbergk.speedswede.pathmenu.SubActionButton;
 import com.zweigbergk.speedswede.util.collection.ArrayList;
 import com.zweigbergk.speedswede.util.collection.List;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -73,11 +75,20 @@ public class PathMenu {
                     if (btnShowActions != null) {
                         stoptimertask();
 
+                        int firstAngle = 112;
+                        int secondAngle = 158;
+
+                        String currentLocale = contextProvider.contextualize(LanguageChanger::getCurrentLanguage);
+                        if (currentLocale.equals("ar")) {
+                            firstAngle = 22;
+                            secondAngle = 68;
+                        }
+
                         FloatingActionMenu.Builder builder = new FloatingActionMenu.Builder(contextProvider)
                                 .setRadius(contextProvider.getResources().getDimensionPixelSize(R.dimen.path_menu_radius));
                         buttons.foreach(button -> builder.addSubActionView(button, 210, 210));
-                        pathMenu = builder.setStartAngle(112)
-                                .setEndAngle(158)
+                        pathMenu = builder.setStartAngle(firstAngle)
+                                .setEndAngle(secondAngle)
                                 .attachTo(btnShowActions)
                                 .build();
 
@@ -85,8 +96,15 @@ public class PathMenu {
                             @Override
                             public void onMenuOpened(FloatingActionMenu menu) {
                                 if (btnShowActions != null) {
+                                    int angle = 45;
+
+                                    String currentLocale = contextProvider.contextualize(LanguageChanger::getCurrentLanguage);
+                                    if (currentLocale.equals("ar")) {
+                                        angle = -45;
+                                    }
+
                                     btnShowActions.setRotation(0);
-                                    PropertyValuesHolder pvhR = PropertyValuesHolder.ofFloat(View.ROTATION, 45);
+                                    PropertyValuesHolder pvhR = PropertyValuesHolder.ofFloat(View.ROTATION, angle);
                                     ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(btnShowActions, pvhR);
                                     animation.start();
                                     new Handler().postDelayed(() -> stateClients.foreach(client -> client.supply(true)),
@@ -97,7 +115,14 @@ public class PathMenu {
                             @Override
                             public void onMenuClosed(FloatingActionMenu menu) {
                                 if (btnShowActions != null) {
-                                    btnShowActions.setRotation(45);
+                                    int angle = 45;
+
+                                    String currentLocale = contextProvider.contextualize(LanguageChanger::getCurrentLanguage);
+                                    if (currentLocale.equals("ar")) {
+                                        angle = -45;
+                                    }
+
+                                    btnShowActions.setRotation(angle);
                                     PropertyValuesHolder pvhR = PropertyValuesHolder.ofFloat(View.ROTATION, 0);
                                     ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(btnShowActions, pvhR);
                                     animation.start();
