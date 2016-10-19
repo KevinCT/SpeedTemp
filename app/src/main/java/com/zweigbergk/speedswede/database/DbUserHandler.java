@@ -143,6 +143,7 @@ class DbUserHandler extends DbTopLevelHandler {
     }
 
     void setUserAttribute(User user, UserReference.UserAttribute attribute, Object value) {
+        Log.d(TAG, "setUserAttribute(): " + attribute.getPath());
         DatabaseReference path = Path.to(user).child(attribute.getPath());
         path.setValue(value);
     }

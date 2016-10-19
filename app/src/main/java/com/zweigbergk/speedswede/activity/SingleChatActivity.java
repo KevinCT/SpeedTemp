@@ -64,7 +64,6 @@ public class SingleChatActivity extends AppCompatActivity implements ChatFragmen
                 .onTouchRegistered(() -> {
                     if (isPathMenuOpened) {
                         pathMenu.close(true);
-                        isPathMenuOpened = false;
                     }
                 });
 
