@@ -46,11 +46,11 @@ public class Constants {
     public static final int DEAFULT_TOPIC_IMAGE = R.drawable.ic_default_chat;
 
     public enum Topic {
-        Cars(R.drawable.ic_taxi), Theatre(R.drawable.ic_comedy), Universe(R.drawable.ic_nature),
-        School(R.drawable.ic_scholarship), Basketball(R.drawable.ic_basketball), Pets(R.drawable.ic_animals),
-        Clothes(R.drawable.ic_shirt), Movies(R.drawable.ic_movie), Football(R.drawable.ic_soccer),
-        Travel(R.drawable.ic_travel), Music(R.drawable.ic_music), Food(R.drawable.ic_food), Books(R.drawable.ic_book),
-        Fitness(R.drawable.ic_fitness);
+        Bilar(R.drawable.ic_taxi), Teater(R.drawable.ic_comedy), Universum(R.drawable.ic_nature),
+        Studier(R.drawable.ic_scholarship), Basketboll(R.drawable.ic_basketball), Husdjur(R.drawable.ic_animals),
+        Kläder(R.drawable.ic_shirt), Filmer(R.drawable.ic_movie), Fotboll(R.drawable.ic_soccer),
+        Resa(R.drawable.ic_travel), Musik(R.drawable.ic_music), Mat(R.drawable.ic_food), Böcker(R.drawable.ic_book),
+        Hälsa(R.drawable.ic_fitness);
 
         private final int resourceId;
 
