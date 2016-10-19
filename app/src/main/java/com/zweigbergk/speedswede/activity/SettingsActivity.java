@@ -18,7 +18,6 @@ import com.zweigbergk.speedswede.database.UserReference;
 import com.zweigbergk.speedswede.fragment.SettingsFragment;
 
 import static com.zweigbergk.speedswede.Constants.SETTINGS_FIRST_SETUP;
-import static com.zweigbergk.speedswede.core.User.Preference;
 import static com.zweigbergk.speedswede.database.UserReference.UserAttribute;
 
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {

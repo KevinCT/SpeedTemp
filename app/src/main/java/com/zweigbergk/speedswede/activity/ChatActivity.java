@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -275,7 +276,9 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         super.onResume();
         if(LanguageChanger.isChanged()){
             LanguageChanger.languageChanged(false);
-            recreate();
+            //Delay by 1 ms to avoid RuntimeException:
+            // Performing pause of activity that is not resumed
+            new Handler().postDelayed(this::recreate, 1);
         }
     }
 
