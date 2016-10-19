@@ -160,8 +160,7 @@ public class SingleChatActivity extends AppCompatActivity implements ChatFragmen
         private void showBlockConfirmationDialog() {
             User activeUser = DatabaseHandler.getActiveUser();
             User otherUser = mPresenter.getChat().getOtherUser(activeUser);
-
-
+            
             new AlertDialog.Builder(this)
                     .setTitle(getResources().getString(R.string.confirm_block_user))
                     .setMessage(getResources().getString(R.string.block_user_text))
