@@ -23,6 +23,7 @@ public class UserFactory {
     private static final String TAG = UserFactory.class.getSimpleName().toUpperCase();
 
     public static User deserializeUser(DataSnapshot dataSnapshot) {
+
         String name = dataSnapshot.child(DISPLAY_NAME).getValue().toString();
         String id = dataSnapshot.child(USER_ID).getValue().toString();
         Object firstLoginObj = dataSnapshot.child(FIRST_LOGIN).getValue();
