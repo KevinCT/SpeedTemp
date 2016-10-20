@@ -12,8 +12,8 @@ public class Collections {
         return new HashSet<>();
     }
 
-    public static <T> List<T> asList(T... objects) {
-        List<T> list = new ArrayList<>();
+    public static <T> ArrayList<T> asList(T... objects) {
+        ArrayList<T> list = new ArrayList<>();
         for (T object : objects) {
             list.add(object);
         }

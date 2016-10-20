@@ -9,6 +9,7 @@
 
     <string name="hint_message_input_field">Skriv ett meddelande...</string>
 
+
     <string name="leta_kompis">Matcha med en främling</string>
     <string name="block_user">Blockera användare</string>
 
@@ -41,6 +42,7 @@
     <string name="languages">Språk</string>
     <string name="other">Annat</string>
     <string name="settings_pref_first_login_continue_text">Fortsätt</string>
+    <string name="looking_for_match">Letar efter chatt...</string>
 
     <string name="chosen_language">Svenska</string>
     <string name="block_user_text">Du kommer inte bli matchad med denna personen igen</string>

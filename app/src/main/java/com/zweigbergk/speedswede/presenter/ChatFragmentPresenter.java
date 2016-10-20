@@ -15,7 +15,6 @@ import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
-import com.zweigbergk.speedswede.database.UserReference;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
@@ -41,9 +40,13 @@ public class ChatFragmentPresenter {
     }
 
     public void setChat(Chat chat) {
-        Log.d(TAG, "setChat()");
-
-        mChat = chat;
+        Log.d(TAG, "setChat(). New chat: " + chat);
+        if (chat != null) {
+            Log.d(TAG, "chat ID: " + chat.getId());
+            mChat = chat;
+        } else {
+            throw new RuntimeException("Tried to set a null chat. setChat() in ChatFragmentPresenter");
+        }
     }
 
     /**
@@ -55,8 +58,10 @@ public class ChatFragmentPresenter {
 
         getMessageAdapter().clear();
 
-        //We want updates from the new chat! Add us as a client to that one :)
         MessageAdapter adapter = (MessageAdapter) mView.getRecyclerView().getAdapter();
+        mChat.getMessages().foreach(message -> adapter.onListChanged(DataChange.added(message)));
+
+        //We want updates from the new chat! Add us as a client to that one :)
         chatEventHandler = createChatEventHandler(adapter);
         Log.d(TAG, "Creating new chatEventHandler, toString(): " + chatEventHandler);
         DatabaseHandler.getReference(mChat).bindMessages(chatEventHandler);
@@ -120,16 +125,6 @@ public class ChatFragmentPresenter {
         adapter.onListChanged(DataChange.added(message));
     }
 
-    public void onBanClicked(){
-        User activeUser = DatabaseHandler.getActiveUser();
-        UserReference userRef = DatabaseHandler.getReference(activeUser);
-
-        User stranger = mChat.getFirstUser().equals(activeUser) ?
-                mChat.getSecondUser() : mChat.getFirstUser();
-
-        userRef.block(stranger);
-}
-
     private MessageAdapter getMessageAdapter() {
         return (MessageAdapter) mView.getRecyclerView().getAdapter();
     }
@@ -150,10 +145,6 @@ public class ChatFragmentPresenter {
             DatabaseHandler.getReference(mChat).unbindMessages(chatEventHandler);
             chatEventHandler = null;
         }
-    }
-
-    public void onChangeNameClicked(Context context, String chatName){
-        LocalStorage.INSTANCE.saveSettings(context, mChat.getId(), chatName);
     }
 
     private void smoothScrollToBottomOfList(Message message) {

@@ -23,6 +23,7 @@ import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.util.ChildCountListener;
 import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.Arrays;
 import com.zweigbergk.speedswede.util.collection.HashMap;
 import com.zweigbergk.speedswede.util.collection.List;
 import com.zweigbergk.speedswede.util.collection.Map;
@@ -42,6 +43,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     private Map<Event, List<Client<Chat>>> eventClients;
     private Context mContext;
     private ChildCountListener mChildCountListener;
+    private HashMap<String, String> topicMap;
+    private List<String> keyList = Arrays.asList("Cars", "Theatre", "Universe", "School", "Basketball", "Pets", "Clothes", "Movies", "Football", "Travel", "Music", "Food", "Books", "Fitness");
+    private List<String> valueList = Arrays.asList("Bilar", "Teater", "Universum", "Studier", "Basket", "Husdjur", "Kläder", "Filmer", "Fotboll", "Resor", "Musik", "Mat", "Böcker", "Hälsa");
 
     public ChatAdapter(List<Chat> chats) {
         eventClients = new HashMap<>();
@@ -50,7 +54,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         for (Event event : Event.values()) {
             eventClients.put(event, new ArrayList<>());
         }
+
+        topicMap = new HashMap<String, String>().putList(keyList, valueList);
     }
+
+
 
     public void setView(ChildCountListener childCountListener) {
        mChildCountListener = childCountListener;

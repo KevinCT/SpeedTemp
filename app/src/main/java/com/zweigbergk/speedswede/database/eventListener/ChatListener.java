@@ -123,7 +123,6 @@ public class ChatListener implements ChildEventListener {
      * */
     public void addClient(Client<DataChange<Chat>> client) {
         addClient(CLIENT_FOR_ALL_CHATS, client);
-        Stringify.printStackTrace();
     }
 
 

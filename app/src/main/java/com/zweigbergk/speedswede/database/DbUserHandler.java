@@ -36,7 +36,7 @@ class DbUserHandler extends DbTopLevelHandler {
 
     private static final String TAG = DbUserHandler.class.getSimpleName().toUpperCase();
 
-    private DatabaseReference mRoot;
+    private DatabaseReference mRoot = FirebaseDatabase.getInstance().getReference();
 
     private UserListener mUsersListener;
     private UserPoolListener mUserPoolListener;
@@ -53,13 +53,6 @@ class DbUserHandler extends DbTopLevelHandler {
         }
 
         return INSTANCE;
-    }
-
-
-    public void initialize() {
-        mRoot = FirebaseDatabase.getInstance().getReference();
-
-        initializeUserPoolListener();
     }
 
     public void logout() {
@@ -150,7 +143,9 @@ class DbUserHandler extends DbTopLevelHandler {
     }
 
     void setUserAttribute(User user, UserReference.UserAttribute attribute, Object value) {
-        Path.to(user).child(attribute.getPath()).setValue(value);
+        Log.d(TAG, "setUserAttribute(): " + attribute.getPath());
+        DatabaseReference path = Path.to(user).child(attribute.getPath());
+        path.setValue(value);
     }
 
     String getActiveUserId() {
@@ -201,6 +196,10 @@ class DbUserHandler extends DbTopLevelHandler {
     }
 
     UserPoolListener getPoolListener() {
+        if (mUserPoolListener == null) {
+            initializeUserPoolListener();
+        }
+
         return mUserPoolListener;
     }
 

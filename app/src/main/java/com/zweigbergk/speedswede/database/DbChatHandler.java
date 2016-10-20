@@ -40,9 +40,9 @@ class DbChatHandler extends DbTopLevelHandler {
 
     private static final String TAG = DbChatHandler.class.getSimpleName().toUpperCase();
 
-    private DatabaseReference mRoot;
+    private DatabaseReference mRoot = FirebaseDatabase.getInstance().getReference();
 
-    private Map<String, MessageListener> messageListeners;
+    private Map<String, MessageListener> messageListeners = new HashMap<>();
 
     private ChatListener mChatListener;
 
@@ -56,12 +56,6 @@ class DbChatHandler extends DbTopLevelHandler {
         }
 
         return INSTANCE;
-    }
-
-    void initialize() {
-        mRoot = FirebaseDatabase.getInstance().getReference();
-
-        messageListeners = new HashMap<>();
     }
 
     public Statement exists(Chat chat) {

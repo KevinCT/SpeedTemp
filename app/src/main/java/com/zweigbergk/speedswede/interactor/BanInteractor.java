@@ -18,16 +18,15 @@ public class BanInteractor  {
     }
 
     public void addBan(String firstUser, String secondUser){
-        mBanner.addBan(DatabaseHandler.getActiveUserId(), firstUser, secondUser);
-        DatabaseHandler.sendObject(BANS, mBanner);
-
+        mBanner.addBan(DatabaseHandler.getActiveUserId(),firstUser,secondUser);
+        DatabaseHandler.pushBanner(mBanner);
     }
 
     public void removeBan(String strangerID){
         if (mBanner.isBanned(strangerID)) {
             mBanner.removeBan(strangerID);
         }
-        DatabaseHandler.sendObject(BANS, mBanner);
+        DatabaseHandler.pushBanner(mBanner);
 
     }
 }

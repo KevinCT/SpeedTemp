@@ -78,10 +78,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         eventCallbacks.get(event).add(callback);
     }
 
-    public void removeEventCallback(DatabaseEvent event, Client<Message> callback) {
-        eventCallbacks.get(event).remove(callback);
-    }
-
     private void updateMessage(@NonNull Message message) {
 
         int position = mMessages.indexOf(message);

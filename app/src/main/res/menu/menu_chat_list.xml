@@ -2,10 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Settings, should always be in the overflow -->
     <item android:id="@+id/menu_chat_list_settings_button"
         android:title="@string/activity_settings_title"
-        app:showAsAction="never|always"
+        app:showAsAction="always"
         android:icon="@drawable/settings_icon"
         android:visible="true" />
 

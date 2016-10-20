@@ -28,8 +28,6 @@ public class Initializer {
     private static List<Client<User>> loginClients = new ArrayList<>();
 
     public static void onLogin(boolean isOfflineMode) {
-        DatabaseHandler.onStartup();
-
         if (!isOfflineMode) {
             onlineLogin();
         } else {
@@ -47,10 +45,9 @@ public class Initializer {
         DatabaseHandler.getReference(userShell).pull().then(user -> {
             if (user != null) {
                 Log.d(TAG, "We already had that one :) ID: " + userShell.getUid());
-                DatabaseHandler.setLoggedInUser(user);
-
             } else {
                 Log.d(TAG, "That's a new user! Pushing user with id: " + userShell.getUid());
+                user = userShell;
                 DatabaseHandler.users().push(userShell);
 
                 //Set default preferences
@@ -59,6 +56,7 @@ public class Initializer {
                 DatabaseHandler.getReference(userShell).setPreference(User.Preference.LANGUAGE, Language.SWEDISH.toString());
             }
 
+            DatabaseHandler.setLoggedInUser(user);
             notifyListeners(user);
         });
     }
@@ -82,7 +80,6 @@ public class Initializer {
     }
 
     private static void notifyListeners(User user) {
-        Log.d(TAG, Stringify.curlyFormat("Our user firstLogin: {firstlogin}", user.isFirstLogin()));
         loginExecutables.foreach(Executable::run);
         loginExecutables = new ArrayList<>();
 

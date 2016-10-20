@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_chat_root">
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="68dp"
+    sothree:umanoFadeColor="@android:color/transparent"
+    sothree:umanoShadowHeight="4dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/activity_chat_root">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,61 +35,79 @@
             android:layout_height="match_parent"/>
 
     </LinearLayout>
+    </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/arc_root_layout"
+        android:id="@+id/matcher_layout"
+        android:background="@color/matcher_layout_background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible">
+        android:layout_height="120dp">
+
+        <FrameLayout
+            android:id="@+id/matcher_layout_top_bar"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:background="@color/colorPrimary"
+            android:layout_height="24dp"/>
 
         <com.zweigbergk.speedswede.eyecandy.TransparentLayout
-            android:id="@+id/arc_clickable_view_or_no"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:id="@+id/cover_match_button_layout"
+            android:layout_below="@id/matcher_layout_top_bar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:visibility="visible"
+            android:clickable="true">
+
+            <mehdi.sakout.fancybuttons.FancyButton
+                android:id="@+id/button_start_match"
+                android:alpha="0.25"
+                android:layout_centerHorizontal="true"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:padding="@dimen/spacing_small"
+                android:clickable="false"
+                fancy:fb_borderColor="#1976D2"
+                fancy:fb_borderWidth="1dp"
+                fancy:fb_defaultColor="#BBDEFB"
+                fancy:fb_iconPaddingLeft="0dp"
+                fancy:fb_iconPaddingRight="0dp"
+                fancy:fb_focusColor="#64B5F6"
+                fancy:fb_iconResource="@drawable/ic_search"
+                fancy:fb_radius="64dp"
+                android:elevation="6dp">
+            </mehdi.sakout.fancybuttons.FancyButton>
         </com.zweigbergk.speedswede.eyecandy.TransparentLayout>
 
-        <com.ogaclejapan.arclayout.ArcLayout
-            android:id="@+id/arc_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:arc_axisRadius="@dimen/layout_child_offset_path"
-            app:arc_freeAngle="true"
-            app:arc_origin="top|right"
-            android:alpha="0.8"
-            app:arc_radius="145dp">
+        <com.zweigbergk.speedswede.eyecandy.MatchLoadingIndicatorLayout
+            android:id="@+id/match_loading_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            android:orientation="vertical">
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/match_loading_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:indicatorName="BallClipRotatePulseIndicator"
+                app:indicatorColor="@color/colorPrimary"
+                />
 
-            <Button
-                android:id="@+id/btn_arc_menu_block_user"
-                android:background="@drawable/ic_block"
-                style="@style/Item.Path"
-                app:arc_angle="22.5"/>
-
-            <Button
-                android:id="@+id/btn_arc_menu_leave_chat"
-                android:background="@drawable/ic_leave"
-                style="@style/Item.Path"
-                app:arc_angle="46"/>
-
-            <Button
-                android:id="@+id/btn_arc_menu_like_chat"
-                android:background="@drawable/ic_trashcan"
-                style="@style/Item.Path"
-                app:arc_angle="70"/>
-
-        </com.ogaclejapan.arclayout.ArcLayout>
-
-        <View
-            android:id="@+id/arc_layout_background_circle"
-            android:background="@drawable/ic_oval"
-            android:layout_width="220dp"
-            android:layout_height="220dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:translationX="72.5dp"
-            android:translationY="-72.5dp"
-            android:alpha="0.8"
-            android:elevation="6dp"
-            android:translationZ="-10dp"/>
-
+            <TextView
+                android:id="@+id/match_loading_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="@dimen/font_small"
+                android:textStyle="bold"
+                android:alpha="0.7"
+                android:text="@string/looking_for_match"
+                />
+        </com.zweigbergk.speedswede.eyecandy.MatchLoadingIndicatorLayout>
     </RelativeLayout>
-</RelativeLayout>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

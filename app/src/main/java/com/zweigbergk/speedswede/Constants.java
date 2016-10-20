@@ -91,6 +91,7 @@ public class Constants {
 
     //For saving instance state
     public static final String CHAT_PARCEL = "chatParcel";
+    public static final String LOAD_HASHMAP = "chatParcel";
 
     public static String makePath(String... constants) {
         if (constants.length == 0)

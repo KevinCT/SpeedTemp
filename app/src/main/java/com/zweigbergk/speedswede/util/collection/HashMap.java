@@ -125,5 +125,14 @@ public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> 
         return result;
     }
 
+    public HashMap<K, V> putList(List<K> keyList, List<V> valueList){
+        HashMap<K, V> map = new HashMap<>();
+        for(int i=0;i< keyList.size();i++){
+            map.put(keyList.get(i), valueList.get(i));
+        }
+
+        return map;
+    }
+
 
 }

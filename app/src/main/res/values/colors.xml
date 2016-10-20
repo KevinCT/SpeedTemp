@@ -8,6 +8,9 @@
     <color name="white">#ffffff</color>
 
     <color name="colorChatMessageUser">#ffda00</color>
+
+    <color name="matcher_layout_background">#fffde7</color>
+
     <color name="colorChatMessageStranger">#dddddd</color>
 
     <!-- Eyecandy -->

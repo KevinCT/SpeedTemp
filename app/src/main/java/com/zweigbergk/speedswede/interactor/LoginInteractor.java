@@ -57,7 +57,7 @@ public class LoginInteractor implements ActivityAttachable {
     }
 
     private boolean isConnectionError(FacebookException exception) {
-        // We are just interested in the getReference 18 characters.
+        // We are just interested in the first 18 characters.
         String msg = exception.getMessage().substring(0, 18);
         return msg.equals("CONNECTION_FAILURE");
     }

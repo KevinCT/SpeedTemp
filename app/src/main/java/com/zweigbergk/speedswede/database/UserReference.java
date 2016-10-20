@@ -17,7 +17,7 @@ import static com.zweigbergk.speedswede.util.PreferenceWrapper.BooleanWrapper;
 public class UserReference {
     private static final String TAG = UserReference.class.getSimpleName().toUpperCase();
 
-    enum UserAttribute {
+    public enum UserAttribute {
         NAME(Constants.DISPLAY_NAME), ID(Constants.USER_ID),
         NOTIFICATIONS(Constants.makePath(Constants.PREFERENCES, Constants.NOTIFICATIONS)),
         LANGUAGE(Constants.makePath(Constants.PREFERENCES, Constants.LANGUAGE)),
@@ -103,6 +103,10 @@ public class UserReference {
             default:
                 return UserAttribute.UNDEFINED;
         }
+    }
+
+    public void setUserAttribute(UserAttribute attribute, Object value) {
+        attempt(() -> userHandler.setUserAttribute(mUser, attribute, value));
     }
 
     public Promise<Banner> bannerPromised() {

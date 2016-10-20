@@ -5,7 +5,8 @@
           android:title="@string/settings_show_actions"
           app:showAsAction="always"
           android:layout_width="wrap_content"
-          android:icon="@drawable/ic_menu"
+          android:actionViewClass="android.widget.Button"
+          android:actionLayout="@layout/messenger_button_send_blue_large"
+          android:icon="@drawable/ic_menu2"
           android:layout_height="wrap_content" />
-
 </menu>

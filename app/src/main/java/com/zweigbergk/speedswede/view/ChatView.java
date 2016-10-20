@@ -13,6 +13,4 @@ public interface ChatView {
     void popBackStack();
     <T> T contextualize(ProviderMethod<T, Context> method);
     void useContext(CallerMethod<Context> method);
-    HashMap<Integer, View> getArcComponents();
-
 }
