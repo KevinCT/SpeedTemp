@@ -1,7 +1,6 @@
 package com.zweigbergk.speedswede.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -24,7 +23,6 @@ import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.util.AbuseFilter;
 import com.zweigbergk.speedswede.util.ChildCountListener;
 import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.Arrays;
 import com.zweigbergk.speedswede.util.collection.HashMap;
 import com.zweigbergk.speedswede.util.collection.List;
 import com.zweigbergk.speedswede.util.collection.Map;
@@ -36,19 +34,16 @@ import static com.zweigbergk.speedswede.Constants.MAX_PREVIEW_LENGTH;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
-    public enum Event { CHAT_VIEW_CLICKED, CHAT_REMOVED, CHAT_ADDED }
+    private enum Event { CHAT_VIEW_CLICKED, CHAT_REMOVED, CHAT_ADDED }
 
-    public static final String TAG = ChatAdapter.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatAdapter.class.getSimpleName().toUpperCase();
 
     private List<Chat> mChats;
     private Map<Event, List<Client<Chat>>> eventClients;
     private Context mContext;
     private ChildCountListener mChildCountListener;
-    private HashMap<String, String> topicMap;
-    private List<String> keyList = Arrays.asList("Cars", "Theatre", "Universe", "School", "Basketball", "Pets", "Clothes", "Movies", "Football", "Travel", "Music", "Food", "Books", "Fitness");
-    private List<String> valueList = Arrays.asList("Bilar", "Teater", "Universum", "Studier", "Basket", "Husdjur", "Kläder", "Filmer", "Fotboll", "Resor", "Musik", "Mat", "Böcker", "Hälsa");
 
-    public ChatAdapter(List<Chat> chats) {
+    private ChatAdapter(List<Chat> chats) {
         eventClients = new HashMap<>();
         mChats = chats;
 
@@ -56,7 +51,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             eventClients.put(event, new ArrayList<>());
         }
 
-        topicMap = new HashMap<String, String>().putList(keyList, valueList);
     }
 
 
@@ -67,11 +61,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     public ChatAdapter() {
         this(new ArrayList<>());
-    }
-
-    public void clear() {
-        mChats.clear();
-        notifyDataSetChanged();
     }
 
     public final void notifyChange(DataChange<Chat> change) {
@@ -104,12 +93,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         }
     }
 
-    public void addEventClient(Event event, Client<Chat> client) {
-        eventClients.get(event).add(client);
-    }
-
-    public void removeEventClient(Event event, Client<Chat> client) {
-        eventClients.get(event).remove(client);
+    public void addClickEventClient(Client<Chat> client) {
+        eventClients.get(Event.CHAT_VIEW_CLICKED).add(client);
     }
 
     private void updateChat(@NonNull Chat chat) {
@@ -203,7 +188,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         Constants.Topic topic = Constants.Topic.fromString(chat.getName());
         int topicResId = topic != null ? topic.getResourceId() : DEAFULT_TOPIC_IMAGE;
 
-        holder.name.setText(topicMap.get(chat.getName()));
+        holder.name.setText(chat.getName());
         holder.latestMessage.setText(messageText);
         holder.timestamp.setText(formattedTime);
         holder.topicImage.setImageDrawable(ContextCompat.getDrawable(mContext, + topicResId));

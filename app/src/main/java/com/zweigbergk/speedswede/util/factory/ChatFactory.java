@@ -7,9 +7,7 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.async.Commitment;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.async.Guarantee;
@@ -17,18 +15,14 @@ import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.HashMap;
 import com.zweigbergk.speedswede.util.collection.List;
 
 import static com.zweigbergk.speedswede.util.async.PromiseNeed.*;
 
 public class ChatFactory {
 
-    public static final String TAG = ChatFactory.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatFactory.class.getSimpleName().toUpperCase();
 
-    public static User mockUser(String name, String uid) {
-        return new UserProfile(name, uid);
-    }
 
     public static Promise<Chat> deserializeChat(DataSnapshot snapshot) {
         Log.d(TAG, "Deserializing chat!");
@@ -70,25 +64,17 @@ public class ChatFactory {
 
         long timestamp = (long) snapshot.child(Constants.TIMESTAMP).getValue();
 
-        Boolean likeStatusFirstUser;
-        Boolean likeStatusSecondUser;
-        if(snapshot.child(Constants.LIKED_BY_FIRST_USER).getValue() == null) {
-            likeStatusFirstUser = false;
-        } else {
-            likeStatusFirstUser = (boolean) snapshot.child(Constants.LIKED_BY_FIRST_USER).getValue();
-        }
+        Object firstLikeObj = snapshot.child(Constants.LIKED_BY_FIRST_USER).getValue();
+        Object secondLikeObj = snapshot.child(Constants.LIKED_BY_SECOND_USER).getValue();
 
-        if(snapshot.child(Constants.LIKED_BY_SECOND_USER).getValue() == null) {
-            likeStatusSecondUser = false;
-        } else {
-            likeStatusSecondUser = (boolean) snapshot.child(Constants.LIKED_BY_SECOND_USER).getValue();
-        }
+        Boolean likeStatusFirstUser = firstLikeObj != null && (boolean) firstLikeObj;
+        Boolean likeStatusSecondUser = secondLikeObj != null && (boolean) secondLikeObj;
 
 
         Iterable<DataSnapshot> messageSnapshots = snapshot.child(Constants.MESSAGES).getChildren();
         List<Message> messages = asMessageList(messageSnapshots);
 
-        Chat chat = new Chat(id, name, timestamp, messages, null, null);
+        Chat chat = new Chat(id, name, timestamp, messages);
         chat.setLikeStatusFirstUser(likeStatusFirstUser);
         chat.setLikeStatusSecondUser(likeStatusSecondUser);
 
@@ -107,40 +93,11 @@ public class ChatFactory {
 
     private static String getUserId(DataSnapshot snapshot) {
         Object value = snapshot.child(Constants.USER_ID).getValue();
-        String userId;
-        if(value == null) {
-            return null;
-        }
-        else if (value.getClass().equals(String.class)) {
-            userId = (String) value;
-        } else if (value.getClass().equals(HashMap.class)) {
-            HashMap<String, Object> mapping = (HashMap) value;
-            userId = (String) mapping.get(Constants.USER_ID);
-        } else {
-            Log.e(TAG, String.format(
-                    "WARNING! Can not extract User ID for a user in chat [Chat ID: %s].%n(Path: %s)",
-                    snapshot.getRef().getParent().getKey(),
-                    snapshot.getRef().toString()));
-            userId = "";
-        }
-
-        return userId;
+        return value != null && value.getClass().equals(String.class) ? (String) value : "N/A";
     }
 
     private static Boolean getLikeStatus(DataSnapshot snapshot) {
         Object value = snapshot.getValue();
-        Boolean liked;
-        try {
-            liked = (Boolean) value;
-        } catch (ClassCastException e) {
-            HashMap<String, Object> mapping = (HashMap) value;
-            liked = (Boolean) mapping.get(snapshot.getKey());
-        }
-
-        if (liked == null) {
-            liked = false;
-        }
-
-        return liked;
+        return value != null && value.getClass().equals(Boolean.class) ? (Boolean) value : false;
     }
 }

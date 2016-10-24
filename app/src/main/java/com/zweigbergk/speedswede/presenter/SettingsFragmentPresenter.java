@@ -1,7 +1,5 @@
 package com.zweigbergk.speedswede.presenter;
 
-import android.content.Context;
-
 import com.zweigbergk.speedswede.interactor.SettingsFragmentInteractor;
 
 public class SettingsFragmentPresenter {

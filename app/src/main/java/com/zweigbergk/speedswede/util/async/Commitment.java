@@ -26,35 +26,14 @@ public abstract class Commitment<E> {
 
     protected abstract boolean hasProduct();
 
-    protected void addExecutable(Executable executable) {
-        if (!hasProduct()) {
-            mExecutables.add(executable);
-        } else {
-            executable.run();
-        }
-    }
-
-    protected E getProduct() {
+    E getProduct() {
         return mCompletedProduct;
     }
 
-    public void thenNotify(Client<E> client) {
-        addClient(client);
-    }
-
-    public void thenPassTo(Client<E> client) {
-        addClient(client);
-    }
 
     public void then(Client<E> client) {
         addClient(client);
     }
 
-    public void thenNotify(Executable executable) {
-        addExecutable(executable);
-    }
 
-    public void whenFinished(Executable executable) {
-        addExecutable(executable);
-    }
 }

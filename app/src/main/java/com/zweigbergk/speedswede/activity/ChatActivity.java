@@ -264,10 +264,12 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     }
 
     public void updateMatcherLayout() {
-        if (fragmentStack.getLast().equalsIgnoreCase(CHATLIST_FRAGMENT_NAME)) {
-            slidingLayout.setPanelState(PanelState.COLLAPSED);
-        } else {
-            slidingLayout.setPanelState(PanelState.HIDDEN);
+        if (fragmentStack.size() > 0) {
+            if (fragmentStack.getLast().equalsIgnoreCase(CHATLIST_FRAGMENT_NAME)) {
+                slidingLayout.setPanelState(PanelState.COLLAPSED);
+            } else {
+                slidingLayout.setPanelState(PanelState.HIDDEN);
+            }
         }
     }
 

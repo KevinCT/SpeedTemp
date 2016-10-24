@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="chat_header">المحادثات</string>
     <string name="app_name">SpeedSwede</string>
-    <string name="title_activity_login">LoginActivity</string>
 
     <string name="facebook_app_id">616859141821100</string>
-    <string name="fb_login_protocol_scheme">fb616859141821100</string>
 
     <string name="hint_message_input_field">اكتب رسالة...</string>
-    
-    <string name="leta_kompis">تواصل مع غريب</string>
-    <string name="block_user">حظرالمستخدم</string>
-
-    <string name="change_language">تغيير اللغة</string>
 
     <string name="settings_pref_notifications">الاخطارات</string>
     <string name="settings_summary_notifications">اختار إذا كنت تريد أن يتم إعلامك عندما تظهر رسائل محادثة جديدة أو متواصلين جدد.</string>
     <string name="settings_pref_app_lang">لغة التطبيق</string>
-    <string name="settings_pref_app_lang_default">English</string>
-    <string name="remove_settings">remove settings</string>
     <string name="settings_pref_usage">كيف تريد استخدام هذا التطبيق؟</string>
     <string name="settings_pref_usage_default">تعلم</string>
 
@@ -27,14 +17,7 @@
     <string name="settings_pref_usage_entry_chat">أنا فقط أريد المحادثة</string>
     
     <string name="exit_chat">ترك المحادثة</string>
-    <string name="languages">اللغات</string>
-    <string name="other">إعدادات أخرى</string>
     <string name="activity_settings_title">إعدادات</string>
-    <string name="cancel">إلغاء</string>
-    <string name="change_chat_name">"تغيير اسم المحادثة "</string>
-    <string name="change_name">تغيير الإسم</string>
-    <string name="enter_chatname">أدخل اسم المحادثة</string>
-    <string name="language_skills">مهارات اللغة</string>
     <string name="activity_login_text">سجل الدخول باستخدام حساب الفيسبوك الخاص بك لتبدأ!</string>
     <string name="confirm_block_user">حظرالمستخدم؟</string>
     <string name="settings_pref_first_login_continue_text">استمرار</string>

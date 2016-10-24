@@ -13,10 +13,10 @@ public enum LocalStorage {
 
     public static final String TAG = LocalStorage.class.getSimpleName().toUpperCase();
 
-    public void saveSettings(Context context, String key, String value){
+    public void saveLanguage(Context context, String value){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(key,value);
+        editor.putString(Constants.LANGUAGE, value);
         editor.apply();
     }
 
@@ -28,11 +28,6 @@ public enum LocalStorage {
     public String getString(Context context, String key, String defaultValue){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(key,defaultValue);
-    }
-
-    public void removeAllSettings(Context context){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        preferences.edit().clear().apply();
     }
 
     public void removeSetting(Context context, String key){

@@ -5,7 +5,7 @@ public class DataChange<T> {
     private final DatabaseEvent mEvent;
     private final T mData;
 
-    DataChange(T data, DatabaseEvent event) {
+    private DataChange(T data, DatabaseEvent event) {
         mData = data;
         mEvent = event;
     }

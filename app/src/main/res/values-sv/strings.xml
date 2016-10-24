@@ -1,35 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="chat_header">Konversationer</string>
     <string name="app_name">SpeedSwede</string>
-    <string name="title_activity_login">LoginActivity</string>
 
     <string name="facebook_app_id">616859141821100</string>
-    <string name="fb_login_protocol_scheme">fb616859141821100</string>
 
     <string name="hint_message_input_field">Skriv ett meddelande...</string>
 
 
-    <string name="leta_kompis">Matcha med en främling</string>
-    <string name="block_user">Blockera användare</string>
-
-    <string name="change_language">Ändra språk</string>
-
     <string name="activity_settings_title">Inställningar</string>
-    <string name="cancel">Avbryt</string>
-    <string name="change_chat_name">Ändra konversationens namn</string>
-    <string name="change_name">Ändra namn</string>
-    <string name="chat_name_1"></string>
-    <string name="chatname_here"></string>
-    <string name="enter_chatname">Ange namn för konversationen</string>
-    <string name="chat_name_error">Namnet kan inte vara tomt!</string>
 
     <string name="settings_pref_notifications">Notifikationer</string>
     <string name="settings_summary_notifications">Ange ifall du vill bli notifierad när ett nytt meddelande eller matchning dyker upp.</string>
     <string name="settings_pref_app_lang">Appens språk</string>
-    <string name="settings_pref_app_lang_default">English</string>
     <string name="exit_chat">Lämna chat</string>
-    <string name="remove_settings">remove settings</string>
     <string name="settings_pref_usage">Hur vill du använda denna app?</string>
     <string name="settings_pref_usage_default">Lära</string>
 
@@ -38,9 +21,6 @@
     <string name="settings_pref_usage_entry_chat">Jag vill bara chatta</string>
     <string name="activity_login_text">Logga in via Facebook för att komma igång!</string>
     <string name="confirm_block_user">Blockera användare?</string>
-    <string name="language_skills">Språkförmåga</string>
-    <string name="languages">Språk</string>
-    <string name="other">Annat</string>
     <string name="settings_pref_first_login_continue_text">Fortsätt</string>
     <string name="looking_for_match">Letar efter chatt...</string>
 

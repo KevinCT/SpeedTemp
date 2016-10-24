@@ -17,7 +17,7 @@ import java.util.TimerTask;
 public enum ChatMatcher {
     INSTANCE;
 
-    public static final String TAG = ChatMatcher.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatMatcher.class.getSimpleName().toUpperCase();
 
     private List<User> mUsersInPool;
 
@@ -79,7 +79,7 @@ public enum ChatMatcher {
         DatabaseHandler.getPool().remove(user);
     }
 
-    public void match() {
+    private void match() {
         Log.d(TAG, "Users in pool: " + mUsersInPool.size());
         if (mUsersInPool.size() > 1) {
             // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
@@ -94,17 +94,6 @@ public enum ChatMatcher {
         }
     }
 
-    private List<String> getUserIdList(){
-        List<String> userNameList = new ArrayList<>();
-        for(int i=0;i<mUsersInPool.size();i++){
-            userNameList.add(mUsersInPool.get(i).getUid());
-        }
-        return userNameList;
-    }
-
-    public void clear() {
-        mUsersInPool.clear();
-    }
 
 
 //    public List<User> sofisticatedMatch() {
@@ -118,7 +107,7 @@ public enum ChatMatcher {
 //        return null;
 //    }
 
-    public void nextLevelMatch() {
+    private void nextLevelMatch() {
         Map<String, List<User>> listMap = seperatePools();
         List<User> learners = listMap.get("learners");
         List<User> mentors = listMap.get("mentors");
@@ -127,7 +116,7 @@ public enum ChatMatcher {
         matchChatters(chatters);
     }
 
-    public Map<String, List<User>> seperatePools() {
+    private Map<String, List<User>> seperatePools() {
         List<User> learners = new ArrayList<>();
         List<User> mentors = new ArrayList<>();
         List<User> chatters = new ArrayList<>();
@@ -155,7 +144,7 @@ public enum ChatMatcher {
         return listMap;
     }
 
-    public void matchLearners(List<User> learners, List<User> mentors) {
+    private void matchLearners(List<User> learners, List<User> mentors) {
         if(learners.size() > 0 && mentors.size() > 0) {
             User firstBeginner = learners.get(0);
             for (User user : learners) {
@@ -179,7 +168,7 @@ public enum ChatMatcher {
         }
     }
 
-    public void matchChatters(List<User> userList) {
+    private void matchChatters(List<User> userList) {
         if(userList.size() > 1) {
             List<User> matchedUsers = new ArrayList<>();
             matchedUsers.add(userList.get(0));

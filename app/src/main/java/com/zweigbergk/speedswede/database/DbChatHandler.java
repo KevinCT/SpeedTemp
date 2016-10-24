@@ -14,25 +14,21 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.database.eventListener.MessageListener;
 import com.zweigbergk.speedswede.database.eventListener.ChatListener;
+import com.zweigbergk.speedswede.util.async.FirebasePromise;
+import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.async.Statement;
-import com.zweigbergk.speedswede.util.async.ListPromise;
 import com.zweigbergk.speedswede.util.collection.ArrayList;
 import com.zweigbergk.speedswede.util.collection.Collections;
 import com.zweigbergk.speedswede.util.collection.HashMap;
 import com.zweigbergk.speedswede.util.collection.List;
 import com.zweigbergk.speedswede.util.collection.Map;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.Tuple;
-import com.zweigbergk.speedswede.util.PreferenceWrapper;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
-import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 
 import static com.zweigbergk.speedswede.Constants.CHATS;
 import static com.zweigbergk.speedswede.Constants.FIRST_USER;
 import static com.zweigbergk.speedswede.Constants.MESSAGES;
 import static com.zweigbergk.speedswede.Constants.SECOND_USER;
-import static com.zweigbergk.speedswede.core.User.Preference;
-import static com.zweigbergk.speedswede.util.Lists.EntryMapping;
 
 
 class DbChatHandler extends DbTopLevelHandler {
@@ -58,15 +54,11 @@ class DbChatHandler extends DbTopLevelHandler {
         return INSTANCE;
     }
 
-    public Statement exists(Chat chat) {
+    Statement exists(Chat chat) {
         return hasReference(mRoot.child(CHATS).child(chat.getId()));
     }
 
-    public Statement exists(String chatId) {
-        return hasReference(mRoot.child(CHATS).child(chatId));
-    }
-
-    void registerChatsListener() {
+    private void registerChatsListener() {
         mChatListener = new ChatListener();
 
         String uid = DbUserHandler.getInstance().getActiveUserId();
@@ -134,12 +126,13 @@ class DbChatHandler extends DbTopLevelHandler {
         ref.removeValue();
     }
 
-    public void addMesageClient(Chat chat, Client<DataChange<Message>> client) {
+    void addMesageClient(Chat chat, Client<DataChange<Message>> client) {
         if (hasMessageListenerForChat(chat)) {
             //If the listener is already there, we must explicitly pass every existing message
             // to our new client
-            DatabaseHandler.getReference(chat).pullMessages().forEach(
-                    message -> client.supply(DataChange.added(message)));
+            DatabaseHandler.getReference(chat).pullMessages().then(
+                    list -> list.foreach(message -> client.supply(DataChange.added(message))));
+
         } else {
             createMessageListenerForChat(chat);
         }
@@ -147,58 +140,28 @@ class DbChatHandler extends DbTopLevelHandler {
         messageListeners.get(chat.getId()).bind(client);
     }
 
-    ListPromise<Message> pullMessages(Chat chat) {
-        final ListPromise<Message> listPromise = ListPromise.empty();
-        listPromise.setResultForm(items -> items.getList(PromiseNeed.LIST));
-
-        List<Message> messages = new ArrayList<>();
-
-        final MessageListener listener = new MessageListener();
-
-        Client<DataChange<Message>> updateList = change -> {
-            Message message = change.getItem();
-            messages.add(message);
-            listPromise.remind();
-            Log.d(TAG, "Adding message: " + message.getText());
-        };
-
-        listener.setIdentifier("pullMessageListener");
-
-        listener.bind(updateList);
-
-        mRoot.child(CHATS).child(chat.getId()).child(MESSAGES).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                long messageCount = dataSnapshot.getChildrenCount();
-                StateRequirement hasAllMessages = list -> ((List<Message>) list).size() == messageCount;
-
-
-                listPromise.requireState(PromiseNeed.LIST, hasAllMessages);
-                listPromise.addItem(PromiseNeed.LIST, messages);
-
-                mRoot.child(CHATS).child(chat.getId()).child(MESSAGES).addChildEventListener(listener);
-
-                listPromise.whenFinished(() -> {
-                    mRoot.child(CHATS).child(chat.getId())
-                            .child(MESSAGES).removeEventListener(listener);
-                    Log.d(TAG, "pullMessages(Chat chat): ListPromise<Message> finished.");
-                });
+    Promise<List<Message>> pullMessages(Chat chat) {
+        Promise<List<Message>> messagesPromised = Promise.create();
+        messagesPromised.requires(PromiseNeed.SNAPSHOT);
+        messagesPromised.setResultForm(items -> {
+            List<Message> result = new ArrayList<>();
+           DataSnapshot messageSnapshot = items.getSnapshot(PromiseNeed.SNAPSHOT);
+            for (DataSnapshot snapshot : messageSnapshot.getChildren()) {
+                result.add(snapshot.getValue(Message.class));
             }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            return result;
         });
 
-        return listPromise;
+        FirebasePromise snapshotPromise = new FirebasePromise(databasePath(CHATS, chat.getId(), MESSAGES));
+        return snapshotPromise.thenPromise(PromiseNeed.SNAPSHOT, messagesPromised);
     }
 
-    boolean hasMessageListenerForChat(Chat chat) {
+    private boolean hasMessageListenerForChat(Chat chat) {
         return messageListeners.containsKey(chat.getId());
     }
 
-    public void removeMessageClient(Chat chat, Client<DataChange<Message>> client) {
+    void removeMessageClient(Chat chat, Client<DataChange<Message>> client) {
         if (!messageListeners.containsKey(chat.getId())) {
             Log.e(TAG, String.format("WARNING: Tried removing client: [%s] from chat with id: [%s]," +
                     " but the client was not attached to the message listener.",
@@ -235,7 +198,7 @@ class DbChatHandler extends DbTopLevelHandler {
         return statement;
     }
 
-    public void deleteChat(Chat chat) {
+    void deleteChat(Chat chat) {
         delete(mRoot.child(CHATS).child(chat.getId()));
     }
 

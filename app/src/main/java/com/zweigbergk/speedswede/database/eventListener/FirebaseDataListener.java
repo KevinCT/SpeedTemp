@@ -16,10 +16,6 @@ public abstract class FirebaseDataListener<T> {
 
     private Set<Client<DataChange<T>>> mClients;
 
-    FirebaseDataListener() {
-        this(Collections.emptySet());
-    }
-
     FirebaseDataListener(Collection<Client<DataChange<T>>> clients) {
         mClients = new HashSet<>(clients);
     }
@@ -32,7 +28,7 @@ public abstract class FirebaseDataListener<T> {
         mClients.remove(client);
     }
 
-    public void notifyClients(DatabaseEvent event, T item) {
+    void notifyClients(DatabaseEvent event, T item) {
         DataChange<T> dataChange;
         switch(event) {
             case ADDED:
@@ -71,9 +67,5 @@ public abstract class FirebaseDataListener<T> {
 
     void notifyInterrupted() {
         notifyClients(DatabaseEvent.INTERRUPTED, null);
-    }
-
-    public void call(Client<DataChange<T>> client) {
-        mClients.add(client);
     }
 }

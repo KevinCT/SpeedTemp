@@ -11,8 +11,8 @@ import com.zweigbergk.speedswede.util.async.Statement;
 
 import java.util.Arrays;
 
-public abstract class DbTopLevelHandler {
-    public static final String TAG = DbTopLevelHandler.class.getSimpleName().toUpperCase();
+abstract class DbTopLevelHandler {
+    private static final String TAG = DbTopLevelHandler.class.getSimpleName().toUpperCase();
 
 
     void delete(DatabaseReference ref) {
@@ -43,7 +43,7 @@ public abstract class DbTopLevelHandler {
         return databasePath(FirebaseDatabase.getInstance().getReference(), strings);
     }
 
-    DatabaseReference databasePath(DatabaseReference ref, String... strings) {
+    private DatabaseReference databasePath(DatabaseReference ref, String... strings) {
         if (strings.length > 0) {
             ref = ref.child(strings[0]);
             strings = Arrays.copyOfRange(strings, 1, strings.length);

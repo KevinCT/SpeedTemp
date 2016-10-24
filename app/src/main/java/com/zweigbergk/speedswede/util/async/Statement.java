@@ -26,14 +26,9 @@ public class Statement extends Promise<Boolean> {
 
     /**
      * Only runs if the Statement returns true.
-     * @param executable
      */
     public void then(Executable executable) {
         onTrue(executable);
-    }
-
-    public static Statement invert(Statement builder) {
-        return builder.invert();
     }
 
     @Override
@@ -42,8 +37,7 @@ public class Statement extends Promise<Boolean> {
     }
 
     private StatementGroup combine(Result<Boolean> resultForm, List<Tuple<PromiseNeed, Statement>> statements) {
-        StatementGroup group = new StatementGroup(resultForm, statements);
-        return group;
+        return new StatementGroup(resultForm, statements);
     }
 
     public Statement and(Statement statement) {

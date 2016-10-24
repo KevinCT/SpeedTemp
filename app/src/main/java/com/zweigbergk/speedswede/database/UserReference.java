@@ -1,13 +1,10 @@
 package com.zweigbergk.speedswede.database;
 
-import android.util.Log;
 import com.zweigbergk.speedswede.Constants;
-import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.PreferenceWrapper;
 import com.zweigbergk.speedswede.util.async.Statement;
-import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
@@ -15,7 +12,6 @@ import static com.zweigbergk.speedswede.util.PreferenceWrapper.StringWrapper;
 import static com.zweigbergk.speedswede.util.PreferenceWrapper.BooleanWrapper;
 
 public class UserReference {
-    private static final String TAG = UserReference.class.getSimpleName().toUpperCase();
 
     public enum UserAttribute {
         NAME(Constants.DISPLAY_NAME), ID(Constants.USER_ID),
@@ -49,9 +45,6 @@ public class UserReference {
         return new UserReference(user);
     }
 
-    public void push() {
-        userHandler.pushUser(mUser);
-    }
 
     public Promise<User> pull() {
         return userHandler.pullUser(mUser.getUid());
@@ -68,14 +61,17 @@ public class UserReference {
         }
     }
 
-    public void setPreference(User.Preference preference, PreferenceWrapper wrapper) {
+    void setPreference(User.Preference preference, PreferenceWrapper wrapper) {
         updateActiveUserPreference(preference, wrapper);
         attempt(() -> userHandler.setUserAttribute(mUser, fromPreference(preference), wrapper.getValue()));
     }
 
-    public void setPreference(User.Preference preference, boolean value) {
-        updateActiveUserPreference(preference, new BooleanWrapper(value));
-        attempt(() -> userHandler.setUserAttribute(mUser, fromPreference(preference), value));
+    public void setNotifications(boolean value) {
+        updateActiveUserPreference(User.Preference.NOTIFICATIONS, new BooleanWrapper(value));
+        attempt(() -> userHandler.setUserAttribute(
+                mUser,
+                fromPreference(User.Preference.NOTIFICATIONS),
+                value));
     }
 
     public void setSkillCategory(SkillCategory skill) {
@@ -85,11 +81,6 @@ public class UserReference {
     public void setFirstLogin(boolean value) {
         activeUser().setFirstLogin(value);
         attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.FIRST_LOGIN, value));
-    }
-
-    public void setTimeInQueue(long value) {
-        activeUser().setTimeInQueue(value);
-        attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.TIME_IN_QUEUE, value));
     }
 
     private UserAttribute fromPreference(User.Preference preference) {
@@ -109,10 +100,6 @@ public class UserReference {
         attempt(() -> userHandler.setUserAttribute(mUser, attribute, value));
     }
 
-    public Promise<Banner> bannerPromised() {
-        return userHandler.getBans(mUser.getUid());
-    }
-
     public Statement hasBlocked(User user) {
         return userHandler.hasBlockedUser(mUser, user);
     }
@@ -121,21 +108,8 @@ public class UserReference {
         userHandler.blockUser(mUser, user);
     }
 
-    public void liftBlock(String strangerUid) {
-        userHandler.liftBlock(strangerUid);
-    }
-
     public void setId(String id) {
         attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.ID, id));
-    }
-
-
-    public void bind(Client<DataChange<User>> client) {
-        userHandler.getUserListener().addClient(mUser, client);
-    }
-
-    public void unbind(Client<DataChange<User>> client) {
-        userHandler.getUserListener().removeClient(mUser, client);
     }
 
     private User activeUser() {
