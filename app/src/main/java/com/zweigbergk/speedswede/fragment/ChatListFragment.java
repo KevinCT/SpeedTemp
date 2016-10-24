@@ -3,6 +3,7 @@ package com.zweigbergk.speedswede.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.baoyz.widget.PullRefreshLayout;
 import com.zweigbergk.speedswede.R;
@@ -30,12 +30,9 @@ import com.zweigbergk.speedswede.util.collection.List;
 public class ChatListFragment extends Fragment implements ChildCountListener {
 
     private static final String TAG = ChatListFragment.class.getSimpleName().toUpperCase();
-    public static final String TAG_CHATLIST = "ChatList";
-    private View view;
+    private static final String TAG_CHATLIST = "ChatList";
 
-    private RecyclerView chatListView;
     private ChatAdapter adapter;
-    private ImageView backgroundImageView;
 
     public ChatListFragment() {
         super();
@@ -56,17 +53,16 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
         adapter = new ChatAdapter();
 
         //Make us switch to the chat if we click its view.
-        adapter.addEventClient(ChatAdapter.Event.CHAT_VIEW_CLICKED,
-                ((ChatActivity) getActivity())::displayChat);
+        adapter.addClickEventClient(((ChatActivity) getActivity())::displayChat);
     }
 
     private void setupSwipeRefresh(View view) {
         PullRefreshLayout layout = (PullRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         layout.setColorSchemeColors(
-                getResources().getColor(R.color.colorPrimaryLight),
-                getResources().getColor(R.color.colorPrimary),
-                getResources().getColor(R.color.colorPrimaryLight),
-                getResources().getColor(R.color.colorPrimary));
+                ContextCompat.getColor(getContext(), R.color.colorPrimaryLight),
+                ContextCompat.getColor(getContext(), R.color.colorPrimary),
+                ContextCompat.getColor(getContext(), R.color.colorPrimaryLight),
+                ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
         layout.setOnRefreshListener(() -> {
             Handler handler = new Handler();
@@ -93,14 +89,12 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
 
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
-        this.view = view;
-        chatListView = (RecyclerView) view.findViewById(R.id.fragment_chat_list_view);
+        RecyclerView chatListView = (RecyclerView) view.findViewById(R.id.fragment_chat_list_view);
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         chatListView.setLayoutManager(manager);
         chatListView.setAdapter(adapter);
-        backgroundImageView = (ImageView) this.view.findViewById(R.id.fragment_chat_list_default_background);
 
         adapter.setView(this);
 
@@ -190,7 +184,7 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
         saveState();
     }
 
-    public void startSettings() {
+    private void startSettings() {
         ((ChatActivity) getActivity()).startSettings();
     }
 }

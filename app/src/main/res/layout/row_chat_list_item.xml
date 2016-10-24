@@ -32,7 +32,6 @@
                 />
 
             <LinearLayout
-                android:id="@+id/row_chat_list_item_second_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -57,7 +56,6 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/line"
         style="?android:attr/listSeparatorTextViewStyle"
         android:paddingTop="5dp"
         android:layout_width="match_parent"

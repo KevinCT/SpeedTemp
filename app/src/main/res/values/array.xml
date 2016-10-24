@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="settings_pref_app_lang_entries">
-        <item>English</item>
-        <item>Svenska</item>
-        <item>العربية</item>
-    </string-array>
-    <string-array name="settings_pref_app_lang_values">
-        <item>en</item>
-        <item>sv</item>
-        <item>ar</item>
-    </string-array>
 
     <string-array name="settings_pref_usage_entries">
         <item>@string/settings_pref_usage_entry_learn</item>

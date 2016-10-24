@@ -56,10 +56,6 @@ android {
         }
     }
 
-    lintOptions {
-        disable "ResourceType"
-    }
-
     dexOptions {
         javaMaxHeapSize "4g"
     }

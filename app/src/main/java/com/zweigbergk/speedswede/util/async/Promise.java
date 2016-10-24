@@ -8,7 +8,6 @@ import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
-import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 
 import com.zweigbergk.speedswede.util.collection.ArrayList;
 import java.util.Arrays;
@@ -21,7 +20,7 @@ public class Promise<E> extends Commitment<E> {
 
     Result<E> mResultForm;
 
-    protected PromiseState promiseState;
+    PromiseState promiseState;
 
     private Map<PromiseNeed, List<Promise<?>>> chainedPromises;
 
@@ -165,27 +164,8 @@ public class Promise<E> extends Commitment<E> {
 
     }
 
-    public void requireState(PromiseNeed need, StateRequirement requirement) {
-        promiseState.requireState(need, requirement);
-    }
-
     public void addItem(PromiseNeed need, Object data) {
         promiseState.put(need, data);
-
-        if (isFulfilled()) {
-            Log.d(TAG, "All requires have been met. Completing...");
-            complete();
-        }
-    }
-
-    /**
-     * Tells the promise to update its state.
-     * This MUST be called if StateRequirements are used, since the Promise will not know
-     * that a requirement has been met unless it is explicitly asked to check.
-     * That check is done using through method.
-     */
-    public void remind() {
-        promiseState.updateState();
 
         if (isFulfilled()) {
             Log.d(TAG, "All requires have been met. Completing...");
@@ -235,12 +215,6 @@ public class Promise<E> extends Commitment<E> {
             items.put(key, item);
         }
 
-        public static <E> List<E> asSimilarList(ItemMap map) {
-            List<E> result = new ArrayList<>();
-            Lists.forEach(map.getItems(), item -> result.add( (E) item.getValue()));
-            return result;
-        }
-
         public Object get(PromiseNeed need) {
             return items.get(need);
         }
@@ -249,9 +223,6 @@ public class Promise<E> extends Commitment<E> {
             return (DataSnapshot) items.get(need);
         }
 
-        public List getList(PromiseNeed need) {
-            return (List) items.get(need);
-        }
 
         public User getUser(PromiseNeed need) {
             return (User) items.get(need);
@@ -261,36 +232,7 @@ public class Promise<E> extends Commitment<E> {
             return items;
         }
 
-        public String getString(PromiseNeed need) {
-            return (String) items.get(need);
-        }
-
-        public int getInt(PromiseNeed need) {
-            return (int) items.get(need);
-        }
-
-        public Long getLong(PromiseNeed need) {
-            Object item = items.get(need);
-            Long value = -1L;
-
-            if (item == null) {
-                return null;
-            }
-
-            if (item.getClass() == Long.class) {
-                value = (Long) item;
-            } else {
-                try {
-                    value = Long.parseLong(item.toString());
-                } catch (NumberFormatException e) {
-                    Log.e(TAG, "In getLong(): Tried to format " + item.toString() + " as long but was unsuccessful. Returning -1.");
-                }
-            }
-
-            return value;
-        }
-
-        public Boolean getBoolean(PromiseNeed need) {
+        Boolean getBoolean(PromiseNeed need) {
             Object item = items.get(need);
 
             if (item == null) {

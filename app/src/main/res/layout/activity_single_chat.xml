@@ -31,7 +31,6 @@
 
         <include
             layout="@layout/type_message_area"
-            android:id="@+id/chat_fragment_new_message_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"

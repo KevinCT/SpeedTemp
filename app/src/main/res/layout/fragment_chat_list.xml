@@ -1,12 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                tools:context="com.zweigbergk.speedswede.fragment.ChatFragment">
+                xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
         android:id="@+id/fragment_chat_list_default_background"
+        android:contentDescription="@string/default_image_descr"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -7,6 +7,7 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -32,7 +33,12 @@
             android:theme="@style/PreferenceScreen"/>
         <activity
             android:name=".activity.ChatActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter android:label="@string/action_view_filter">
+                <action android:name="android.intent.action.VIEW" />
+
+            </intent-filter>
+        </activity>
         <activity
             xmlns:tools="http://schemas.android.com/tools"
             android:name="com.facebook.FacebookActivity"

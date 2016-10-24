@@ -15,7 +15,6 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.Translation;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
@@ -74,8 +73,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
     }
 
-    public void addEventCallback(DatabaseEvent event, Client<Message> callback) {
-        eventCallbacks.get(event).add(callback);
+    public void onMessageAdded(Client<Message> client) {
+        eventCallbacks.get(DatabaseEvent.ADDED).add(client);
     }
 
     private void updateMessage(@NonNull Message message) {

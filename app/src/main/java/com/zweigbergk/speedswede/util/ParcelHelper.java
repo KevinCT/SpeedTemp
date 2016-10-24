@@ -13,11 +13,12 @@ import com.zweigbergk.speedswede.util.collection.Map;
 
 public class ParcelHelper {
 
+    private static final int FLAGS_NORMAL = 0;
     public static final String TAG = ParcelHelper.class.getSimpleName().toUpperCase();
 
-    public static <E extends Parcelable> void writeParcelableList(Parcel parcel, int flags, List<E> list) {
+    public static <E extends Parcelable> void writeParcelableList(Parcel parcel, List<E> list) {
         parcel.writeInt(list.size());
-        Lists.forEach(list, e -> parcel.writeParcelable(e, flags));
+        Lists.forEach(list, e -> parcel.writeParcelable(e, FLAGS_NORMAL));
     }
 
     public static <E extends Parcelable> List<E> readParcelableList(Parcel parcel, Class<E> eClass) {
@@ -36,11 +37,11 @@ public class ParcelHelper {
      */
     // For writing to a Parcel
     public static <K extends Parcelable,V extends Parcelable> void writeParcelableMap(
-            Parcel parcel, int flags, Map<K, V > map) {
+            Parcel parcel, Map<K, V > map) {
         parcel.writeInt(map.size());
         for(Map.Entry<K, V> e : map.entrySet()){
-            parcel.writeParcelable(e.getKey(), flags);
-            parcel.writeParcelable(e.getValue(), flags);
+            parcel.writeParcelable(e.getKey(), FLAGS_NORMAL);
+            parcel.writeParcelable(e.getValue(), FLAGS_NORMAL);
         }
     }
 

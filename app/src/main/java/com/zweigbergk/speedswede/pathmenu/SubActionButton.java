@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -56,10 +57,20 @@ public class SubActionButton extends FrameLayout {
         setClickable(true);
     }
 
+    public SubActionButton(Context context) {
+        super(context);
+    }
+
+    public SubActionButton(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public SubActionButton(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
     /**
      * Sets a content view with custom LayoutParams that will be displayed inside this SubActionButton.
-     * @param contentView
-     * @param params
      */
     public void setContentView(View contentView, LayoutParams params) {
         if(params == null) {
@@ -74,7 +85,6 @@ public class SubActionButton extends FrameLayout {
 
     /**
      * Sets a content view with default LayoutParams
-     * @param contentView
      */
     public void setContentView(View contentView) {
         setContentView(contentView, null);
@@ -106,7 +116,7 @@ public class SubActionButton extends FrameLayout {
 
             // Default SubActionButton settings
             int size = context.getResources().getDimensionPixelSize(com.oguzdev.circularfloatingactionmenu.library.R.dimen.sub_action_button_size);
-            LayoutParams params = new LayoutParams(size, size, Gravity.TOP | Gravity.LEFT);
+            LayoutParams params = new LayoutParams(size, size, Gravity.TOP | Gravity.START);
             setLayoutParams(params);
             setTheme(SubActionButton.THEME_LIGHT);
         }

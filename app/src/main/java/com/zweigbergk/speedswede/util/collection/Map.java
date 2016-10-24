@@ -7,17 +7,17 @@ import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Query;
 
 public interface Map<K, V> extends java.util.Map<K, V> {
-    public <X, Y> Map<X, Y> map(Lists.EntryMapping<X, Y> mapping);
-    public <E> List<E> transform(Lists.Mapping<Map.Entry<K, V>, E> mapping);
-    public Set<K> keys();
+    <X, Y> Map<X, Y> map(Lists.EntryMapping<X, Y> mapping);
+    <E> List<E> transform(Lists.Mapping<Map.Entry<K, V>, E> mapping);
+    Set<K> keys();
 
-    public void foreach(Client<Entry<K, V>> client);
+    void foreach(Client<Entry<K, V>> client);
 
     @NonNull
-    public Set<V> values();
+    Set<V> values();
 
-    public Map<V, K> invert();
-    public Map<K, V> filter(Query<Entry<K, V>> query);
-    public Map<K, V> reject(Query<Entry<K, V>> query);
-    public Map<K, V> nonNull();
+    Map<V, K> invert();
+    Map<K, V> filter(Query<Entry<K, V>> query);
+    Map<K, V> reject(Query<Entry<K, V>> query);
+    Map<K, V> nonNull();
 }

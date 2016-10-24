@@ -6,12 +6,13 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
+import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.async.Statement;
-import com.zweigbergk.speedswede.util.async.ListPromise;
+import com.zweigbergk.speedswede.util.collection.List;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public class ChatReference {
-    public static final String TAG = ChatReference.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatReference.class.getSimpleName().toUpperCase();
 
     enum ChatAttribute {
         FIRST_USER, SECOND_USER, LIKED_BY_FIRST_USER, LIKED_BY_SECOND_USER;
@@ -59,7 +60,7 @@ public class ChatReference {
 
     }
 
-    public ListPromise<Message> pullMessages() {
+    public Promise<List<Message>> pullMessages() {
         return DbChatHandler.getInstance().pullMessages(mChat);
     }
 
@@ -110,7 +111,7 @@ public class ChatReference {
         DbChatHandler.getInstance().removeMessageClient(mChat, client);
     }
 
-    public Statement ifStillValid() {
+    private Statement ifStillValid() {
         return DbChatHandler.getInstance().exists(mChat);
     }
 

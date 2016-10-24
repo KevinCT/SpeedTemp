@@ -35,9 +35,6 @@ import java.util.List;
 public class FloatingActionMenu {
     private static final String TAG = FloatingActionMenu.class.getSimpleName().toUpperCase();
 
-    public View.OnClickListener disabledClickListener;
-
-
     /** Reference to the view (usually a button) to trigger the menu to show */
     private View mainActionView;
     /** The angle (in degrees, modulus 360) which the circular menu starts from  */
@@ -60,20 +57,10 @@ public class FloatingActionMenu {
     private boolean systemOverlay;
     /** a simple layout to contain all the sub action views in the system overlay mode */
     private FrameLayout overlayContainer;
-
-    private OrientationEventListener orientationListener;
-
     /**
      * Constructor that takes the parameters collected using {@link Builder}
-     * @param mainActionView
-     * @param startAngle
-     * @param endAngle
-     * @param radius
-     * @param subActionItems
-     * @param animationHandler
-     * @param animated
      */
-    public FloatingActionMenu(final View mainActionView,
+    private FloatingActionMenu(final View mainActionView,
                               int startAngle,
                               int endAngle,
                               int radius,
@@ -84,9 +71,7 @@ public class FloatingActionMenu {
                               final boolean systemOverlay) {
         Log.d(TAG, "This is called. (1)");
         this.mainActionView = mainActionView;
-        int id = 233225871;
-        Integer wtf = id;
-        mainActionView.setId(wtf);
+        mainActionView.setId(Integer.valueOf(233225871));
         this.startAngle = startAngle;
         this.endAngle = endAngle;
         this.radius = radius;
@@ -134,7 +119,7 @@ public class FloatingActionMenu {
         }
 
         if(systemOverlay) {
-            orientationListener = new OrientationEventListener(mainActionView.getContext(), SensorManager.SENSOR_DELAY_UI) {
+            OrientationEventListener orientationListener = new OrientationEventListener(mainActionView.getContext(), SensorManager.SENSOR_DELAY_UI) {
                 private int lastState = -1;
 
                 public void onOrientationChanged(int orientation) {
@@ -193,9 +178,9 @@ public class FloatingActionMenu {
 
                 // Initially, place all items right at the center of the main action view
                 // Because they are supposed to start animating from that point.
-                final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(subActionItems.get(i).width, subActionItems.get(i).height, Gravity.TOP | Gravity.LEFT);
+                final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(subActionItems.get(i).width, subActionItems.get(i).height, Gravity.TOP | Gravity.START);
 
-                if(systemOverlay) {
+                if(systemOverlay && overlayParams != null) {
                     params.setMargins(center.x - overlayParams.x - subActionItems.get(i).width / 2, center.y - overlayParams.y - subActionItems.get(i).height / 2, 0, 0);
                 }
                 else {
@@ -211,8 +196,8 @@ public class FloatingActionMenu {
             for (int i = 0; i < subActionItems.size(); i++) {
                 // This is currently done by giving them large margins
 
-                final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(subActionItems.get(i).width, subActionItems.get(i).height, Gravity.TOP | Gravity.LEFT);
-                if(systemOverlay) {
+                final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(subActionItems.get(i).width, subActionItems.get(i).height, Gravity.TOP | Gravity.START);
+                if(systemOverlay && overlayParams != null) {
                     params.setMargins(subActionItems.get(i).x - overlayParams.x, subActionItems.get(i).y - overlayParams.y, 0, 0);
                     subActionItems.get(i).view.setLayoutParams(params);
                 }
@@ -266,21 +251,13 @@ public class FloatingActionMenu {
      * Toggles the menu
      * @param animated if true, the open/close action is executed by the current {@link MenuAnimationHandler}
      */
-    public void toggle(boolean animated) {
+    private void toggle(boolean animated) {
         if(open) {
             close(animated);
         }
         else {
             open(animated);
         }
-    }
-
-    public void disable() {
-        mainActionView.setOnClickListener(disabledClickListener);
-    }
-
-    public void enable() {
-        mainActionView.setOnClickListener(new ActionViewClickListener());
     }
 
     /**
@@ -293,32 +270,12 @@ public class FloatingActionMenu {
     /**
      * @return whether the menu is a system overlay or not
      */
-    public boolean isSystemOverlay() {
+    boolean isSystemOverlay() {
         return systemOverlay;
     }
 
-    public FrameLayout getOverlayContainer() {
+    FrameLayout getOverlayContainer() {
         return overlayContainer;
-    }
-
-    /**
-     * Recalculates the positions of each sub action item on demand.
-     */
-    public void updateItemPositions() {
-        // Only update if the menu is currently open
-        if(!isOpen()) {
-            return;
-        }
-        // recalculate x,y coordinates of Items
-        calculateItemPositions();
-
-        // Simply update layout params for each item
-        for (int i = 0; i < subActionItems.size(); i++) {
-            // This is currently done by giving them large margins
-            final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(subActionItems.get(i).width, subActionItems.get(i).height, Gravity.TOP | Gravity.LEFT);
-            params.setMargins(subActionItems.get(i).x, subActionItems.get(i).y, 0, 0);
-            subActionItems.get(i).view.setLayoutParams(params);
-        }
     }
 
     /**
@@ -337,10 +294,12 @@ public class FloatingActionMenu {
             coords[1] -= getStatusBarHeight();
         }
         else {
-            Rect activityFrame = new Rect();
-            getActivityContentView().getWindowVisibleDisplayFrame(activityFrame);
-            coords[0] -= (getScreenSize().x - getActivityContentView().getMeasuredWidth());
-            coords[1] -= (activityFrame.height() + activityFrame.top - getActivityContentView().getMeasuredHeight());
+            if (getActivityContentView() != null) {
+                Rect activityFrame = new Rect();
+                getActivityContentView().getWindowVisibleDisplayFrame(activityFrame);
+                coords[0] -= (getScreenSize().x - getActivityContentView().getMeasuredWidth());
+                coords[1] -= (activityFrame.height() + activityFrame.top - getActivityContentView().getMeasuredHeight());
+            }
         }
         return new Point(coords[0], coords[1]);
     }
@@ -349,7 +308,7 @@ public class FloatingActionMenu {
      * Returns the center point of the main action view
      * @return the action view center point
      */
-    public Point getActionViewCenter() {
+    Point getActionViewCenter() {
         Point point = getActionViewCoordinates();
         point.x += mainActionView.getMeasuredWidth() / 2;
         point.y += mainActionView.getMeasuredHeight() / 2;
@@ -392,16 +351,9 @@ public class FloatingActionMenu {
     }
 
     /**
-     * @return the specified raduis of the menu
-     */
-    public int getRadius() {
-        return radius;
-    }
-
-    /**
      * @return a reference to the sub action items list
      */
-    public List<Item> getSubActionItems() {
+    List<Item> getSubActionItems() {
         return subActionItems;
     }
 
@@ -409,13 +361,17 @@ public class FloatingActionMenu {
      * Finds and returns the main content view from the Activity context.
      * @return the main content view
      */
-    public View getActivityContentView() {
+    private View getActivityContentView() {
         try {
-            return getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
+            if (getActivity() != null && getActivity().getWindow() != null) {
+                return getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
+            }
         }
         catch(ClassCastException e) {
             throw new ClassCastException("Please provide an Activity context for this FloatingActionMenu.");
         }
+
+        return null;
     }
 
     private Activity getActivity() {
@@ -433,7 +389,7 @@ public class FloatingActionMenu {
      * Intended to use for systemOverlay mode.
      * @return the WindowManager for the current context.
      */
-    public WindowManager getWindowManager() {
+    private WindowManager getWindowManager() {
         return (WindowManager) mainActionView.getContext().getSystemService(Context.WINDOW_SERVICE);
     }
 
@@ -443,6 +399,7 @@ public class FloatingActionMenu {
         }
         else {
             try {
+                if (getActivityContentView() != null)
                 if(layoutParams != null) {
                     FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) layoutParams;
                     ((ViewGroup) getActivityContentView()).addView(view, lp);
@@ -499,7 +456,7 @@ public class FloatingActionMenu {
         overlayParams.height = bottom - top;
         overlayParams.x = left;
         overlayParams.y = top;
-        overlayParams.gravity = Gravity.TOP | Gravity.LEFT;
+        overlayParams.gravity = Gravity.TOP | Gravity.START;
         return overlayParams;
     }
 
@@ -614,9 +571,9 @@ public class FloatingActionMenu {
     /**
      * A listener to listen open/closed state changes of the Menu
      */
-    public static interface MenuStateChangeListener {
-        public void onMenuOpened(FloatingActionMenu menu);
-        public void onMenuClosed(FloatingActionMenu menu);
+    public interface MenuStateChangeListener {
+        void onMenuOpened(FloatingActionMenu menu);
+        void onMenuClosed(FloatingActionMenu menu);
     }
 
     /**
@@ -634,7 +591,7 @@ public class FloatingActionMenu {
         private MenuStateChangeListener stateChangeListener;
         private boolean systemOverlay;
 
-        public Builder(Context context, boolean systemOverlay) {
+        public Builder(Context context) {
             subActionItems = new ArrayList<>();
             // Default settings
             radius = context.getResources().getDimensionPixelSize(com.oguzdev.circularfloatingactionmenu.library.R.dimen.action_menu_radius);
@@ -642,11 +599,7 @@ public class FloatingActionMenu {
             endAngle = 270;
             animationHandler = new DefaultAnimationHandler();
             animated = true;
-            this.systemOverlay = systemOverlay;
-        }
-
-        public Builder(Context context) {
-            this(context, false);
+            this.systemOverlay = false;
         }
 
         public Builder setStartAngle(int startAngle) {
@@ -750,7 +703,7 @@ public class FloatingActionMenu {
         }
     }
 
-    public static WindowManager.LayoutParams getDefaultSystemWindowParams() {
+    private static WindowManager.LayoutParams getDefaultSystemWindowParams() {
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -758,7 +711,7 @@ public class FloatingActionMenu {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         params.format = PixelFormat.RGBA_8888;
-        params.gravity = Gravity.TOP | Gravity.LEFT;
+        params.gravity = Gravity.TOP | Gravity.START;
         return params;
     }
 

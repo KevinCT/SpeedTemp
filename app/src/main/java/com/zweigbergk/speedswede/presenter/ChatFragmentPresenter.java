@@ -25,7 +25,7 @@ import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
 
 
 public class ChatFragmentPresenter {
-    public static final String TAG = ChatFragmentPresenter.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatFragmentPresenter.class.getSimpleName().toUpperCase();
 
     private ChatFragmentView mView;
     private Client<DataChange<Message>> chatEventHandler;
@@ -82,7 +82,7 @@ public class ChatFragmentPresenter {
 
         recyclerView.setOnClickListener(v -> Log.d(TAG, "Clicked :D"));
 
-        adapter.addEventCallback(DatabaseEvent.ADDED, this::smoothScrollToBottomOfList);
+        adapter.onMessageAdded(this::smoothScrollToBottomOfList);
     }
 
     public void onSaveInstanceState(Bundle outState) {

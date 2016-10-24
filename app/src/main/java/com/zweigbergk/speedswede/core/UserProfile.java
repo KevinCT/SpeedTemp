@@ -176,7 +176,7 @@ public class UserProfile implements User {
         dest.writeString(displayName);
         dest.writeString(uid);
         mPreferences.foreach(pref -> Log.d(TAG, "A pref value: " + pref.getValue()));
-        ParcelHelper.writeParcelableMap(dest, 0, mPreferences);
+        ParcelHelper.writeParcelableMap(dest, mPreferences);
     }
 
     private UserProfile(Parcel in) {
