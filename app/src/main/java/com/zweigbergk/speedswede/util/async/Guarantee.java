@@ -5,7 +5,7 @@ import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
 public class Guarantee<E> extends Commitment<E> {
 
-    E mCompletedProduct;
+    private E mCompletedProduct;
 
     public Guarantee(E product) {
         mCompletedProduct = product;
