@@ -15,6 +15,10 @@ public class SettingsFragment extends PreferenceFragment {
     private SharedPreferences.OnSharedPreferenceChangeListener mListener;
     private SettingsFragmentPresenter mPresenter;
 
+    public SettingsFragment() {
+        mPresenter = new SettingsFragmentPresenter();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +28,6 @@ public class SettingsFragment extends PreferenceFragment {
         initListener();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPreferences.registerOnSharedPreferenceChangeListener(mListener);
-        mPresenter = new SettingsFragmentPresenter();
     }
 
     @Override

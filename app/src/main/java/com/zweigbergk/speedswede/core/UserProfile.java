@@ -6,25 +6,23 @@ import android.util.Log;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.Exclude;
-import com.zweigbergk.speedswede.activity.Language;
+import com.zweigbergk.speedswede.util.Language;
 import com.zweigbergk.speedswede.util.ParcelHelper;
 import com.zweigbergk.speedswede.util.PreferenceWrapper;
 import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.collection.HashMapExtension;
 import com.zweigbergk.speedswede.util.collection.MapExtension;
 
+import java.util.Locale;
+
 
 public class UserProfile implements User {
-    private static final String TAG = UserProfile.class.getSimpleName().toUpperCase();
+    private static final String TAG = UserProfile.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
 
 
     private String displayName, uid;
     private boolean isFirstLogin;
-    @SuppressWarnings("unused")
-    public static String facebookUserID = "";
-//    private Timer timer;
-//    private int[] matchingInterval;
 
     @SuppressWarnings("unused")
     private long timeInQueue;

@@ -12,10 +12,12 @@ import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.collection.HashMapExtension;
 import com.zweigbergk.speedswede.util.collection.MapExtension;
 
+import java.util.Locale;
+
 public enum ChatMatcher {
     INSTANCE;
 
-    private static final String TAG = ChatMatcher.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatMatcher.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private ListExtension<User> mUsersInPool;
 

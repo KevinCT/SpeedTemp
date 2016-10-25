@@ -29,6 +29,8 @@ import com.zweigbergk.speedswede.util.collection.MapExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 
+import java.util.Locale;
+
 import static com.zweigbergk.speedswede.Constants.DEFAULT_TOPIC_IMAGE;
 import static com.zweigbergk.speedswede.Constants.MAX_PREVIEW_LENGTH;
 
@@ -36,7 +38,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     private enum Event { CHAT_VIEW_CLICKED, CHAT_REMOVED, CHAT_ADDED }
 
-    private static final String TAG = ChatAdapter.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatAdapter.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private ListExtension<Chat> mChats;
     private MapExtension<Event, ListExtension<Client<Chat>>> eventClients;

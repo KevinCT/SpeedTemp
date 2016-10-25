@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.zweigbergk.speedswede.Constants;
-import com.zweigbergk.speedswede.activity.Language;
+import com.zweigbergk.speedswede.util.Language;
 import com.zweigbergk.speedswede.util.PreferenceWrapper;
 import com.zweigbergk.speedswede.util.collection.MapExtension;
 

@@ -12,11 +12,13 @@ import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
 import java.util.Arrays;
+import java.util.Locale;
+
 import com.zweigbergk.speedswede.util.collection.HashMapExtension;
 import com.zweigbergk.speedswede.util.collection.MapExtension;
 
 public class Promise<E> extends Commitment<E> {
-    private static final String TAG = Promise.class.getSimpleName().toUpperCase();
+    private static final String TAG = Promise.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     Result<E> mResultForm;
 
@@ -117,6 +119,7 @@ public class Promise<E> extends Commitment<E> {
      */
     private void forwardToChainedPromises() {
         ListExtension<Tuple<PromiseNeed, Promise<?>>> promises = new ArrayListExtension<>();
+
 
         Lists.forEach(chainedPromises, entry -> {
             ListExtension<Promise<?>> list = entry.getValue();

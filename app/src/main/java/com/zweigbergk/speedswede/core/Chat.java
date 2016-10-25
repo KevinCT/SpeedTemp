@@ -128,6 +128,7 @@ public class Chat implements Parcelable {
         messages.add(message);
     }
 
+    @SuppressWarnings("unused")
     public long getTimeStamp() {
         return this.timeStamp;
     }

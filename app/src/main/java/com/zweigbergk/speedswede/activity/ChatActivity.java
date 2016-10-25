@@ -33,13 +33,15 @@ import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
 import com.zweigbergk.speedswede.view.ChatView;
 
+import java.util.Locale;
+
 import mehdi.sakout.fancybuttons.FancyButton;
 
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 
 public class ChatActivity extends AppCompatActivity implements ChatView {
-    private static final String TAG = ChatActivity.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatActivity.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private static final int FRAGMENT_CONTAINER = R.id.fragment_container;
     private static final String CHAT_LIST_FRAGMENT_NAME = "ChatListFragment";

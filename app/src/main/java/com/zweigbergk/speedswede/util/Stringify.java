@@ -4,8 +4,10 @@ import android.util.Log;
 
 import com.zweigbergk.speedswede.util.collection.Collections;
 
+import java.util.Locale;
+
 public class Stringify {
-    private static final String TAG = Stringify.class.getSimpleName().toUpperCase();
+    private static final String TAG = Stringify.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     /**
      * Format a String with args in curly braces. Use § sign for escaping characters.

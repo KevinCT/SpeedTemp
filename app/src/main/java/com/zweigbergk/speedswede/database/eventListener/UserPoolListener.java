@@ -11,9 +11,11 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.collection.Collections;
 
+import java.util.Locale;
+
 public class UserPoolListener extends FirebaseDataListener<User> implements ChildEventListener {
 
-    private static final String TAG = UserPoolListener.class.getSimpleName().toUpperCase();
+    private static final String TAG = UserPoolListener.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     public UserPoolListener() {
         super(Collections.emptySet());
@@ -48,6 +50,5 @@ public class UserPoolListener extends FirebaseDataListener<User> implements Chil
     @Override
     public void onCancelled(DatabaseError databaseError) {
         Log.d(Constants.ERROR, databaseError.getMessage());
-        notifyInterrupted();
     }
 }

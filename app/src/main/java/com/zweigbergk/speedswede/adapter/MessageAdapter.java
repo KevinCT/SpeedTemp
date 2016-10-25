@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zweigbergk.speedswede.R;
-import com.zweigbergk.speedswede.activity.Language;
+import com.zweigbergk.speedswede.util.Language;
 import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
@@ -30,7 +30,7 @@ import com.zweigbergk.speedswede.util.Translation.TranslationCache;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
-    private static final String TAG = MessageAdapter.class.getSimpleName().toUpperCase();
+    private static final String TAG = MessageAdapter.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private ListExtension<Message> mMessages;
     private MapExtension<DatabaseEvent, ListExtension<Client<Message>>> eventCallbacks;

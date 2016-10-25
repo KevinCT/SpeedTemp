@@ -9,9 +9,11 @@ import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
 import com.zweigbergk.speedswede.util.collection.ListExtension;
 
+import java.util.Locale;
+
 // TODO Use Tag() instead of Tuples...
 class PromiseGroup<E> extends Promise<E> {
-    private static final String TAG = PromiseGroup.class.getSimpleName().toUpperCase();
+    private static final String TAG = PromiseGroup.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private ListExtension<Tuple<PromiseNeed, Commitment<?>>> mPromiseTuples;
 

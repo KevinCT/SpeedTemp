@@ -11,8 +11,10 @@ import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
+import java.util.Locale;
+
 public class ChatReference {
-    private static final String TAG = ChatReference.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatReference.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     enum ChatAttribute {
         FIRST_USER, SECOND_USER, LIKED_BY_FIRST_USER, LIKED_BY_SECOND_USER;

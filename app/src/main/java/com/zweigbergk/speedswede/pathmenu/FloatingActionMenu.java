@@ -24,6 +24,7 @@ import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /** Taken from: https://github.com/oguzbilgener/CircularFloatingActionMenu/
  *  Date: 17/10/2016
@@ -32,7 +33,7 @@ import java.util.List;
  */
 
 public class FloatingActionMenu {
-    private static final String TAG = FloatingActionMenu.class.getSimpleName().toUpperCase();
+    private static final String TAG = FloatingActionMenu.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     /** Reference to the view (usually a button) to trigger the menu to show */
     private View mainActionView;

@@ -10,11 +10,13 @@ import com.zweigbergk.speedswede.util.collection.HashMapExtension;
 import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.collection.MapExtension;
 
+import java.util.Locale;
+
 
 public class ParcelHelper {
 
     private static final int FLAGS_NORMAL = 0;
-    private static final String TAG = ParcelHelper.class.getSimpleName().toUpperCase();
+    private static final String TAG = ParcelHelper.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     public static <E extends Parcelable> void writeParcelableList(Parcel parcel, ListExtension<E> list) {
         parcel.writeInt(list.size());

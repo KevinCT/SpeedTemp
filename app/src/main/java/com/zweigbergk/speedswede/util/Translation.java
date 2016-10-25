@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.firebase.database.Exclude;
-import com.zweigbergk.speedswede.activity.Language;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 import org.json.JSONException;
@@ -22,7 +21,7 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 
 public class Translation {
-    private static final String TAG = Translation.class.getSimpleName().toUpperCase();
+    private static final String TAG = Translation.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private static final boolean DISABLED = false;
 

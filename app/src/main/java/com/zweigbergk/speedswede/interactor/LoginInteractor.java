@@ -12,7 +12,6 @@ import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.util.ActivityAttachable;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
@@ -68,7 +67,7 @@ public class LoginInteractor implements ActivityAttachable {
         Log.d(TAG, "user: " + token.getUserId());
 
         //Unsure about merge conflict
-        UserProfile.facebookUserID = token.getUserId();
+        //UserProfile.facebookUserID = token.getUserId();
         userCredential = FacebookAuthProvider.getCredential(token.getToken());
         setUserCredential(FacebookAuthProvider.getCredential(token.getToken()));
         FirebaseAuth.getInstance().signInWithCredential(userCredential)

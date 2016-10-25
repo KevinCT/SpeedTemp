@@ -3,12 +3,10 @@ package com.zweigbergk.speedswede.database;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
@@ -25,6 +23,8 @@ import com.zweigbergk.speedswede.util.collection.MapExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 
+import java.util.Locale;
+
 import static com.zweigbergk.speedswede.Constants.CHATS;
 import static com.zweigbergk.speedswede.Constants.FIRST_USER;
 import static com.zweigbergk.speedswede.Constants.MESSAGES;
@@ -34,7 +34,7 @@ import static com.zweigbergk.speedswede.Constants.SECOND_USER;
 class DbChatHandler extends DbTopLevelHandler {
     private static DbChatHandler INSTANCE;
 
-    private static final String TAG = DbChatHandler.class.getSimpleName().toUpperCase();
+    private static final String TAG = DbChatHandler.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private DatabaseReference mRoot = FirebaseDatabase.getInstance().getReference();
 

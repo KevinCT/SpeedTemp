@@ -9,8 +9,10 @@ import com.zweigbergk.speedswede.util.collection.HashSetExtension;
 import com.zweigbergk.speedswede.util.collection.SetExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
+import java.util.Locale;
+
 public abstract class FirebaseDataListener<T> {
-    private static final String TAG = FirebaseDataListener.class.getSimpleName().toUpperCase();
+    private static final String TAG = FirebaseDataListener.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
 
     private SetExtension<Client<DataChange<T>>> mClients;
@@ -58,9 +60,5 @@ public abstract class FirebaseDataListener<T> {
 
     void notifyChanged(T item) {
         notifyClients(DatabaseEvent.CHANGED, item);
-    }
-
-    void notifyInterrupted() {
-        notifyClients(DatabaseEvent.INTERRUPTED, null);
     }
 }

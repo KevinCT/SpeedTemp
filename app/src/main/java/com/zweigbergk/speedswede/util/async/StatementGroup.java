@@ -8,9 +8,11 @@ import com.zweigbergk.speedswede.util.Tuple;
 
 import com.zweigbergk.speedswede.util.collection.ListExtension;
 
+import java.util.Locale;
+
 // TODO Use Tag() instead of Tuples...
 class StatementGroup extends Statement {
-    private static final String TAG = StatementGroup.class.getSimpleName().toUpperCase();
+    private static final String TAG = StatementGroup.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     StatementGroup(Result<Boolean> resultForm, ListExtension<Tuple<PromiseNeed, Statement>> tuples) {
         super(false);

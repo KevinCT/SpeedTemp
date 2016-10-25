@@ -14,6 +14,8 @@ import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.UserReference;
 
+import java.util.Locale;
+
 import static com.zweigbergk.speedswede.Constants.ARABIC;
 import static com.zweigbergk.speedswede.Constants.DARI;
 import static com.zweigbergk.speedswede.Constants.ENGLISH;
@@ -21,7 +23,7 @@ import static com.zweigbergk.speedswede.Constants.SWEDISH;
 import static com.zweigbergk.speedswede.Constants.TURKISH;
 
 public class ChangeLanguageFragment extends Fragment {
-    private static final String TAG = ChangeLanguageFragment.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChangeLanguageFragment.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
 
     public ChangeLanguageFragment() {

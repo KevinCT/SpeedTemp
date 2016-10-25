@@ -3,6 +3,8 @@ package com.zweigbergk.speedswede.util;
 import com.zweigbergk.speedswede.util.collection.Arrays;
 import com.zweigbergk.speedswede.util.collection.ListExtension;
 
+import java.util.Locale;
+
 public class AbuseFilter {
 
     private static String[] forbiddenWords = {
@@ -31,7 +33,7 @@ public class AbuseFilter {
         StringBuilder result = new StringBuilder();
         ListExtension<String> forbidden = Arrays.asList(forbiddenWords);
         Arrays.asList(input.split("\\s+")).map(word ->
-                result.append((forbidden.contains(word) ? "*** " : word + " ")));
+                result.append((forbidden.contains(word.toLowerCase(Locale.ENGLISH)) ? "*** " : word + " ")));
 
         return result.toString();
     }

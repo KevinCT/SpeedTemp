@@ -22,7 +22,7 @@ import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
 
 
 public class ChatFragmentPresenter {
-    private static final String TAG = ChatFragmentPresenter.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatFragmentPresenter.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private ChatFragmentView mView;
     private Client<DataChange<Message>> chatEventHandler;

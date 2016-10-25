@@ -13,6 +13,8 @@ import com.zweigbergk.speedswede.util.collection.HashMapExtension;
 import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.collection.MapExtension;
 
+import java.util.Locale;
+
 import static com.zweigbergk.speedswede.Constants.DISPLAY_NAME;
 import static com.zweigbergk.speedswede.Constants.FIRST_LOGIN;
 import static com.zweigbergk.speedswede.Constants.PREFERENCES;
@@ -20,7 +22,7 @@ import static com.zweigbergk.speedswede.Constants.USER_ID;
 import static com.zweigbergk.speedswede.core.User.Preference;
 
 public class UserFactory {
-    private static final String TAG = UserFactory.class.getSimpleName().toUpperCase();
+    private static final String TAG = UserFactory.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     public static User deserializeUser(DataSnapshot dataSnapshot) {
         String name = dataSnapshot.child(DISPLAY_NAME).getValue().toString();

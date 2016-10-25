@@ -10,11 +10,13 @@ import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
 import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
+import java.util.Locale;
+
 /**
  * A layout that doesn't intercept click events
  */
 public class TransparentLayout extends RelativeLayout {
-    private static final String TAG = TransparentLayout.class.getSimpleName().toUpperCase();
+    private static final String TAG = TransparentLayout.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
 
     private boolean catchClickEvents = false;

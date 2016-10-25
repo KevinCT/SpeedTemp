@@ -17,11 +17,13 @@ import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.UserReference;
 import com.zweigbergk.speedswede.fragment.SettingsFragment;
 
+import java.util.Locale;
+
 import static com.zweigbergk.speedswede.Constants.SETTINGS_FIRST_SETUP;
 import static com.zweigbergk.speedswede.database.UserReference.UserAttribute;
 
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final String TAG = SettingsActivity.class.getSimpleName().toUpperCase();
+    private static final String TAG = SettingsActivity.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private boolean isFirstTime = false;
 

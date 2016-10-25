@@ -22,7 +22,7 @@ class DefaultAnimationHandler extends MenuAnimationHandler {
     /** duration of animations, in milliseconds */
     private static final int DURATION = 500;
     /** duration to wait between each of  */
-    private static final int LAG_BETWEEN_ITEMS = 20;
+    private static final long LAG_BETWEEN_ITEMS = 20L;
     /** holds the current state of animation */
     private boolean animating;
 

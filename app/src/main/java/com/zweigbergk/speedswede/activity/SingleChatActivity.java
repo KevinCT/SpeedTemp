@@ -26,10 +26,12 @@ import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
 import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
 
+import java.util.Locale;
+
 import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
 
 public class SingleChatActivity extends AppCompatActivity implements ChatFragmentView {
-    private static final String TAG = SingleChatActivity.class.getSimpleName().toUpperCase();
+    private static final String TAG = SingleChatActivity.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     //From ChatFragment
     private ChatFragmentPresenter mPresenter;

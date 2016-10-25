@@ -1,4 +1,4 @@
-package com.zweigbergk.speedswede.activity;
+package com.zweigbergk.speedswede.util;
 
 import com.zweigbergk.speedswede.util.collection.Collections;
 

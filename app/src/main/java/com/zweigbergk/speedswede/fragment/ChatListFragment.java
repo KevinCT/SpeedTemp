@@ -27,9 +27,11 @@ import com.zweigbergk.speedswede.util.ChildCountListener;
 import com.zweigbergk.speedswede.util.ParcelHelper;
 import com.zweigbergk.speedswede.util.collection.ListExtension;
 
+import java.util.Locale;
+
 public class ChatListFragment extends Fragment implements ChildCountListener {
 
-    private static final String TAG = ChatListFragment.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatListFragment.class.getSimpleName().toUpperCase(Locale.ENGLISH);
     private static final String TAG_CHAT_LIST = "ChatList";
 
     private ChatAdapter adapter;

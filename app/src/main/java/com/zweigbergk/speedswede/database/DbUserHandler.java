@@ -22,6 +22,8 @@ import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.factory.UserFactory;
 
+import java.util.Locale;
+
 import static com.zweigbergk.speedswede.Constants.BAN_LIST;
 import static com.zweigbergk.speedswede.Constants.BANS;
 import static com.zweigbergk.speedswede.Constants.POOL;
@@ -30,7 +32,7 @@ import static com.zweigbergk.speedswede.Constants.USERS;
 class DbUserHandler extends DbTopLevelHandler {
     private static DbUserHandler INSTANCE;
 
-    private static final String TAG = DbUserHandler.class.getSimpleName().toUpperCase();
+    private static final String TAG = DbUserHandler.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private DatabaseReference mRoot = FirebaseDatabase.getInstance().getReference();
 

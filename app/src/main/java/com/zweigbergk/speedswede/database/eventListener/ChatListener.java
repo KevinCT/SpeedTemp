@@ -16,10 +16,11 @@ import com.zweigbergk.speedswede.util.factory.ChatFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public class ChatListener implements ChildEventListener {
-    private static final String TAG = ChatListener.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatListener.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private static final String CLIENT_FOR_ALL_CHATS = "key_to_listen_to_every_chat";
 

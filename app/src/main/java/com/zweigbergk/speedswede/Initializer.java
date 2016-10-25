@@ -3,7 +3,7 @@ package com.zweigbergk.speedswede;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.zweigbergk.speedswede.activity.Language;
+import com.zweigbergk.speedswede.util.Language;
 import com.zweigbergk.speedswede.core.ChatMatcher;
 import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.core.User;
@@ -14,8 +14,10 @@ import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
+import java.util.Locale;
+
 public class Initializer {
-    private static final String TAG = Initializer.class.getSimpleName().toUpperCase();
+    private static final String TAG = Initializer.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private static ListExtension<Executable> loginExecutables = new ArrayListExtension<>();

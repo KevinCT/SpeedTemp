@@ -10,11 +10,13 @@ import com.zweigbergk.speedswede.util.collection.HashSetExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 import com.zweigbergk.speedswede.util.async.Promise.ItemMap;
 
+import java.util.Locale;
+
 /** Holds an unfinished object. Only releases it once it is completed,
  * i.e. all requirements are met. */
 class PromiseState {
 
-    private static final String TAG = PromiseState.class.getSimpleName().toUpperCase();
+    private static final String TAG = PromiseState.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private ItemMap mItems;
 
