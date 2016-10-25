@@ -24,7 +24,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="0"
             android:src="@android:drawable/ic_menu_send"
-            android:contentDescription="@string/default_image_descr"
+            android:contentDescription="@string/default_image_description"
             android:id="@+id/fragment_chat_post_message" />
 
 </LinearLayout>

@@ -16,7 +16,7 @@ import com.zweigbergk.speedswede.util.collection.HashMapExtension;
 import com.zweigbergk.speedswede.util.collection.MapExtension;
 
 public class Promise<E> extends Commitment<E> {
-    public static final String TAG = Promise.class.getSimpleName().toUpperCase();
+    private static final String TAG = Promise.class.getSimpleName().toUpperCase();
 
     Result<E> mResultForm;
 
@@ -25,7 +25,7 @@ public class Promise<E> extends Commitment<E> {
     private MapExtension<PromiseNeed, ListExtension<Promise<?>>> chainedPromises;
 
     //Error flag. If this is set, the builder will return null to all its listeners.
-    boolean mBuildFailed;
+    private boolean mBuildFailed;
 
     public static <E> Promise<E> create() {
         return new Promise<>(null);
@@ -56,17 +56,6 @@ public class Promise<E> extends Commitment<E> {
         return this;
     }
 
-    public static Promise<ListExtension<?>> all(ListExtension<Tuple<PromiseNeed, Commitment<?>>> tuples) {
-        return PromiseGroup.normal(tuples);
-    }
-
-    /*public static <E> Promise<E> group(Result<E> resultForm, Tuple<PromiseNeed, Commitment<?>>... promises) {
-        PromiseGroup<E> group = new PromiseGroup<>(promises);
-        group.setResultForm(resultForm);
-        return group;
-    }*/
-
-
     public static <E> Promise<E> group(Result<E> resultForm, ListExtension<Tuple<PromiseNeed, Commitment<?>>> promises) {
         PromiseGroup<E> group = new PromiseGroup<>(promises);
         group.setResultForm(resultForm);
@@ -86,7 +75,7 @@ public class Promise<E> extends Commitment<E> {
         Lists.forEach(Arrays.asList(locks), promiseState::addNeed);
     }
 
-    protected void complete() {
+    void complete() {
         mCompletedProduct = mResultForm.makeFromItems(promiseState.getItems());
 
         notifyListeners();
@@ -110,8 +99,7 @@ public class Promise<E> extends Commitment<E> {
         }
     }
 
-    @Override
-    protected void addExecutable(Executable executable, Executable.Interest<E> interest) {
+    void addExecutable(Executable executable, Executable.Interest<E> interest) {
         if (!hasProduct()) {
             mInterestExecutables.put(executable, interest);
         } else {
@@ -140,7 +128,7 @@ public class Promise<E> extends Commitment<E> {
         });
     }
 
-    protected void notifyListeners() {
+    void notifyListeners() {
         Lists.forEach(mClients.iterator(), client -> {
             client.supply(mCompletedProduct);
         });
@@ -173,8 +161,7 @@ public class Promise<E> extends Commitment<E> {
         }
     }
 
-    @Override
-    protected boolean isFulfilled() {
+    private boolean isFulfilled() {
         return promiseState.isFulfilled();
     }
 
@@ -198,8 +185,7 @@ public class Promise<E> extends Commitment<E> {
         return hasProduct() ? mCompletedProduct : null;
     }
 
-    @Override
-    protected boolean hasProduct() {
+    private boolean hasProduct() {
         return mCompletedProduct != null || mBuildFailed;
     }
 

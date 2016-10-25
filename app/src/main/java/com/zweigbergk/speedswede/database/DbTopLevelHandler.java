@@ -15,6 +15,7 @@ abstract class DbTopLevelHandler {
     private static final String TAG = DbTopLevelHandler.class.getSimpleName().toUpperCase();
 
 
+    @SuppressWarnings("unused")
     void delete(DatabaseReference ref) {
         ref.removeValue();
     }

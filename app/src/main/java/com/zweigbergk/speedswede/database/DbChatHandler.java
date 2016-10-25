@@ -99,26 +99,6 @@ class DbChatHandler extends DbTopLevelHandler {
      * */
     void pushChat(Chat chat) {
         Log.d(TAG, "Push chat: " + chat.getName());
-
-        DatabaseReference ref = mRoot.child(CHATS).child(chat.getId());
-
-        ValueEventListener listener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    //pushPreferences(chat);
-                    Log.d(TAG, "In listener where pushPreferences is called");
-                    ref.removeEventListener(this);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-
-        mRoot.child(CHATS).child(chat.getId()).addValueEventListener(listener);
         mRoot.child(CHATS).child(chat.getId()).setValue(chat);
     }
 
@@ -126,7 +106,7 @@ class DbChatHandler extends DbTopLevelHandler {
         ref.removeValue();
     }
 
-    void addMesageClient(Chat chat, Client<DataChange<Message>> client) {
+    void addMessageClient(Chat chat, Client<DataChange<Message>> client) {
         if (hasMessageListenerForChat(chat)) {
             //If the listener is already there, we must explicitly pass every existing message
             // to our new client

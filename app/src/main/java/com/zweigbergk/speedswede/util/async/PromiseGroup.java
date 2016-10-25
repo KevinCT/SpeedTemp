@@ -11,6 +11,7 @@ import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 // TODO Use Tag() instead of Tuples...
 class PromiseGroup<E> extends Promise<E> {
+    private static final String TAG = PromiseGroup.class.getSimpleName().toUpperCase();
 
     private ListExtension<Tuple<PromiseNeed, Commitment<?>>> mPromiseTuples;
 
@@ -40,6 +41,7 @@ class PromiseGroup<E> extends Promise<E> {
         return result;
     };
 
+    @SuppressWarnings("unused")
     static PromiseGroup<ListExtension<?>> normal(ListExtension<Tuple<PromiseNeed, Commitment<?>>> tuples) {
         return (PromiseGroup<ListExtension<?>>) new PromiseGroup<ListExtension<?>>(tuples).setResultForm(listBlueprint);
     }

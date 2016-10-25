@@ -11,8 +11,6 @@ import java.util.Locale;
 public enum LocalStorage {
     INSTANCE;
 
-    public static final String TAG = LocalStorage.class.getSimpleName().toUpperCase();
-
     public void saveLanguage(Context context, String value){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
@@ -29,14 +27,4 @@ public enum LocalStorage {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(key,defaultValue);
     }
-
-    public void removeSetting(Context context, String key){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.remove(key);
-        editor.apply();
-
-
-    }
-
 }

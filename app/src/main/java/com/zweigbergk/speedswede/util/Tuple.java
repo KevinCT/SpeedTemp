@@ -31,6 +31,7 @@ public class Tuple<K, V> implements MapExtension.Entry<K, V> {
         return oldValue;
     }
 
+    @SuppressWarnings("unused")
     public static <K, V> Tuple from(MapExtension.Entry<K, V> entry) {
         return new Tuple<>(entry.getKey(), entry.getValue());
     }

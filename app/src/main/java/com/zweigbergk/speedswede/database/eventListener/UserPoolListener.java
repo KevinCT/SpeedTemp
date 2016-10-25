@@ -13,7 +13,7 @@ import com.zweigbergk.speedswede.util.collection.Collections;
 
 public class UserPoolListener extends FirebaseDataListener<User> implements ChildEventListener {
 
-    public static final String TAG = UserPoolListener.class.getSimpleName().toUpperCase();
+    private static final String TAG = UserPoolListener.class.getSimpleName().toUpperCase();
 
     public UserPoolListener() {
         super(Collections.emptySet());

@@ -19,6 +19,7 @@ public class TransparentLayout extends RelativeLayout {
 
     private boolean catchClickEvents = false;
 
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private ListExtension<Executable> executables = new ArrayListExtension<>();
 
     public TransparentLayout(Context context) {

@@ -9,8 +9,10 @@ import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public class PanelSlideListener implements SlidingUpPanelLayout.PanelSlideListener {
 
-    ListExtension<Client<Float>> slideListeners = new ArrayListExtension<>();
-    ListExtension<Client<SlidingUpPanelLayout.PanelState>> stateChangedListeners = new ArrayListExtension<>();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private ListExtension<Client<Float>> slideListeners = new ArrayListExtension<>();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private ListExtension<Client<SlidingUpPanelLayout.PanelState>> stateChangedListeners = new ArrayListExtension<>();
 
     public PanelSlideListener onPanelSlide(Client<Float> client) {
         slideListeners.add(client);

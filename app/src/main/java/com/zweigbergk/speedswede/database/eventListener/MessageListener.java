@@ -14,7 +14,7 @@ import com.zweigbergk.speedswede.util.collection.CollectionExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public class MessageListener extends FirebaseDataListener<Message> implements ChildEventListener {
-    public static final String TAG = MessageListener.class.getSimpleName().toUpperCase();
+    private static final String TAG = MessageListener.class.getSimpleName().toUpperCase();
 
     private String mIdentifier = "";
 

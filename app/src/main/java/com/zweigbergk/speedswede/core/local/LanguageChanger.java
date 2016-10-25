@@ -40,7 +40,8 @@ public class LanguageChanger {
             return resources.getConfiguration().getLocales()
                     .getFirstMatch(resources.getAssets().getLocales());
         } else {
-           return resources.getConfiguration().getLocales().get(0);
+            //noinspection deprecation
+            return resources.getConfiguration().locale;
         }
     }
 

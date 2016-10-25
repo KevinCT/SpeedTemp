@@ -15,7 +15,7 @@ import static com.zweigbergk.speedswede.Constants.SWEDISH;
 import static com.zweigbergk.speedswede.Constants.TURKISH;
 
 public class LanguagePreferences extends DialogPreference {
-    public static final String TAG  = "LanguagePreferences";
+    private static final String TAG  = "LanguagePreferences";
 
     public LanguagePreferences(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -68,10 +68,5 @@ public class LanguagePreferences extends DialogPreference {
         LanguageChanger.changeLanguage(languageCode, getContext());
         setSummary(R.string.chosen_language);
         getDialog().dismiss();
-    }
-
-    @Override
-    protected void onDialogClosed(boolean positiveResult) {
-        super.onDialogClosed(positiveResult);
     }
 }

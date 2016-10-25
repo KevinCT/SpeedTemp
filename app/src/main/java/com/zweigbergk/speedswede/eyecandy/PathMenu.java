@@ -19,7 +19,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class PathMenu {
-    private static final String TAG = PathMenu.class.getSimpleName().toUpperCase();
 
     private ListExtension<Client<Boolean>> stateClients = new ArrayListExtension<>();
 
@@ -34,6 +33,7 @@ public class PathMenu {
     private TimerTask timerTask;
     private final Handler handler = new Handler();
     private SubActionButton.Builder itemBuilder;
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private ListExtension<SubActionButton> buttons = new ArrayListExtension<>();
 
 
@@ -42,10 +42,6 @@ public class PathMenu {
     public PathMenu(SingleChatActivity contextProvider, SubActionButton.Builder itemBuilder) {
         this.contextProvider = contextProvider;
         this.itemBuilder = itemBuilder;
-    }
-
-    public boolean isOpen() {
-        return pathMenu.isOpen();
     }
 
     public void addImageViewWithAction(ImageView imageView, View.OnClickListener listener) {
@@ -72,7 +68,7 @@ public class PathMenu {
                 handler.post(() -> {
                     btnShowActions = contextProvider.findViewById(R.id.show_actions);
                     if (btnShowActions != null) {
-                        stoptimertask();
+                        stopTimerTask();
 
                         int firstAngle = 112;
                         int secondAngle = 158;
@@ -145,7 +141,7 @@ public class PathMenu {
         timer.schedule(timerTask, 0, 50); //
     }
 
-    private void stoptimertask() {
+    private void stopTimerTask() {
         //stop the timer, if it's not already null
         if (timer != null) {
             timer.cancel();

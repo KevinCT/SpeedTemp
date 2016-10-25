@@ -18,9 +18,9 @@ import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public class LoginInteractor implements ActivityAttachable {
 
-    static AuthCredential userCredential;
+    private static AuthCredential userCredential;
 
-    public static final String TAG = "LoginInteractor";
+    private static final String TAG = "LoginInteractor";
 
     public enum AuthResult { SUCCESS, FAIL }
 
@@ -86,15 +86,5 @@ public class LoginInteractor implements ActivityAttachable {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onStart() {
-
-    }
-
-    @Override
-    public void onStop() {
-
     }
 }

@@ -9,7 +9,7 @@ import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
 public class Statement extends Promise<Boolean> {
     private boolean inverted;
 
-    protected Statement(boolean needsAssertion) {
+    Statement(boolean needsAssertion) {
         super(null);
 
         if (needsAssertion) {
@@ -40,6 +40,7 @@ public class Statement extends Promise<Boolean> {
         return new StatementGroup(resultForm, statements);
     }
 
+    @SuppressWarnings("unused")
     public Statement and(Statement statement) {
         ListExtension<Tuple<PromiseNeed, Statement>> combined = new ArrayListExtension<>();
         combined.add(new Tuple<>(PromiseNeed.FIRST_ASSERTION, this));

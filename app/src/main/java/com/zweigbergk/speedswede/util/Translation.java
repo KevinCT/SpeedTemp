@@ -22,12 +22,12 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 
 public class Translation {
-    public static final String TAG = Translation.class.getSimpleName().toUpperCase();
+    private static final String TAG = Translation.class.getSimpleName().toUpperCase();
 
     private static final boolean DISABLED = false;
 
     private static final String BASE_URL = "https://www.googleapis.com/language/translate/v2?key=";
-    private static final String TANSLATE_API_KEY = "AIzaSyCjL04iIPrLYwqCVyCrIvRWwMA60yeMSvE";
+    private static final String TRANSLATE_API_KEY = "AIzaSyCjL04iIPrLYwqCVyCrIvRWwMA60yeMSvE";
 
     private Client<String> mClient;
 
@@ -45,7 +45,7 @@ public class Translation {
         try {
         text = URLEncoder.encode(text, "UTF-8");
         String url = Stringify.curlyFormat("{baseUrl}{key}&q={text}&source={source}&target={target}",
-                BASE_URL, TANSLATE_API_KEY, text, from.getLanguageCode(), to.getLanguageCode());
+                BASE_URL, TRANSLATE_API_KEY, text, from.getLanguageCode(), to.getLanguageCode());
 
         Log.d(TAG, "Formatted URL: " + url);
         return new Translation(url);
@@ -128,10 +128,6 @@ public class Translation {
 
         private String translatedText;
         private String locale;
-
-        private TranslationCache() {
-
-        }
 
         private TranslationCache(String locale, String translatedText) {
             this.translatedText = translatedText;

@@ -15,10 +15,11 @@ import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
 public class Initializer {
+    private static final String TAG = Initializer.class.getSimpleName().toUpperCase();
 
-    public static final String TAG = Initializer.class.getSimpleName().toUpperCase();
-
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private static ListExtension<Executable> loginExecutables = new ArrayListExtension<>();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private static ListExtension<Client<User>> loginClients = new ArrayListExtension<>();
 
     public static void onLogin(boolean isOfflineMode) {
@@ -78,10 +79,6 @@ public class Initializer {
         loginExecutables = new ArrayListExtension<>();
 
         loginClients.foreach(client -> client.supply(user));
-    }
-
-    public static void runOnLogin(Executable executable) {
-        loginExecutables.add(executable);
     }
 
     public static void runOnLogin(Client<User> client) {

@@ -5,7 +5,6 @@ import android.util.Log;
 import com.zweigbergk.speedswede.util.collection.HashMapExtension;
 import com.zweigbergk.speedswede.util.collection.MapExtension;
 
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.collection.HashSetExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
@@ -15,7 +14,7 @@ import com.zweigbergk.speedswede.util.async.Promise.ItemMap;
  * i.e. all requirements are met. */
 class PromiseState {
 
-    public static final String TAG = PromiseState.class.getSimpleName().toUpperCase();
+    private static final String TAG = PromiseState.class.getSimpleName().toUpperCase();
 
     private ItemMap mItems;
 
@@ -34,11 +33,6 @@ class PromiseState {
         stateRequirements = new HashMapExtension<>();
     }
 
-    void requireState(PromiseNeed key, StateRequirement requirement) {
-        stateRequirements.put(key, requirement);
-        Log.d(TAG, "Adding state requirement: " + key);
-    }
-
     private void updateState(PromiseNeed need) {
         Object object = mItems.get(need);
         if (hasStateRequirement(need)) {
@@ -53,10 +47,6 @@ class PromiseState {
             Log.d(TAG, Stringify.curlyFormat("Need {need} is fulfilled!", need.name()));
             Log.d(TAG, Stringify.curlyFormat("Total needs: {total}, needs remaining: {remaining}", needs, needs.difference(fulfilledNeeds)));
         }
-    }
-
-    void updateState() {
-        Lists.forEach(needs, this::updateState);
     }
 
     void put(PromiseNeed need, Object item) {

@@ -68,43 +68,14 @@ public class ChatReference {
         DbChatHandler.getInstance().pushChat(mChat);
     }
 
-    public void setFirstUser(User user) {
-        ifStillValid().then(() ->
-                DbChatHandler.getInstance().setChatAttribute(mChat, ChatAttribute.FIRST_USER, user));
-
-    }
-
-    public void setSecondUser(User user) {
-        ifStillValid().then(() ->
-                DbChatHandler.getInstance().setChatAttribute(mChat, ChatAttribute.SECOND_USER, user));
-    }
-
-    public void setLikeStatusForFirstUser(Boolean likeStatus) {
-        ifStillValid().then(() ->
-                DbChatHandler.getInstance().setChatAttribute(mChat, ChatAttribute.LIKED_BY_FIRST_USER, likeStatus));
-    }
-
-    public void setLikeStatusForSecondUser(Boolean likeStatus) {
-        ifStillValid().then(() ->
-                DbChatHandler.getInstance().setChatAttribute(mChat, ChatAttribute.LIKED_BY_SECOND_USER, likeStatus));
-    }
-
     public void sendMessage(Message message) {
         ifStillValid().then(
                 () -> DbChatHandler.getInstance().postMessageToChat(mChat, message));
     }
 
-    public void bind(Client<DataChange<Chat>> client) {
-        DbChatHandler.getInstance().getChatListener().addClient(mChat, client);
-    }
-
-    public void unbind(Client<DataChange<Chat>> client) {
-        DbChatHandler.getInstance().getChatListener().removeClient(mChat, client);
-    }
-
     public void bindMessages(Client<DataChange<Message>> client) {
         //Register the client with our message listener
-        DbChatHandler.getInstance().addMesageClient(mChat, client);
+        DbChatHandler.getInstance().addMessageClient(mChat, client);
     }
 
     public void unbindMessages(Client<DataChange<Message>> client) {

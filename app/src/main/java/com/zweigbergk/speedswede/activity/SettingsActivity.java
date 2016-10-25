@@ -110,7 +110,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         }
     }
 
-    public void close() {
+    private void close() {
         if (isFirstTime) {
             User activeUser = DatabaseHandler.getActiveUser();
             DatabaseHandler.getReference(activeUser).setFirstLogin(false);

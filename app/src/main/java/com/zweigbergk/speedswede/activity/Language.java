@@ -26,7 +26,7 @@ public enum Language {
     }
 
     /**
-     * @return the langauge matching the given languageCode, or null if there was no language for that code.
+     * @return the language matching the given languageCode, or null if there was no language for that code.
      */
     public static Language fromString(String languageCode) {
         return Collections.asList(values())

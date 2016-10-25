@@ -4,20 +4,15 @@ import java.util.Iterator;
 
 public class Collections {
 
-    public static <T> ListExtension<T> emptyList() {
-        return new ArrayListExtension<>();
-    }
 
     public static <T> SetExtension<T> emptySet() {
         return new HashSetExtension<>();
     }
 
+    @SafeVarargs
     public static <T> ArrayListExtension<T> asList(T... objects) {
         ArrayListExtension<T> list = new ArrayListExtension<>();
-        for (T object : objects) {
-            list.add(object);
-        }
-
+        list.addAll(java.util.Arrays.asList(objects));
         return list;
     }
 
@@ -31,7 +26,7 @@ public class Collections {
         return list;
     }
 
-    public static <E> SetExtension<E> asSet(Iterable<E> iterable) {
+    static <E> SetExtension<E> asSet(Iterable<E> iterable) {
         SetExtension<E> result = new HashSetExtension<>();
         for (E item : iterable) {
             result.add(item);

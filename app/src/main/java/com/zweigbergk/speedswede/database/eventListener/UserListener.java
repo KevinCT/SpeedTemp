@@ -19,8 +19,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class UserListener implements ChildEventListener {
-    public static final String TAG = UserListener.class.getSimpleName().toUpperCase();
-
     private static final String CLIENT_FOR_ALL_USERS = "key_to_listen_to_every_user";
 
     private MapExtension<String, Set<Client<DataChange<User>>>> userClients;
@@ -99,14 +97,11 @@ public class UserListener implements ChildEventListener {
         notifyClients(DatabaseEvent.CHANGED, user);
     }
 
-    private void notifyInterrupted() {
-        notifyClients(DatabaseEvent.INTERRUPTED, null);
-    }
-
 
      /**
      * Adds a client that will receive updates whenever the user is added/removed/changed.
      * */
+    @SuppressWarnings("WeakerAccess")
     public void addClient(String userId, Client<DataChange<User>> client) {
         if (!userClients.containsKey(userId)) {
             userClients.put(userId, new HashSet<>());
@@ -118,6 +113,7 @@ public class UserListener implements ChildEventListener {
     /**
      * Adds a client that will receive updates whenever the user is added/removed/changed.
      * */
+    @SuppressWarnings("unused")
     public void addClient(User user, Client<DataChange<User>> client) {
         addClient(user.getUid(), client);
     }
@@ -125,6 +121,7 @@ public class UserListener implements ChildEventListener {
     /**
      * Adds a client that will receive updates whenever <u>any</u> user is added/removed/changed.
      * */
+    @SuppressWarnings("unused")
     public void addClient(Client<DataChange<User>> client) {
         addClient(CLIENT_FOR_ALL_USERS, client);
     }
@@ -132,6 +129,7 @@ public class UserListener implements ChildEventListener {
     /**
      * Stops a client from receiving updates from the particular user.
      * */
+    @SuppressWarnings("WeakerAccess")
     public void removeClient(String userId, Client<DataChange<User>> client) {
         if (!userClients.containsKey(userId)) {
             userClients.put(userId, new HashSet<>());
@@ -143,6 +141,7 @@ public class UserListener implements ChildEventListener {
     /**
      * Stops a client from receiving updates from the particular user.
      * */
+    @SuppressWarnings("unused")
     public void removeClient(User user, Client<DataChange<User>> client) {
         removeClient(user.getUid(), client);
     }

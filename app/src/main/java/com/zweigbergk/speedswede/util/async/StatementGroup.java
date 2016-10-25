@@ -10,6 +10,7 @@ import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 // TODO Use Tag() instead of Tuples...
 class StatementGroup extends Statement {
+    private static final String TAG = StatementGroup.class.getSimpleName().toUpperCase();
 
     StatementGroup(Result<Boolean> resultForm, ListExtension<Tuple<PromiseNeed, Statement>> tuples) {
         super(false);
@@ -38,6 +39,7 @@ class StatementGroup extends Statement {
     }
 
     private static class PromiseException extends RuntimeException {
+        @SuppressWarnings("unused")
         PromiseException(String message) {
             super(message);
         }

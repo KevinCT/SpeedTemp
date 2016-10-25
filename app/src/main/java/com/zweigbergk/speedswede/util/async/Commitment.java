@@ -14,17 +14,7 @@ public abstract class Commitment<E> {
 
     E mCompletedProduct;
 
-    protected abstract boolean isFulfilled();
-
     protected abstract void addClient(Client<E> client);
-
-    protected void addExecutable(Executable executable, Executable.Interest<E> interest) {
-        if (interest.caresFor(mCompletedProduct)) {
-            executable.run();
-        }
-    }
-
-    protected abstract boolean hasProduct();
 
     E getProduct() {
         return mCompletedProduct;

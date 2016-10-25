@@ -4,13 +4,10 @@ import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Query;
 
+@SuppressWarnings("Convert2streamapi")
 public class ArrayListExtension<E> extends java.util.ArrayList<E> implements ListExtension<E> {
 
-    @Override
-    public SetExtension<E> union(Iterable<E> other) {
-        return null;
-    }
-
+    @SuppressWarnings("unused")
     public SetExtension<E> intersect(Iterable<E> other) {
         SetExtension<E> result = new HashSetExtension<>();
 
@@ -23,12 +20,6 @@ public class ArrayListExtension<E> extends java.util.ArrayList<E> implements Lis
         return result;
     }
 
-    @Override
-    public SetExtension<E> difference(Iterable<E> other) {
-        return null;
-    }
-
-    @Override
     public ListExtension<E> filter(Query<E> query) {
         ListExtension<E> result = new ArrayListExtension<>();
 
@@ -41,7 +32,7 @@ public class ArrayListExtension<E> extends java.util.ArrayList<E> implements Lis
         return result;
     }
 
-    @Override
+    @SuppressWarnings("unused")
     public ListExtension<E> reject(Query<E> query) {
         ListExtension<E> result = new ArrayListExtension<>();
 

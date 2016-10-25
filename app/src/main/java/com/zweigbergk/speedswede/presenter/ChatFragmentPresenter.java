@@ -1,6 +1,5 @@
 package com.zweigbergk.speedswede.presenter;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +12,6 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
@@ -101,10 +99,6 @@ public class ChatFragmentPresenter {
         User activeUser = DatabaseHandler.getActiveUser();
         DatabaseHandler.getReference(mChat).removeUser(activeUser);
         DatabaseHandler.hasUsers(mChat).onFalse(DatabaseHandler.getReference(mChat)::remove);
-    }
-
-    public void removeLocalChatSettings(Context context){
-        LocalStorage.INSTANCE.removeSetting(context, mChat.getId());
     }
 
     private void postMessage(String messageText) {

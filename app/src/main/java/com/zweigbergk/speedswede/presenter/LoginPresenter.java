@@ -103,14 +103,6 @@ public class LoginPresenter implements ActivityAttachable {
     }
 
     @Override
-    public void onStart() {
-    }
-
-    @Override
-    public void onStop() {
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mInteractor.onActivityResult(requestCode, resultCode, data);
     }

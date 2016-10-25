@@ -3,6 +3,7 @@ package com.zweigbergk.speedswede.util.collection;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Query;
 
+@SuppressWarnings("Convert2streamapi")
 public class HashSetExtension<E> extends java.util.HashSet<E> implements SetExtension<E> {
 
     public HashSetExtension() {
@@ -13,7 +14,7 @@ public class HashSetExtension<E> extends java.util.HashSet<E> implements SetExte
         super(collection);
     }
 
-    @Override
+    @SuppressWarnings("unused")
     public SetExtension<E> union(Iterable<E> other) {
         SetExtension<E> result = new HashSetExtension<>();
         Client<E> addToResult = this::add;
@@ -25,6 +26,7 @@ public class HashSetExtension<E> extends java.util.HashSet<E> implements SetExte
         return result;
     }
 
+    @SuppressWarnings("unused")
     public SetExtension<E> intersect(Iterable<E> other) {
         SetExtension<E> result = new HashSetExtension<>();
 
@@ -37,7 +39,6 @@ public class HashSetExtension<E> extends java.util.HashSet<E> implements SetExte
         return result;
     }
 
-    @Override
     public SetExtension<E> difference(Iterable<E> other) {
         SetExtension<E> result = new HashSetExtension<>();
         SetExtension<E> otherSet = Collections.asSet(other);
@@ -60,7 +61,7 @@ public class HashSetExtension<E> extends java.util.HashSet<E> implements SetExte
         }
     }
 
-    @Override
+    @SuppressWarnings("unused")
     public SetExtension<E> filter(Query<E> query) {
         SetExtension<E> result = new HashSetExtension<>();
 

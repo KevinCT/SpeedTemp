@@ -13,19 +13,20 @@ import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.collection.HashMapExtension;
 import com.zweigbergk.speedswede.util.collection.MapExtension;
 
-import java.util.Date;
 
 public class UserProfile implements User {
-    public static final String TAG = UserProfile.class.getSimpleName().toUpperCase();
+    private static final String TAG = UserProfile.class.getSimpleName().toUpperCase();
 
 
 
     private String displayName, uid;
     private boolean isFirstLogin;
+    @SuppressWarnings("unused")
     public static String facebookUserID = "";
 //    private Timer timer;
 //    private int[] matchingInterval;
 
+    @SuppressWarnings("unused")
     private long timeInQueue;
 
     @Exclude
@@ -50,12 +51,6 @@ public class UserProfile implements User {
         PreferenceWrapper pref = getPreference(Preference.SKILL_CATEGORY);
         SkillCategory skillCategory = SkillCategory.fromString((String) pref.getValue());
         return skillCategory != null ? skillCategory : SkillCategory.DEFAULT;
-}
-    @Exclude
-    @Override
-    public boolean getNotificationPreference() {
-        PreferenceWrapper value = getPreference(Preference.NOTIFICATIONS);
-        return value != null && (boolean) value.getValue();
     }
 
     @Exclude
@@ -74,10 +69,6 @@ public class UserProfile implements User {
         isFirstLogin = value;
     }
 
-    public void setTimeInQueue(long value) {
-        timeInQueue = value;
-    }
-
     @Override
     public String getUid() {
         return uid;
@@ -94,16 +85,12 @@ public class UserProfile implements User {
         return mPreferences.get(preference);
     }
 
-    private void setPreferences(java.util.Map<Preference, PreferenceWrapper> map) {
+    private void setPreferences(MapExtension<Preference, PreferenceWrapper> map) {
         if (mPreferences == null) {
             mPreferences = new HashMapExtension<>();
         }
 
-        for (MapExtension.Entry<Preference, PreferenceWrapper> entry : map.entrySet()) {
-            if (entry.getValue() != null) {
-                mPreferences.put(entry.getKey(), entry.getValue());
-            }
-        }
+        map.nonNull().foreach(mPreferences::putEntry);
     }
 
     @Override
@@ -132,8 +119,8 @@ public class UserProfile implements User {
     public String toString() {
         StringBuilder preferences = new StringBuilder();
         mPreferences.foreach(entry -> {
-            preferences.append(Stringify.curlyFormat("%nkey: {key}", entry.getKey().toString()));
-            preferences.append(Stringify.curlyFormat("\tvalue: {value}", entry.getValue().getValue().toString()));
+            preferences.append(Stringify.curlyFormat("%n key: {key}", entry.getKey().toString()));
+            preferences.append(Stringify.curlyFormat("\t value: {value}", entry.getValue().getValue().toString()));
         });
 
         return String.format("UserProfile {%n\t\tdisplayName: %s,%n\t\tuid: %s,%n\t\tpreferences: %s%n}",
@@ -186,11 +173,6 @@ public class UserProfile implements User {
                     ParcelHelper.readParcelableMap(in, Preference.class, PreferenceWrapper.class);
 
             setPreferences(preferences);
-    }
-
-    public void startTime() {
-        Date date = new Date();
-        timeInQueue = date.getTime();
     }
 
     public long getTimeInQueue() {

@@ -7,15 +7,14 @@ import com.zweigbergk.speedswede.util.methodwrapper.Query;
 
 import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
 import java.util.Collection;
-import com.zweigbergk.speedswede.util.collection.HashMapExtension;
 import java.util.HashSet;
 import java.util.Iterator;
 
 import com.zweigbergk.speedswede.util.collection.MapExtension;
 import java.util.Set;
 
+@SuppressWarnings("Convert2streamapi")
 public class Lists {
-    public static final String TAG = Lists.class.getSimpleName().toUpperCase();
 
     public static <E> void forEach(Iterable<E> collection, Client<E> client) {
         for (E element : collection) {
@@ -39,6 +38,7 @@ public class Lists {
         forEach(Arrays.asList(array), client);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static <E> ListExtension<E> filter(Iterable<E> collection, Query<E> query) {
         ListExtension<E> result = new ArrayListExtension<>();
         forEach(collection, e -> {
@@ -50,27 +50,9 @@ public class Lists {
         return result;
     }
 
+    @SuppressWarnings("unused")
     public static <E> ListExtension<E> filter(E[] collection, Query<E> query) {
         return filter(Arrays.asList(collection), query);
-    }
-
-    public static <From, To> ListExtension<To> map(Iterable<From> collection, Mapping<From, To> tool) {
-        ListExtension<To> result = new ArrayListExtension<>();
-
-        forEach(collection, e -> result.add(tool.map(e)));
-
-        return result;
-    }
-
-    public static <K, V> MapExtension<K, V> map(MapExtension<?, ?> source, EntryMapping<K, V> tool) {
-        MapExtension<K, V> result = new HashMapExtension<>();
-
-        forEach(source, entry -> {
-            MapExtension.Entry<K, V> mapping = tool.map(entry);
-            result.put(mapping.getKey(), mapping.getValue());
-        });
-
-        return result;
     }
 
 
@@ -93,6 +75,7 @@ public class Lists {
         To map(From object);
     }
 
+    @SuppressWarnings("unused")
     public interface EntryMapping<K, V> {
         MapExtension.Entry<K, V> map(MapExtension.Entry entry);
     }

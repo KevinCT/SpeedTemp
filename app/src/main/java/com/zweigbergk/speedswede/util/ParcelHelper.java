@@ -14,7 +14,7 @@ import com.zweigbergk.speedswede.util.collection.MapExtension;
 public class ParcelHelper {
 
     private static final int FLAGS_NORMAL = 0;
-    public static final String TAG = ParcelHelper.class.getSimpleName().toUpperCase();
+    private static final String TAG = ParcelHelper.class.getSimpleName().toUpperCase();
 
     public static <E extends Parcelable> void writeParcelableList(Parcel parcel, ListExtension<E> list) {
         parcel.writeInt(list.size());
@@ -61,7 +61,7 @@ public class ParcelHelper {
         return map;
     }
 
-    public static <E extends Parcelable> void saveParcableList(Bundle bundle, ListExtension<E> list, String tag) {
+    public static <E extends Parcelable> void saveParcelableList(Bundle bundle, ListExtension<E> list, String tag) {
         bundle.putInt(tag, list.size());
         for (int i = 0; i < list.size(); i++) {
             if (bundle.getParcelable(tag + i) != null) {
@@ -73,7 +73,7 @@ public class ParcelHelper {
         }
     }
 
-    public static <E extends Parcelable> ListExtension<E> retrieveParcableList(Bundle bundle, String tag) {
+    public static <E extends Parcelable> ListExtension<E> retrieveParcelableList(Bundle bundle, String tag) {
         ListExtension<E> list = new ArrayListExtension<>();
         int size = bundle.getInt(tag);
         for (int i = 0; i < size; i++) {

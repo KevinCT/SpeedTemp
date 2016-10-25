@@ -113,6 +113,7 @@ public class ChatListener implements ChildEventListener {
     /**
      * Adds a client that will receive updates whenever the chat is added/removed/changed.
      * */
+    @SuppressWarnings("unused")
     public void addClient(Chat chat, Client<DataChange<Chat>> client) {
         addClient(chat.getId(), client);
     }
@@ -140,6 +141,7 @@ public class ChatListener implements ChildEventListener {
     /**
      * Stops a client from receiving updates from the particular chat.
      * */
+    @SuppressWarnings("unused")
     public void removeClient(Chat chat, Client<DataChange<Chat>> client) {
         removeClient(chat.getId(), client);
     }
@@ -158,7 +160,7 @@ public class ChatListener implements ChildEventListener {
     }
 
     /**
-     * Overriding hashCode since ChatListener is used in hashmaps.
+     * Overriding hashCode since ChatListener is used in hash maps.
      */
     @Override
     public int hashCode() {

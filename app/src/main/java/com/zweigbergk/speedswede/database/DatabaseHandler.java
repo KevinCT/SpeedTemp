@@ -16,18 +16,9 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
-public enum DatabaseHandler {
-    INSTANCE;
-
-    public enum DatabaseNode {
-        CHATS, USERS
-    }
+public class DatabaseHandler {
 
     private static final String TAG = DatabaseHandler.class.getSimpleName().toUpperCase();
-
-    public static DatabaseHandler getInstance() {
-        return INSTANCE;
-    }
 
     public static void registerUsersListener() {
         DbUserHandler.getInstance().registerUsersListener();

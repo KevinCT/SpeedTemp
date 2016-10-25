@@ -142,6 +142,7 @@ public class FloatingActionMenu {
      * Simply opens the menu by doing necessary calculations.
      * @param animated if true, this action is executed by the current {@link MenuAnimationHandler}
      */
+    @SuppressWarnings("WeakerAccess")
     public void open(boolean animated) {
 
         // Get the center of the action view from the following function for efficiency
@@ -261,6 +262,7 @@ public class FloatingActionMenu {
     /**
      * @return whether the menu is open or not
      */
+    @SuppressWarnings("WeakerAccess")
     public boolean isOpen() {
         return open;
     }
@@ -283,23 +285,23 @@ public class FloatingActionMenu {
      * @return a Point containing x and y coordinates of the top left corner of action view
      */
     private Point getActionViewCoordinates() {
-        int[] coords = new int[2];
+        int[] coordinates = new int[2];
         // This method returns a x and y values that can be larger than the dimensions of the device screen.
-        mainActionView.getLocationOnScreen(coords);
+        mainActionView.getLocationOnScreen(coordinates);
 
         // So, we need to deduce the offsets.
         if(systemOverlay) {
-            coords[1] -= getStatusBarHeight();
+            coordinates[1] -= getStatusBarHeight();
         }
         else {
             if (getActivityContentView() != null) {
                 Rect activityFrame = new Rect();
                 getActivityContentView().getWindowVisibleDisplayFrame(activityFrame);
-                coords[0] -= (getScreenSize().x - getActivityContentView().getMeasuredWidth());
-                coords[1] -= (activityFrame.height() + activityFrame.top - getActivityContentView().getMeasuredHeight());
+                coordinates[0] -= (getScreenSize().x - getActivityContentView().getMeasuredWidth());
+                coordinates[1] -= (activityFrame.height() + activityFrame.top - getActivityContentView().getMeasuredHeight());
             }
         }
-        return new Point(coords[0], coords[1]);
+        return new Point(coordinates[0], coordinates[1]);
     }
 
     /**
@@ -339,11 +341,11 @@ public class FloatingActionMenu {
 
         // Measure this path, in order to find points that have the same distance between each other
         for(int i=0; i<subActionItems.size(); i++) {
-            float[] coords = new float[] {0f, 0f};
-            measure.getPosTan((i) * measure.getLength() / divisor, coords, null);
+            float[] coordinates = new float[] {0f, 0f};
+            measure.getPosTan((i) * measure.getLength() / divisor, coordinates, null);
             // get the x and y values of these points and set them to each of sub action items.
-            subActionItems.get(i).x = (int) coords[0] - subActionItems.get(i).width / 2;
-            subActionItems.get(i).y = (int) coords[1] - subActionItems.get(i).height / 2;
+            subActionItems.get(i).x = (int) coordinates[0] - subActionItems.get(i).width / 2;
+            subActionItems.get(i).y = (int) coordinates[1] - subActionItems.get(i).height / 2;
         }
         return center;
     }
@@ -477,7 +479,7 @@ public class FloatingActionMenu {
         addViewToCurrentContainer(view, null);
     }
 
-    public void removeViewFromCurrentContainer(View view) {
+    void removeViewFromCurrentContainer(View view) {
         if(systemOverlay) {
             overlayContainer.removeView(view);
         }
@@ -571,6 +573,7 @@ public class FloatingActionMenu {
     /**
      * A listener to listen open/closed state changes of the Menu
      */
+    @SuppressWarnings("UnusedParameters")
     public interface MenuStateChangeListener {
         void onMenuOpened(FloatingActionMenu menu);
         void onMenuClosed(FloatingActionMenu menu);

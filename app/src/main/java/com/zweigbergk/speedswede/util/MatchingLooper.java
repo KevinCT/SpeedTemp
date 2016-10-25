@@ -1,8 +1,5 @@
 //package com.zweigbergk.speedswede.util;
 //
-///**
-// * Created by FEngelbrektsson on 11/10/16.
-// */
 //
 //public enum MatchingLooper {
 //    INSTANCE;

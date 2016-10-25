@@ -18,13 +18,11 @@ import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.view.LoginView;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
-    public static final String TAG = "LoginActivity";
-
     private ActivityAttachable mPresenter;
 
-    LoginButton mLoginButton;
-    ProgressBar mProgressCircle;
-    RelativeLayout mContentLayout;
+    private LoginButton mLoginButton;
+    private ProgressBar mProgressCircle;
+    private RelativeLayout mContentLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +39,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         mPresenter = new LoginPresenter(this);
     }
 
-    @Override
     public void onLogin(boolean isOfflineMode) {
         Initializer.onLogin(isOfflineMode);
 
@@ -75,7 +72,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         mContentLayout.setVisibility(visibility);
     }
 
-    @Override
     public LoginButton getLoginButton() {
         return mLoginButton;
     }
@@ -85,18 +81,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         super.onResume();
 
         ((LoginPresenter)mPresenter).invalidateState();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mPresenter.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mPresenter.onStop();
     }
 
     @Override

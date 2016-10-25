@@ -1,5 +1,8 @@
 package com.zweigbergk.speedswede.util;
 
+import com.zweigbergk.speedswede.util.collection.Arrays;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
+
 public class AbuseFilter {
 
     private static String[] forbiddenWords = {
@@ -7,7 +10,7 @@ public class AbuseFilter {
     };
 
     public static String filterMessage(String input) {
-        String[] inputWords = input.split("\\s+");
+        /*String[] inputWords = input.split("\\s+");
         StringBuilder outputWords = new StringBuilder();
 
         for (int i = 0; i < inputWords.length; i++) {
@@ -23,8 +26,13 @@ public class AbuseFilter {
             if ((i + 1) < inputWords.length) {
                 outputWords.append(" ");
             }
-        }
+        }*/
 
-        return outputWords.toString();
+        StringBuilder result = new StringBuilder();
+        ListExtension<String> forbidden = Arrays.asList(forbiddenWords);
+        Arrays.asList(input.split("\\s+")).map(word ->
+                result.append((forbidden.contains(word) ? "*** " : word + " ")));
+
+        return result.toString();
     }
 }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string-array name="settings_pref_usage_entries">
         <item>@string/settings_pref_usage_entry_learn</item>
         <item>@string/settings_pref_usage_entry_mentor</item>
         <item>@string/settings_pref_usage_entry_chat</item>
     </string-array>
-    <string-array name="settings_pref_usage_values">
+    <string-array name="settings_pref_usage_values" tools:ignore="MissingTranslation">
         <item>learn</item>
         <item>mentor</item>
         <item>chat</item>

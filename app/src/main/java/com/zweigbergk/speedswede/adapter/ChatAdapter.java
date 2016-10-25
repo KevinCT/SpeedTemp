@@ -29,7 +29,7 @@ import com.zweigbergk.speedswede.util.collection.MapExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 
-import static com.zweigbergk.speedswede.Constants.DEAFULT_TOPIC_IMAGE;
+import static com.zweigbergk.speedswede.Constants.DEFAULT_TOPIC_IMAGE;
 import static com.zweigbergk.speedswede.Constants.MAX_PREVIEW_LENGTH;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
@@ -186,7 +186,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
         //Default
         Constants.Topic topic = Constants.Topic.fromString(chat.getName());
-        int topicResId = topic != null ? topic.getResourceId() : DEAFULT_TOPIC_IMAGE;
+        int topicResId = topic != null ? topic.getResourceId() : DEFAULT_TOPIC_IMAGE;
 
         holder.name.setText(chat.getName());
         holder.latestMessage.setText(messageText);

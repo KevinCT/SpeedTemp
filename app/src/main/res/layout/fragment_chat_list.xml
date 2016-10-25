@@ -5,21 +5,9 @@
 
     <ImageView
         android:id="@+id/fragment_chat_list_default_background"
-        android:contentDescription="@string/default_image_descr"
+        android:contentDescription="@string/default_image_description"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <!-- <Button
-        style="@android:style/Widget.Button"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:background="@color/colorPrimary"
-        android:textColor="@color/white"
-        android:text="@string/leta_kompis"
-        android:textSize="@dimen/font_large"
-        android:id="@+id/match_button"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/spacing_huge" /> -->
 
     <com.baoyz.widget.PullRefreshLayout
         android:id="@+id/swipeRefreshLayout"

@@ -22,6 +22,7 @@ public abstract class PreferenceWrapper<T> implements Parcelable {
         for (PreferenceWrapper shell : Constants.shells) {
             try {
                 T item = (T) shell.getValue().getClass().cast(object);
+                //noinspection unchecked
                 return shell.withValue(item);
             } catch (ClassCastException e) {
                 e.printStackTrace();

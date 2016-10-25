@@ -30,7 +30,7 @@ import com.zweigbergk.speedswede.util.Translation.TranslationCache;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
-    public static final String TAG = MessageAdapter.class.getSimpleName().toUpperCase();
+    private static final String TAG = MessageAdapter.class.getSimpleName().toUpperCase();
 
     private ListExtension<Message> mMessages;
     private MapExtension<DatabaseEvent, ListExtension<Client<Message>>> eventCallbacks;

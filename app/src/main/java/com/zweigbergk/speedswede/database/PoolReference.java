@@ -1,28 +1,21 @@
 package com.zweigbergk.speedswede.database;
 
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public enum PoolReference {
     INSTANCE;
 
+    @SuppressWarnings("SameReturnValue")
     static PoolReference getInstance() {
         return INSTANCE;
-    }
-
-    public Statement contains(User user) {
-        return DbUserHandler.getInstance().isInUserPool(user);
-    }
-
-    public Statement not(Statement statement) {
-        return statement.invert();
     }
 
     public void push(User user) {
         DbUserHandler.getInstance().addUserToPool(user);
     }
 
+    @SuppressWarnings("unused")
     public void remove(User user) {
         removeUser(user);
     }
@@ -33,9 +26,5 @@ public enum PoolReference {
 
     public void bind(Client<DataChange<User>> client) {
         DbUserHandler.getInstance().getPoolListener().bind(client);
-    }
-
-    public void unbind(Client<DataChange<User>> client) {
-        DbUserHandler.getInstance().getPoolListener().unbind(client);
     }
 }

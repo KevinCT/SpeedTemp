@@ -8,7 +8,7 @@ public class SettingsFragmentInteractor {
 
     }
 
-    public void changeLanguage(boolean languageChanged) {
+    public void changeLanguage() {
         LanguageChanger.languageChanged(true);
     }
 

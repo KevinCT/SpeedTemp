@@ -5,7 +5,7 @@ import android.util.Log;
 import com.zweigbergk.speedswede.util.collection.Collections;
 
 public class Stringify {
-    public static final String TAG = Stringify.class.getSimpleName().toUpperCase();
+    private static final String TAG = Stringify.class.getSimpleName().toUpperCase();
 
     /**
      * Format a String with args in curly braces. Use § sign for escaping characters.
@@ -55,6 +55,7 @@ public class Stringify {
         return s.replace("{", "").replace("}", "");
     }
 
+    @SuppressWarnings("unused")
     public static void printStackTrace() {
         StringBuilder builder = new StringBuilder();
         Collections.asList(Thread.currentThread().getStackTrace()).foreach(trace -> {

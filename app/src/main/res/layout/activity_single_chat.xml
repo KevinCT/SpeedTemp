@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.zweigbergk.speedswede.eyecandy.TransparentLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_single_chat_root_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,7 +16,8 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        tools:targetApi="lollipop"/>
 
 
     <LinearLayout

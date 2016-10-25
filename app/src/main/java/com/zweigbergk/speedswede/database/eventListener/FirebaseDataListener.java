@@ -48,10 +48,6 @@ public abstract class FirebaseDataListener<T> {
         mClients.foreach(client -> client.supply(dataChange));
     }
 
-    public int size() {
-        return mClients.size();
-    }
-
     void notifyAdded(T item) {
         notifyClients(DatabaseEvent.ADDED, item);
     }

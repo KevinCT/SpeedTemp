@@ -11,8 +11,6 @@ import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 import com.zweigbergk.speedswede.util.collection.HashMapExtension;
 import com.zweigbergk.speedswede.util.collection.MapExtension;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public enum ChatMatcher {
     INSTANCE;
@@ -20,8 +18,6 @@ public enum ChatMatcher {
     private static final String TAG = ChatMatcher.class.getSimpleName().toUpperCase();
 
     private ListExtension<User> mUsersInPool;
-
-    private boolean loopIsActive = false;
 
     ChatMatcher() {
         mUsersInPool = new ArrayListExtension<>();
@@ -69,15 +65,9 @@ public enum ChatMatcher {
         DatabaseHandler.getPool().push(user);
     }
 
-    /** Remove user from the matching process */
-    public void removeUser(User user) {
-        DatabaseHandler.getPool().remove(user);
-    }
-
     private void match() {
         Log.d(TAG, "Users in pool: " + mUsersInPool.size());
         if (mUsersInPool.size() > 1) {
-            // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
             ListExtension<User> matchedUsers = mUsersInPool.first(2);
 
             DatabaseHandler.getPool().removeUser(matchedUsers.get(0));
@@ -91,7 +81,7 @@ public enum ChatMatcher {
 
 
 
-//    public ListExtension<User> sofisticatedMatch() {
+//    public ListExtension<User> sophisticatedMatch() {
 //        User activeUser = DatabaseHandler.getActiveUser();
 //
 //        for(User secondUser : mUsersInPool) {
@@ -102,8 +92,9 @@ public enum ChatMatcher {
 //        return null;
 //    }
 
+    @SuppressWarnings("unused")
     private void nextLevelMatch() {
-        MapExtension<String, ListExtension<User>> listMap = seperatePools();
+        MapExtension<String, ListExtension<User>> listMap = separatePools();
         ListExtension<User> learners = listMap.get("learners");
         ListExtension<User> mentors = listMap.get("mentors");
         ListExtension<User> chatters = listMap.get("chatters");
@@ -111,7 +102,7 @@ public enum ChatMatcher {
         matchChatters(chatters);
     }
 
-    private MapExtension<String, ListExtension<User>> seperatePools() {
+    private MapExtension<String, ListExtension<User>> separatePools() {
         ListExtension<User> learners = new ArrayListExtension<>();
         ListExtension<User> mentors = new ArrayListExtension<>();
         ListExtension<User> chatters = new ArrayListExtension<>();
@@ -158,7 +149,6 @@ public enum ChatMatcher {
             DatabaseHandler.getPool().removeUser(firstMentor);
 
             Chat chat = new Chat(firstBeginner, firstMentor);
-            Log.d("MAFAKALEARNERS", chat.getName() + "");
             DatabaseHandler.getReference(chat).push();
         }
     }
@@ -173,14 +163,12 @@ public enum ChatMatcher {
             DatabaseHandler.getPool().removeUser(matchedUsers.get(1));
 
             Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
-            Log.d("FILTHYCASUALS: ", chat.getName() + "");
             DatabaseHandler.getReference(chat).push();
         }
     }
 
 //    public ListExtension<User> checkIfMatch(User activeUser, User secondUser) {
 //        ListExtension<User> matchedUsers = new ArrayListExtension<>();
-//        if(activeUser.getmMatchSkill() == secondUser.getOwnSkill()) {
 //            ListExtension<User> skillGroup = new ArrayListExtension<>();
 //            skillGroup.add(secondUser);
 //            boolean firstTime = true;
@@ -199,25 +187,10 @@ public enum ChatMatcher {
 //            }
 //            matchedUsers.add(DatabaseHandler.getActiveUser());
 //            matchedUsers.add(bestMatch);
-//            Log.d("FELIXMATCH", " matched: " + bestMatch);
 //            return matchedUsers;
 //        }
 //        return null;
 //    }
-
-    public void matchingLoop() {
-        if(!loopIsActive) {
-            loopIsActive = true;
-            Timer timer = new Timer();
-
-            timer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    nextLevelMatch();
-                }
-            }, 10 * 1000, 10 * 1000);
-        }
-    }
 //
 //    public ListExtension<User> checkIfMatch(User userSecond) {
 //        int userSecondMin = userSecond.getMatchInterval()[0];
@@ -228,7 +201,6 @@ public enum ChatMatcher {
 //        if(userFirstRating >= userSecondMin && userFirstRating <= userSecondMax) {
 //            matchedUsers.add(DatabaseHandler.getActiveUser());
 //            matchedUsers.add(userSecond);
-//            Log.d("FELIXMATCH", " : we got a match brah");
 //            return matchedUsers;
 //        }
 //        return null;

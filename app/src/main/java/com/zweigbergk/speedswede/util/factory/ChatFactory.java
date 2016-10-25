@@ -1,7 +1,5 @@
 package com.zweigbergk.speedswede.util.factory;
 
-import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
@@ -21,12 +19,7 @@ import static com.zweigbergk.speedswede.util.async.PromiseNeed.*;
 
 public class ChatFactory {
 
-    private static final String TAG = ChatFactory.class.getSimpleName().toUpperCase();
-
-
     public static Promise<Chat> deserializeChat(DataSnapshot snapshot) {
-        Log.d(TAG, "Deserializing chat!");
-
         String firstUserId = ChatFactory.getUserId(snapshot.child(Constants.FIRST_USER));
         String secondUserId = ChatFactory.getUserId(snapshot.child(Constants.SECOND_USER));
         Boolean likeStatusFirstUser = ChatFactory.getLikeStatus(snapshot.child(Constants.LIKED_BY_FIRST_USER));

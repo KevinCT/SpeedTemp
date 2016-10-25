@@ -49,7 +49,7 @@ public class UserFactory {
         User user = new UserProfile(name, id).withPreferences(preferenceMap);
         user.setFirstLogin(firstLogin);
 
-        preferenceMap.foreach(entry -> Log.d(TAG, Stringify.curlyFormat("Here's a preference entry from the preferencemap! Key: {key}, Value: {value}",
+        preferenceMap.foreach(entry -> Log.d(TAG, Stringify.curlyFormat("Here's a preference entry from the preferenceMap! Key: {key}, Value: {value}",
                 entry.getKey().toString(), entry.getValue().getValue().toString())));
 
         return user;

@@ -9,6 +9,7 @@ import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 class AnimationListener implements Animation.AnimationListener {
 
     private ListExtension<Executable> startExecutables = new ArrayListExtension<>();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private ListExtension<Executable> endExecutables = new ArrayListExtension<>();
     private ListExtension<Executable> repeatExecutables = new ArrayListExtension<>();
 
