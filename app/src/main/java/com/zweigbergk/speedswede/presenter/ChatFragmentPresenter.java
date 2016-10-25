@@ -12,7 +12,6 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.database.DataChange;
-import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
@@ -25,7 +24,7 @@ import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
 
 
 public class ChatFragmentPresenter {
-    public static final String TAG = ChatFragmentPresenter.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatFragmentPresenter.class.getSimpleName().toUpperCase();
 
     private ChatFragmentView mView;
     private Client<DataChange<Message>> chatEventHandler;
@@ -82,7 +81,7 @@ public class ChatFragmentPresenter {
 
         recyclerView.setOnClickListener(v -> Log.d(TAG, "Clicked :D"));
 
-        adapter.addEventCallback(DatabaseEvent.ADDED, this::smoothScrollToBottomOfList);
+        adapter.onMessageAdded(this::smoothScrollToBottomOfList);
     }
 
     public void onSaveInstanceState(Bundle outState) {

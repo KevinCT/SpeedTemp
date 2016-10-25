@@ -5,55 +5,32 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.User;
 
-import com.zweigbergk.speedswede.util.Lists;
-import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
-import com.zweigbergk.speedswede.util.collection.HashMap;
-
-import static com.zweigbergk.speedswede.Constants.BANLIST;
-import static com.zweigbergk.speedswede.Constants.BANS;
-
 public enum DatabaseHandler {
     INSTANCE;
-
-    public static String facebookUserID = "";
 
     public enum DatabaseNode {
         CHATS, USERS
     }
 
-    public static final String TAG = DatabaseHandler.class.getSimpleName().toUpperCase();
-
-    private static boolean mFirebaseConnectionStatus = false;
-
-    private static DatabaseReference root = FirebaseDatabase.getInstance().getReference();
+    private static final String TAG = DatabaseHandler.class.getSimpleName().toUpperCase();
 
     public static DatabaseHandler getInstance() {
         return INSTANCE;
     }
 
-    public static void registerListener(DatabaseNode node) {
-        switch (node) {
-            case USERS:
-                DbUserHandler.getInstance().registerUsersListener();
-                break;
-            default:
-                Log.w(TAG, "registerListener(): There is no setting for that node.");
-        }
+    public static void registerUsersListener() {
+        DbUserHandler.getInstance().registerUsersListener();
     }
 
     public static ChatReference getReference(Chat chat) {
@@ -104,27 +81,10 @@ public enum DatabaseHandler {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public static Statement hasUser(User user) {
-        return DbUserHandler.getInstance().userExists(user);
-    }
-
     public static Statement hasUsers(Chat chat) {
         return DbChatHandler.getInstance().hasUsers(chat);
     }
 
-    public static Statement hasUser(String userId) {
-        return DbUserHandler.getInstance().userExists(userId);
-    }
-
-    public static String generateId() {
-        return root.push().getKey();
-    }
-
-    public static void pushBanner(Banner banner ){
-        HashMap<String, Boolean> map = new HashMap<>();
-        Lists.forEach(banner.getBanList(), uid -> map.put(uid, true));
-        root.child(BANS).child(DbUserHandler.getInstance().getActiveUserId()).child(BANLIST).setValue(map);
-    }
 
     public static void registerConnectionHandling() {
         DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
@@ -133,7 +93,6 @@ public enum DatabaseHandler {
             public void onDataChange(DataSnapshot snapshot) {
                 boolean connectionStatus = snapshot.getValue(Boolean.class);
                 Log.d(TAG, "Firebase connection status changed to: " + connectionStatus);
-                mFirebaseConnectionStatus = connectionStatus;
             }
 
             @Override

@@ -22,17 +22,6 @@ public class MessageListener extends FirebaseDataListener<Message> implements Ch
         super(clients);
     }
 
-    public MessageListener(Client<DataChange<Message>> client) {
-        bind(client);
-    }
-
-    public MessageListener() {
-    }
-
-    public void setIdentifier(String identifier) {
-        mIdentifier = identifier;
-    }
-
     // NOTE: onChildAdded() runs once for every existing child at the time of attaching.
     // Thus there is no need for an initial SingleValueEventListener.
     @Override

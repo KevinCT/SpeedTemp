@@ -2,7 +2,6 @@ package com.zweigbergk.speedswede.coreTest;
 
 import com.zweigbergk.speedswede.core.Banner;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

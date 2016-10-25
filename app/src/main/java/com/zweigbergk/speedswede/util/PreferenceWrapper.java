@@ -2,13 +2,10 @@ package com.zweigbergk.speedswede.util;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.zweigbergk.speedswede.Constants;
 
 public abstract class PreferenceWrapper<T> implements Parcelable {
-    private static final String TAG = PreferenceWrapper.class.getSimpleName().toUpperCase();
-
     private T mValue;
 
     private PreferenceWrapper(T value) {
@@ -25,10 +22,9 @@ public abstract class PreferenceWrapper<T> implements Parcelable {
         for (PreferenceWrapper shell : Constants.shells) {
             try {
                 T item = (T) shell.getValue().getClass().cast(object);
-                Log.d(TAG, "Returning from cast with: " + item.toString());
                 return shell.withValue(item);
             } catch (ClassCastException e) {
-                Log.d(TAG, "Could not cast to " + shell.getValue().getClass());
+                e.printStackTrace();
             }
         }
 
@@ -124,7 +120,7 @@ public abstract class PreferenceWrapper<T> implements Parcelable {
     }
 
     public static class LongWrapper extends PreferenceWrapper<Long> {
-        public LongWrapper(Long value) {
+        LongWrapper(Long value) {
             super(value);
         }
 

@@ -20,7 +20,7 @@ import com.zweigbergk.speedswede.util.collection.Map;
 import java.util.Set;
 
 public class ChatListener implements ChildEventListener {
-    public static final String TAG = ChatListener.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatListener.class.getSimpleName().toUpperCase();
 
     private static final String CLIENT_FOR_ALL_CHATS = "key_to_listen_to_every_chat";
 
@@ -129,7 +129,7 @@ public class ChatListener implements ChildEventListener {
     /**
      * Stops a client from receiving updates from the particular chat.
      * */
-    public void removeClient(String chatId, Client<DataChange<Chat>> client) {
+    private void removeClient(String chatId, Client<DataChange<Chat>> client) {
         if (!chatClients.containsKey(chatId)) {
             chatClients.put(chatId, new HashSet<>());
         }

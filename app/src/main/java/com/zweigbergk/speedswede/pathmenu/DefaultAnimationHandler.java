@@ -17,16 +17,16 @@ import android.view.animation.OvershootInterpolator;
  * An example animation handler
  * Animates translation, rotation, scale and alpha at the same time using Property Animation APIs.
  */
-public class DefaultAnimationHandler extends MenuAnimationHandler {
+class DefaultAnimationHandler extends MenuAnimationHandler {
 
     /** duration of animations, in milliseconds */
-    protected static final int DURATION = 500;
+    private static final int DURATION = 500;
     /** duration to wait between each of  */
-    protected static final int LAG_BETWEEN_ITEMS = 20;
+    private static final int LAG_BETWEEN_ITEMS = 20;
     /** holds the current state of animation */
     private boolean animating;
 
-    public DefaultAnimationHandler() {
+    DefaultAnimationHandler() {
         setAnimating(false);
     }
 
@@ -111,12 +111,12 @@ public class DefaultAnimationHandler extends MenuAnimationHandler {
         this.animating = animating;
     }
 
-    protected class SubActionItemAnimationListener implements Animator.AnimatorListener {
+    private class SubActionItemAnimationListener implements Animator.AnimatorListener {
 
         private FloatingActionMenu.Item subActionItem;
         private ActionType actionType;
 
-        public SubActionItemAnimationListener(FloatingActionMenu.Item subActionItem, ActionType actionType) {
+        SubActionItemAnimationListener(FloatingActionMenu.Item subActionItem, ActionType actionType) {
             this.subActionItem = subActionItem;
             this.actionType = actionType;
         }

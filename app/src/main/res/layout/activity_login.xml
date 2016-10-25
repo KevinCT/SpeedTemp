@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/spacing_normal"
     android:paddingTop="@dimen/spacing_normal"
     tools:context="com.zweigbergk.speedswede.activity.LoginActivity"
-    android:id="@+id/activity_login_root">
+    >
 
     <!-- All content must be inside this RelativeLayout, otherwise code may break.
     (See LoginActivity & LoginPresenter) -->
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/logo_yellow"
-            android:id="@+id/activity_login_logo"
+            android:contentDescription="@string/default_image_descr"
             android:layout_centerHorizontal="true"
             android:cropToPadding="false"
             android:layout_alignParentTop="true"
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:drawableLeft="@null"
+            android:drawableStart="@null"
             style="@style/FacebookLoginButtonCustom"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
@@ -46,7 +46,6 @@
             android:layout_width="match_parent"
             android:text="@string/activity_login_text"
             android:ems="10"
-            android:id="@+id/activity_login_text"
             android:textAlignment="center"
             android:textSize="25sp"
             android:layout_below="@+id/activity_login_login_button"

@@ -50,9 +50,9 @@ public class Chat implements Parcelable {
         inactive = false;
     }
 
-    public Chat(String id, String name, long timeStamp, List<Message> messages, User firstUser, User secondUser) {
-        this.firstUser = firstUser;
-        this.secondUser = secondUser;
+    public Chat(String id, String name, long timeStamp, List<Message> messages) {
+        this.firstUser = null;
+        this.secondUser = null;
 
         this.id = id;
         this.name = name;
@@ -220,7 +220,7 @@ public class Chat implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(firstUser, 0);
         dest.writeParcelable(secondUser, 0);
-        ParcelHelper.writeParcelableList(dest, 0, messages);
+        ParcelHelper.writeParcelableList(dest, messages);
         dest.writeString(id);
         dest.writeLong(timeStamp);
         dest.writeLong(lastMessageTimeStamp);

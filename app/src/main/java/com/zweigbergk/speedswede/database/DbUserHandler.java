@@ -203,7 +203,7 @@ class DbUserHandler extends DbTopLevelHandler {
         return mUserPoolListener;
     }
 
-    public void liftBlock(String strangerUid) {
+    void liftBlock(String strangerUid) {
         String uid = getActiveUserId();
         DatabaseReference ref = mRoot.child(BANS).child(uid).child(BANLIST).child(strangerUid);
         delete(ref);

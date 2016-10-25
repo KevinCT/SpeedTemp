@@ -10,15 +10,10 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.DatabaseHandler.DatabaseNode;
-import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.collection.ArrayList;
 import com.zweigbergk.speedswede.util.collection.List;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
-
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.Date;
 
 public class Initializer {
 
@@ -34,7 +29,7 @@ public class Initializer {
             offlineLogin();
         }
 
-        DatabaseHandler.registerListener(DatabaseNode.USERS);
+        DatabaseHandler.registerUsersListener();
         DatabaseHandler.getPool().bind(ChatMatcher.INSTANCE::handleUser);
     }
 
@@ -52,7 +47,7 @@ public class Initializer {
 
                 //Set default preferences
                 DatabaseHandler.getReference(userShell).setPreference(User.Preference.SKILL_CATEGORY, SkillCategory.MENTOR.toString());
-                DatabaseHandler.getReference(userShell).setPreference(User.Preference.NOTIFICATIONS, true);
+                DatabaseHandler.getReference(userShell).setNotifications(true);
                 DatabaseHandler.getReference(userShell).setPreference(User.Preference.LANGUAGE, Language.SWEDISH.toString());
             }
 

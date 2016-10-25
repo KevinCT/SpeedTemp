@@ -1,16 +1,13 @@
 package com.zweigbergk.speedswede.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Fade;
-import android.transition.Transition;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,10 +31,6 @@ import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
 
 public class SingleChatActivity extends AppCompatActivity implements ChatFragmentView {
     private static final String TAG = SingleChatActivity.class.getSimpleName().toUpperCase();
-
-    //Activity stuff
-    private Toolbar toolbar;
-
 
     //From ChatFragment
     private ChatFragmentPresenter mPresenter;
@@ -89,11 +82,11 @@ public class SingleChatActivity extends AppCompatActivity implements ChatFragmen
     }
 
     private void setupToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
         if (getSupportActionBar() != null) {
-            final Drawable upArrow = getResources().getDrawable(R.drawable.ic_go_back_left_arrow);
+            final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.ic_go_back_left_arrow);
             getSupportActionBar().setHomeAsUpIndicator(upArrow);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -131,8 +124,6 @@ public class SingleChatActivity extends AppCompatActivity implements ChatFragmen
 
         if (savedInstanceState != null) {
             Chat chat = savedInstanceState.getParcelable(CHAT_PARCEL);
-
-            Log.d(TAG, "Found old chat with ID: " + chat.getId());
             setChat(chat);
         }
     }
@@ -229,8 +220,7 @@ public class SingleChatActivity extends AppCompatActivity implements ChatFragmen
         @Override
         public ImageView getImageView(int resId) {
             ImageView view = new ImageView(this);
-            view.setImageDrawable(getResources().getDrawable(resId));
-            //view.setImageDrawable(resizeImage(getContext(), resId, 60, 60));
+            view.setImageDrawable(ContextCompat.getDrawable(this, resId));
             return view;
         }
 }

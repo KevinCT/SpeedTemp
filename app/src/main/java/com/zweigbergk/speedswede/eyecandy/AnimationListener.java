@@ -6,27 +6,14 @@ import com.zweigbergk.speedswede.util.collection.ArrayList;
 import com.zweigbergk.speedswede.util.collection.List;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
-public class AnimationListener implements Animation.AnimationListener {
+class AnimationListener implements Animation.AnimationListener {
 
-    List<Executable> startExecutables = new ArrayList<>();
-    List<Executable> endExecutables = new ArrayList<>();
-    List<Executable> repeatExecutables = new ArrayList<>();
+    private List<Executable> startExecutables = new ArrayList<>();
+    private List<Executable> endExecutables = new ArrayList<>();
+    private List<Executable> repeatExecutables = new ArrayList<>();
 
-
-    public AnimationListener onStart(Executable executable) {
-        startExecutables.add(executable);
-
-        return this;
-    }
-
-    public AnimationListener onEnd(Executable executable) {
+    AnimationListener onEnd(Executable executable) {
         endExecutables.add(executable);
-
-        return this;
-    }
-
-    public AnimationListener onRepeat(Executable executable) {
-        repeatExecutables.add(executable);
 
         return this;
     }
