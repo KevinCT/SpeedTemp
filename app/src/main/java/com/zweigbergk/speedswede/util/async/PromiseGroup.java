@@ -52,9 +52,11 @@ class PromiseGroup<E> extends Promise<E> {
         PromiseNeed need = tuple.getKey();
 
         commitment.addClient(item -> {
-            Log.d(TAG, Stringify.curlyFormat("Received item: {item} at need: {need}",
-                    item.toString(), need));
-            this.addItem(need, commitment);
+            if (item != null) {
+                Log.d(TAG, Stringify.curlyFormat("Received item: {item} at need: {need}",
+                        item.toString(), need));
+                this.addItem(need, commitment);
+            }
         });
     }
 
