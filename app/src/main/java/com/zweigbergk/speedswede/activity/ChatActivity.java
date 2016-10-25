@@ -65,7 +65,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         //We need our ChatListFragment if it's the first run
         if (savedInstanceState == null) {
-            addFragment(new ChatListFragment(), false);
+            addFragment(new ChatListFragment());
         }
 
         //Grab the views
@@ -161,17 +161,13 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         }
     }
 
-    private void addFragment(Fragment fragment, boolean addToBackstack) {
+    private void addFragment(Fragment fragment) {
         String name = getFragmentName(fragment);
         fragmentStack.add(name);
 
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
                 .add(FRAGMENT_CONTAINER, fragment, name);
-
-        if (addToBackstack) {
-            transaction.addToBackStack(name);
-        }
 
         transaction.commit();
     }

@@ -2,12 +2,9 @@ package com.zweigbergk.speedswede.core;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.google.firebase.database.Exclude;
-
 import com.zweigbergk.speedswede.util.Translation.TranslationCache;
-
 
 import java.util.Calendar;
 import java.util.Date;

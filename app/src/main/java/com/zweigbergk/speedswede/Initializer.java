@@ -9,7 +9,6 @@ import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.database.DatabaseHandler.DatabaseNode;
 import com.zweigbergk.speedswede.util.collection.ArrayList;
 import com.zweigbergk.speedswede.util.collection.List;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;

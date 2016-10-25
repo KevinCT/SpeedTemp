@@ -9,14 +9,13 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
-import com.zweigbergk.speedswede.util.Stringify;
+import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.collection.Map;
 import com.zweigbergk.speedswede.util.factory.ChatFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.Lists;
 
-import com.zweigbergk.speedswede.util.collection.HashMap;
 import java.util.HashSet;
-import com.zweigbergk.speedswede.util.collection.Map;
 import java.util.Set;
 
 public class ChatListener implements ChildEventListener {

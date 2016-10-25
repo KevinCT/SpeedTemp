@@ -1,8 +1,8 @@
 package com.zweigbergk.speedswede.eyecandy;
+
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -15,7 +15,6 @@ import com.zweigbergk.speedswede.util.collection.ArrayList;
 import com.zweigbergk.speedswede.util.collection.List;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 

@@ -3,7 +3,6 @@
  */
 package com.zweigbergk.speedswede.pathmenu;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;

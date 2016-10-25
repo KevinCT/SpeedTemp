@@ -150,11 +150,6 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
     }
 
     @Override
-    public void onActivityCreated (Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_chat_list_settings_button:

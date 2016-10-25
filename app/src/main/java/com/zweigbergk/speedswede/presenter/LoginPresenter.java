@@ -6,14 +6,10 @@ import android.util.Log;
 import android.view.View;
 
 import com.facebook.AccessToken;
-
-import com.google.firebase.auth.FirebaseAuth;
-
-import com.zweigbergk.speedswede.core.UserProfile;
-import com.zweigbergk.speedswede.util.ActivityAttachable;
 import com.zweigbergk.speedswede.activity.LoginActivity;
-import com.zweigbergk.speedswede.interactor.LoginInteractor;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
+import com.zweigbergk.speedswede.interactor.LoginInteractor;
+import com.zweigbergk.speedswede.util.ActivityAttachable;
 
 public class LoginPresenter implements ActivityAttachable {
 

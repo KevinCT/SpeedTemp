@@ -1,6 +1,5 @@
 package com.zweigbergk.speedswede.util.collection;
 
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Query;
 

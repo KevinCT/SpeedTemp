@@ -5,7 +5,6 @@ import android.util.Log;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.util.collection.Collection;
-import com.zweigbergk.speedswede.util.collection.Collections;
 import com.zweigbergk.speedswede.util.collection.HashSet;
 import com.zweigbergk.speedswede.util.collection.Set;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;

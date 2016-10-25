@@ -6,7 +6,6 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.zweigbergk.speedswede.util.collection.ArrayList;
 import com.zweigbergk.speedswede.util.collection.List;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
 public class PanelSlideListener implements SlidingUpPanelLayout.PanelSlideListener {
 

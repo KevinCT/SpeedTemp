@@ -45,11 +45,6 @@ public enum ChatMatcher {
         }
     }
 
-    /**
-     * IF activeUser has not blocked user, and user has not blocked activeUser, this will
-     * add user to the local user pool (mUsersInPool) and then run match().
-     * @param user
-     */
     private void handleUserAdded(User user) {
         User activeUser = DatabaseHandler.getActiveUser();
 

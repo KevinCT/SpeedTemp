@@ -1,10 +1,8 @@
 package com.zweigbergk.speedswede.view;
 
 import android.content.Context;
-import android.view.View;
 
 import com.zweigbergk.speedswede.core.Chat;
-import com.zweigbergk.speedswede.util.collection.HashMap;
 import com.zweigbergk.speedswede.util.methodwrapper.CallerMethod;
 import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
 

@@ -5,19 +5,17 @@ import android.util.Log;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.util.Lists;
+import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.collection.Map;
 import com.zweigbergk.speedswede.util.factory.UserFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.Lists;
 
-import com.zweigbergk.speedswede.util.collection.HashMap;
 import java.util.HashSet;
-import com.zweigbergk.speedswede.util.collection.Map;
 import java.util.Set;
 
 public class UserListener implements ChildEventListener {

@@ -70,7 +70,6 @@ public class FloatingActionMenu {
                               final boolean systemOverlay) {
         Log.d(TAG, "This is called. (1)");
         this.mainActionView = mainActionView;
-        mainActionView.setId(Integer.valueOf(233225871));
         this.startAngle = startAngle;
         this.endAngle = endAngle;
         this.radius = radius;
