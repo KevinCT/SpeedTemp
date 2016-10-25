@@ -478,7 +478,7 @@ public class FloatingActionMenu {
         addViewToCurrentContainer(view, null);
     }
 
-    private void removeViewFromCurrentContainer(View view) {
+    public void removeViewFromCurrentContainer(View view) {
         if(systemOverlay) {
             overlayContainer.removeView(view);
         }
