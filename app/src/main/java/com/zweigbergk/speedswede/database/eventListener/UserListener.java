@@ -9,19 +9,17 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.HashSetExtension;
 import com.zweigbergk.speedswede.util.collection.MapExtension;
+import com.zweigbergk.speedswede.util.collection.SetExtension;
 import com.zweigbergk.speedswede.util.factory.UserFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class UserListener implements ChildEventListener {
     private static final String CLIENT_FOR_ALL_USERS = "key_to_listen_to_every_user";
 
-    private MapExtension<String, Set<Client<DataChange<User>>>> userClients;
+    private MapExtension<String, SetExtension<Client<DataChange<User>>>> userClients;
 
 
     public UserListener() {
@@ -63,8 +61,6 @@ public class UserListener implements ChildEventListener {
 
     private void notifyClients(DatabaseEvent event, User user) {
         String id = user.getUid();
-        Set<Client<DataChange<User>>> chatClients =
-                Lists.union(this.userClients.get(id), this.userClients.get(CLIENT_FOR_ALL_USERS));
 
         DataChange<User> dataChange;
         switch(event) {
@@ -82,7 +78,14 @@ public class UserListener implements ChildEventListener {
                 break;
         }
 
-        Lists.forEach(chatClients, client -> client.supply(dataChange));
+        userClients.filter(clientEntry -> {
+                    String entryID = clientEntry.getKey();
+                    return entryID.equals(id) || entryID.equals(CLIENT_FOR_ALL_USERS);
+                })
+                .values()
+                .foreach(set ->
+                        set.foreach(client ->
+                                client.supply(dataChange)));
     }
 
     private void notifyAdded(User user) {
@@ -104,7 +107,7 @@ public class UserListener implements ChildEventListener {
     @SuppressWarnings("WeakerAccess")
     public void addClient(String userId, Client<DataChange<User>> client) {
         if (!userClients.containsKey(userId)) {
-            userClients.put(userId, new HashSet<>());
+            userClients.put(userId, new HashSetExtension<>());
         }
 
         userClients.get(userId).add(client);
@@ -132,7 +135,7 @@ public class UserListener implements ChildEventListener {
     @SuppressWarnings("WeakerAccess")
     public void removeClient(String userId, Client<DataChange<User>> client) {
         if (!userClients.containsKey(userId)) {
-            userClients.put(userId, new HashSet<>());
+            userClients.put(userId, new HashSetExtension<>());
         }
 
         userClients.get(userId).remove(client);

@@ -20,7 +20,7 @@ public class ParcelHelper {
 
     public static <E extends Parcelable> void writeParcelableList(Parcel parcel, ListExtension<E> list) {
         parcel.writeInt(list.size());
-        Lists.forEach(list, e -> parcel.writeParcelable(e, FLAGS_NORMAL));
+        list.foreach(e -> parcel.writeParcelable(e, FLAGS_NORMAL));
     }
 
     public static <E extends Parcelable> ListExtension<E> readParcelableList(Parcel parcel, Class<E> eClass) {

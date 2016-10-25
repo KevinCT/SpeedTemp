@@ -9,22 +9,21 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.HashSetExtension;
 import com.zweigbergk.speedswede.util.collection.MapExtension;
+import com.zweigbergk.speedswede.util.collection.SetExtension;
 import com.zweigbergk.speedswede.util.factory.ChatFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 
 public class ChatListener implements ChildEventListener {
     private static final String TAG = ChatListener.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private static final String CLIENT_FOR_ALL_CHATS = "key_to_listen_to_every_chat";
 
-    private MapExtension<String, Set<Client<DataChange<Chat>>>> chatClients;
+    private MapExtension<String, SetExtension<Client<DataChange<Chat>>>> chatClients;
 
 
     public ChatListener() {
@@ -64,8 +63,6 @@ public class ChatListener implements ChildEventListener {
 
     private void notifyClients(DatabaseEvent event, Chat chat) {
         String id = chat.getId();
-        Set<Client<DataChange<Chat>>> chatClients =
-                Lists.union(this.chatClients.get(id), this.chatClients.get(CLIENT_FOR_ALL_CHATS));
 
         DataChange<Chat> dataChange;
         switch(event) {
@@ -83,7 +80,12 @@ public class ChatListener implements ChildEventListener {
                 break;
         }
 
-        Lists.forEach(chatClients, client -> client.supply(dataChange));
+        chatClients.filter(clientEntry -> {
+                    String entryID = clientEntry.getKey();
+                    return entryID.equals(id) || entryID.equals(CLIENT_FOR_ALL_CHATS);
+                })
+                .values()
+                .foreach(list -> list.foreach(client -> client.supply(dataChange)));
     }
 
     private void notifyAdded(Chat chat) {
@@ -105,7 +107,7 @@ public class ChatListener implements ChildEventListener {
       * */
     private void addClient(String chatId, Client<DataChange<Chat>> client) {
         if (!chatClients.containsKey(chatId)) {
-            chatClients.put(chatId, new HashSet<>());
+            chatClients.put(chatId, new HashSetExtension<>());
         }
 
         chatClients.get(chatId).add(client);
@@ -132,7 +134,7 @@ public class ChatListener implements ChildEventListener {
      * */
     private void removeClient(String chatId, Client<DataChange<Chat>> client) {
         if (!chatClients.containsKey(chatId)) {
-            chatClients.put(chatId, new HashSet<>());
+            chatClients.put(chatId, new HashSetExtension<>());
         }
 
         chatClients.get(chatId).remove(client);

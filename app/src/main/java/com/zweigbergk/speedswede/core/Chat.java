@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.zweigbergk.speedswede.Constants;
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.ParcelHelper;
 
 import com.zweigbergk.speedswede.util.Stringify;
@@ -90,10 +89,7 @@ public class Chat implements Parcelable {
 
 
     public ListExtension<Message> getMessages() {
-        ListExtension<Message> messageListClone = new ArrayListExtension<>();
-        Lists.forEach(messages, m -> messageListClone.add(m.clone()));
-
-        return messageListClone;
+        return messages.map(Message::clone);
     }
 
     public String getId() {

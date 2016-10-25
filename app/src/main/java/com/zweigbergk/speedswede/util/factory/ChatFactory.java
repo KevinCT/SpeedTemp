@@ -7,12 +7,12 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.async.Commitment;
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.async.Guarantee;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.Arrays;
 import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 import static com.zweigbergk.speedswede.util.async.PromiseNeed.*;
@@ -75,13 +75,8 @@ public class ChatFactory {
     }
 
     private static ListExtension<Message> asMessageList(Iterable<DataSnapshot> snapshot) {
-        ListExtension<Message> messages = new ArrayListExtension<>();
-        Lists.forEach(snapshot, messageSnapshot -> {
-            Message message = messageSnapshot.getValue(Message.class);
-            messages.add(message);
-        });
-
-        return messages;
+        return Arrays.asList(snapshot)
+                .map(messageSnapshot -> messageSnapshot.getValue(Message.class));
     }
 
     private static String getUserId(DataSnapshot snapshot) {

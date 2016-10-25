@@ -2,7 +2,6 @@ package com.zweigbergk.speedswede.util.async;
 
 import android.util.Log;
 
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.Tuple;
 
@@ -19,8 +18,8 @@ class StatementGroup extends Statement {
         //Since default constructor in Statement always sets a result form, don't use default method here.
         mResultForm = resultForm;
 
-        Lists.forEach(tuples, tuple -> requires(tuple.getKey()));
-        Lists.forEach(tuples, this::includePromiseTuple);
+        tuples.map(Tuple::getKey).foreach(this::requires);
+        tuples.foreach(this::includePromiseTuple);
     }
 
     private void includePromiseTuple(Tuple<PromiseNeed, Statement> tuple) {

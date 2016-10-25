@@ -1,6 +1,5 @@
 package com.zweigbergk.speedswede.util.collection;
 
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Query;
 
@@ -83,7 +82,7 @@ public class ArrayListExtension<E> extends java.util.ArrayList<E> implements Lis
     }
 
     @Override
-    public <To> ListExtension<To> map(Lists.Mapping<E, To> mapping) {
+    public <To> ListExtension<To> map(Mapping<E, To> mapping) {
         ListExtension<To> result = new ArrayListExtension<>();
 
         for (E element : this) {
@@ -91,5 +90,10 @@ public class ArrayListExtension<E> extends java.util.ArrayList<E> implements Lis
         }
 
         return result;
+    }
+
+    @Override
+    public ListExtension<E> nonNull() {
+        return reject(item -> item == null);
     }
 }

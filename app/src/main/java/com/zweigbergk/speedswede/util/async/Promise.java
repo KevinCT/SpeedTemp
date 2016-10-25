@@ -4,14 +4,13 @@ import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Tuple;
 import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.Arrays;
 import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
-import java.util.Arrays;
 import java.util.Locale;
 
 import com.zweigbergk.speedswede.util.collection.HashMapExtension;
@@ -44,7 +43,7 @@ public class Promise<E> extends Commitment<E> {
         chainedPromises = new HashMapExtension<>();
 
         promiseState = new PromiseState();
-        Lists.forEach(needs, promiseState::addNeed);
+        Arrays.asList(needs).foreach(promiseState::addNeed);
     }
 
     public Promise<E> setResultForm(Result<E> result) {
@@ -74,7 +73,7 @@ public class Promise<E> extends Commitment<E> {
     }
 
     public void requires(PromiseNeed... locks) {
-        Lists.forEach(Arrays.asList(locks), promiseState::addNeed);
+        Arrays.asList(locks).foreach(promiseState::addNeed);
     }
 
     void complete() {
@@ -118,41 +117,27 @@ public class Promise<E> extends Commitment<E> {
      * on this Promise.
      */
     private void forwardToChainedPromises() {
-        ListExtension<Tuple<PromiseNeed, Promise<?>>> promises = new ArrayListExtension<>();
-
-
-        Lists.forEach(chainedPromises, entry -> {
-            ListExtension<Promise<?>> list = entry.getValue();
-            Lists.forEach(list, promise -> promises.add(new Tuple<>(entry.getKey(), promise)));
-        });
-
-        Lists.forEach(promises, tuple -> {
-            tuple.getValue().addItem(tuple.getKey(), mCompletedProduct);
-        });
+        chainedPromises.foreach(promiseList ->
+                promiseList.getValue().foreach(promise ->
+                        promise.addItem(promiseList.getKey(), mCompletedProduct)));
     }
 
     void notifyListeners() {
-        Lists.forEach(mClients.iterator(), client -> {
-            client.supply(mCompletedProduct);
-        });
-
+        mClients.foreach(client -> client.supply(mCompletedProduct));
         mClients.clear();
 
-        Lists.forEach(mExecutables.iterator(), Executable::run);
-
+        mExecutables.foreach(Executable::run);
         mExecutables.clear();
 
-        for (MapExtension.Entry<Executable, Executable.Interest<E>> entry :
-                mInterestExecutables.entrySet()) {
-            Executable.Interest<E> interest = entry.getValue();
-            Executable executable = entry.getKey();
-            if (interest.caresFor(mCompletedProduct)) {
-                executable.run();
-            }
-        }
+        mInterestExecutables.foreach(entry -> {
+                    Executable.Interest<E> interest = entry.getValue();
+                    Executable executable = entry.getKey();
+                    if (interest.caresFor(mCompletedProduct)) {
+                        executable.run();
+                    }
+                });
 
         mInterestExecutables.clear();
-
     }
 
     public void addItem(PromiseNeed need, Object data) {

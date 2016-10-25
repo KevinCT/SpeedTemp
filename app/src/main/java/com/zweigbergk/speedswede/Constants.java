@@ -1,11 +1,10 @@
 package com.zweigbergk.speedswede;
 
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.PreferenceWrapper;
+import com.zweigbergk.speedswede.util.collection.Arrays;
 import com.zweigbergk.speedswede.util.collection.Collections;
 import com.zweigbergk.speedswede.util.collection.ListExtension;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class Constants {
@@ -94,7 +93,7 @@ public class Constants {
             return "";
 
         StringBuilder builder = new StringBuilder();
-        Lists.forEach(Arrays.asList(constants), c -> {
+        Arrays.asList(constants).foreach(c -> {
             builder.append(c);
             builder.append('/');
         });

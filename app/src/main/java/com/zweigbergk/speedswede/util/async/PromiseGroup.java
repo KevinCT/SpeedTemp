@@ -2,7 +2,6 @@ package com.zweigbergk.speedswede.util.async;
 
 import android.util.Log;
 
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.Tuple;
 
@@ -10,8 +9,8 @@ import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
 import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 import java.util.Locale;
+import java.util.Map;
 
-// TODO Use Tag() instead of Tuples...
 class PromiseGroup<E> extends Promise<E> {
     private static final String TAG = PromiseGroup.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
@@ -37,15 +36,11 @@ class PromiseGroup<E> extends Promise<E> {
         }
     }
 
-    private static final Result<ListExtension<?>> listBlueprint = itemMap -> {
-        ListExtension<Object> result = new ArrayListExtension<>();
-        Lists.forEach(itemMap.getItems(), entry -> result.add(entry.getValue()));
-        return result;
-    };
-
     @SuppressWarnings("unused")
     static PromiseGroup<ListExtension<?>> normal(ListExtension<Tuple<PromiseNeed, Commitment<?>>> tuples) {
-        return (PromiseGroup<ListExtension<?>>) new PromiseGroup<ListExtension<?>>(tuples).setResultForm(listBlueprint);
+        return (PromiseGroup<ListExtension<?>>)
+                new PromiseGroup<ListExtension<?>>(tuples).setResultForm(itemMap ->
+                        itemMap.getItems().transform(Map.Entry::getValue));
     }
 
     private void includePromiseTuple(Tuple<PromiseNeed, Commitment<?>> tuple) {
@@ -68,7 +63,8 @@ class PromiseGroup<E> extends Promise<E> {
     protected void complete() throws PromiseException {
         Log.d(TAG, "In complete()");
         ItemMap items = new ItemMap();
-        Lists.forEach(mPromiseTuples, tuple -> {
+
+        mPromiseTuples.foreach(tuple -> {
             if (tuple.getKey() == null) {
                 throw new PromiseException("Every Tuple must have a key. Look at the tuples added" +
                         "to the PromiseGroup and make sure none of them have a null key.");
@@ -82,15 +78,6 @@ class PromiseGroup<E> extends Promise<E> {
 
         super.notifyListeners();
     }
-
-   /* @Override
-    protected boolean isFulfilled() {
-        return Lists.reject(mPromiseTuples, tuple -> {
-            Log.d(TAG, Stringify.curlyFormat("Tuple with key: {key} is fulfilled? {bool}",
-                    tuple.getKey(), tuple.toString().isFulfilled()));
-            return tuple.toString().isFulfilled();
-        }).size() == 0;
-    }*/
 
     private static class PromiseException extends RuntimeException {
         PromiseException(String message) {

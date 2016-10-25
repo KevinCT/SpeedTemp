@@ -47,7 +47,7 @@ public class Stringify {
         } while (++i < source.length());
 
         if (args.length != argumentIndex) {
-            Log.w(TAG, "Lists.unrealFormat: Expected " + args.length + " but only received " + (argumentIndex + 1) + " args.");
+            Log.w(TAG, "Stringify.curlyFormat: Expected " + args.length + " but only received " + (argumentIndex + 1) + " args.");
         }
 
         return builder.toString();
