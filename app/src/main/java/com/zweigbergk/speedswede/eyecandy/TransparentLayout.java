@@ -6,8 +6,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
 /**
@@ -19,7 +19,7 @@ public class TransparentLayout extends RelativeLayout {
 
     private boolean catchClickEvents = false;
 
-    private List<Executable> executables = new ArrayList<>();
+    private ListExtension<Executable> executables = new ArrayListExtension<>();
 
     public TransparentLayout(Context context) {
         super(context);

@@ -6,14 +6,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Tuple;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
-import com.zweigbergk.speedswede.util.collection.ArrayList;
 import java.util.Arrays;
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.List;
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 
 public class Promise<E> extends Commitment<E> {
     public static final String TAG = Promise.class.getSimpleName().toUpperCase();
@@ -22,7 +22,7 @@ public class Promise<E> extends Commitment<E> {
 
     PromiseState promiseState;
 
-    private Map<PromiseNeed, List<Promise<?>>> chainedPromises;
+    private MapExtension<PromiseNeed, ListExtension<Promise<?>>> chainedPromises;
 
     //Error flag. If this is set, the builder will return null to all its listeners.
     boolean mBuildFailed;
@@ -36,10 +36,10 @@ public class Promise<E> extends Commitment<E> {
         mResultForm = blueprint;
         mBuildFailed = false;
 
-        mClients = new ArrayList<>();
-        mExecutables = new ArrayList<>();
-        mInterestExecutables = new HashMap<>();
-        chainedPromises = new HashMap<>();
+        mClients = new ArrayListExtension<>();
+        mExecutables = new ArrayListExtension<>();
+        mInterestExecutables = new HashMapExtension<>();
+        chainedPromises = new HashMapExtension<>();
 
         promiseState = new PromiseState();
         Lists.forEach(needs, promiseState::addNeed);
@@ -56,7 +56,7 @@ public class Promise<E> extends Commitment<E> {
         return this;
     }
 
-    public static Promise<List<?>> all(List<Tuple<PromiseNeed, Commitment<?>>> tuples) {
+    public static Promise<ListExtension<?>> all(ListExtension<Tuple<PromiseNeed, Commitment<?>>> tuples) {
         return PromiseGroup.normal(tuples);
     }
 
@@ -67,7 +67,7 @@ public class Promise<E> extends Commitment<E> {
     }*/
 
 
-    public static <E> Promise<E> group(Result<E> resultForm, List<Tuple<PromiseNeed, Commitment<?>>> promises) {
+    public static <E> Promise<E> group(Result<E> resultForm, ListExtension<Tuple<PromiseNeed, Commitment<?>>> promises) {
         PromiseGroup<E> group = new PromiseGroup<>(promises);
         group.setResultForm(resultForm);
         return group;
@@ -75,7 +75,7 @@ public class Promise<E> extends Commitment<E> {
 
     public <NewType> Promise<NewType> thenPromise(PromiseNeed need, Promise<NewType> promise) {
         if (!chainedPromises.containsKey(need)) {
-            chainedPromises.put(need, new ArrayList<>());
+            chainedPromises.put(need, new ArrayListExtension<>());
         }
 
         chainedPromises.get(need).add(promise);
@@ -128,10 +128,10 @@ public class Promise<E> extends Commitment<E> {
      * on this Promise.
      */
     private void forwardToChainedPromises() {
-        List<Tuple<PromiseNeed, Promise<?>>> promises = new ArrayList<>();
+        ListExtension<Tuple<PromiseNeed, Promise<?>>> promises = new ArrayListExtension<>();
 
         Lists.forEach(chainedPromises, entry -> {
-            List<Promise<?>> list = entry.getValue();
+            ListExtension<Promise<?>> list = entry.getValue();
             Lists.forEach(list, promise -> promises.add(new Tuple<>(entry.getKey(), promise)));
         });
 
@@ -151,7 +151,7 @@ public class Promise<E> extends Commitment<E> {
 
         mExecutables.clear();
 
-        for (Map.Entry<Executable, Executable.Interest<E>> entry :
+        for (MapExtension.Entry<Executable, Executable.Interest<E>> entry :
                 mInterestExecutables.entrySet()) {
             Executable.Interest<E> interest = entry.getValue();
             Executable executable = entry.getKey();
@@ -205,10 +205,10 @@ public class Promise<E> extends Commitment<E> {
 
     public static class ItemMap {
 
-        Map<PromiseNeed, Object> items;
+        MapExtension<PromiseNeed, Object> items;
 
         ItemMap() {
-            items = new HashMap<>();
+            items = new HashMapExtension<>();
         }
 
         public void put(PromiseNeed key, Object item) {
@@ -228,7 +228,7 @@ public class Promise<E> extends Commitment<E> {
             return (User) items.get(need);
         }
 
-        Map<PromiseNeed, Object> getItems() {
+        MapExtension<PromiseNeed, Object> getItems() {
             return items;
         }
 

@@ -7,7 +7,7 @@
 //public enum MatchingLooper {
 //    INSTANCE;
 //
-//    private Array matchingList = new ArrayList;
+//    private Array matchingList = new ArrayListExtension;
 //
 //    public void updateMatchingLooper(Array) {}
 //

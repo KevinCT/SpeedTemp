@@ -4,15 +4,15 @@ import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Query;
 
-public class ArrayList<E> extends java.util.ArrayList<E> implements List<E> {
+public class ArrayListExtension<E> extends java.util.ArrayList<E> implements ListExtension<E> {
 
     @Override
-    public Set<E> union(Iterable<E> other) {
+    public SetExtension<E> union(Iterable<E> other) {
         return null;
     }
 
-    public Set<E> intersect(Iterable<E> other) {
-        Set<E> result = new HashSet<>();
+    public SetExtension<E> intersect(Iterable<E> other) {
+        SetExtension<E> result = new HashSetExtension<>();
 
         for (E e : other) {
             if (contains(e)) {
@@ -24,13 +24,13 @@ public class ArrayList<E> extends java.util.ArrayList<E> implements List<E> {
     }
 
     @Override
-    public Set<E> difference(Iterable<E> other) {
+    public SetExtension<E> difference(Iterable<E> other) {
         return null;
     }
 
     @Override
-    public List<E> filter(Query<E> query) {
-        List<E> result = new ArrayList<>();
+    public ListExtension<E> filter(Query<E> query) {
+        ListExtension<E> result = new ArrayListExtension<>();
 
         foreach(e -> {
             if (query.matches(e)) {
@@ -42,8 +42,8 @@ public class ArrayList<E> extends java.util.ArrayList<E> implements List<E> {
     }
 
     @Override
-    public List<E> reject(Query<E> query) {
-        List<E> result = new ArrayList<>();
+    public ListExtension<E> reject(Query<E> query) {
+        ListExtension<E> result = new ArrayListExtension<>();
 
         foreach(e -> {
             if (!query.matches(e)) {
@@ -82,8 +82,8 @@ public class ArrayList<E> extends java.util.ArrayList<E> implements List<E> {
     }
 
     @Override
-    public List<E> first(int amount) {
-        List<E> result = new ArrayList<>();
+    public ListExtension<E> first(int amount) {
+        ListExtension<E> result = new ArrayListExtension<>();
         for (int i = 0; i < amount; ++i) {
             result.add(this.get(i));
         }
@@ -92,8 +92,8 @@ public class ArrayList<E> extends java.util.ArrayList<E> implements List<E> {
     }
 
     @Override
-    public <To> List<To> map(Lists.Mapping<E, To> mapping) {
-        List<To> result = new ArrayList<>();
+    public <To> ListExtension<To> map(Lists.Mapping<E, To> mapping) {
+        ListExtension<To> result = new ArrayListExtension<>();
 
         for (E element : this) {
             result.add(mapping.map(element));

@@ -9,8 +9,8 @@ import com.zweigbergk.speedswede.core.SkillCategory;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
@@ -18,8 +18,8 @@ public class Initializer {
 
     public static final String TAG = Initializer.class.getSimpleName().toUpperCase();
 
-    private static List<Executable> loginExecutables = new ArrayList<>();
-    private static List<Client<User>> loginClients = new ArrayList<>();
+    private static ListExtension<Executable> loginExecutables = new ArrayListExtension<>();
+    private static ListExtension<Client<User>> loginClients = new ArrayListExtension<>();
 
     public static void onLogin(boolean isOfflineMode) {
         if (!isOfflineMode) {
@@ -44,7 +44,7 @@ public class Initializer {
                 user = userShell;
                 DatabaseHandler.users().push(userShell);
 
-                //Set default preferences
+                //SetExtension default preferences
                 DatabaseHandler.getReference(userShell).setPreference(User.Preference.SKILL_CATEGORY, SkillCategory.MENTOR.toString());
                 DatabaseHandler.getReference(userShell).setNotifications(true);
                 DatabaseHandler.getReference(userShell).setPreference(User.Preference.LANGUAGE, Language.SWEDISH.toString());
@@ -75,7 +75,7 @@ public class Initializer {
 
     private static void notifyListeners(User user) {
         loginExecutables.foreach(Executable::run);
-        loginExecutables = new ArrayList<>();
+        loginExecutables = new ArrayListExtension<>();
 
         loginClients.foreach(client -> client.supply(user));
     }

@@ -3,7 +3,7 @@ package com.zweigbergk.speedswede;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.PreferenceWrapper;
 import com.zweigbergk.speedswede.util.collection.Collections;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -109,7 +109,7 @@ public class Constants {
         return makePath(PREFERENCES, preference);
     }
 
-    public static List<PreferenceWrapper> shells =
+    public static final ListExtension<PreferenceWrapper> shells =
             Collections.asList(
                     PreferenceWrapper.StringWrapper.shell(),
                     PreferenceWrapper.BooleanWrapper.shell(),

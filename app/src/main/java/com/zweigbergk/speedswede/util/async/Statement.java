@@ -1,10 +1,10 @@
 package com.zweigbergk.speedswede.util.async;
 
 import com.zweigbergk.speedswede.util.Tuple;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
 
 public class Statement extends Promise<Boolean> {
     private boolean inverted;
@@ -36,12 +36,12 @@ public class Statement extends Promise<Boolean> {
         throw new StatementException("addItem() may not be called from within a Statement. Use a Promise instead.");
     }
 
-    private StatementGroup combine(Result<Boolean> resultForm, List<Tuple<PromiseNeed, Statement>> statements) {
+    private StatementGroup combine(Result<Boolean> resultForm, ListExtension<Tuple<PromiseNeed, Statement>> statements) {
         return new StatementGroup(resultForm, statements);
     }
 
     public Statement and(Statement statement) {
-        List<Tuple<PromiseNeed, Statement>> combined = new ArrayList<>();
+        ListExtension<Tuple<PromiseNeed, Statement>> combined = new ArrayListExtension<>();
         combined.add(new Tuple<>(PromiseNeed.FIRST_ASSERTION, this));
         combined.add(new Tuple<>(PromiseNeed.SECOND_ASSERTION, statement));
 
@@ -53,7 +53,7 @@ public class Statement extends Promise<Boolean> {
     }
 
     public Statement or(Statement statement) {
-        List<Tuple<PromiseNeed, Statement>> combined = new ArrayList<>();
+        ListExtension<Tuple<PromiseNeed, Statement>> combined = new ArrayListExtension<>();
         combined.add(new Tuple<>(PromiseNeed.FIRST_ASSERTION, this));
         combined.add(new Tuple<>(PromiseNeed.SECOND_ASSERTION, statement));
 

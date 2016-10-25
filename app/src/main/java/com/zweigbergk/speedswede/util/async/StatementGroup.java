@@ -6,12 +6,12 @@ import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.Tuple;
 
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 // TODO Use Tag() instead of Tuples...
 class StatementGroup extends Statement {
 
-    StatementGroup(Result<Boolean> resultForm, List<Tuple<PromiseNeed, Statement>> tuples) {
+    StatementGroup(Result<Boolean> resultForm, ListExtension<Tuple<PromiseNeed, Statement>> tuples) {
         super(false);
         //Since default constructor in Statement always sets a result form, don't use default method here.
         mResultForm = resultForm;

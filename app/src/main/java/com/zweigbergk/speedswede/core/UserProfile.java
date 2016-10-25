@@ -10,8 +10,8 @@ import com.zweigbergk.speedswede.activity.Language;
 import com.zweigbergk.speedswede.util.ParcelHelper;
 import com.zweigbergk.speedswede.util.PreferenceWrapper;
 import com.zweigbergk.speedswede.util.Stringify;
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 
 import java.util.Date;
 
@@ -29,17 +29,17 @@ public class UserProfile implements User {
     private long timeInQueue;
 
     @Exclude
-    private Map<Preference, PreferenceWrapper> mPreferences = new HashMap<>();
+    private MapExtension<Preference, PreferenceWrapper> mPreferences = new HashMapExtension<>();
 
     public UserProfile(String name, String uid) {
         this.displayName = name;
         this.uid = uid;
 
-        mPreferences = new HashMap<>();
+        mPreferences = new HashMapExtension<>();
         isFirstLogin = true;
     }
 
-    public UserProfile withPreferences(Map<Preference, PreferenceWrapper> preferences) {
+    public UserProfile withPreferences(MapExtension<Preference, PreferenceWrapper> preferences) {
         setPreferences(preferences);
         return this;
     }
@@ -96,10 +96,10 @@ public class UserProfile implements User {
 
     private void setPreferences(java.util.Map<Preference, PreferenceWrapper> map) {
         if (mPreferences == null) {
-            mPreferences = new HashMap<>();
+            mPreferences = new HashMapExtension<>();
         }
 
-        for (Map.Entry<Preference, PreferenceWrapper> entry : map.entrySet()) {
+        for (MapExtension.Entry<Preference, PreferenceWrapper> entry : map.entrySet()) {
             if (entry.getValue() != null) {
                 mPreferences.put(entry.getKey(), entry.getValue());
             }
@@ -108,7 +108,7 @@ public class UserProfile implements User {
 
     @Override
     @Exclude
-    public Map<Preference, PreferenceWrapper> getPreferences() {
+    public MapExtension<Preference, PreferenceWrapper> getPreferences() {
         return mPreferences;
     }
 
@@ -182,7 +182,7 @@ public class UserProfile implements User {
     private UserProfile(Parcel in) {
             displayName = in.readString();
             uid = in.readString();
-            Map<Preference, PreferenceWrapper> preferences =
+            MapExtension<Preference, PreferenceWrapper> preferences =
                     ParcelHelper.readParcelableMap(in, Preference.class, PreferenceWrapper.class);
 
             setPreferences(preferences);

@@ -10,8 +10,8 @@ import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.util.Lists;
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 import com.zweigbergk.speedswede.util.factory.ChatFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
@@ -23,13 +23,13 @@ public class ChatListener implements ChildEventListener {
 
     private static final String CLIENT_FOR_ALL_CHATS = "key_to_listen_to_every_chat";
 
-    private Map<String, Set<Client<DataChange<Chat>>>> chatClients;
+    private MapExtension<String, Set<Client<DataChange<Chat>>>> chatClients;
 
 
     public ChatListener() {
         super();
 
-        chatClients = new HashMap<>();
+        chatClients = new HashMapExtension<>();
     }
 
     // NOTE: onChildAdded() runs once for every existing child at the time of attaching.

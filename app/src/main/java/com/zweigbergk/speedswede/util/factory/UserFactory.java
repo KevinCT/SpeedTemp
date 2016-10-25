@@ -9,9 +9,9 @@ import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.util.PreferenceWrapper;
 import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.collection.Collections;
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.List;
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 
 import static com.zweigbergk.speedswede.Constants.DISPLAY_NAME;
 import static com.zweigbergk.speedswede.Constants.FIRST_LOGIN;
@@ -29,20 +29,20 @@ public class UserFactory {
         boolean firstLogin = firstLoginObj != null && (boolean) firstLoginObj;
 
         //First getReference a list of the preference key: value pairs
-        List<DataSnapshot> preferences = Collections.asList(dataSnapshot.child(PREFERENCES)
+        ListExtension<DataSnapshot> preferences = Collections.asList(dataSnapshot.child(PREFERENCES)
                 .getChildren()
                 .iterator());
 
         //Extract the keys
-        List<Preference> preferenceKeys = preferences.map(DataSnapshot::getKey)
+        ListExtension<Preference> preferenceKeys = preferences.map(DataSnapshot::getKey)
                 .map(Preference::fromString);
 
         //Extract the values
-        List<PreferenceWrapper> preferenceValues = preferences
+        ListExtension<PreferenceWrapper> preferenceValues = preferences
                 .map(snapshot -> PreferenceWrapper.cast(snapshot.getValue()));
 
         //Create a preference map
-        Map<Preference, PreferenceWrapper> preferenceMap = HashMap
+        MapExtension<Preference, PreferenceWrapper> preferenceMap = HashMapExtension
                 .create(preferenceKeys, preferenceValues)
                 .nonNull();
 

@@ -2,12 +2,12 @@ package com.zweigbergk.speedswede.util.async;
 
 import android.util.Log;
 
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Stringify;
-import com.zweigbergk.speedswede.util.collection.HashSet;
+import com.zweigbergk.speedswede.util.collection.HashSetExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 import com.zweigbergk.speedswede.util.async.Promise.ItemMap;
 
@@ -19,19 +19,19 @@ class PromiseState {
 
     private ItemMap mItems;
 
-    private HashSet<PromiseNeed> needs;
+    private HashSetExtension<PromiseNeed> needs;
 
-    private HashSet<PromiseNeed> fulfilledNeeds;
+    private HashSetExtension<PromiseNeed> fulfilledNeeds;
 
-    private Map<PromiseNeed, StateRequirement> stateRequirements;
+    private MapExtension<PromiseNeed, StateRequirement> stateRequirements;
 
     PromiseState() {
         mItems = new ItemMap();
 
-        needs = new HashSet<>();
-        fulfilledNeeds = new HashSet<>();
+        needs = new HashSetExtension<>();
+        fulfilledNeeds = new HashSetExtension<>();
 
-        stateRequirements = new HashMap<>();
+        stateRequirements = new HashMapExtension<>();
     }
 
     void requireState(PromiseNeed key, StateRequirement requirement) {

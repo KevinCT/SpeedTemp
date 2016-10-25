@@ -8,7 +8,7 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.async.Statement;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public class ChatReference {
@@ -60,7 +60,7 @@ public class ChatReference {
 
     }
 
-    public Promise<List<Message>> pullMessages() {
+    public Promise<ListExtension<Message>> pullMessages() {
         return DbChatHandler.getInstance().pullMessages(mChat);
     }
 

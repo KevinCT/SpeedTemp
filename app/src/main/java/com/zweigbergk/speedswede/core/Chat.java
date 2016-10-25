@@ -8,8 +8,8 @@ import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.ParcelHelper;
 
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,7 +24,7 @@ public class Chat implements Parcelable {
     private boolean likedByFirstUser = false;
     private boolean likedBySecondUser = false;
 
-    private List<Message> messages;
+    private ListExtension<Message> messages;
     private String id;
     private long timeStamp;
     private long lastMessageTimeStamp;
@@ -42,7 +42,7 @@ public class Chat implements Parcelable {
 
         this.name = Constants.Topic.getRandom().name();
 
-        this.messages = new ArrayList<>();
+        this.messages = new ArrayListExtension<>();
         timeStamp = (new Date()).getTime();
 
         id = firstUser.getUid() + "-" + secondUser.getUid();
@@ -50,7 +50,7 @@ public class Chat implements Parcelable {
         inactive = false;
     }
 
-    public Chat(String id, String name, long timeStamp, List<Message> messages) {
+    public Chat(String id, String name, long timeStamp, ListExtension<Message> messages) {
         this.firstUser = null;
         this.secondUser = null;
 
@@ -111,8 +111,8 @@ public class Chat implements Parcelable {
     }
 
 
-    public List<Message> getMessages() {
-        List<Message> messageListClone = new ArrayList<>();
+    public ListExtension<Message> getMessages() {
+        ListExtension<Message> messageListClone = new ArrayListExtension<>();
         Lists.forEach(messages, m -> messageListClone.add(m.clone()));
 
         return messageListClone;

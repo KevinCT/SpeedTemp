@@ -1,16 +1,17 @@
 package com.zweigbergk.speedswede.util;
 
 import com.zweigbergk.speedswede.util.collection.Arrays;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Query;
 
-import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
 import java.util.Collection;
-import com.zweigbergk.speedswede.util.collection.HashMap;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
 import java.util.HashSet;
 import java.util.Iterator;
-import com.zweigbergk.speedswede.util.collection.List;
-import com.zweigbergk.speedswede.util.collection.Map;
+
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 import java.util.Set;
 
 public class Lists {
@@ -28,8 +29,8 @@ public class Lists {
         }
     }
 
-    public static <K, V> void forEach(Map<K, V> map, Client<Map.Entry<K, V>> client) {
-        for (Map.Entry<K, V> entry : map.entrySet()) {
+    public static <K, V> void forEach(MapExtension<K, V> map, Client<MapExtension.Entry<K, V>> client) {
+        for (MapExtension.Entry<K, V> entry : map.entrySet()) {
             client.supply(entry);
         }
     }
@@ -38,8 +39,8 @@ public class Lists {
         forEach(Arrays.asList(array), client);
     }
 
-    public static <E> List<E> filter(Iterable<E> collection, Query<E> query) {
-        List<E> result = new ArrayList<>();
+    public static <E> ListExtension<E> filter(Iterable<E> collection, Query<E> query) {
+        ListExtension<E> result = new ArrayListExtension<>();
         forEach(collection, e -> {
             if (query.matches(e)) {
                 result.add(e);
@@ -49,23 +50,23 @@ public class Lists {
         return result;
     }
 
-    public static <E> List<E> filter(E[] collection, Query<E> query) {
+    public static <E> ListExtension<E> filter(E[] collection, Query<E> query) {
         return filter(Arrays.asList(collection), query);
     }
 
-    public static <From, To> List<To> map(Iterable<From> collection, Mapping<From, To> tool) {
-        List<To> result = new ArrayList<>();
+    public static <From, To> ListExtension<To> map(Iterable<From> collection, Mapping<From, To> tool) {
+        ListExtension<To> result = new ArrayListExtension<>();
 
         forEach(collection, e -> result.add(tool.map(e)));
 
         return result;
     }
 
-    public static <K, V> Map<K, V> map(Map<?, ?> source, EntryMapping<K, V> tool) {
-        Map<K, V> result = new HashMap<>();
+    public static <K, V> MapExtension<K, V> map(MapExtension<?, ?> source, EntryMapping<K, V> tool) {
+        MapExtension<K, V> result = new HashMapExtension<>();
 
         forEach(source, entry -> {
-            Map.Entry<K, V> mapping = tool.map(entry);
+            MapExtension.Entry<K, V> mapping = tool.map(entry);
             result.put(mapping.getKey(), mapping.getValue());
         });
 
@@ -93,6 +94,6 @@ public class Lists {
     }
 
     public interface EntryMapping<K, V> {
-        Map.Entry<K, V> map(Map.Entry entry);
+        MapExtension.Entry<K, V> map(MapExtension.Entry entry);
     }
 }

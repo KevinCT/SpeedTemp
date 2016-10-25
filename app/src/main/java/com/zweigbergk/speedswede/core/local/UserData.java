@@ -2,17 +2,17 @@ package com.zweigbergk.speedswede.core.local;
 
 import com.zweigbergk.speedswede.core.Chat;
 
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 public class UserData {
-    List<Chat> chats;
+    ListExtension<Chat> chats;
 
     public UserData() {
-        chats = new ArrayList<>();
+        chats = new ArrayListExtension<>();
     }
 
-    public List<Chat> getChats() {
+    public ListExtension<Chat> getChats() {
         return chats;
     }
 

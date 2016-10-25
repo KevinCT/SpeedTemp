@@ -17,13 +17,14 @@ import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.AbuseFilter;
 import com.zweigbergk.speedswede.util.Translation;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+
 import java.util.Locale;
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 
 import com.zweigbergk.speedswede.util.Translation.TranslationCache;
 
@@ -31,19 +32,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     public static final String TAG = MessageAdapter.class.getSimpleName().toUpperCase();
 
-    private List<Message> mMessages;
-    private Map<DatabaseEvent, List<Client<Message>>> eventCallbacks;
+    private ListExtension<Message> mMessages;
+    private MapExtension<DatabaseEvent, ListExtension<Client<Message>>> eventCallbacks;
 
     private final Locale mLocale;
 
 
     public MessageAdapter(Locale currentLocale) {
-        eventCallbacks = new HashMap<>();
-        mMessages = new ArrayList<>();
+        eventCallbacks = new HashMapExtension<>();
+        mMessages = new ArrayListExtension<>();
         mLocale = currentLocale;
 
         for (DatabaseEvent event : DatabaseEvent.values()) {
-            eventCallbacks.put(event, new ArrayList<>());
+            eventCallbacks.put(event, new ArrayListExtension<>());
         }
     }
 
@@ -121,7 +122,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     private void executeCallbacks(DatabaseEvent event, Message message) {
-        List<Client<Message>> clients = eventCallbacks.get(event);
+        ListExtension<Client<Message>> clients = eventCallbacks.get(event);
         for (Client<Message> client : clients) {
             client.supply(message);
         }

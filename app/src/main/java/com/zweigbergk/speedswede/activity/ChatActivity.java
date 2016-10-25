@@ -26,9 +26,9 @@ import com.zweigbergk.speedswede.eyecandy.MatchLoadingIndicatorLayout;
 import com.zweigbergk.speedswede.eyecandy.PanelSlideListener;
 import com.zweigbergk.speedswede.eyecandy.TransparentLayout;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
-import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
 import com.zweigbergk.speedswede.util.collection.Arrays;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.CallerMethod;
 import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
 import com.zweigbergk.speedswede.view.ChatView;
@@ -44,7 +44,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     private static final int FRAGMENT_CONTAINER = R.id.fragment_container;
     private static final String CHATLIST_FRAGMENT_NAME = "ChatListFragment";
 
-    public static final List<String> fragmentStack = new ArrayList<>();
+    public static final ListExtension<String> fragmentStack = new ArrayListExtension<>();
 
     private Toolbar toolbar;
 

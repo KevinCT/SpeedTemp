@@ -10,8 +10,8 @@ import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.util.Lists;
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 import com.zweigbergk.speedswede.util.factory.UserFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
@@ -23,13 +23,13 @@ public class UserListener implements ChildEventListener {
 
     private static final String CLIENT_FOR_ALL_USERS = "key_to_listen_to_every_user";
 
-    private Map<String, Set<Client<DataChange<User>>>> userClients;
+    private MapExtension<String, Set<Client<DataChange<User>>>> userClients;
 
 
     public UserListener() {
         super();
 
-        userClients = new HashMap<>();
+        userClients = new HashMapExtension<>();
     }
 
     // NOTE: onChildAdded() runs once for every existing child at the time of attaching.

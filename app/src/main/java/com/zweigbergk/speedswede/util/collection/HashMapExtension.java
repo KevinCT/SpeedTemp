@@ -11,12 +11,12 @@ import static com.zweigbergk.speedswede.util.collection.Collections.SizeMismatch
 
 import java.util.Iterator;
 
-public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> {
+public class HashMapExtension<K, V> extends java.util.HashMap<K, V> implements MapExtension<K, V> {
     @Override
-    public <X, Y> Map<X, Y> map(Lists.EntryMapping<X, Y> mapping) {
-        Map<X, Y> result = new HashMap<>();
-        Client<Map.Entry<K, V>> addMapping = entry -> {
-            Map.Entry<X, Y> mappedEntry = mapping.map(entry);
+    public <X, Y> MapExtension<X, Y> map(Lists.EntryMapping<X, Y> mapping) {
+        MapExtension<X, Y> result = new HashMapExtension<>();
+        Client<MapExtension.Entry<K, V>> addMapping = entry -> {
+            MapExtension.Entry<X, Y> mappedEntry = mapping.map(entry);
             result.put(mappedEntry.getKey(), mappedEntry.getValue());
         };
         foreach(addMapping);
@@ -25,9 +25,9 @@ public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> 
     }
 
     @Override
-    public <E> List<E> transform(Lists.Mapping<Entry<K, V>, E> mapping) {
-        List<E> result = new ArrayList<>();
-        Client<Map.Entry<K, V>> addTransform = entry -> result.add(mapping.map(entry));
+    public <E> ListExtension<E> transform(Lists.Mapping<Entry<K, V>, E> mapping) {
+        ListExtension<E> result = new ArrayListExtension<>();
+        Client<MapExtension.Entry<K, V>> addTransform = entry -> result.add(mapping.map(entry));
         foreach(addTransform);
 
         return result;
@@ -35,18 +35,18 @@ public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> 
 
     @Override
     @NonNull
-    public Set<V> values() {
-        Set<V> result = new HashSet<>();
-        Client<Map.Entry<K, V>> addValue = entry -> result.add(entry.getValue());
+    public SetExtension<V> values() {
+        SetExtension<V> result = new HashSetExtension<>();
+        Client<MapExtension.Entry<K, V>> addValue = entry -> result.add(entry.getValue());
         foreach(addValue);
 
         return result;
     }
 
     @Override
-    public Set<K> keys() {
-        Set<K> result = new HashSet<>();
-        Client<Map.Entry<K, V>> addKey = entry -> result.add(entry.getKey());
+    public SetExtension<K> keys() {
+        SetExtension<K> result = new HashSetExtension<>();
+        Client<MapExtension.Entry<K, V>> addKey = entry -> result.add(entry.getKey());
         foreach(addKey);
 
         return result;
@@ -54,24 +54,24 @@ public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> 
 
     @Override
     public void foreach(Client<Entry<K, V>> client) {
-        for (Map.Entry<K, V> item : this.entrySet()) {
+        for (MapExtension.Entry<K, V> item : this.entrySet()) {
             client.supply(item);
         }
     }
 
     @Override
-    public Map<V, K> invert() {
-        Map<V, K> result = new HashMap<>();
-        Client<Map.Entry<K, V>> addInvertedEntry = entry -> result.put(entry.getValue(), entry.getKey());
+    public MapExtension<V, K> invert() {
+        MapExtension<V, K> result = new HashMapExtension<>();
+        Client<MapExtension.Entry<K, V>> addInvertedEntry = entry -> result.put(entry.getValue(), entry.getKey());
         foreach(addInvertedEntry);
 
         return result;
     }
 
     @Override
-    public Map<K, V> filter(Query<Entry<K, V>> query) {
-        Map<K, V> result = new HashMap<>();
-        Client<Map.Entry<K, V>> addMatches = entry -> {
+    public MapExtension<K, V> filter(Query<Entry<K, V>> query) {
+        MapExtension<K, V> result = new HashMapExtension<>();
+        Client<MapExtension.Entry<K, V>> addMatches = entry -> {
           if (query.matches(entry)) {
               result.put(entry.getKey(), entry.getValue());
           }
@@ -83,9 +83,9 @@ public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> 
     }
 
     @Override
-    public Map<K, V> reject(Query<Entry<K, V>> query) {
-        Map<K, V> result = new HashMap<>();
-        Client<Map.Entry<K, V>> addMatches = entry -> {
+    public MapExtension<K, V> reject(Query<Entry<K, V>> query) {
+        MapExtension<K, V> result = new HashMapExtension<>();
+        Client<MapExtension.Entry<K, V>> addMatches = entry -> {
             if (!query.matches(entry)) {
                 result.put(entry.getKey(), entry.getValue());
             }
@@ -97,13 +97,13 @@ public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> 
     }
 
     @Override
-    public Map<K, V> nonNull() {
-        Query<Map.Entry<K, V>> isNull = entry -> entry.getValue() == null;
+    public MapExtension<K, V> nonNull() {
+        Query<MapExtension.Entry<K, V>> isNull = entry -> entry.getValue() == null;
 
         return reject(isNull);
     }
 
-    public static <K, V> Map<K, V> create(Collection<K> keys, Collection<V> values) {
+    public static <K, V> MapExtension<K, V> create(CollectionExtension<K> keys, CollectionExtension<V> values) {
         if (keys.size() != values.size()) {
             throw new SizeMismatchException(Stringify.curlyFormat(
                     "Key collection (size: {keyCount}) must be of same size as value collection" +
@@ -111,7 +111,7 @@ public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> 
             );
         }
 
-        Map<K, V> result = new HashMap<>();
+        MapExtension<K, V> result = new HashMapExtension<>();
         Iterator<K> keyIterator = keys.iterator();
         Iterator<V> valueIterator = values.iterator();
 
@@ -122,8 +122,8 @@ public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> 
         return result;
     }
 
-    public HashMap<K, V> putList(List<K> keyList, List<V> valueList){
-        HashMap<K, V> map = new HashMap<>();
+    public HashMapExtension<K, V> putList(ListExtension<K> keyList, ListExtension<V> valueList){
+        HashMapExtension<K, V> map = new HashMapExtension<>();
         for(int i=0;i< keyList.size();i++){
             map.put(keyList.get(i), valueList.get(i));
         }

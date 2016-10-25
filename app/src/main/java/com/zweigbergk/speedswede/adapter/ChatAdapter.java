@@ -22,10 +22,10 @@ import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.util.AbuseFilter;
 import com.zweigbergk.speedswede.util.ChildCountListener;
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.List;
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 
@@ -38,17 +38,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     private static final String TAG = ChatAdapter.class.getSimpleName().toUpperCase();
 
-    private List<Chat> mChats;
-    private Map<Event, List<Client<Chat>>> eventClients;
+    private ListExtension<Chat> mChats;
+    private MapExtension<Event, ListExtension<Client<Chat>>> eventClients;
     private Context mContext;
     private ChildCountListener mChildCountListener;
 
-    private ChatAdapter(List<Chat> chats) {
-        eventClients = new HashMap<>();
+    private ChatAdapter(ListExtension<Chat> chats) {
+        eventClients = new HashMapExtension<>();
         mChats = chats;
 
         for (Event event : Event.values()) {
-            eventClients.put(event, new ArrayList<>());
+            eventClients.put(event, new ArrayListExtension<>());
         }
 
     }
@@ -60,7 +60,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     }
 
     public ChatAdapter() {
-        this(new ArrayList<>());
+        this(new ArrayListExtension<>());
     }
 
     public final void notifyChange(DataChange<Chat> change) {
@@ -137,12 +137,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         }
     }
 
-    public List<Chat> getChats() {
+    public ListExtension<Chat> getChats() {
         return mChats;
     }
 
     private void broadcastEvent(Event event, Chat chat) {
-        List<Client<Chat>> clients = eventClients.get(event);
+        ListExtension<Client<Chat>> clients = eventClients.get(event);
         for (Client<Chat> client : clients) {
             client.supply(chat);
         }
@@ -163,7 +163,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         Message latestMessage = chat.getLatestMessage();
 
 
-        //Set appropriate text as latest message text
+        //SetExtension appropriate text as latest message text
         String messageText = "";
         if (latestMessage != null) {
             messageText = latestMessage.getText();

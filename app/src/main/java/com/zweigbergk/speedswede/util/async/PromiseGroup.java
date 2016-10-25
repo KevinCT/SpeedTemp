@@ -6,18 +6,18 @@ import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.Tuple;
 
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 // TODO Use Tag() instead of Tuples...
 class PromiseGroup<E> extends Promise<E> {
 
-    private List<Tuple<PromiseNeed, Commitment<?>>> mPromiseTuples;
+    private ListExtension<Tuple<PromiseNeed, Commitment<?>>> mPromiseTuples;
 
-    PromiseGroup(List<Tuple<PromiseNeed, Commitment<?>>> tuples) {
+    PromiseGroup(ListExtension<Tuple<PromiseNeed, Commitment<?>>> tuples) {
         super(null);
 
-        mPromiseTuples = new ArrayList<>();
+        mPromiseTuples = new ArrayListExtension<>();
 
         //We have to add the next requirement before we add our item, since otherwise the promise
         //will be marked as finished as soon as a Guarantee is passed.
@@ -34,14 +34,14 @@ class PromiseGroup<E> extends Promise<E> {
         }
     }
 
-    private static final Result<List<?>> listBlueprint = itemMap -> {
-        List<Object> result = new ArrayList<>();
+    private static final Result<ListExtension<?>> listBlueprint = itemMap -> {
+        ListExtension<Object> result = new ArrayListExtension<>();
         Lists.forEach(itemMap.getItems(), entry -> result.add(entry.getValue()));
         return result;
     };
 
-    static PromiseGroup<List<?>> normal(List<Tuple<PromiseNeed, Commitment<?>>> tuples) {
-        return (PromiseGroup<List<?>>) new PromiseGroup<List<?>>(tuples).setResultForm(listBlueprint);
+    static PromiseGroup<ListExtension<?>> normal(ListExtension<Tuple<PromiseNeed, Commitment<?>>> tuples) {
+        return (PromiseGroup<ListExtension<?>>) new PromiseGroup<ListExtension<?>>(tuples).setResultForm(listBlueprint);
     }
 
     private void includePromiseTuple(Tuple<PromiseNeed, Commitment<?>> tuple) {

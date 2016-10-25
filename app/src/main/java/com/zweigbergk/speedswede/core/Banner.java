@@ -1,16 +1,16 @@
 package com.zweigbergk.speedswede.core;
 
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 public class Banner {
-    private List<String> banList;
+    private ListExtension<String> banList;
 
     public Banner(){
-        banList = new ArrayList<>();
+        banList = new ArrayListExtension<>();
     }
 
-    public Banner(List<String> banList) {
+    public Banner(ListExtension<String> banList) {
         this.banList = banList;
     }
 
@@ -29,11 +29,11 @@ public class Banner {
 
     }
 
-    public List<String> getBanList(){
+    public ListExtension<String> getBanList(){
         return banList;
     }
 
-    public void setBanList(List<String> banList){
+    public void setBanList(ListExtension<String> banList){
         this.banList=banList;
     }
 

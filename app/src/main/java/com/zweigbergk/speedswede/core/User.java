@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.activity.Language;
 import com.zweigbergk.speedswede.util.PreferenceWrapper;
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 
 import java.util.Arrays;
 
@@ -16,7 +16,7 @@ public interface User extends Parcelable {
 
     //Preferences
     PreferenceWrapper getPreference(Preference preference);
-    Map<Preference, PreferenceWrapper> getPreferences();
+    MapExtension<Preference, PreferenceWrapper> getPreferences();
     boolean getNotificationPreference();
     Language getLanguage();
     SkillCategory getSkillCategory();

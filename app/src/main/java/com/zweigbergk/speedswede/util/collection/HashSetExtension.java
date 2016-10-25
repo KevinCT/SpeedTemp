@@ -3,19 +3,19 @@ package com.zweigbergk.speedswede.util.collection;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Query;
 
-public class HashSet<E> extends java.util.HashSet<E> implements Set<E> {
+public class HashSetExtension<E> extends java.util.HashSet<E> implements SetExtension<E> {
 
-    public HashSet() {
+    public HashSetExtension() {
         super();
     }
 
-    public HashSet(Collection<E> collection) {
+    public HashSetExtension(CollectionExtension<E> collection) {
         super(collection);
     }
 
     @Override
-    public Set<E> union(Iterable<E> other) {
-        Set<E> result = new HashSet<>();
+    public SetExtension<E> union(Iterable<E> other) {
+        SetExtension<E> result = new HashSetExtension<>();
         Client<E> addToResult = this::add;
         this.foreach(addToResult);
         for (E item : other) {
@@ -25,8 +25,8 @@ public class HashSet<E> extends java.util.HashSet<E> implements Set<E> {
         return result;
     }
 
-    public Set<E> intersect(Iterable<E> other) {
-        Set<E> result = new HashSet<>();
+    public SetExtension<E> intersect(Iterable<E> other) {
+        SetExtension<E> result = new HashSetExtension<>();
 
         for (E e : other) {
             if (contains(e)) {
@@ -38,9 +38,9 @@ public class HashSet<E> extends java.util.HashSet<E> implements Set<E> {
     }
 
     @Override
-    public Set<E> difference(Iterable<E> other) {
-        Set<E> result = new HashSet<>();
-        Set<E> otherSet = Collections.asSet(other);
+    public SetExtension<E> difference(Iterable<E> other) {
+        SetExtension<E> result = new HashSetExtension<>();
+        SetExtension<E> otherSet = Collections.asSet(other);
 
         Client<E> diff = e -> {
             if (!otherSet.contains(e)) {
@@ -54,19 +54,6 @@ public class HashSet<E> extends java.util.HashSet<E> implements Set<E> {
     }
 
     @Override
-    public Set<E> reject(Query<E> query) {
-        Set<E> result = new HashSet<>();
-
-        foreach(e -> {
-            if (!query.matches(e)) {
-                result.add(e);
-            }
-        });
-
-        return result;
-    }
-
-    @Override
     public void foreach(Client<E> client) {
         for (E item : this) {
             client.supply(item);
@@ -74,8 +61,8 @@ public class HashSet<E> extends java.util.HashSet<E> implements Set<E> {
     }
 
     @Override
-    public Set<E> filter(Query<E> query) {
-        Set<E> result = new HashSet<>();
+    public SetExtension<E> filter(Query<E> query) {
+        SetExtension<E> result = new HashSetExtension<>();
 
         foreach(e -> {
             if (query.matches(e)) {

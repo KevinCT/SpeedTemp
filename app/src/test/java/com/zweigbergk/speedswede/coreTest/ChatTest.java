@@ -7,7 +7,7 @@ import com.zweigbergk.speedswede.core.User;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 import static org.junit.Assert.assertTrue;
 
@@ -59,7 +59,7 @@ public class ChatTest {
 
     @Test
     public void gettingMessages() {
-        List<Message> conversation = chat.getMessages();
+        ListExtension<Message> conversation = chat.getMessages();
         assertTrue(conversation != null);
 
         String messageText = "TestMessage: gettingMessages";

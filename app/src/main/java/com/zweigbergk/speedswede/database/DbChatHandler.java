@@ -17,11 +17,11 @@ import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.util.async.FirebasePromise;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.async.Statement;
-import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
 import com.zweigbergk.speedswede.util.collection.Collections;
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.List;
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 
@@ -38,7 +38,7 @@ class DbChatHandler extends DbTopLevelHandler {
 
     private DatabaseReference mRoot = FirebaseDatabase.getInstance().getReference();
 
-    private Map<String, MessageListener> messageListeners = new HashMap<>();
+    private MapExtension<String, MessageListener> messageListeners = new HashMapExtension<>();
 
     private ChatListener mChatListener;
 
@@ -140,11 +140,11 @@ class DbChatHandler extends DbTopLevelHandler {
         messageListeners.get(chat.getId()).bind(client);
     }
 
-    Promise<List<Message>> pullMessages(Chat chat) {
-        Promise<List<Message>> messagesPromised = Promise.create();
+    Promise<ListExtension<Message>> pullMessages(Chat chat) {
+        Promise<ListExtension<Message>> messagesPromised = Promise.create();
         messagesPromised.requires(PromiseNeed.SNAPSHOT);
         messagesPromised.setResultForm(items -> {
-            List<Message> result = new ArrayList<>();
+            ListExtension<Message> result = new ArrayListExtension<>();
            DataSnapshot messageSnapshot = items.getSnapshot(PromiseNeed.SNAPSHOT);
             for (DataSnapshot snapshot : messageSnapshot.getChildren()) {
                 result.add(snapshot.getValue(Message.class));

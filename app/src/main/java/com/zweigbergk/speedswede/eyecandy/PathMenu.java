@@ -11,8 +11,8 @@ import com.zweigbergk.speedswede.activity.SingleChatActivity;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.pathmenu.FloatingActionMenu;
 import com.zweigbergk.speedswede.pathmenu.SubActionButton;
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 import java.util.Timer;
@@ -21,7 +21,7 @@ import java.util.TimerTask;
 public class PathMenu {
     private static final String TAG = PathMenu.class.getSimpleName().toUpperCase();
 
-    private List<Client<Boolean>> stateClients = new ArrayList<>();
+    private ListExtension<Client<Boolean>> stateClients = new ArrayListExtension<>();
 
     public void addStateClient(Client<Boolean> client) {
         stateClients.add(client);
@@ -34,7 +34,7 @@ public class PathMenu {
     private TimerTask timerTask;
     private final Handler handler = new Handler();
     private SubActionButton.Builder itemBuilder;
-    private List<SubActionButton> buttons = new ArrayList<>();
+    private ListExtension<SubActionButton> buttons = new ArrayListExtension<>();
 
 
     private SingleChatActivity contextProvider;

@@ -25,7 +25,7 @@ import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.ChildCountListener;
 import com.zweigbergk.speedswede.util.ParcelHelper;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 public class ChatListFragment extends Fragment implements ChildCountListener {
 
@@ -73,7 +73,7 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
     private void saveState() {
         Log.d(TAG, "saveState()");
         Bundle bundle = getArguments();
-        List<Chat> list = adapter.getChats();
+        ListExtension<Chat> list = adapter.getChats();
         Log.d(TAG, "Saving chats to arguments. Chat amount: " + list.size());
         ParcelHelper.saveParcableList(bundle, list, TAG_CHATLIST);
     }
@@ -135,7 +135,7 @@ public class ChatListFragment extends Fragment implements ChildCountListener {
 
         if (savedState != null) {
             Log.d(TAG, "We have a saved state!");
-            List<Chat> savedChats = ParcelHelper.retrieveParcableList(savedState, TAG_CHATLIST);
+            ListExtension<Chat> savedChats = ParcelHelper.retrieveParcableList(savedState, TAG_CHATLIST);
             Log.d(TAG, "Saved chat amount: " + savedChats);
                 savedChats.foreach(chat -> adapter.notifyChange(DataChange.added(chat)));
 

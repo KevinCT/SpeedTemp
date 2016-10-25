@@ -42,7 +42,7 @@ public class FloatingActionMenu {
     private int endAngle;
     /** Distance of menu items from mainActionView */
     private int radius;
-    /** List of menu items */
+    /** ListExtension of menu items */
     private List<Item> subActionItems;
     /** Reference to the preferred {@link MenuAnimationHandler} object */
     private MenuAnimationHandler animationHandler;

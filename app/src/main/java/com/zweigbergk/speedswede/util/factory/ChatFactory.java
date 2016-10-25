@@ -14,8 +14,8 @@ import com.zweigbergk.speedswede.util.async.Guarantee;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.Tuple;
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 import static com.zweigbergk.speedswede.util.async.PromiseNeed.*;
 
@@ -49,7 +49,7 @@ public class ChatFactory {
             return chat;
         };
 
-        List<Tuple<PromiseNeed, Commitment<?>>> commitments = new ArrayList<>();
+        ListExtension<Tuple<PromiseNeed, Commitment<?>>> commitments = new ArrayListExtension<>();
         commitments.add(new Tuple<>(CHAT, chatCommitment));
         commitments.add(new Tuple<>(FIRST_USER, firstUserPromised));
         commitments.add(new Tuple<>(SECOND_USER, secondUserPromised));
@@ -72,7 +72,7 @@ public class ChatFactory {
 
 
         Iterable<DataSnapshot> messageSnapshots = snapshot.child(Constants.MESSAGES).getChildren();
-        List<Message> messages = asMessageList(messageSnapshots);
+        ListExtension<Message> messages = asMessageList(messageSnapshots);
 
         Chat chat = new Chat(id, name, timestamp, messages);
         chat.setLikeStatusFirstUser(likeStatusFirstUser);
@@ -81,8 +81,8 @@ public class ChatFactory {
         return chat;
     }
 
-    private static List<Message> asMessageList(Iterable<DataSnapshot> snapshot) {
-        List<Message> messages = new ArrayList<>();
+    private static ListExtension<Message> asMessageList(Iterable<DataSnapshot> snapshot) {
+        ListExtension<Message> messages = new ArrayListExtension<>();
         Lists.forEach(snapshot, messageSnapshot -> {
             Message message = messageSnapshot.getValue(Message.class);
             messages.add(message);
