@@ -3,6 +3,8 @@ package com.zweigbergk.speedswede.util.collection;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Query;
 
+import java.util.Iterator;
+
 @SuppressWarnings("Convert2streamapi")
 public class HashSetExtension<E> extends java.util.HashSet<E> implements SetExtension<E> {
 
@@ -72,5 +74,11 @@ public class HashSetExtension<E> extends java.util.HashSet<E> implements SetExte
         });
 
         return result;
+    }
+
+    @Override
+    public E getFirst() {
+        Iterator<E> iterator = iterator();
+        return iterator.hasNext() ? iterator.next() : null;
     }
 }

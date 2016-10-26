@@ -84,13 +84,23 @@ public class ArrayListExtension<E> extends java.util.ArrayList<E> implements Lis
     @Override
     public <To> ListExtension<To> map(Mapping<E, To> mapping) {
         ListExtension<To> result = new ArrayListExtension<>();
-
-        for (E element : this) {
-            result.add(mapping.map(element));
-        }
+        foreach(e -> result.add(mapping.map(e)));
 
         return result;
     }
+
+    @Override
+    public <K, V> MapExtension<K, V> toMap(Mapping<E, MapExtension.Entry<K, V>> mapping) {
+        MapExtension<K, V> result = new HashMapExtension<>();
+
+        foreach(e -> {
+            MapExtension.Entry<K, V> entry = mapping.map(e);
+            result.put(entry.getKey(), entry.getValue());
+        });
+
+        return result;
+    }
+
 
     @Override
     public ListExtension<E> nonNull() {

@@ -8,4 +8,5 @@ public interface SetExtension<E> extends java.util.Set<E>, CollectionExtension<E
     SetExtension<E> intersect(Iterable<E> other);
     SetExtension<E> difference(Iterable<E> other);
     SetExtension<E> filter(Query<E> query);
+    E getFirst();
 }

@@ -7,9 +7,6 @@ import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Query;
 
 import static com.zweigbergk.speedswede.util.collection.CollectionExtension.Mapping;
-
-
-
 import static com.zweigbergk.speedswede.util.collection.Collections.SizeMismatchException;
 
 import java.util.Iterator;
@@ -31,7 +28,7 @@ public class HashMapExtension<K, V> extends java.util.HashMap<K, V> implements M
     @Override
     public <E> ListExtension<E> transform(Mapping<Entry<K, V>, E> mapping) {
         ListExtension<E> result = new ArrayListExtension<>();
-        Client<MapExtension.Entry<K, V>> addTransform = entry -> result.add(mapping.map(entry));
+        Client<Entry<K, V>> addTransform = entry -> result.add(mapping.map(entry));
         foreach(addTransform);
 
         return result;
@@ -40,7 +37,7 @@ public class HashMapExtension<K, V> extends java.util.HashMap<K, V> implements M
     @Override
     public <E> SetExtension<E> transformToSet(Mapping<Entry<K, V>, E> mapping) {
         SetExtension<E> result = new HashSetExtension<>();
-        Client<MapExtension.Entry<K, V>> addTransform = entry -> result.add(mapping.map(entry));
+        Client<Entry<K, V>> addTransform = entry -> result.add(mapping.map(entry));
         foreach(addTransform);
 
         return result;
@@ -50,7 +47,7 @@ public class HashMapExtension<K, V> extends java.util.HashMap<K, V> implements M
     @NonNull
     public SetExtension<V> values() {
         SetExtension<V> result = new HashSetExtension<>();
-        Client<MapExtension.Entry<K, V>> addValue = entry -> result.add(entry.getValue());
+        Client<Entry<K, V>> addValue = entry -> result.add(entry.getValue());
         foreach(addValue);
 
         return result;
@@ -59,7 +56,7 @@ public class HashMapExtension<K, V> extends java.util.HashMap<K, V> implements M
     @Override
     public SetExtension<K> keys() {
         SetExtension<K> result = new HashSetExtension<>();
-        Client<MapExtension.Entry<K, V>> addKey = entry -> result.add(entry.getKey());
+        Client<Entry<K, V>> addKey = entry -> result.add(entry.getKey());
         foreach(addKey);
 
         return result;
@@ -67,7 +64,7 @@ public class HashMapExtension<K, V> extends java.util.HashMap<K, V> implements M
 
     @Override
     public void foreach(Client<Entry<K, V>> client) {
-        for (MapExtension.Entry<K, V> item : this.entrySet()) {
+        for (Entry<K, V> item : this.entrySet()) {
             client.supply(item);
         }
     }
@@ -75,7 +72,7 @@ public class HashMapExtension<K, V> extends java.util.HashMap<K, V> implements M
     @Override
     public MapExtension<V, K> invert() {
         MapExtension<V, K> result = new HashMapExtension<>();
-        Client<MapExtension.Entry<K, V>> addInvertedEntry = entry -> result.put(entry.getValue(), entry.getKey());
+        Client<Entry<K, V>> addInvertedEntry = entry -> result.put(entry.getValue(), entry.getKey());
         foreach(addInvertedEntry);
 
         return result;
@@ -84,7 +81,7 @@ public class HashMapExtension<K, V> extends java.util.HashMap<K, V> implements M
     @Override
     public MapExtension<K, V> filter(Query<Entry<K, V>> query) {
         MapExtension<K, V> result = new HashMapExtension<>();
-        Client<MapExtension.Entry<K, V>> addMatches = entry -> {
+        Client<Entry<K, V>> addMatches = entry -> {
             if (query.matches(entry)) {
                 result.put(entry.getKey(), entry.getValue());
             }
@@ -98,7 +95,7 @@ public class HashMapExtension<K, V> extends java.util.HashMap<K, V> implements M
     @Override
     public MapExtension<K, V> reject(Query<Entry<K, V>> query) {
         MapExtension<K, V> result = new HashMapExtension<>();
-        Client<MapExtension.Entry<K, V>> addMatches = entry -> {
+        Client<Entry<K, V>> addMatches = entry -> {
             if (!query.matches(entry)) {
                 result.put(entry.getKey(), entry.getValue());
             }
@@ -111,7 +108,7 @@ public class HashMapExtension<K, V> extends java.util.HashMap<K, V> implements M
 
     @Override
     public MapExtension<K, V> nonNull() {
-        Query<MapExtension.Entry<K, V>> isNull = entry -> entry.getValue() == null;
+        Query<Entry<K, V>> isNull = entry -> entry.getValue() == null;
 
         return reject(isNull);
     }
@@ -135,7 +132,7 @@ public class HashMapExtension<K, V> extends java.util.HashMap<K, V> implements M
         return result;
     }
 
-    public void putEntry(MapExtension.Entry<K, V> entry) {
+    public void putEntry(Entry<K, V> entry) {
         put(entry.getKey(), entry.getValue());
     }
 

@@ -2,6 +2,9 @@ package com.zweigbergk.speedswede.util.collection;
 
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
+import java.util.Map;
+
+
 public interface CollectionExtension<E> extends java.util.Collection<E> {
     void foreach(Client<E> client);
 
@@ -10,6 +13,6 @@ public interface CollectionExtension<E> extends java.util.Collection<E> {
     }
 
     interface EntryMapping<K, V> {
-        <X, Y> MapExtension.Entry<X, Y> map(MapExtension.Entry<K, V> entry);
+        <X, Y> Map.Entry<X, Y> map(Map.Entry<K, V> entry);
     }
 }

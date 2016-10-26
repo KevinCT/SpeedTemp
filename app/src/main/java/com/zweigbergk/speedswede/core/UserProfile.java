@@ -39,6 +39,7 @@ public class UserProfile implements User {
     }
 
     public UserProfile withPreferences(MapExtension<Preference, PreferenceWrapper> preferences) {
+
         setPreferences(preferences);
         return this;
     }
