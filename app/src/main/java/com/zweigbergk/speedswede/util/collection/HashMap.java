@@ -12,13 +12,11 @@ import static com.zweigbergk.speedswede.util.collection.Collections.SizeMismatch
 import java.util.Iterator;
 
 public class HashMap<K, V> extends java.util.HashMap<K, V> implements Map<K, V> {
+
     @Override
     public <X, Y> Map<X, Y> map(Lists.EntryMapping<X, Y> mapping) {
         Map<X, Y> result = new HashMap<>();
-        Client<Map.Entry<K, V>> ad
-
-
-        dMapping = entry -> {
+        Client<Map.Entry<K, V>> addMapping = entry -> {
             Map.Entry<X, Y> mappedEntry = mapping.map(entry);
             result.put(mappedEntry.getKey(), mappedEntry.getValue());
         };
