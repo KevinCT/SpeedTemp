@@ -14,12 +14,10 @@ import static com.zweigbergk.speedswede.util.PreferenceWrapper.BooleanWrapper;
 public class UserReference {
 
     public enum UserAttribute {
-        NAME(Constants.DISPLAY_NAME), ID(Constants.USER_ID),
         NOTIFICATIONS(Constants.makePath(Constants.PREFERENCES, Constants.NOTIFICATIONS)),
         LANGUAGE(Constants.makePath(Constants.PREFERENCES, Constants.LANGUAGE)),
         SKILL_CATEGORY(Constants.makePath(Constants.PREFERENCES, Constants.SKILL_CATEGORY)),
         FIRST_LOGIN(Constants.FIRST_LOGIN),
-        TIME_IN_QUEUE(Constants.TIME_IN_QUEUE),
         UNDEFINED(Constants.UNDEFINED);
 
         private String path;
@@ -106,10 +104,6 @@ public class UserReference {
 
     public void block(User user) {
         userHandler.blockUser(mUser, user);
-    }
-
-    public void setId(String id) {
-        attempt(() -> userHandler.setUserAttribute(mUser, UserAttribute.ID, id));
     }
 
     private User activeUser() {

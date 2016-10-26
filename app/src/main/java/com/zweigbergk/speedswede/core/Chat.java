@@ -3,17 +3,14 @@ package com.zweigbergk.speedswede.core;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.firebase.database.Exclude;
 import com.zweigbergk.speedswede.Constants;
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.ParcelHelper;
 
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.Stringify;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 public class Chat implements Parcelable {
 
     private User firstUser;
@@ -21,10 +18,12 @@ public class Chat implements Parcelable {
     private User secondUser;
 
 
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private boolean likedByFirstUser = false;
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private boolean likedBySecondUser = false;
 
-    private List<Message> messages;
+    private ListExtension<Message> messages;
     private String id;
     private long timeStamp;
     private long lastMessageTimeStamp;
@@ -33,6 +32,7 @@ public class Chat implements Parcelable {
     private boolean inactive;
 
 
+    @SuppressWarnings("unused")
     public Chat() {
     }
 
@@ -42,15 +42,15 @@ public class Chat implements Parcelable {
 
         this.name = Constants.Topic.getRandom().name();
 
-        this.messages = new ArrayList<>();
-        timeStamp = (new Date()).getTime();
+        this.messages = new ArrayListExtension<>();
+        this.timeStamp = (new Date()).getTime();
 
         id = firstUser.getUid() + "-" + secondUser.getUid();
 
         inactive = false;
     }
 
-    public Chat(String id, String name, long timeStamp, List<Message> messages) {
+    public Chat(String id, String name, long timeStamp, ListExtension<Message> messages) {
         this.firstUser = null;
         this.secondUser = null;
 
@@ -78,44 +78,18 @@ public class Chat implements Parcelable {
         this.name = name;
     }
 
-    @Exclude
-    public boolean isInactive() {
-        return inactive;
-    }
-
-    @Exclude
-    public void setInactive(boolean inactive) {
-        this.inactive = inactive;
-    }
-
     public User getFirstUser() {
         return firstUser;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public User getSecondUser() {
         return secondUser;
     }
 
-    public boolean hasFirstUserLiked() {
 
-        return likedByFirstUser;
-    }
-
-    public boolean hasSecondUserLiked() {
-
-        return likedBySecondUser;
-    }
-
-    public long getTimeStamp() {
-        return timeStamp;
-    }
-
-
-    public List<Message> getMessages() {
-        List<Message> messageListClone = new ArrayList<>();
-        Lists.forEach(messages, m -> messageListClone.add(m.clone()));
-
-        return messageListClone;
+    public ListExtension<Message> getMessages() {
+        return messages.map(Message::clone);
     }
 
     public String getId() {
@@ -138,13 +112,6 @@ public class Chat implements Parcelable {
         this.secondUser = user;
     }
 
-    @Exclude
-    public long getIdAsLong() {
-        return firstUser.hashCode() * 5 +
-                secondUser.hashCode() * 7 +
-                timeStamp;
-    }
-
     public Message getLatestMessage() {
         return messages.size() > 0 ? messages.get(messages.size() - 1) : null;
     }
@@ -157,8 +124,9 @@ public class Chat implements Parcelable {
         messages.add(message);
     }
 
-    public String getReadableTime() {
-        return new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss", Locale.ENGLISH).format(new Date(timeStamp));
+    @SuppressWarnings("unused")
+    public long getTimeStamp() {
+        return this.timeStamp;
     }
 
     @Override
@@ -183,18 +151,14 @@ public class Chat implements Parcelable {
 
     @Override
     public String toString() {
-        return String.format(Locale.ENGLISH,
-                "Chat {id: %s,%sname: %s,%sfirstUser: %s,%secondUser: %s,%smessageCount: %d,%n},",
-                id, NEWLINE,
-                name, NEWLINE,
-                firstUser != null ? firstUser.toString() : "null", NEWLINE,
-                secondUser != null ? secondUser.toString() : "null", NEWLINE,
+        return Stringify.curlyFormat("Chat: ( id: {id},%n\t\tname: {name},%n\t\t" +
+                "firstUser: {user1},%n\t\tsecondUser: {user2},%n\t\tmessageCount: {count},",
+                id, name,
+                firstUser != null ? firstUser.toString() : "null",
+                secondUser != null ? secondUser.toString() : "null",
                 messages.size()
                 );
     }
-
-    private static final String NEWLINE = "%n\t\t";
-
 
     /**
      * PARCELABLE METHODS BELOW; IGNORE
@@ -228,6 +192,7 @@ public class Chat implements Parcelable {
         dest.writeInt(inactive ? 1 : 0);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public Chat(Parcel in) {
         firstUser = in.readParcelable(UserProfile.class.getClassLoader());
         secondUser = in.readParcelable(UserProfile.class.getClassLoader());

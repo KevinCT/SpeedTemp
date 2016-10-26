@@ -13,31 +13,30 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.Constants;
-import com.zweigbergk.speedswede.core.Banner;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.eventListener.UserListener;
 import com.zweigbergk.speedswede.database.eventListener.UserPoolListener;
-import com.zweigbergk.speedswede.util.Lists;
-import com.zweigbergk.speedswede.util.async.FirebasePromise;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.async.Statement;
 import com.zweigbergk.speedswede.util.factory.UserFactory;
 
-import static com.zweigbergk.speedswede.Constants.BANLIST;
+import java.util.Locale;
+
+import static com.zweigbergk.speedswede.Constants.BAN_LIST;
 import static com.zweigbergk.speedswede.Constants.BANS;
 import static com.zweigbergk.speedswede.Constants.POOL;
 import static com.zweigbergk.speedswede.Constants.USERS;
-import static com.zweigbergk.speedswede.util.async.PromiseNeed.SNAPSHOT;
 
 class DbUserHandler extends DbTopLevelHandler {
     private static DbUserHandler INSTANCE;
 
-    private static final String TAG = DbUserHandler.class.getSimpleName().toUpperCase();
+    private static final String TAG = DbUserHandler.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private DatabaseReference mRoot = FirebaseDatabase.getInstance().getReference();
 
+    @SuppressWarnings("FieldCanBeLocal")
     private UserListener mUsersListener;
     private UserPoolListener mUserPoolListener;
 
@@ -81,10 +80,6 @@ class DbUserHandler extends DbTopLevelHandler {
         ref.keepSynced(true);
     }
 
-    UserListener getUserListener() {
-        return mUsersListener;
-    }
-
     public Promise<User> pullUser(String uid) {
         final Promise<User> promise = new Promise<>(items -> items.getUser(PromiseNeed.USER));
                 promise.requires(PromiseNeed.USER);
@@ -121,10 +116,6 @@ class DbUserHandler extends DbTopLevelHandler {
 
     public Statement exists(User user) {
         return hasReference(mRoot.child(USERS).child(user.getUid()));
-    }
-
-    public Statement isInPool(User user) {
-        return hasReference(mRoot.child(POOL).child(user.getUid()));
     }
 
     void addUserToPool(User user) {
@@ -183,14 +174,7 @@ class DbUserHandler extends DbTopLevelHandler {
         mLoggedInUser = user;
     }
 
-    Statement userExists(User user) {
-        return hasReference(mRoot.child(USERS).child(user.getUid()));
-    }
-
-    Statement userExists(String userId) {
-        return hasReference(mRoot.child(USERS).child(userId));
-    }
-
+    @SuppressWarnings("unused")
     Statement isInUserPool(User user) {
         return hasReference(mRoot.child(POOL).child(user.getUid()));
     }
@@ -203,30 +187,12 @@ class DbUserHandler extends DbTopLevelHandler {
         return mUserPoolListener;
     }
 
-    void liftBlock(String strangerUid) {
-        String uid = getActiveUserId();
-        DatabaseReference ref = mRoot.child(BANS).child(uid).child(BANLIST).child(strangerUid);
-        delete(ref);
-    }
-
-    Promise<Banner> getBans(String uid){
-        Promise.Result<Banner> bannerResult = items -> {
-            DataSnapshot snapshot = items.getSnapshot(SNAPSHOT);
-            return new Banner(Lists.map(snapshot.getChildren(), DataSnapshot::getKey));
-        };
-
-        Promise<Banner> bannerPromise = new Promise<>(bannerResult, SNAPSHOT);
-
-        FirebasePromise snapshotPromise = new FirebasePromise(databasePath(BANS, uid, BANLIST));
-        return snapshotPromise.thenPromise(SNAPSHOT, bannerPromise);
-    }
-
     void blockUser(User subject, User target) {
-        mRoot.child(BANS).child(subject.getUid()).child(BANLIST).child(target.getUid()).setValue(true);
+        mRoot.child(BANS).child(subject.getUid()).child(BAN_LIST).child(target.getUid()).setValue(true);
     }
 
     Statement hasBlockedUser(User subject, User target) {
-        DatabaseReference ref = mRoot.child(BANS).child(subject.getUid()).child(BANLIST).child(target.getUid());
+        DatabaseReference ref = mRoot.child(BANS).child(subject.getUid()).child(BAN_LIST).child(target.getUid());
         return DbUserHandler.getInstance().hasReference(ref);
     }
 }

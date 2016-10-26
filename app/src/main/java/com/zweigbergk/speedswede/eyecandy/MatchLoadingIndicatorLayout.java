@@ -51,15 +51,15 @@ public class MatchLoadingIndicatorLayout extends LinearLayout {
         DatabaseHandler.getPool().bind(getPoolClient());
     }
 
-    public Client<DataChange<User>> getPoolClient() {
+    private Client<DataChange<User>> getPoolClient() {
         return poolClient;
     }
 
-    public Animation fadeInAnimation() {
+    private Animation fadeInAnimation() {
         return contextProvider.contextualize(context -> AnimationUtils.loadAnimation(context, android.R.anim.fade_in));
     }
 
-    public Animation fadeOutAnimation() {
+    private Animation fadeOutAnimation() {
         return contextProvider.contextualize(context -> AnimationUtils.loadAnimation(context, android.R.anim.fade_out));
     }
 

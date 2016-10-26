@@ -1,58 +1,65 @@
 package com.zweigbergk.speedswede.util.factory;
 
-import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.core.UserProfile;
 
+import com.zweigbergk.speedswede.mock.ISnapshot;
+import com.zweigbergk.speedswede.mock.SnapshotExtension;
 import com.zweigbergk.speedswede.util.PreferenceWrapper;
-import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.collection.Collections;
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.List;
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
+
 
 import static com.zweigbergk.speedswede.Constants.DISPLAY_NAME;
 import static com.zweigbergk.speedswede.Constants.FIRST_LOGIN;
 import static com.zweigbergk.speedswede.Constants.PREFERENCES;
+import static com.zweigbergk.speedswede.Constants.UNDEFINED;
 import static com.zweigbergk.speedswede.Constants.USER_ID;
 import static com.zweigbergk.speedswede.core.User.Preference;
 
+import static com.zweigbergk.speedswede.util.collection.MapExtension.MapEntry;
+
 public class UserFactory {
-    private static final String TAG = UserFactory.class.getSimpleName().toUpperCase();
 
-    public static User deserializeUser(DataSnapshot dataSnapshot) {
+    public static User deserializeUser(ISnapshot dataSnapshot) {
 
-        String name = dataSnapshot.child(DISPLAY_NAME).getValue().toString();
-        String id = dataSnapshot.child(USER_ID).getValue().toString();
-        Object firstLoginObj = dataSnapshot.child(FIRST_LOGIN).getValue();
-        boolean firstLogin = firstLoginObj != null && (boolean) firstLoginObj;
+        ISnapshot sName = dataSnapshot.child(DISPLAY_NAME);
+        String name = sName.exists() ? sName.getValue().toString() : UNDEFINED;
 
-        //First getReference a list of the preference key: value pairs
-        List<DataSnapshot> preferences = Collections.asList(dataSnapshot.child(PREFERENCES)
+        ISnapshot sId = dataSnapshot.child(USER_ID);
+        String id = sId.exists() ? sId.getValue().toString() : UNDEFINED;
+
+        ISnapshot sFirstLogin = dataSnapshot.child(FIRST_LOGIN);
+        boolean firstLogin = sFirstLogin.exists() && toBoolean(sFirstLogin.getValue());
+
+        //Retrieve the preferences
+        ISnapshot sPreferences = dataSnapshot.child(PREFERENCES);
+
+        MapExtension<Preference, PreferenceWrapper> preferenceMap = sPreferences.exists() ?
+                Collections.asList(dataSnapshot.child(PREFERENCES)
                 .getChildren()
-                .iterator());
+                .iterator())
+                .toMap(snapshot ->
+                new MapEntry<>(
+                        Preference.fromString(snapshot.getKey()),
+                        PreferenceWrapper.cast(snapshot.getValue())
+                )).nonNull()
+                : new HashMapExtension<>();
 
-        //Extract the keys
-        List<Preference> preferenceKeys = preferences.map(DataSnapshot::getKey)
-                .map(Preference::fromString);
-
-        //Extract the values
-        List<PreferenceWrapper> preferenceValues = preferences
-                .map(snapshot -> PreferenceWrapper.cast(snapshot.getValue()));
-
-        //Create a preference map
-        Map<Preference, PreferenceWrapper> preferenceMap = HashMap
-                .create(preferenceKeys, preferenceValues)
-                .nonNull();
 
         User user = new UserProfile(name, id).withPreferences(preferenceMap);
         user.setFirstLogin(firstLogin);
 
-        preferenceMap.foreach(entry -> Log.d(TAG, Stringify.curlyFormat("Here's a preference entry from the preferencemap! Key: {key}, Value: {value}",
-                entry.getKey().toString(), entry.getValue().getValue().toString())));
-
         return user;
+    }
+
+    public static User deserializeUser(DataSnapshot snapshot) {
+        return deserializeUser(new SnapshotExtension(snapshot));
+    }
+
+    private static boolean toBoolean(Object object) {
+        return object.getClass().equals(Boolean.class) && (boolean) object;
     }
 }

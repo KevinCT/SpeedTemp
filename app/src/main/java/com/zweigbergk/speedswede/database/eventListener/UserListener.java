@@ -5,33 +5,27 @@ import android.util.Log;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.core.UserProfile;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.HashSetExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
+import com.zweigbergk.speedswede.util.collection.SetExtension;
 import com.zweigbergk.speedswede.util.factory.UserFactory;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.Lists;
-
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import java.util.HashSet;
-import com.zweigbergk.speedswede.util.collection.Map;
-import java.util.Set;
 
 public class UserListener implements ChildEventListener {
-    public static final String TAG = UserListener.class.getSimpleName().toUpperCase();
-
     private static final String CLIENT_FOR_ALL_USERS = "key_to_listen_to_every_user";
 
-    private Map<String, Set<Client<DataChange<User>>>> userClients;
+    private MapExtension<String, SetExtension<Client<DataChange<User>>>> userClients;
 
 
     public UserListener() {
         super();
 
-        userClients = new HashMap<>();
+        userClients = new HashMapExtension<>();
     }
 
     // NOTE: onChildAdded() runs once for every existing child at the time of attaching.
@@ -67,8 +61,6 @@ public class UserListener implements ChildEventListener {
 
     private void notifyClients(DatabaseEvent event, User user) {
         String id = user.getUid();
-        Set<Client<DataChange<User>>> chatClients =
-                Lists.union(this.userClients.get(id), this.userClients.get(CLIENT_FOR_ALL_USERS));
 
         DataChange<User> dataChange;
         switch(event) {
@@ -86,7 +78,14 @@ public class UserListener implements ChildEventListener {
                 break;
         }
 
-        Lists.forEach(chatClients, client -> client.supply(dataChange));
+        userClients.filter(clientEntry -> {
+                    String entryID = clientEntry.getKey();
+                    return entryID.equals(id) || entryID.equals(CLIENT_FOR_ALL_USERS);
+                })
+                .values()
+                .foreach(set ->
+                        set.foreach(client ->
+                                client.supply(dataChange)));
     }
 
     private void notifyAdded(User user) {
@@ -101,17 +100,14 @@ public class UserListener implements ChildEventListener {
         notifyClients(DatabaseEvent.CHANGED, user);
     }
 
-    private void notifyInterrupted() {
-        notifyClients(DatabaseEvent.INTERRUPTED, null);
-    }
-
 
      /**
      * Adds a client that will receive updates whenever the user is added/removed/changed.
      * */
+    @SuppressWarnings("WeakerAccess")
     public void addClient(String userId, Client<DataChange<User>> client) {
         if (!userClients.containsKey(userId)) {
-            userClients.put(userId, new HashSet<>());
+            userClients.put(userId, new HashSetExtension<>());
         }
 
         userClients.get(userId).add(client);
@@ -120,6 +116,7 @@ public class UserListener implements ChildEventListener {
     /**
      * Adds a client that will receive updates whenever the user is added/removed/changed.
      * */
+    @SuppressWarnings("unused")
     public void addClient(User user, Client<DataChange<User>> client) {
         addClient(user.getUid(), client);
     }
@@ -127,6 +124,7 @@ public class UserListener implements ChildEventListener {
     /**
      * Adds a client that will receive updates whenever <u>any</u> user is added/removed/changed.
      * */
+    @SuppressWarnings("unused")
     public void addClient(Client<DataChange<User>> client) {
         addClient(CLIENT_FOR_ALL_USERS, client);
     }
@@ -134,9 +132,10 @@ public class UserListener implements ChildEventListener {
     /**
      * Stops a client from receiving updates from the particular user.
      * */
+    @SuppressWarnings("WeakerAccess")
     public void removeClient(String userId, Client<DataChange<User>> client) {
         if (!userClients.containsKey(userId)) {
-            userClients.put(userId, new HashSet<>());
+            userClients.put(userId, new HashSetExtension<>());
         }
 
         userClients.get(userId).remove(client);
@@ -145,6 +144,7 @@ public class UserListener implements ChildEventListener {
     /**
      * Stops a client from receiving updates from the particular user.
      * */
+    @SuppressWarnings("unused")
     public void removeClient(User user, Client<DataChange<User>> client) {
         removeClient(user.getUid(), client);
     }

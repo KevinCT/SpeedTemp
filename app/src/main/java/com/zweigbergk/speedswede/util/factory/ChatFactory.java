@@ -1,7 +1,5 @@
 package com.zweigbergk.speedswede.util.factory;
 
-import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
@@ -9,24 +7,19 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.core.User;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.async.Commitment;
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.async.Guarantee;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
 import com.zweigbergk.speedswede.util.Tuple;
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.Arrays;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 import static com.zweigbergk.speedswede.util.async.PromiseNeed.*;
 
 public class ChatFactory {
 
-    private static final String TAG = ChatFactory.class.getSimpleName().toUpperCase();
-
-
     public static Promise<Chat> deserializeChat(DataSnapshot snapshot) {
-        Log.d(TAG, "Deserializing chat!");
-
         String firstUserId = ChatFactory.getUserId(snapshot.child(Constants.FIRST_USER));
         String secondUserId = ChatFactory.getUserId(snapshot.child(Constants.SECOND_USER));
         Boolean likeStatusFirstUser = ChatFactory.getLikeStatus(snapshot.child(Constants.LIKED_BY_FIRST_USER));
@@ -49,7 +42,7 @@ public class ChatFactory {
             return chat;
         };
 
-        List<Tuple<PromiseNeed, Commitment<?>>> commitments = new ArrayList<>();
+        ListExtension<Tuple<PromiseNeed, Commitment<?>>> commitments = new ArrayListExtension<>();
         commitments.add(new Tuple<>(CHAT, chatCommitment));
         commitments.add(new Tuple<>(FIRST_USER, firstUserPromised));
         commitments.add(new Tuple<>(SECOND_USER, secondUserPromised));
@@ -72,7 +65,7 @@ public class ChatFactory {
 
 
         Iterable<DataSnapshot> messageSnapshots = snapshot.child(Constants.MESSAGES).getChildren();
-        List<Message> messages = asMessageList(messageSnapshots);
+        ListExtension<Message> messages = asMessageList(messageSnapshots);
 
         Chat chat = new Chat(id, name, timestamp, messages);
         chat.setLikeStatusFirstUser(likeStatusFirstUser);
@@ -81,14 +74,9 @@ public class ChatFactory {
         return chat;
     }
 
-    private static List<Message> asMessageList(Iterable<DataSnapshot> snapshot) {
-        List<Message> messages = new ArrayList<>();
-        Lists.forEach(snapshot, messageSnapshot -> {
-            Message message = messageSnapshot.getValue(Message.class);
-            messages.add(message);
-        });
-
-        return messages;
+    private static ListExtension<Message> asMessageList(Iterable<DataSnapshot> snapshot) {
+        return Arrays.asList(snapshot)
+                .map(messageSnapshot -> messageSnapshot.getValue(Message.class));
     }
 
     private static String getUserId(DataSnapshot snapshot) {

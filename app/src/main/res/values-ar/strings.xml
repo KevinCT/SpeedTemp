@@ -4,7 +4,7 @@
 
     <string name="facebook_app_id">616859141821100</string>
 
-    <string name="hint_message_input_field">اكتب رسالة...</string>
+    <string name="hint_message_input_field">&#8230;اكتب رسالة</string>
 
     <string name="settings_pref_notifications">الاخطارات</string>
     <string name="settings_summary_notifications">اختار إذا كنت تريد أن يتم إعلامك عندما تظهر رسائل محادثة جديدة أو متواصلين جدد.</string>

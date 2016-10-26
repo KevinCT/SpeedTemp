@@ -2,41 +2,37 @@ package com.zweigbergk.speedswede.util.async;
 
 import android.util.Log;
 
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Stringify;
-import com.zweigbergk.speedswede.util.collection.HashSet;
+import com.zweigbergk.speedswede.util.collection.HashSetExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.StateRequirement;
 import com.zweigbergk.speedswede.util.async.Promise.ItemMap;
+
+import java.util.Locale;
 
 /** Holds an unfinished object. Only releases it once it is completed,
  * i.e. all requirements are met. */
 class PromiseState {
 
-    public static final String TAG = PromiseState.class.getSimpleName().toUpperCase();
+    private static final String TAG = PromiseState.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private ItemMap mItems;
 
-    private HashSet<PromiseNeed> needs;
+    private HashSetExtension<PromiseNeed> needs;
 
-    private HashSet<PromiseNeed> fulfilledNeeds;
+    private HashSetExtension<PromiseNeed> fulfilledNeeds;
 
-    private Map<PromiseNeed, StateRequirement> stateRequirements;
+    private MapExtension<PromiseNeed, StateRequirement> stateRequirements;
 
     PromiseState() {
         mItems = new ItemMap();
 
-        needs = new HashSet<>();
-        fulfilledNeeds = new HashSet<>();
+        needs = new HashSetExtension<>();
+        fulfilledNeeds = new HashSetExtension<>();
 
-        stateRequirements = new HashMap<>();
-    }
-
-    void requireState(PromiseNeed key, StateRequirement requirement) {
-        stateRequirements.put(key, requirement);
-        Log.d(TAG, "Adding state requirement: " + key);
+        stateRequirements = new HashMapExtension<>();
     }
 
     private void updateState(PromiseNeed need) {
@@ -53,10 +49,6 @@ class PromiseState {
             Log.d(TAG, Stringify.curlyFormat("Need {need} is fulfilled!", need.name()));
             Log.d(TAG, Stringify.curlyFormat("Total needs: {total}, needs remaining: {remaining}", needs, needs.difference(fulfilledNeeds)));
         }
-    }
-
-    void updateState() {
-        Lists.forEach(needs, this::updateState);
     }
 
     void put(PromiseNeed need, Object item) {

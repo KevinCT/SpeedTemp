@@ -9,11 +9,11 @@ import static org.junit.Assert.*;
 
 
 public class HashSetTest {
-    HashSet<String> test;
+    HashSetExtension<String> test;
 
     @Before
     public void setUp() throws Exception {
-        test = new HashSet<>();
+        test = new HashSetExtension<>();
 
         assertTrue(test.isEmpty());
 
@@ -27,8 +27,8 @@ public class HashSetTest {
 
     @Test
     public void union() throws Exception {
-        HashSet<String> testUnion = new HashSet<>();
-        HashSet<String> testUnion2 = new HashSet<>();
+        HashSetExtension<String> testUnion = new HashSetExtension<>();
+        HashSetExtension<String> testUnion2 = new HashSetExtension<>();
 
         testUnion2.add("a");
         testUnion2.add("b");
@@ -45,7 +45,7 @@ public class HashSetTest {
         testUnion.add("e");
         testUnion.add("f");
 
-        testUnion = (HashSet<String>) testUnion.union(test);
+        testUnion = (HashSetExtension<String>) testUnion.union(test);
 
         assertEquals(testUnion2, testUnion);
 
@@ -53,9 +53,9 @@ public class HashSetTest {
 
     @Test
     public void intersect() throws Exception {
-        test =  new HashSet<>();
-        HashSet<String> testIntersect = new HashSet<>();
-        HashSet<String> testIntersect2 = new HashSet<>();
+        test =  new HashSetExtension<>();
+        HashSetExtension<String> testIntersect = new HashSetExtension<>();
+        HashSetExtension<String> testIntersect2 = new HashSetExtension<>();
 
         test.add("a");
         test.add("b");
@@ -76,7 +76,7 @@ public class HashSetTest {
         testIntersect.add("g");
         testIntersect.add("e");
 
-        test = (HashSet<String>) test.intersect(testIntersect2);
+        test = (HashSetExtension<String>) test.intersect(testIntersect2);
 
         assertEquals(test, testIntersect);
 
@@ -84,9 +84,9 @@ public class HashSetTest {
 
     @Test
     public void difference() throws Exception {
-        test =  new HashSet<>();
-        HashSet<String> testIntersect = new HashSet<>();
-        HashSet<String> testIntersect2 = new HashSet<>();
+        test =  new HashSetExtension<>();
+        HashSetExtension<String> testIntersect = new HashSetExtension<>();
+        HashSetExtension<String> testIntersect2 = new HashSetExtension<>();
 
         test.add("a");
         test.add("b");
@@ -106,7 +106,7 @@ public class HashSetTest {
         testIntersect.add("f");
         testIntersect.add("h");
 
-        test = (HashSet<String>) test.difference(testIntersect2);
+        test = (HashSetExtension<String>) test.difference(testIntersect2);
 
         assertEquals(test, testIntersect);
     }

@@ -1,11 +1,10 @@
 package com.zweigbergk.speedswede;
 
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.PreferenceWrapper;
+import com.zweigbergk.speedswede.util.collection.Arrays;
 import com.zweigbergk.speedswede.util.collection.Collections;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class Constants {
@@ -33,16 +32,15 @@ public class Constants {
     public static final String LIKED_BY_SECOND_USER = "likedBySecondUser";
 
     public static final String FIRST_LOGIN = "firstLogin";
-    public static final String TIME_IN_QUEUE = "timeInQueue";
     public static final String SKILL_CATEGORY = "skillCategory";
 
     public static final String BANS = "bans";
-    public static final String BANLIST = "banList";
+    public static final String BAN_LIST = "banList";
 
     public static final String SETTINGS_FIRST_SETUP = "settings_first_setup";
 
     //Topics
-    public static final int DEAFULT_TOPIC_IMAGE = R.drawable.ic_default_chat;
+    public static final int DEFAULT_TOPIC_IMAGE = R.drawable.ic_default_chat;
 
     public enum Topic {
         Cars(R.drawable.ic_taxi), Theatre(R.drawable.ic_comedy), Universe(R.drawable.ic_nature),
@@ -95,7 +93,7 @@ public class Constants {
             return "";
 
         StringBuilder builder = new StringBuilder();
-        Lists.forEach(Arrays.asList(constants), c -> {
+        Arrays.asList(constants).foreach(c -> {
             builder.append(c);
             builder.append('/');
         });
@@ -105,11 +103,7 @@ public class Constants {
         return builder.toString();
     }
 
-    public static String preference(String preference) {
-        return makePath(PREFERENCES, preference);
-    }
-
-    public static List<PreferenceWrapper> shells =
+    public static final ListExtension<PreferenceWrapper> shells =
             Collections.asList(
                     PreferenceWrapper.StringWrapper.shell(),
                     PreferenceWrapper.BooleanWrapper.shell(),

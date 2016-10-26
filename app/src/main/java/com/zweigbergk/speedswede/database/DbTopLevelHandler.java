@@ -10,11 +10,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.util.async.Statement;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 abstract class DbTopLevelHandler {
-    private static final String TAG = DbTopLevelHandler.class.getSimpleName().toUpperCase();
+    private static final String TAG = DbTopLevelHandler.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
 
+    @SuppressWarnings("unused")
     void delete(DatabaseReference ref) {
         ref.removeValue();
     }

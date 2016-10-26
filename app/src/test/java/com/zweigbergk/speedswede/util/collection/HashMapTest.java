@@ -1,22 +1,24 @@
 package com.zweigbergk.speedswede.util.collection;
 
-import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
 public class HashMapTest {
 
-    HashMap<String, Integer> test;
+    HashMapExtension<String, Integer> test;
 
     @Before
     public void setUp() throws Exception {
-        test = new HashMap<>();
+        test = new HashMapExtension<>();
 
         assertTrue(test.isEmpty());
 
@@ -30,16 +32,16 @@ public class HashMapTest {
 
 
     @Test
-    public void values() throws Exception { //FEL
-        test = new HashMap<>();
-        Set<Integer> testSet = new HashSet<>();
+    public void values() throws Exception {
+        test = new HashMapExtension<>();
+        Set<Integer> testSet = new HashSetExtension<>();
         for(int i=65;i<=90;i++) {
             testSet.add(i);
             test.put(String.valueOf((char) i) , i);
         }
 
-        java.util.Set<String> keySet = test.keySet();
-        java.util.Set<Integer> valueSet = new HashSet<Integer>();
+        Set<String> keySet = test.keySet();
+        Set<Integer> valueSet = new HashSetExtension<>();
 
         for(String i: keySet) {
             valueSet.add(test.get(i));
@@ -52,7 +54,7 @@ public class HashMapTest {
 
     @Test
     public void keys() throws Exception {
-        test = new HashMap<>();
+        test = new HashMapExtension<>();
         Set<String> testSet = new HashSet<>();
         for(int i=65;i<=90;i++) {
             testSet.add(String.valueOf((char) i));
@@ -65,14 +67,14 @@ public class HashMapTest {
 
     @Test
     public void invert() throws Exception {
-        test = new HashMap<>();
+        test = new HashMapExtension<>();
 
         test.put("a" , 1);
         test.put("b" , 2);
         test.put("c" , 3);
         test.put("d" , 4);
 
-        HashMap<Integer, String> testInvert = (HashMap<Integer, String>) test.invert();
+        HashMapExtension<Integer, String> testInvert = (HashMapExtension<Integer, String>) test.invert();
 
         assertEquals(testInvert.get(1), "a");
         assertEquals(testInvert.get(2), "b");
@@ -84,12 +86,12 @@ public class HashMapTest {
 
     @Test
     public void create() throws Exception {
-        test = new HashMap<>();
+        test = new HashMapExtension<>();
 
-        Collection<String> keys = new ArrayList<>();
-        Collection<Integer> values = new ArrayList<>();
+        CollectionExtension<String> keys = new ArrayListExtension<>();
+        CollectionExtension<Integer> values = new ArrayListExtension<>();
 
-        HashMap<String, Integer> hashMapCreateTest = new HashMap<>();
+        HashMapExtension<String, Integer> hashMapCreateTest;
 
         test.put("a", 1);
         test.put("b", 2);
@@ -106,7 +108,7 @@ public class HashMapTest {
         values.add(3);
         values.add(4);
 
-        hashMapCreateTest = (HashMap<String, Integer>) HashMap.create(keys, values);
+        hashMapCreateTest = (HashMapExtension<String, Integer>) HashMapExtension.create(keys, values);
 
         assertEquals(hashMapCreateTest, test);
 
@@ -114,8 +116,8 @@ public class HashMapTest {
 
     @Test
     public void putList() throws Exception {
-        test = new HashMap<>();
-        HashMap<String, Integer> hashMapPutListTest = new HashMap<>();
+        test = new HashMapExtension<>();
+        HashMapExtension<String, Integer> hashMapPutListTest = new HashMapExtension<>();
 
         List<String> keys = new ArrayList<String>();
 

@@ -5,8 +5,8 @@ import com.zweigbergk.speedswede.core.Banner;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -39,7 +39,7 @@ public class BannerTest {
 
     @Test
     public void setGetTest(){
-        List<String> banList = new ArrayList<>();
+        ListExtension<String> banList = new ArrayListExtension<>();
         mBanner.setBanList(banList);
         assertTrue(mBanner.getBanList().equals(banList));
     }

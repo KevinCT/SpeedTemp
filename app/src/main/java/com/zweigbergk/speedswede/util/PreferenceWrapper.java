@@ -18,13 +18,14 @@ public abstract class PreferenceWrapper<T> implements Parcelable {
 
     abstract PreferenceWrapper<T> withValue(T value);
 
-    public static <T> PreferenceWrapper<T> cast(Object object) {
+    public static <T> PreferenceWrapper cast(Object object) {
         for (PreferenceWrapper shell : Constants.shells) {
             try {
                 T item = (T) shell.getValue().getClass().cast(object);
+                //noinspection unchecked
                 return shell.withValue(item);
             } catch (ClassCastException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
 

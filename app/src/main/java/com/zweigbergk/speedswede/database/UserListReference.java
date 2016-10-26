@@ -7,10 +7,12 @@ import com.zweigbergk.speedswede.util.async.Promise;
 public enum UserListReference {
     INSTANCE;
 
+    @SuppressWarnings("SameReturnValue")
     static UserListReference getInstance() {
         return INSTANCE;
     }
 
+    @SuppressWarnings("unused")
     public Statement not(Statement statement) {
         return statement.invert();
     }

@@ -6,20 +6,23 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
+
+import java.util.Locale;
 
 /**
  * A layout that doesn't intercept click events
  */
 public class TransparentLayout extends RelativeLayout {
-    private static final String TAG = TransparentLayout.class.getSimpleName().toUpperCase();
+    private static final String TAG = TransparentLayout.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
 
     private boolean catchClickEvents = false;
 
-    private List<Executable> executables = new ArrayList<>();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private ListExtension<Executable> executables = new ArrayListExtension<>();
 
     public TransparentLayout(Context context) {
         super(context);

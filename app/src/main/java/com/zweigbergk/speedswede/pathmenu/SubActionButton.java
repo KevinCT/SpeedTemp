@@ -3,10 +3,10 @@
  */
 package com.zweigbergk.speedswede.pathmenu;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -21,33 +21,34 @@ import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
  */
 public class SubActionButton extends FrameLayout {
 
-    public static final int THEME_LIGHT = 0;
-    public static final int THEME_DARK = 1;
-    public static final int THEME_LIGHTER = 2;
-    public static final int THEME_DARKER = 3;
+    private static final int THEME_LIGHT = 0;
+    private static final int THEME_DARK = 1;
+    private static final int THEME_LIGHTER = 2;
+    private static final int THEME_DARKER = 3;
 
-    public SubActionButton(Context context, LayoutParams layoutParams, int theme, Drawable backgroundDrawable, View contentView, LayoutParams contentParams) {
+    private SubActionButton(Context context, LayoutParams layoutParams, int theme, Drawable backgroundDrawable, View contentView, LayoutParams contentParams) {
         super(context);
         setLayoutParams(layoutParams);
         // If no custom backgroundDrawable is specified, use the background drawable of the theme.
         if(backgroundDrawable == null) {
             if(theme == THEME_LIGHT) {
-                backgroundDrawable = context.getResources().getDrawable(com.oguzdev.circularfloatingactionmenu.library.R.drawable.button_sub_action_selector);
+                backgroundDrawable = ContextCompat.getDrawable(context, com.oguzdev.circularfloatingactionmenu.library.R.drawable.button_sub_action_selector);
             }
             else if(theme == THEME_DARK) {
-                backgroundDrawable = context.getResources().getDrawable(com.oguzdev.circularfloatingactionmenu.library.R.drawable.button_sub_action_dark_selector);
+                backgroundDrawable = ContextCompat.getDrawable(context, com.oguzdev.circularfloatingactionmenu.library.R.drawable.button_sub_action_dark_selector);
             }
             else if(theme == THEME_LIGHTER) {
-                backgroundDrawable = context.getResources().getDrawable(com.oguzdev.circularfloatingactionmenu.library.R.drawable.button_action_selector);
+                backgroundDrawable = ContextCompat.getDrawable(context, com.oguzdev.circularfloatingactionmenu.library.R.drawable.button_action_selector);
             }
             else if(theme == THEME_DARKER) {
-                backgroundDrawable = context.getResources().getDrawable(com.oguzdev.circularfloatingactionmenu.library.R.drawable.button_action_dark_selector);
+                backgroundDrawable = ContextCompat.getDrawable(context, com.oguzdev.circularfloatingactionmenu.library.R.drawable.button_action_dark_selector);
             }
             else {
                 throw new RuntimeException("Unknown SubActionButton theme: " + theme);
             }
         }
         else {
+            //noinspection ConstantConditions
             backgroundDrawable = backgroundDrawable.mutate().getConstantState().newDrawable();
         }
         setBackgroundResource(backgroundDrawable);
@@ -72,7 +73,7 @@ public class SubActionButton extends FrameLayout {
     /**
      * Sets a content view with custom LayoutParams that will be displayed inside this SubActionButton.
      */
-    public void setContentView(View contentView, LayoutParams params) {
+    private void setContentView(View contentView, LayoutParams params) {
         if(params == null) {
             params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER);
             final int margin = getResources().getDimensionPixelSize(com.oguzdev.circularfloatingactionmenu.library.R.dimen.sub_action_button_content_margin);
@@ -86,6 +87,7 @@ public class SubActionButton extends FrameLayout {
     /**
      * Sets a content view with default LayoutParams
      */
+    @SuppressWarnings("unused")
     public void setContentView(View contentView) {
         setContentView(contentView, null);
     }
@@ -95,7 +97,7 @@ public class SubActionButton extends FrameLayout {
             setBackground(drawable);
         }
         else {
-            setBackgroundDrawable(drawable);
+            setBackground(drawable);
         }
     }
 
@@ -107,7 +109,6 @@ public class SubActionButton extends FrameLayout {
         private Context context;
         private LayoutParams layoutParams;
         private int theme;
-        private Drawable backgroundDrawable;
         private View contentView;
         private LayoutParams contentParams;
 
@@ -121,18 +122,15 @@ public class SubActionButton extends FrameLayout {
             setTheme(SubActionButton.THEME_LIGHT);
         }
 
-        public Builder setLayoutParams(LayoutParams params) {
+        @SuppressWarnings("UnusedReturnValue")
+        Builder setLayoutParams(LayoutParams params) {
             this.layoutParams = params;
             return this;
         }
 
+        @SuppressWarnings("UnusedReturnValue")
         public Builder setTheme(int theme) {
             this.theme = theme;
-            return this;
-        }
-
-        public Builder setBackgroundDrawable(Drawable backgroundDrawable) {
-            this.backgroundDrawable = backgroundDrawable;
             return this;
         }
 
@@ -141,6 +139,7 @@ public class SubActionButton extends FrameLayout {
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setContentView(View contentView, LayoutParams contentParams) {
             this.contentView = contentView;
             this.contentParams = contentParams;
@@ -151,7 +150,7 @@ public class SubActionButton extends FrameLayout {
             return new SubActionButton(context,
                     layoutParams,
                     theme,
-                    backgroundDrawable,
+                    null,
                     contentView,
                     contentParams);
         }

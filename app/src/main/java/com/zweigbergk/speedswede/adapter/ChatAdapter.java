@@ -22,33 +22,35 @@ import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.database.LocalStorage;
 import com.zweigbergk.speedswede.util.AbuseFilter;
 import com.zweigbergk.speedswede.util.ChildCountListener;
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.List;
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.Time;
 
-import static com.zweigbergk.speedswede.Constants.DEAFULT_TOPIC_IMAGE;
+import java.util.Locale;
+
+import static com.zweigbergk.speedswede.Constants.DEFAULT_TOPIC_IMAGE;
 import static com.zweigbergk.speedswede.Constants.MAX_PREVIEW_LENGTH;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     private enum Event { CHAT_VIEW_CLICKED, CHAT_REMOVED, CHAT_ADDED }
 
-    private static final String TAG = ChatAdapter.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatAdapter.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
-    private List<Chat> mChats;
-    private Map<Event, List<Client<Chat>>> eventClients;
+    private ListExtension<Chat> mChats;
+    private MapExtension<Event, ListExtension<Client<Chat>>> eventClients;
     private Context mContext;
     private ChildCountListener mChildCountListener;
 
-    private ChatAdapter(List<Chat> chats) {
-        eventClients = new HashMap<>();
+    private ChatAdapter(ListExtension<Chat> chats) {
+        eventClients = new HashMapExtension<>();
         mChats = chats;
 
         for (Event event : Event.values()) {
-            eventClients.put(event, new ArrayList<>());
+            eventClients.put(event, new ArrayListExtension<>());
         }
 
     }
@@ -60,7 +62,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     }
 
     public ChatAdapter() {
-        this(new ArrayList<>());
+        this(new ArrayListExtension<>());
     }
 
     public final void notifyChange(DataChange<Chat> change) {
@@ -137,12 +139,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         }
     }
 
-    public List<Chat> getChats() {
+    public ListExtension<Chat> getChats() {
         return mChats;
     }
 
     private void broadcastEvent(Event event, Chat chat) {
-        List<Client<Chat>> clients = eventClients.get(event);
+        ListExtension<Client<Chat>> clients = eventClients.get(event);
         for (Client<Chat> client : clients) {
             client.supply(chat);
         }
@@ -163,7 +165,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         Message latestMessage = chat.getLatestMessage();
 
 
-        //Set appropriate text as latest message text
+        //SetExtension appropriate text as latest message text
         String messageText = "";
         if (latestMessage != null) {
             messageText = latestMessage.getText();
@@ -186,7 +188,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
         //Default
         Constants.Topic topic = Constants.Topic.fromString(chat.getName());
-        int topicResId = topic != null ? topic.getResourceId() : DEAFULT_TOPIC_IMAGE;
+        int topicResId = topic != null ? topic.getResourceId() : DEFAULT_TOPIC_IMAGE;
 
         holder.name.setText(chat.getName());
         holder.latestMessage.setText(messageText);

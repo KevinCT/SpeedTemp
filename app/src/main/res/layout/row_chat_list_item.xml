@@ -14,7 +14,7 @@
         android:layout_centerVertical="true"/>
 
         <LinearLayout
-            android:id="@+id/righthand_wrapper"
+            android:id="@+id/right_hand_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/spacing_small"
@@ -60,7 +60,7 @@
         android:paddingTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/righthand_wrapper"
+        android:layout_below="@id/right_hand_wrapper"
         android:background="#DDD"/>
 
 </RelativeLayout>

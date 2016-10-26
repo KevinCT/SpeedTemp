@@ -10,15 +10,17 @@ import com.zweigbergk.speedswede.core.Message;
 import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.util.Stringify;
-import com.zweigbergk.speedswede.util.collection.Collection;
+import com.zweigbergk.speedswede.util.collection.CollectionExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
+import java.util.Locale;
+
 public class MessageListener extends FirebaseDataListener<Message> implements ChildEventListener {
-    public static final String TAG = MessageListener.class.getSimpleName().toUpperCase();
+    private static final String TAG = MessageListener.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private String mIdentifier = "";
 
-    public MessageListener(Collection<Client<DataChange<Message>>> clients) {
+    public MessageListener(CollectionExtension<Client<DataChange<Message>>> clients) {
         super(clients);
     }
 

@@ -4,28 +4,29 @@ import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Tuple;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.Arrays;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import java.util.Arrays;
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.List;
-import com.zweigbergk.speedswede.util.collection.Map;
+import java.util.Locale;
+
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 
 public class Promise<E> extends Commitment<E> {
-    public static final String TAG = Promise.class.getSimpleName().toUpperCase();
+    private static final String TAG = Promise.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     Result<E> mResultForm;
 
     PromiseState promiseState;
 
-    private Map<PromiseNeed, List<Promise<?>>> chainedPromises;
+    private MapExtension<PromiseNeed, ListExtension<Promise<?>>> chainedPromises;
 
     //Error flag. If this is set, the builder will return null to all its listeners.
-    boolean mBuildFailed;
+    private boolean mBuildFailed;
 
     public static <E> Promise<E> create() {
         return new Promise<>(null);
@@ -36,13 +37,13 @@ public class Promise<E> extends Commitment<E> {
         mResultForm = blueprint;
         mBuildFailed = false;
 
-        mClients = new ArrayList<>();
-        mExecutables = new ArrayList<>();
-        mInterestExecutables = new HashMap<>();
-        chainedPromises = new HashMap<>();
+        mClients = new ArrayListExtension<>();
+        mExecutables = new ArrayListExtension<>();
+        mInterestExecutables = new HashMapExtension<>();
+        chainedPromises = new HashMapExtension<>();
 
         promiseState = new PromiseState();
-        Lists.forEach(needs, promiseState::addNeed);
+        Arrays.asList(needs).foreach(promiseState::addNeed);
     }
 
     public Promise<E> setResultForm(Result<E> result) {
@@ -56,18 +57,7 @@ public class Promise<E> extends Commitment<E> {
         return this;
     }
 
-    public static Promise<List<?>> all(List<Tuple<PromiseNeed, Commitment<?>>> tuples) {
-        return PromiseGroup.normal(tuples);
-    }
-
-    /*public static <E> Promise<E> group(Result<E> resultForm, Tuple<PromiseNeed, Commitment<?>>... promises) {
-        PromiseGroup<E> group = new PromiseGroup<>(promises);
-        group.setResultForm(resultForm);
-        return group;
-    }*/
-
-
-    public static <E> Promise<E> group(Result<E> resultForm, List<Tuple<PromiseNeed, Commitment<?>>> promises) {
+    public static <E> Promise<E> group(Result<E> resultForm, ListExtension<Tuple<PromiseNeed, Commitment<?>>> promises) {
         PromiseGroup<E> group = new PromiseGroup<>(promises);
         group.setResultForm(resultForm);
         return group;
@@ -75,7 +65,7 @@ public class Promise<E> extends Commitment<E> {
 
     public <NewType> Promise<NewType> thenPromise(PromiseNeed need, Promise<NewType> promise) {
         if (!chainedPromises.containsKey(need)) {
-            chainedPromises.put(need, new ArrayList<>());
+            chainedPromises.put(need, new ArrayListExtension<>());
         }
 
         chainedPromises.get(need).add(promise);
@@ -83,10 +73,10 @@ public class Promise<E> extends Commitment<E> {
     }
 
     public void requires(PromiseNeed... locks) {
-        Lists.forEach(Arrays.asList(locks), promiseState::addNeed);
+        Arrays.asList(locks).foreach(promiseState::addNeed);
     }
 
-    protected void complete() {
+    void complete() {
         mCompletedProduct = mResultForm.makeFromItems(promiseState.getItems());
 
         notifyListeners();
@@ -110,8 +100,7 @@ public class Promise<E> extends Commitment<E> {
         }
     }
 
-    @Override
-    protected void addExecutable(Executable executable, Executable.Interest<E> interest) {
+    void addExecutable(Executable executable, Executable.Interest<E> interest) {
         if (!hasProduct()) {
             mInterestExecutables.put(executable, interest);
         } else {
@@ -128,40 +117,27 @@ public class Promise<E> extends Commitment<E> {
      * on this Promise.
      */
     private void forwardToChainedPromises() {
-        List<Tuple<PromiseNeed, Promise<?>>> promises = new ArrayList<>();
-
-        Lists.forEach(chainedPromises, entry -> {
-            List<Promise<?>> list = entry.getValue();
-            Lists.forEach(list, promise -> promises.add(new Tuple<>(entry.getKey(), promise)));
-        });
-
-        Lists.forEach(promises, tuple -> {
-            tuple.getValue().addItem(tuple.getKey(), mCompletedProduct);
-        });
+        chainedPromises.foreach(promiseList ->
+                promiseList.getValue().foreach(promise ->
+                        promise.addItem(promiseList.getKey(), mCompletedProduct)));
     }
 
-    protected void notifyListeners() {
-        Lists.forEach(mClients.iterator(), client -> {
-            client.supply(mCompletedProduct);
-        });
-
+    void notifyListeners() {
+        mClients.foreach(client -> client.supply(mCompletedProduct));
         mClients.clear();
 
-        Lists.forEach(mExecutables.iterator(), Executable::run);
-
+        mExecutables.foreach(Executable::run);
         mExecutables.clear();
 
-        for (Map.Entry<Executable, Executable.Interest<E>> entry :
-                mInterestExecutables.entrySet()) {
-            Executable.Interest<E> interest = entry.getValue();
-            Executable executable = entry.getKey();
-            if (interest.caresFor(mCompletedProduct)) {
-                executable.run();
-            }
-        }
+        mInterestExecutables.foreach(entry -> {
+                    Executable.Interest<E> interest = entry.getValue();
+                    Executable executable = entry.getKey();
+                    if (interest.caresFor(mCompletedProduct)) {
+                        executable.run();
+                    }
+                });
 
         mInterestExecutables.clear();
-
     }
 
     public void addItem(PromiseNeed need, Object data) {
@@ -173,8 +149,7 @@ public class Promise<E> extends Commitment<E> {
         }
     }
 
-    @Override
-    protected boolean isFulfilled() {
+    private boolean isFulfilled() {
         return promiseState.isFulfilled();
     }
 
@@ -198,17 +173,16 @@ public class Promise<E> extends Commitment<E> {
         return hasProduct() ? mCompletedProduct : null;
     }
 
-    @Override
-    protected boolean hasProduct() {
+    private boolean hasProduct() {
         return mCompletedProduct != null || mBuildFailed;
     }
 
     public static class ItemMap {
 
-        Map<PromiseNeed, Object> items;
+        MapExtension<PromiseNeed, Object> items;
 
         ItemMap() {
-            items = new HashMap<>();
+            items = new HashMapExtension<>();
         }
 
         public void put(PromiseNeed key, Object item) {
@@ -228,7 +202,7 @@ public class Promise<E> extends Commitment<E> {
             return (User) items.get(need);
         }
 
-        Map<PromiseNeed, Object> getItems() {
+        MapExtension<PromiseNeed, Object> getItems() {
             return items;
         }
 

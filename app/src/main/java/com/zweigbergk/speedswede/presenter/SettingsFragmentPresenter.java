@@ -10,8 +10,8 @@ public class SettingsFragmentPresenter {
 
     }
 
-    public void onDialogPreferenceSelected(Boolean languageChanged){
-        mInteractor.changeLanguage(languageChanged);
+    public void onDialogPreferenceSelected(){
+        mInteractor.changeLanguage();
     }
 
 }

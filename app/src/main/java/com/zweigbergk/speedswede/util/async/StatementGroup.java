@@ -2,22 +2,24 @@ package com.zweigbergk.speedswede.util.async;
 
 import android.util.Log;
 
-import com.zweigbergk.speedswede.util.Lists;
 import com.zweigbergk.speedswede.util.Stringify;
 import com.zweigbergk.speedswede.util.Tuple;
 
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
+
+import java.util.Locale;
 
 // TODO Use Tag() instead of Tuples...
 class StatementGroup extends Statement {
+    private static final String TAG = StatementGroup.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
-    StatementGroup(Result<Boolean> resultForm, List<Tuple<PromiseNeed, Statement>> tuples) {
+    StatementGroup(Result<Boolean> resultForm, ListExtension<Tuple<PromiseNeed, Statement>> tuples) {
         super(false);
         //Since default constructor in Statement always sets a result form, don't use default method here.
         mResultForm = resultForm;
 
-        Lists.forEach(tuples, tuple -> requires(tuple.getKey()));
-        Lists.forEach(tuples, this::includePromiseTuple);
+        tuples.map(Tuple::getKey).foreach(this::requires);
+        tuples.foreach(this::includePromiseTuple);
     }
 
     private void includePromiseTuple(Tuple<PromiseNeed, Statement> tuple) {
@@ -38,6 +40,7 @@ class StatementGroup extends Statement {
     }
 
     private static class PromiseException extends RuntimeException {
+        @SuppressWarnings("unused")
         PromiseException(String message) {
             super(message);
         }

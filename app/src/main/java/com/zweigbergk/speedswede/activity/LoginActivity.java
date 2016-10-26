@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -13,21 +12,17 @@ import com.facebook.login.widget.LoginButton;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.Initializer;
 import com.zweigbergk.speedswede.R;
-import com.zweigbergk.speedswede.core.User;
-import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.presenter.LoginPresenter;
 import com.zweigbergk.speedswede.util.ActivityAttachable;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.view.LoginView;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
-    public static final String TAG = "LoginActivity";
-
     private ActivityAttachable mPresenter;
 
-    LoginButton mLoginButton;
-    ProgressBar mProgressCircle;
-    RelativeLayout mContentLayout;
+    private LoginButton mLoginButton;
+    private ProgressBar mProgressCircle;
+    private RelativeLayout mContentLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +39,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         mPresenter = new LoginPresenter(this);
     }
 
-    @Override
     public void onLogin(boolean isOfflineMode) {
         Initializer.onLogin(isOfflineMode);
 
@@ -78,7 +72,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         mContentLayout.setVisibility(visibility);
     }
 
-    @Override
     public LoginButton getLoginButton() {
         return mLoginButton;
     }
@@ -88,18 +81,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         super.onResume();
 
         ((LoginPresenter)mPresenter).invalidateState();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mPresenter.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mPresenter.onStop();
     }
 
     @Override

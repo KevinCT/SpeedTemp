@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">SpeedSwede</string>
 
     <string name="facebook_app_id">616859141821100</string>
 
-    <string name="hint_message_input_field">Write a message...</string>
+    <string name="hint_message_input_field">Write a message&#8230;</string>
 
-    <string name="looking_for_match">Looking for a chat...</string>
+    <string name="looking_for_match" tools:ignore="MissingTranslation">Looking for a chat&#8230;</string>
     <string name="confirm_block_user">Block user?</string>
 
-    <string name="settings_show_actions">Show actions</string>
+    <string name="settings_show_actions" tools:ignore="MissingTranslation">Show actions</string>
 
     <string name="activity_settings_title">Settings</string>
-    <string name="action_view_filter">Action View Filter</string>
+    <string name="action_view_filter" tools:ignore="MissingTranslation">Action View Filter</string>
 
     <string name="settings_pref_notifications">Notifications</string>
     <string name="settings_summary_notifications">Choose whether you want to be notified when new chat messages or matches appear.</string>
@@ -27,10 +27,10 @@
     <string name="settings_pref_usage_entry_chat">I just want to chat</string>
 
     <string name="activity_login_text">Log in using your Facebook account to get started!</string>
-    <string name="topic_image_description">topic image</string>
+    <string name="topic_image_description" tools:ignore="MissingTranslation">topic image</string>
 
     <string name="chosen_language">English</string>
     <string name="exit_chat_text">You will not be able to come back to it.</string>
     <string name="block_user_text">You will not be matched with him or her again.</string>
-    <string name="default_image_descr">image</string>
+    <string name="default_image_description" tools:ignore="MissingTranslation">image</string>
 </resources>

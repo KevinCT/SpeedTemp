@@ -6,25 +6,23 @@ import com.zweigbergk.speedswede.database.DataChange;
 import com.zweigbergk.speedswede.database.DatabaseEvent;
 import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.async.Statement;
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
+
+import java.util.Locale;
 
 public enum ChatMatcher {
     INSTANCE;
 
-    private static final String TAG = ChatMatcher.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatMatcher.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
-    private List<User> mUsersInPool;
-
-    private boolean loopIsActive = false;
+    private ListExtension<User> mUsersInPool;
 
     ChatMatcher() {
-        mUsersInPool = new ArrayList<>();
+        mUsersInPool = new ArrayListExtension<>();
     }
 
     public void handleUser(DataChange<User> dataChange) {
@@ -45,11 +43,6 @@ public enum ChatMatcher {
         }
     }
 
-    /**
-     * IF activeUser has not blocked user, and user has not blocked activeUser, this will
-     * add user to the local user pool (mUsersInPool) and then run match().
-     * @param user
-     */
     private void handleUserAdded(User user) {
         User activeUser = DatabaseHandler.getActiveUser();
 
@@ -74,16 +67,10 @@ public enum ChatMatcher {
         DatabaseHandler.getPool().push(user);
     }
 
-    /** Remove user from the matching process */
-    public void removeUser(User user) {
-        DatabaseHandler.getPool().remove(user);
-    }
-
     private void match() {
         Log.d(TAG, "Users in pool: " + mUsersInPool.size());
         if (mUsersInPool.size() > 1) {
-            // TODO: Change to a more sofisticated matching algorithm in future. Maybe match depending on personal best in benchpress?
-            List<User> matchedUsers = mUsersInPool.first(2);
+            ListExtension<User> matchedUsers = mUsersInPool.first(2);
 
             DatabaseHandler.getPool().removeUser(matchedUsers.get(0));
             DatabaseHandler.getPool().removeUser(matchedUsers.get(1));
@@ -96,7 +83,7 @@ public enum ChatMatcher {
 
 
 
-//    public List<User> sofisticatedMatch() {
+//    public ListExtension<User> sophisticatedMatch() {
 //        User activeUser = DatabaseHandler.getActiveUser();
 //
 //        for(User secondUser : mUsersInPool) {
@@ -107,20 +94,21 @@ public enum ChatMatcher {
 //        return null;
 //    }
 
+    @SuppressWarnings("unused")
     private void nextLevelMatch() {
-        Map<String, List<User>> listMap = seperatePools();
-        List<User> learners = listMap.get("learners");
-        List<User> mentors = listMap.get("mentors");
-        List<User> chatters = listMap.get("chatters");
+        MapExtension<String, ListExtension<User>> listMap = separatePools();
+        ListExtension<User> learners = listMap.get("learners");
+        ListExtension<User> mentors = listMap.get("mentors");
+        ListExtension<User> chatters = listMap.get("chatters");
         matchLearners(learners, mentors);
         matchChatters(chatters);
     }
 
-    private Map<String, List<User>> seperatePools() {
-        List<User> learners = new ArrayList<>();
-        List<User> mentors = new ArrayList<>();
-        List<User> chatters = new ArrayList<>();
-        Map<String, List<User>> listMap = new HashMap<>();
+    private MapExtension<String, ListExtension<User>> separatePools() {
+        ListExtension<User> learners = new ArrayListExtension<>();
+        ListExtension<User> mentors = new ArrayListExtension<>();
+        ListExtension<User> chatters = new ArrayListExtension<>();
+        MapExtension<String, ListExtension<User>> listMap = new HashMapExtension<>();
 
         for(User user : mUsersInPool) {
             switch(user.getSkillCategory()) {
@@ -144,7 +132,7 @@ public enum ChatMatcher {
         return listMap;
     }
 
-    private void matchLearners(List<User> learners, List<User> mentors) {
+    private void matchLearners(ListExtension<User> learners, ListExtension<User> mentors) {
         if(learners.size() > 0 && mentors.size() > 0) {
             User firstBeginner = learners.get(0);
             for (User user : learners) {
@@ -163,14 +151,13 @@ public enum ChatMatcher {
             DatabaseHandler.getPool().removeUser(firstMentor);
 
             Chat chat = new Chat(firstBeginner, firstMentor);
-            Log.d("MAFAKALEARNERS", chat.getName() + "");
             DatabaseHandler.getReference(chat).push();
         }
     }
 
-    private void matchChatters(List<User> userList) {
+    private void matchChatters(ListExtension<User> userList) {
         if(userList.size() > 1) {
-            List<User> matchedUsers = new ArrayList<>();
+            ListExtension<User> matchedUsers = new ArrayListExtension<>();
             matchedUsers.add(userList.get(0));
             matchedUsers.add(userList.get(1));
 
@@ -178,15 +165,13 @@ public enum ChatMatcher {
             DatabaseHandler.getPool().removeUser(matchedUsers.get(1));
 
             Chat chat = new Chat(matchedUsers.get(0), matchedUsers.get(1));
-            Log.d("FILTHYCASUALS: ", chat.getName() + "");
             DatabaseHandler.getReference(chat).push();
         }
     }
 
-//    public List<User> checkIfMatch(User activeUser, User secondUser) {
-//        List<User> matchedUsers = new ArrayList<>();
-//        if(activeUser.getmMatchSkill() == secondUser.getOwnSkill()) {
-//            List<User> skillGroup = new ArrayList<>();
+//    public ListExtension<User> checkIfMatch(User activeUser, User secondUser) {
+//        ListExtension<User> matchedUsers = new ArrayListExtension<>();
+//            ListExtension<User> skillGroup = new ArrayListExtension<>();
 //            skillGroup.add(secondUser);
 //            boolean firstTime = true;
 //            long temp = 0;
@@ -204,49 +189,33 @@ public enum ChatMatcher {
 //            }
 //            matchedUsers.add(DatabaseHandler.getActiveUser());
 //            matchedUsers.add(bestMatch);
-//            Log.d("FELIXMATCH", " matched: " + bestMatch);
 //            return matchedUsers;
 //        }
 //        return null;
 //    }
-
-    public void matchingLoop() {
-        if(!loopIsActive) {
-            loopIsActive = true;
-            Timer timer = new Timer();
-
-            timer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    nextLevelMatch();
-                }
-            }, 10 * 1000, 10 * 1000);
-        }
-    }
 //
-//    public List<User> checkIfMatch(User userSecond) {
+//    public ListExtension<User> checkIfMatch(User userSecond) {
 //        int userSecondMin = userSecond.getMatchInterval()[0];
 //        int userSecondMax = userSecond.getMatchInterval()[1];
 //        int userFirstRating = DatabaseHandler.getActiveUser().getOwnRating();
-//        List<User> matchedUsers = new ArrayList<>();
+//        ListExtension<User> matchedUsers = new ArrayListExtension<>();
 //
 //        if(userFirstRating >= userSecondMin && userFirstRating <= userSecondMax) {
 //            matchedUsers.add(DatabaseHandler.getActiveUser());
 //            matchedUsers.add(userSecond);
-//            Log.d("FELIXMATCH", " : we got a match brah");
 //            return matchedUsers;
 //        }
 //        return null;
 //    }
 //
-//    public List<User> checkIfDifferentUsers(User userSecond) {
+//    public ListExtension<User> checkIfDifferentUsers(User userSecond) {
 //        if(userSecond.getUid() != DatabaseHandler.getActiveUser().getUid()) {
 //            return checkIfMatch(userSecond);
 //        }
 //        return null;
 //    }
 //
-//    public List<User> advancedMatch() {
+//    public ListExtension<User> advancedMatch() {
 //        if(mUsersInPool.size() > 1) {
 //            for(User user : mUsersInPool) {
 //                return checkIfDifferentUsers(user);

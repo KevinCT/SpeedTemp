@@ -5,25 +5,27 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.List;
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
+
+import java.util.Locale;
 
 
 public class ParcelHelper {
 
     private static final int FLAGS_NORMAL = 0;
-    public static final String TAG = ParcelHelper.class.getSimpleName().toUpperCase();
+    private static final String TAG = ParcelHelper.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
-    public static <E extends Parcelable> void writeParcelableList(Parcel parcel, List<E> list) {
+    public static <E extends Parcelable> void writeParcelableList(Parcel parcel, ListExtension<E> list) {
         parcel.writeInt(list.size());
-        Lists.forEach(list, e -> parcel.writeParcelable(e, FLAGS_NORMAL));
+        list.foreach(e -> parcel.writeParcelable(e, FLAGS_NORMAL));
     }
 
-    public static <E extends Parcelable> List<E> readParcelableList(Parcel parcel, Class<E> eClass) {
+    public static <E extends Parcelable> ListExtension<E> readParcelableList(Parcel parcel, Class<E> eClass) {
         int size = parcel.readInt();
-        List<E> list = new ArrayList<>();
+        ListExtension<E> list = new ArrayListExtension<>();
         while (size-- > 0) {
             list.add(eClass.cast(parcel.readParcelable(eClass.getClassLoader())));
         }
@@ -37,9 +39,9 @@ public class ParcelHelper {
      */
     // For writing to a Parcel
     public static <K extends Parcelable,V extends Parcelable> void writeParcelableMap(
-            Parcel parcel, Map<K, V > map) {
+            Parcel parcel, MapExtension<K, V > map) {
         parcel.writeInt(map.size());
-        for(Map.Entry<K, V> e : map.entrySet()){
+        for(MapExtension.Entry<K, V> e : map.entrySet()){
             parcel.writeParcelable(e.getKey(), FLAGS_NORMAL);
             parcel.writeParcelable(e.getValue(), FLAGS_NORMAL);
         }
@@ -50,10 +52,10 @@ public class ParcelHelper {
      * 10/10/2016
      */
     // For reading from a Parcel
-    public static <K extends Parcelable,V extends Parcelable> Map<K,V> readParcelableMap(
+    public static <K extends Parcelable,V extends Parcelable> MapExtension<K,V> readParcelableMap(
             Parcel parcel, Class<K> kClass, Class<V> vClass) {
         int size = parcel.readInt();
-        Map<K, V> map = new HashMap<>();
+        MapExtension<K, V> map = new HashMapExtension<>();
         for(int i = 0; i < size; i++){
             map.put(kClass.cast(parcel.readParcelable(kClass.getClassLoader())),
                     vClass.cast(parcel.readParcelable(vClass.getClassLoader())));
@@ -61,7 +63,7 @@ public class ParcelHelper {
         return map;
     }
 
-    public static <E extends Parcelable> void saveParcableList(Bundle bundle, List<E> list, String tag) {
+    public static <E extends Parcelable> void saveParcelableList(Bundle bundle, ListExtension<E> list, String tag) {
         bundle.putInt(tag, list.size());
         for (int i = 0; i < list.size(); i++) {
             if (bundle.getParcelable(tag + i) != null) {
@@ -73,8 +75,8 @@ public class ParcelHelper {
         }
     }
 
-    public static <E extends Parcelable> List<E> retrieveParcableList(Bundle bundle, String tag) {
-        List<E> list = new ArrayList<>();
+    public static <E extends Parcelable> ListExtension<E> retrieveParcelableList(Bundle bundle, String tag) {
+        ListExtension<E> list = new ArrayListExtension<>();
         int size = bundle.getInt(tag);
         for (int i = 0; i < size; i++) {
             Log.d(TAG, "retrieveParcelableList(): Adding item!");

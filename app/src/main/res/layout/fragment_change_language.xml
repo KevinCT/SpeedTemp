@@ -10,13 +10,13 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            >
+            tools:ignore="UselessParent">
 
             <ImageButton
                 android:layout_width="160dp"
                 app:srcCompat="@drawable/ic_turkey_circle"
                 android:id="@+id/fragment_change_language_turkish"
-                android:contentDescription="@string/default_image_descr"
+                android:contentDescription="@string/default_image_description"
                 android:layout_height="160dp"
                 android:layout_row="1"
                 android:layout_column="0" />
@@ -25,7 +25,7 @@
                 android:layout_width="160dp"
                 app:srcCompat="@drawable/ic_sweden_circle"
                 android:id="@+id/fragment_change_language_swedish"
-                android:contentDescription="@string/default_image_descr"
+                android:contentDescription="@string/default_image_description"
                 android:layout_height="160dp"
                 android:layout_row="0"
                 android:layout_column="0" />
@@ -34,7 +34,7 @@
                 android:layout_width="160dp"
                 app:srcCompat="@drawable/ic_afghanistan_circle"
                 android:id="@+id/fragment_change_language_dari"
-                android:contentDescription="@string/default_image_descr"
+                android:contentDescription="@string/default_image_description"
                 android:layout_height="160dp"
                 android:layout_row="0"
                 android:layout_column="1" />
@@ -43,7 +43,7 @@
                 android:layout_width="160dp"
                 app:srcCompat="@drawable/ic_syria_circle"
                 android:id="@+id/fragment_change_language_arabic"
-                android:contentDescription="@string/default_image_descr"
+                android:contentDescription="@string/default_image_description"
                 android:layout_height="160dp"
                 android:layout_row="1"
                 android:layout_column="1" />
@@ -52,7 +52,7 @@
                 android:layout_width="160dp"
                 app:srcCompat="@drawable/ic_usa_circle"
                 android:id="@+id/fragment_change_language_english"
-                android:contentDescription="@string/default_image_descr"
+                android:contentDescription="@string/default_image_description"
                 android:layout_height="160dp"
                 android:layout_row="2"
                 android:layout_column="0" />

@@ -1,8 +1,8 @@
 package com.zweigbergk.speedswede.util;
 
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 
-public class Tuple<K, V> implements Map.Entry<K, V> {
+public class Tuple<K, V> implements MapExtension.Entry<K, V> {
 
     private K key;
     private V value;
@@ -31,7 +31,8 @@ public class Tuple<K, V> implements Map.Entry<K, V> {
         return oldValue;
     }
 
-    public static <K, V> Tuple from(Map.Entry<K, V> entry) {
+    @SuppressWarnings("unused")
+    public static <K, V> Tuple from(MapExtension.Entry<K, V> entry) {
         return new Tuple<>(entry.getKey(), entry.getValue());
     }
 

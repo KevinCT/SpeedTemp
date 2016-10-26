@@ -3,12 +3,10 @@ package com.zweigbergk.speedswede.database;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import com.google.firebase.database.ValueEventListener;
 import com.zweigbergk.speedswede.Constants;
 import com.zweigbergk.speedswede.core.Chat;
 import com.zweigbergk.speedswede.core.Message;
@@ -17,13 +15,15 @@ import com.zweigbergk.speedswede.database.eventListener.ChatListener;
 import com.zweigbergk.speedswede.util.async.FirebasePromise;
 import com.zweigbergk.speedswede.util.async.Promise;
 import com.zweigbergk.speedswede.util.async.Statement;
-import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
 import com.zweigbergk.speedswede.util.collection.Collections;
-import com.zweigbergk.speedswede.util.collection.HashMap;
-import com.zweigbergk.speedswede.util.collection.List;
-import com.zweigbergk.speedswede.util.collection.Map;
+import com.zweigbergk.speedswede.util.collection.HashMapExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
+import com.zweigbergk.speedswede.util.collection.MapExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 import com.zweigbergk.speedswede.util.async.PromiseNeed;
+
+import java.util.Locale;
 
 import static com.zweigbergk.speedswede.Constants.CHATS;
 import static com.zweigbergk.speedswede.Constants.FIRST_USER;
@@ -34,11 +34,11 @@ import static com.zweigbergk.speedswede.Constants.SECOND_USER;
 class DbChatHandler extends DbTopLevelHandler {
     private static DbChatHandler INSTANCE;
 
-    private static final String TAG = DbChatHandler.class.getSimpleName().toUpperCase();
+    private static final String TAG = DbChatHandler.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private DatabaseReference mRoot = FirebaseDatabase.getInstance().getReference();
 
-    private Map<String, MessageListener> messageListeners = new HashMap<>();
+    private MapExtension<String, MessageListener> messageListeners = new HashMapExtension<>();
 
     private ChatListener mChatListener;
 
@@ -99,26 +99,6 @@ class DbChatHandler extends DbTopLevelHandler {
      * */
     void pushChat(Chat chat) {
         Log.d(TAG, "Push chat: " + chat.getName());
-
-        DatabaseReference ref = mRoot.child(CHATS).child(chat.getId());
-
-        ValueEventListener listener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    //pushPreferences(chat);
-                    Log.d(TAG, "In listener where pushPreferences is called");
-                    ref.removeEventListener(this);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-
-        mRoot.child(CHATS).child(chat.getId()).addValueEventListener(listener);
         mRoot.child(CHATS).child(chat.getId()).setValue(chat);
     }
 
@@ -126,7 +106,7 @@ class DbChatHandler extends DbTopLevelHandler {
         ref.removeValue();
     }
 
-    void addMesageClient(Chat chat, Client<DataChange<Message>> client) {
+    void addMessageClient(Chat chat, Client<DataChange<Message>> client) {
         if (hasMessageListenerForChat(chat)) {
             //If the listener is already there, we must explicitly pass every existing message
             // to our new client
@@ -140,11 +120,11 @@ class DbChatHandler extends DbTopLevelHandler {
         messageListeners.get(chat.getId()).bind(client);
     }
 
-    Promise<List<Message>> pullMessages(Chat chat) {
-        Promise<List<Message>> messagesPromised = Promise.create();
+    Promise<ListExtension<Message>> pullMessages(Chat chat) {
+        Promise<ListExtension<Message>> messagesPromised = Promise.create();
         messagesPromised.requires(PromiseNeed.SNAPSHOT);
         messagesPromised.setResultForm(items -> {
-            List<Message> result = new ArrayList<>();
+            ListExtension<Message> result = new ArrayListExtension<>();
            DataSnapshot messageSnapshot = items.getSnapshot(PromiseNeed.SNAPSHOT);
             for (DataSnapshot snapshot : messageSnapshot.getChildren()) {
                 result.add(snapshot.getValue(Message.class));

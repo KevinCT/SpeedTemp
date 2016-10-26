@@ -14,7 +14,6 @@ import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.view.MainView;
 
 public class MainActivity extends AppCompatActivity implements MainView {
-    public static final String TAG = MainActivity.class.getSimpleName().toUpperCase();
 
     private static final boolean LOGOUT_ON_STARTUP = false;
     private static boolean calledAlready = false;
@@ -33,8 +32,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
             calledAlready = true;
         }
 
-        setUpContent();
-
         if (LOGOUT_ON_STARTUP) {
             DatabaseHandler.logout();
         }
@@ -42,9 +39,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
         startLoginActivity();
 
         LanguageChanger.onCreate(this);
-    }
-
-    private void setUpContent() {
     }
 
     private void startLoginActivity() {

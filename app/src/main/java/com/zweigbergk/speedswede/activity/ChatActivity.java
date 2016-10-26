@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,12 +27,13 @@ import com.zweigbergk.speedswede.eyecandy.MatchLoadingIndicatorLayout;
 import com.zweigbergk.speedswede.eyecandy.PanelSlideListener;
 import com.zweigbergk.speedswede.eyecandy.TransparentLayout;
 import com.zweigbergk.speedswede.fragment.ChatListFragment;
-import com.zweigbergk.speedswede.util.collection.ArrayList;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
 import com.zweigbergk.speedswede.util.collection.Arrays;
-import com.zweigbergk.speedswede.util.collection.List;
-import com.zweigbergk.speedswede.util.methodwrapper.CallerMethod;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
 import com.zweigbergk.speedswede.view.ChatView;
+
+import java.util.Locale;
 
 import mehdi.sakout.fancybuttons.FancyButton;
 
@@ -39,14 +41,12 @@ import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 
 public class ChatActivity extends AppCompatActivity implements ChatView {
-    private static final String TAG = ChatActivity.class.getSimpleName().toUpperCase();
+    private static final String TAG = ChatActivity.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     private static final int FRAGMENT_CONTAINER = R.id.fragment_container;
-    private static final String CHATLIST_FRAGMENT_NAME = "ChatListFragment";
+    private static final String CHAT_LIST_FRAGMENT_NAME = "ChatListFragment";
 
-    public static final List<String> fragmentStack = new ArrayList<>();
-
-    private Toolbar toolbar;
+    private static final ListExtension<String> fragmentStack = new ArrayListExtension<>();
 
     private SlidingUpPanelLayout slidingLayout;
     private MatchLoadingIndicatorLayout matchLoadingLayout;
@@ -65,7 +65,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         //We need our ChatListFragment if it's the first run
         if (savedInstanceState == null) {
-            addFragment(new ChatListFragment(), false);
+            addFragment(new ChatListFragment());
         }
 
         //Grab the views
@@ -132,10 +132,10 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     }
 
     private void setupToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-        final Drawable upArrow = getResources().getDrawable(R.drawable.ic_go_back_left_arrow);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
+        final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.ic_go_back_left_arrow);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setHomeAsUpIndicator(upArrow);
         }
@@ -161,7 +161,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         }
     }
 
-    private void addFragment(Fragment fragment, boolean addToBackstack) {
+    private void addFragment(Fragment fragment) {
         String name = getFragmentName(fragment);
         fragmentStack.add(name);
 
@@ -169,36 +169,13 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
                 .beginTransaction()
                 .add(FRAGMENT_CONTAINER, fragment, name);
 
-        if (addToBackstack) {
-            transaction.addToBackStack(name);
-        }
-
         transaction.commit();
-    }
-
-    public void switchToFragment(Fragment fragment, boolean addToBackstack) {
-        String name = getFragmentName(fragment);
-        fragmentStack.add(name);
-
-        FragmentTransaction transaction = getSupportFragmentManager()
-                .beginTransaction()
-                .replace(FRAGMENT_CONTAINER, fragment, name);
-
-        if (addToBackstack) {
-            transaction.addToBackStack(name);
-        }
-
-        transaction.commit();
-
-        updateMatcherLayout();
-        supportInvalidateOptionsMenu();
     }
 
     private String getFragmentName(Fragment fragment) {
         return fragment.getClass().getSimpleName();
     }
 
-    @Override
     public void displayChat(Chat chat) {
         if (chat != null) {
             Log.d(TAG, "Displaying chat with ID: " + chat.getId());
@@ -209,13 +186,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             Log.w(TAG, "WARNING! Tried to display a null chat. ");
             new Exception().printStackTrace();
         }
-    }
-
-    @Override
-    public void popBackStack() {
-        getSupportFragmentManager().popBackStack();
-        Log.d(TAG, "popBackStack()");
-        updateMatcherLayout();
     }
 
     @Override
@@ -263,9 +233,9 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         coverMatchButtonLayout.setBlockClickEvents(bundle.getBoolean("matchButtonContainerState"));
     }
 
-    public void updateMatcherLayout() {
+    private void updateMatcherLayout() {
         if (fragmentStack.size() > 0) {
-            if (fragmentStack.getLast().equalsIgnoreCase(CHATLIST_FRAGMENT_NAME)) {
+            if (fragmentStack.getLast().equalsIgnoreCase(CHAT_LIST_FRAGMENT_NAME)) {
                 slidingLayout.setPanelState(PanelState.COLLAPSED);
             } else {
                 slidingLayout.setPanelState(PanelState.HIDDEN);
@@ -307,17 +277,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         startActivity(intent);
     }
 
-    public Toolbar getToolbar() {
-        return toolbar;
-    }
-
     @Override
     public <T> T contextualize(ProviderMethod<T, Context> method) {
         return method.call(this);
-    }
-
-    @Override
-    public void useContext(CallerMethod<Context> method) {
-        method.call(this);
     }
 }

@@ -1,8 +1,8 @@
 package com.zweigbergk.speedswede.eyecandy;
+
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -11,18 +11,16 @@ import com.zweigbergk.speedswede.activity.SingleChatActivity;
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
 import com.zweigbergk.speedswede.pathmenu.FloatingActionMenu;
 import com.zweigbergk.speedswede.pathmenu.SubActionButton;
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class PathMenu {
-    private static final String TAG = PathMenu.class.getSimpleName().toUpperCase();
 
-    private List<Client<Boolean>> stateClients = new ArrayList<>();
+    private ListExtension<Client<Boolean>> stateClients = new ArrayListExtension<>();
 
     public void addStateClient(Client<Boolean> client) {
         stateClients.add(client);
@@ -35,7 +33,8 @@ public class PathMenu {
     private TimerTask timerTask;
     private final Handler handler = new Handler();
     private SubActionButton.Builder itemBuilder;
-    private List<SubActionButton> buttons = new ArrayList<>();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private ListExtension<SubActionButton> buttons = new ArrayListExtension<>();
 
 
     private SingleChatActivity contextProvider;
@@ -43,10 +42,6 @@ public class PathMenu {
     public PathMenu(SingleChatActivity contextProvider, SubActionButton.Builder itemBuilder) {
         this.contextProvider = contextProvider;
         this.itemBuilder = itemBuilder;
-    }
-
-    public boolean isOpen() {
-        return pathMenu.isOpen();
     }
 
     public void addImageViewWithAction(ImageView imageView, View.OnClickListener listener) {
@@ -73,7 +68,7 @@ public class PathMenu {
                 handler.post(() -> {
                     btnShowActions = contextProvider.findViewById(R.id.show_actions);
                     if (btnShowActions != null) {
-                        stoptimertask();
+                        stopTimerTask();
 
                         int firstAngle = 112;
                         int secondAngle = 158;
@@ -146,7 +141,7 @@ public class PathMenu {
         timer.schedule(timerTask, 0, 50); //
     }
 
-    private void stoptimertask() {
+    private void stopTimerTask() {
         //stop the timer, if it's not already null
         if (timer != null) {
             timer.cancel();

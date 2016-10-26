@@ -1,8 +1,5 @@
 package com.zweigbergk.speedswede.interactor;
 
-import android.content.Context;
-import android.util.Log;
-
 import com.zweigbergk.speedswede.core.local.LanguageChanger;
 
 public class SettingsFragmentInteractor {
@@ -11,7 +8,7 @@ public class SettingsFragmentInteractor {
 
     }
 
-    public void changeLanguage(boolean languageChanged) {
+    public void changeLanguage() {
         LanguageChanger.languageChanged(true);
     }
 

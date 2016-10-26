@@ -9,21 +9,17 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-
-import com.zweigbergk.speedswede.core.UserProfile;
-import com.zweigbergk.speedswede.database.DatabaseHandler;
 import com.zweigbergk.speedswede.util.ActivityAttachable;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public class LoginInteractor implements ActivityAttachable {
 
-    static AuthCredential userCredential;
+    private static AuthCredential userCredential;
 
-    public static final String TAG = "LoginInteractor";
+    private static final String TAG = "LoginInteractor";
 
     public enum AuthResult { SUCCESS, FAIL }
 
@@ -71,7 +67,7 @@ public class LoginInteractor implements ActivityAttachable {
         Log.d(TAG, "user: " + token.getUserId());
 
         //Unsure about merge conflict
-        UserProfile.facebookUserID = token.getUserId();
+        //UserProfile.facebookUserID = token.getUserId();
         userCredential = FacebookAuthProvider.getCredential(token.getToken());
         setUserCredential(FacebookAuthProvider.getCredential(token.getToken()));
         FirebaseAuth.getInstance().signInWithCredential(userCredential)
@@ -89,15 +85,5 @@ public class LoginInteractor implements ActivityAttachable {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onStart() {
-
-    }
-
-    @Override
-    public void onStop() {
-
     }
 }

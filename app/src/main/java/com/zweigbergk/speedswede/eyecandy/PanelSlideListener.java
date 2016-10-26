@@ -3,15 +3,16 @@ package com.zweigbergk.speedswede.eyecandy;
 import android.view.View;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.zweigbergk.speedswede.util.collection.ArrayList;
-import com.zweigbergk.speedswede.util.collection.List;
+import com.zweigbergk.speedswede.util.collection.ArrayListExtension;
+import com.zweigbergk.speedswede.util.collection.ListExtension;
 import com.zweigbergk.speedswede.util.methodwrapper.Client;
-import com.zweigbergk.speedswede.util.methodwrapper.Executable;
 
 public class PanelSlideListener implements SlidingUpPanelLayout.PanelSlideListener {
 
-    List<Client<Float>> slideListeners = new ArrayList<>();
-    List<Client<SlidingUpPanelLayout.PanelState>> stateChangedListeners = new ArrayList<>();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private ListExtension<Client<Float>> slideListeners = new ArrayListExtension<>();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private ListExtension<Client<SlidingUpPanelLayout.PanelState>> stateChangedListeners = new ArrayListExtension<>();
 
     public PanelSlideListener onPanelSlide(Client<Float> client) {
         slideListeners.add(client);

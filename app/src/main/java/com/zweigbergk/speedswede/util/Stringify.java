@@ -4,8 +4,10 @@ import android.util.Log;
 
 import com.zweigbergk.speedswede.util.collection.Collections;
 
+import java.util.Locale;
+
 public class Stringify {
-    public static final String TAG = Stringify.class.getSimpleName().toUpperCase();
+    private static final String TAG = Stringify.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     /**
      * Format a String with args in curly braces. Use § sign for escaping characters.
@@ -45,7 +47,7 @@ public class Stringify {
         } while (++i < source.length());
 
         if (args.length != argumentIndex) {
-            Log.w(TAG, "Lists.unrealFormat: Expected " + args.length + " but only received " + (argumentIndex + 1) + " args.");
+            Log.w(TAG, "Stringify.curlyFormat: Expected " + args.length + " but only received " + (argumentIndex + 1) + " args.");
         }
 
         return builder.toString();
@@ -55,6 +57,7 @@ public class Stringify {
         return s.replace("{", "").replace("}", "");
     }
 
+    @SuppressWarnings("unused")
     public static void printStackTrace() {
         StringBuilder builder = new StringBuilder();
         Collections.asList(Thread.currentThread().getStackTrace()).foreach(trace -> {

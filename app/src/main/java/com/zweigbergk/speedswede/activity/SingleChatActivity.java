@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -27,10 +26,12 @@ import com.zweigbergk.speedswede.presenter.ChatFragmentPresenter;
 import com.zweigbergk.speedswede.util.methodwrapper.ProviderMethod;
 import com.zweigbergk.speedswede.view.ChatFragmentView;
 
+import java.util.Locale;
+
 import static com.zweigbergk.speedswede.Constants.CHAT_PARCEL;
 
 public class SingleChatActivity extends AppCompatActivity implements ChatFragmentView {
-    private static final String TAG = SingleChatActivity.class.getSimpleName().toUpperCase();
+    private static final String TAG = SingleChatActivity.class.getSimpleName().toUpperCase(Locale.ENGLISH);
 
     //From ChatFragment
     private ChatFragmentPresenter mPresenter;
@@ -42,7 +43,8 @@ public class SingleChatActivity extends AppCompatActivity implements ChatFragmen
     private PathMenu pathMenu;
     private boolean isPathMenuOpened = false;
 
-    SubActionButton.Builder itemBuilder;
+    @SuppressWarnings("FieldCanBeLocal")
+    private SubActionButton.Builder itemBuilder;
 
 
     @Override
@@ -64,7 +66,7 @@ public class SingleChatActivity extends AppCompatActivity implements ChatFragmen
 
         loadChatFromIntent();
 
-        findViewById(R.id.fragment_chat_post_message).setOnClickListener(this::onButtonClick);
+        findViewById(R.id.fragment_chat_post_message).setOnClickListener(view -> onButtonClick());
 
         chatRecyclerView = (RecyclerView) findViewById(R.id.fragment_chat_recycler_view);
         mInputBox = (EditText) findViewById(R.id.fragment_chat_message_text);
@@ -129,11 +131,11 @@ public class SingleChatActivity extends AppCompatActivity implements ChatFragmen
     }
 
 
-        public void setChat(Chat newChat) {
-            mPresenter.setChat(newChat);
-        }
+    private void setChat(Chat newChat) {
+        mPresenter.setChat(newChat);
+    }
 
-        private void onButtonClick(View view) {
+        private void onButtonClick() {
             mPresenter.onClickSend();
         }
 
@@ -208,19 +210,13 @@ public class SingleChatActivity extends AppCompatActivity implements ChatFragmen
         }
 
         @Override
-        public void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
-            chatRecyclerView.setLayoutManager(layoutManager);
-        }
-
-        @Override
         public <T> T contextualize(ProviderMethod<T, Context> method) {
             return method.call(this);
         }
 
-        @Override
-        public ImageView getImageView(int resId) {
-            ImageView view = new ImageView(this);
-            view.setImageDrawable(ContextCompat.getDrawable(this, resId));
-            return view;
-        }
+    private ImageView getImageView(int resId) {
+        ImageView view = new ImageView(this);
+        view.setImageDrawable(ContextCompat.getDrawable(this, resId));
+        return view;
+    }
 }

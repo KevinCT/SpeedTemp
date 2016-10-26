@@ -4,25 +4,20 @@ import java.util.Iterator;
 
 public class Collections {
 
-    public static <T> List<T> emptyList() {
-        return new ArrayList<>();
+
+    public static <T> SetExtension<T> emptySet() {
+        return new HashSetExtension<>();
     }
 
-    public static <T> Set<T> emptySet() {
-        return new HashSet<>();
-    }
-
-    public static <T> ArrayList<T> asList(T... objects) {
-        ArrayList<T> list = new ArrayList<>();
-        for (T object : objects) {
-            list.add(object);
-        }
-
+    @SafeVarargs
+    public static <T> ArrayListExtension<T> asList(T... objects) {
+        ArrayListExtension<T> list = new ArrayListExtension<>();
+        list.addAll(java.util.Arrays.asList(objects));
         return list;
     }
 
-    public static <T> List<T> asList(Iterator<T> iterator) {
-        List<T> list = new ArrayList<>();
+    public static <T> ListExtension<T> asList(Iterator<T> iterator) {
+        ListExtension<T> list = new ArrayListExtension<>();
 
         while(iterator.hasNext()) {
             list.add(iterator.next());
@@ -31,8 +26,8 @@ public class Collections {
         return list;
     }
 
-    public static <E> com.zweigbergk.speedswede.util.collection.Set<E> asSet(Iterable<E> iterable) {
-        com.zweigbergk.speedswede.util.collection.Set<E> result = new com.zweigbergk.speedswede.util.collection.HashSet<>();
+    static <E> SetExtension<E> asSet(Iterable<E> iterable) {
+        SetExtension<E> result = new HashSetExtension<>();
         for (E item : iterable) {
             result.add(item);
         }

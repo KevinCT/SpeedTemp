@@ -5,24 +5,19 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
 
 import com.zweigbergk.speedswede.R;
-import com.zweigbergk.speedswede.activity.SettingsActivity;
 import com.zweigbergk.speedswede.presenter.SettingsFragmentPresenter;
 import com.zweigbergk.speedswede.settings.LanguagePreferences;
 
 public class SettingsFragment extends PreferenceFragment {
-    private static final String TAG = SettingsActivity.class.getSimpleName().toUpperCase();
-
 
     private SharedPreferences.OnSharedPreferenceChangeListener mListener;
     private SettingsFragmentPresenter mPresenter;
+
+    public SettingsFragment() {
+        mPresenter = new SettingsFragmentPresenter();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +28,6 @@ public class SettingsFragment extends PreferenceFragment {
         initListener();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPreferences.registerOnSharedPreferenceChangeListener(mListener);
-        mPresenter = new SettingsFragmentPresenter();
     }
 
     @Override
@@ -46,9 +40,9 @@ public class SettingsFragment extends PreferenceFragment {
     private void initListener(){
         mListener = (sharedPreferences, key) -> {
             Preference preference = findPreference(key);
-            //Make sure it only checks when Languagepreference is open
+            //Make sure it only checks when LanguagePreference is open
             if (preference instanceof LanguagePreferences) {
-                mPresenter.onDialogPreferenceSelected(true);
+                mPresenter.onDialogPreferenceSelected();
                 getActivity().recreate();
             }
 
