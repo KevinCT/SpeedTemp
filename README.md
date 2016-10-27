@@ -13,4 +13,10 @@ Sprint #1: https://trello.com/b/JDr1IlSi/task-board-sprint-1
 - Fredag 14 oktober - EDIT 5213 - 08:30 - 12:30
 - Fredag 14 oktober - EDIT 5213 - 13:00 - 17:00
 
+## Content of repo
+- [Code](https://github.com/ryggan/zweigbergk/tree/master/app/src/main/java/com/zweigbergk/speedswede)
+- [Unit Testing Code](https://github.com/ryggan/zweigbergk/tree/master/app/src/test/java/com/zweigbergk/speedswede)
+- [Reflection report] 
+- [Prototype document]
+ #
 
