@@ -16,5 +16,8 @@
   - [Burndown Chart](https://github.com/ryggan/zweigbergk/blob/master/docs/Burndown_chart.jpg)
   - [Gitinspector Output](https://rawgit.com/KevinCT/95f85df5e1749c4dd479f0ad65638639/raw/a1c971c3dbdb628aaa37fd364a25f9f9d1da9447/gitinspector.html)
   - [FindBugs](https://github.com/ryggan/zweigbergk/blob/master/docs/findbugs.jpg)
+  
+ 
+- [Prototype APK](https://github.com/ryggan/zweigbergk/blob/master/app-debug.apk)
  
 
