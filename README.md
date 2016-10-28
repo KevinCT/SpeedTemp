@@ -14,7 +14,7 @@
   - [Reflection report](https://github.com/ryggan/zweigbergk/blob/master/docs/Report.pdf)
   - [Sprint retrospectives](https://github.com/ryggan/zweigbergk/blob/master/docs/Sprintretrospectives.pdf)
   - [Burndown Chart](https://github.com/ryggan/zweigbergk/blob/master/docs/Burndown_chart.jpg)
-  - [Gitinspector Output](https://rawgit.com/KevinCT/95f85df5e1749c4dd479f0ad65638639/raw/a1c971c3dbdb628aaa37fd364a25f9f9d1da9447/gitinspector.html)
+  - [Gitinspector Output](https://github.com/ryggan/zweigbergk/blob/master/docs/git_inspector.jpg)
   - [FindBugs](https://github.com/ryggan/zweigbergk/blob/master/docs/findbugs.jpg)
   
  
