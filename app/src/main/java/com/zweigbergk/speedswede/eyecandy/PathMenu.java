@@ -42,6 +42,7 @@ public class PathMenu {
     public PathMenu(SingleChatActivity contextProvider, SubActionButton.Builder itemBuilder) {
         this.contextProvider = contextProvider;
         this.itemBuilder = itemBuilder;
+        this.pathMenu = null;
     }
 
     public void addImageViewWithAction(ImageView imageView, View.OnClickListener listener) {

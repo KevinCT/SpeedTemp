@@ -46,4 +46,13 @@ public class Tuple<K, V> implements MapExtension.Entry<K, V> {
         return this.key.hashCode() * 3 +
                 this.value.hashCode() * 5;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        return other != null &&
+                other.getClass().equals(this.getClass()) &&
+                ((Tuple)other).key.equals(this.key) &&
+                ((Tuple)other).value.equals(this.value);
+
+    }
 }

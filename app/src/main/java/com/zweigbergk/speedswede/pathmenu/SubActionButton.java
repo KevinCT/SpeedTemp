@@ -93,12 +93,7 @@ public class SubActionButton extends FrameLayout {
     }
 
     private void setBackgroundResource(Drawable drawable) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             setBackground(drawable);
-        }
-        else {
-            setBackground(drawable);
-        }
     }
 
     /**

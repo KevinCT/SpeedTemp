@@ -14,6 +14,9 @@ import java.util.List;
 
 @SuppressWarnings("Convert2streamapi")
 public class HashMapExtension<K, V> extends java.util.HashMap<K, V> implements MapExtension<K, V> {
+
+    static final long serialVersionUID = 2345L;
+
     @Override
     public <X, Y> MapExtension<X, Y> map(CollectionExtension.EntryMapping<K, V> mapping) {
         MapExtension<X, Y> result = new HashMapExtension<>();

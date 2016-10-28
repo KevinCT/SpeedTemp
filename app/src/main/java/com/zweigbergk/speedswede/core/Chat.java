@@ -17,12 +17,6 @@ public class Chat implements Parcelable {
 
     private User secondUser;
 
-
-    @SuppressWarnings({"FieldCanBeLocal", "unused"})
-    private boolean likedByFirstUser = false;
-    @SuppressWarnings({"FieldCanBeLocal", "unused"})
-    private boolean likedBySecondUser = false;
-
     private ListExtension<Message> messages;
     private String id;
     private long timeStamp;
@@ -94,14 +88,6 @@ public class Chat implements Parcelable {
 
     public String getId() {
         return id;
-    }
-
-    public void setLikeStatusFirstUser(Boolean likeStatus) {
-        likedByFirstUser = likeStatus;
-    }
-
-    public void setLikeStatusSecondUser(Boolean likeStatus) {
-        likedBySecondUser = likeStatus;
     }
 
     public void setFirstUser(User user) {

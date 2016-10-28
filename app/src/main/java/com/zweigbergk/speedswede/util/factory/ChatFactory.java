@@ -22,8 +22,6 @@ public class ChatFactory {
     public static Promise<Chat> deserializeChat(DataSnapshot snapshot) {
         String firstUserId = ChatFactory.getUserId(snapshot.child(Constants.FIRST_USER));
         String secondUserId = ChatFactory.getUserId(snapshot.child(Constants.SECOND_USER));
-        Boolean likeStatusFirstUser = ChatFactory.getLikeStatus(snapshot.child(Constants.LIKED_BY_FIRST_USER));
-        Boolean likeStatusSecondUser = ChatFactory.getLikeStatus(snapshot.child(Constants.LIKED_BY_SECOND_USER));
 
         Chat chatWithoutUsers = getChatWithoutUsers(snapshot);
         Commitment<Chat> chatCommitment = new Guarantee<>(chatWithoutUsers);
@@ -37,8 +35,6 @@ public class ChatFactory {
             User secondUser = (User) items.get(SECOND_USER);
             chat.setFirstUser(firstUser);
             chat.setSecondUser(secondUser);
-            chat.setLikeStatusFirstUser(likeStatusFirstUser);
-            chat.setLikeStatusSecondUser(likeStatusSecondUser);
             return chat;
         };
 
@@ -57,19 +53,10 @@ public class ChatFactory {
 
         long timestamp = (long) snapshot.child(Constants.TIMESTAMP).getValue();
 
-        Object firstLikeObj = snapshot.child(Constants.LIKED_BY_FIRST_USER).getValue();
-        Object secondLikeObj = snapshot.child(Constants.LIKED_BY_SECOND_USER).getValue();
-
-        Boolean likeStatusFirstUser = firstLikeObj != null && (boolean) firstLikeObj;
-        Boolean likeStatusSecondUser = secondLikeObj != null && (boolean) secondLikeObj;
-
-
         Iterable<DataSnapshot> messageSnapshots = snapshot.child(Constants.MESSAGES).getChildren();
         ListExtension<Message> messages = asMessageList(messageSnapshots);
 
         Chat chat = new Chat(id, name, timestamp, messages);
-        chat.setLikeStatusFirstUser(likeStatusFirstUser);
-        chat.setLikeStatusSecondUser(likeStatusSecondUser);
 
         return chat;
     }
@@ -82,10 +69,5 @@ public class ChatFactory {
     private static String getUserId(DataSnapshot snapshot) {
         Object value = snapshot.child(Constants.USER_ID).getValue();
         return value != null && value.getClass().equals(String.class) ? (String) value : "N/A";
-    }
-
-    private static Boolean getLikeStatus(DataSnapshot snapshot) {
-        Object value = snapshot.getValue();
-        return value != null && value.getClass().equals(Boolean.class) ? (Boolean) value : false;
     }
 }

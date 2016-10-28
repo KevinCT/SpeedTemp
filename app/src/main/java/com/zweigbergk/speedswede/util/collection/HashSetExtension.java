@@ -8,6 +8,8 @@ import java.util.Iterator;
 @SuppressWarnings("Convert2streamapi")
 public class HashSetExtension<E> extends java.util.HashSet<E> implements SetExtension<E> {
 
+    static final long serialVersionUID = 3456;
+
     public HashSetExtension() {
         super();
     }

@@ -6,6 +6,8 @@ import com.zweigbergk.speedswede.util.methodwrapper.Query;
 @SuppressWarnings("Convert2streamapi")
 public class ArrayListExtension<E> extends java.util.ArrayList<E> implements ListExtension<E> {
 
+    static final long serialVersionUID = 1234L;
+
     @SuppressWarnings("unused")
     public SetExtension<E> intersect(Iterable<E> other) {
         SetExtension<E> result = new HashSetExtension<>();

@@ -17,8 +17,6 @@ import com.zweigbergk.speedswede.util.methodwrapper.Client;
 
 public class LoginInteractor implements ActivityAttachable {
 
-    private static AuthCredential userCredential;
-
     private static final String TAG = "LoginInteractor";
 
     public enum AuthResult { SUCCESS, FAIL }
@@ -58,18 +56,13 @@ public class LoginInteractor implements ActivityAttachable {
         return msg.equals("CONNECTION_FAILURE");
     }
 
-    private static void setUserCredential(AuthCredential authCredential) {
-        userCredential = authCredential;
-    }
-
     public void handleFacebookAccessToken(Client<AuthResult> authClient, AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
         Log.d(TAG, "user: " + token.getUserId());
 
         //Unsure about merge conflict
         //UserProfile.facebookUserID = token.getUserId();
-        userCredential = FacebookAuthProvider.getCredential(token.getToken());
-        setUserCredential(FacebookAuthProvider.getCredential(token.getToken()));
+        AuthCredential userCredential = FacebookAuthProvider.getCredential(token.getToken());
         FirebaseAuth.getInstance().signInWithCredential(userCredential)
                 .addOnCompleteListener(task -> {
                     Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
